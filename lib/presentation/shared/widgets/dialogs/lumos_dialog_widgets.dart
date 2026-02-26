@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/constants/dimensions.dart';
 import '../buttons/lumos_button.dart';
+import '../inputs/lumos_form_widgets.dart';
 import '../lumos_models.dart';
 
 class LumosDialog extends StatelessWidget {
@@ -59,6 +60,54 @@ class LumosDialog extends StatelessWidget {
           size: LumosButtonSize.small,
         ),
     ];
+  }
+}
+
+class LumosPromptDialog extends StatelessWidget {
+  const LumosPromptDialog({
+    required this.title,
+    required this.label,
+    required this.cancelText,
+    required this.confirmText,
+    required this.onCancel,
+    required this.onConfirm,
+    super.key,
+    this.initialValue = '',
+  });
+
+  final String title;
+  final String label;
+  final String cancelText;
+  final String confirmText;
+  final VoidCallback onCancel;
+  final ValueChanged<String> onConfirm;
+  final String initialValue;
+
+  @override
+  Widget build(BuildContext context) {
+    final TextEditingController controller = TextEditingController(
+      text: initialValue,
+    );
+    return AlertDialog(
+      title: Text(title, overflow: TextOverflow.ellipsis),
+      content: LumosTextField(controller: controller, label: label),
+      actions: <Widget>[
+        LumosButton(
+          label: cancelText,
+          onPressed: onCancel,
+          type: LumosButtonType.text,
+          size: LumosButtonSize.small,
+        ),
+        LumosButton(
+          label: confirmText,
+          onPressed: () {
+            onConfirm(controller.text);
+          },
+          type: LumosButtonType.primary,
+          size: LumosButtonSize.small,
+        ),
+      ],
+    );
   }
 }
 

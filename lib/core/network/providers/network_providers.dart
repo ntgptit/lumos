@@ -4,6 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:logger/logger.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+import 'package:retrofit/retrofit.dart' show HttpResponse;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../constants/api_endpoints.dart';
@@ -13,6 +14,7 @@ import '../../logging/app_logger.dart';
 import '../api_client.dart';
 import '../interceptors/auth_token_interceptor.dart';
 import '../interceptors/network_error_interceptor.dart';
+import '../interceptors/retry_interceptor.dart';
 
 part 'network_providers.g.dart';
 
@@ -85,6 +87,7 @@ Dio dioClient(Ref ref) {
   final Dio dio = Dio(options);
 
   dio.interceptors.add(ref.watch(authTokenInterceptorProvider));
+  dio.interceptors.add(RetryInterceptor(dio: dio));
   dio.interceptors.add(ref.watch(networkErrorInterceptorProvider));
   if (kDebugMode) {
     dio.interceptors.add(ref.watch(prettyDioLoggerProvider));
@@ -108,7 +111,12 @@ Future<Map<String, dynamic>> networkHealth(Ref ref) async {
   final AsyncValue<Map<String, dynamic>> result =
       await AsyncValue.guard<Map<String, dynamic>>(() async {
         final ApiClient client = ref.watch(apiClientProvider);
-        return client.getHealth();
+        final HttpResponse<dynamic> response = await client.getHealth();
+        final dynamic data = response.data;
+        if (data is Map<String, dynamic>) {
+          return data;
+        }
+        return <String, dynamic>{};
       });
 
   if (result case AsyncData<Map<String, dynamic>>(:final value)) {
@@ -135,12 +143,29 @@ Future<Map<String, dynamic>> networkHealth(Ref ref) async {
 String _resolveBaseUrl() {
   final String apiUrl = dotenv.env[NetworkProviderConst.apiUrlEnvKey] ?? '';
   if (apiUrl.isNotEmpty) {
-    return apiUrl;
+    return _normalizeBaseUrlForPlatform(apiUrl);
   }
   final String legacyApiUrl =
       dotenv.env[NetworkProviderConst.legacyBaseUrlEnvKey] ?? '';
   if (legacyApiUrl.isNotEmpty) {
-    return legacyApiUrl;
+    return _normalizeBaseUrlForPlatform(legacyApiUrl);
   }
-  return ApiEndpoints.baseUrl;
+  return _normalizeBaseUrlForPlatform(ApiEndpoints.baseUrl);
+}
+
+String _normalizeBaseUrlForPlatform(String baseUrl) {
+  if (kIsWeb) {
+    return baseUrl;
+  }
+  if (defaultTargetPlatform != TargetPlatform.android) {
+    return baseUrl;
+  }
+  final String normalizedLocalhost = baseUrl.replaceFirst(
+    '://localhost',
+    '://10.0.2.2',
+  );
+  return normalizedLocalhost.replaceFirst(
+    '://127.0.0.1',
+    '://10.0.2.2',
+  );
 }

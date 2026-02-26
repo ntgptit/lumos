@@ -13,11 +13,11 @@ abstract class ApiClient {
 
   /// Health check endpoint.
   @GET(ApiEndpoints.health)
-  Future<Map<String, dynamic>> getHealth();
+  Future<HttpResponse<dynamic>> getHealth();
 
   /// Example POST endpoint.
   @POST(ApiEndpoints.echo)
-  Future<Map<String, dynamic>> postEcho({
+  Future<HttpResponse<dynamic>> postEcho({
     @Body() required Map<String, dynamic> payload,
   });
 }

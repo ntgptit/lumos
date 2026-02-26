@@ -3,5 +3,35 @@
   "appTitle": "Lumos",
   "@appTitle": {
     "description": "Default application title"
+  },
+  "commonCancel": "Cancel",
+  "commonCreate": "Create",
+  "commonSave": "Save",
+  "commonDelete": "Delete",
+  "commonRetry": "Retry",
+  "commonRename": "Rename",
+  "folderNewFolder": "New Folder",
+  "folderCreateTitle": "Create folder",
+  "folderRenameTitle": "Rename folder",
+  "folderDeleteTitle": "Delete folder",
+  "folderNameLabel": "Folder name",
+  "folderManagerTitle": "Folder Manager",
+  "folderManagerSubtitle": "Browse tree, create, rename, and soft-delete folders.",
+  "folderRoot": "Root",
+  "folderEmptyTitle": "No folders here yet.",
+  "folderEmptySubtitle": "Create one to start organizing content.",
+  "folderDeleteConfirm": "Delete \"{name}\" and all subfolders?",
+  "@folderDeleteConfirm": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "folderDepth": "Depth {depth}",
+  "@folderDepth": {
+    "placeholders": {
+      "depth": {
+        "type": "int"
+      }
+    }
   }
 }

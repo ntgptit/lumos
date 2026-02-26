@@ -28,4 +28,33 @@ extension AsyncValueErrorX<T> on AsyncValue<T> {
       context,
     ).showSnackBar(SnackBar(content: Text(failure.message), action: action));
   }
+
+  Widget whenWithLoading({
+    required Widget Function(BuildContext context, T data) dataBuilder,
+    required Widget Function(BuildContext context) loadingBuilder,
+    Widget Function(BuildContext context, Failure failure)? errorBuilder,
+  }) {
+    return when(
+      data: (T data) => Builder(
+        builder: (BuildContext context) {
+          return dataBuilder(context, data);
+        },
+      ),
+      loading: () => Builder(
+        builder: (BuildContext context) {
+          return loadingBuilder(context);
+        },
+      ),
+      error: (Object error, StackTrace stackTrace) => Builder(
+        builder: (BuildContext context) {
+          final Failure failure = error.toFailure();
+          final errorBuilderOrFallback = errorBuilder;
+          if (errorBuilderOrFallback != null) {
+            return errorBuilderOrFallback(context, failure);
+          }
+          return Center(child: Text(failure.message));
+        },
+      ),
+    );
+  }
 }

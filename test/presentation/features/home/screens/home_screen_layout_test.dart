@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lumos/core/constants/dimensions.dart';
 import 'package:lumos/presentation/features/home/screens/home_screen.dart';
@@ -74,6 +75,10 @@ Future<void> _pumpHomeWithSize({
   addTearDown(tester.view.resetDevicePixelRatio);
   addTearDown(tester.view.resetPhysicalSize);
 
-  await tester.pumpWidget(const MaterialApp(home: HomeScreen()));
+  await tester.pumpWidget(
+    const ProviderScope(
+      child: MaterialApp(home: HomeScreen()),
+    ),
+  );
   await tester.pumpAndSettle();
 }

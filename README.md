@@ -45,3 +45,26 @@ Pre-commit will run:
 - `flutter test`
 
 If you prefer Node workflow, you can replace this with Husky + lint-staged.
+
+## Run Frontend (FE)
+
+Run commands from project root `D:/workspace/lumos`:
+
+```bash
+flutter pub get
+flutter run -d chrome
+```
+
+Optional targets:
+
+```bash
+flutter devices
+flutter run -d android
+flutter run -d ios
+```
+
+Build FE (web release):
+
+```bash
+flutter build web --release
+```

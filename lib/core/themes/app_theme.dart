@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 
 import '../constants/dimensions.dart';
 import 'component_themes/app_bar_theme.dart';
@@ -42,16 +43,14 @@ class AppTheme {
   }
 
   static ThemeData _buildThemeData({required ColorScheme colorScheme}) {
+    final ThemeData flexTheme = _buildFlexTheme(colorScheme: colorScheme);
     final TextTheme textTheme = AppTypography.textTheme(
       colorScheme: colorScheme,
     );
     final TextTheme primaryTextTheme = AppTypography.primaryTextTheme(
       colorScheme: colorScheme,
     );
-    final ThemeData baseTheme = ThemeData(
-      useMaterial3: true,
-      brightness: colorScheme.brightness,
-      colorScheme: colorScheme,
+    final ThemeData baseTheme = flexTheme.copyWith(
       textTheme: textTheme,
       primaryTextTheme: primaryTextTheme,
       pageTransitionsTheme: _buildPageTransitionsTheme(),
@@ -64,6 +63,38 @@ class AppTheme {
       baseTheme: baseTheme,
       colorScheme: colorScheme,
       textTheme: textTheme,
+    );
+  }
+
+  static ThemeData _buildFlexTheme({required ColorScheme colorScheme}) {
+    final FlexSchemeColor flexSchemeColor = _toFlexSchemeColor(
+      colorScheme: colorScheme,
+    );
+    if (colorScheme.brightness == Brightness.dark) {
+      return FlexColorScheme.dark(
+        colors: flexSchemeColor,
+        useMaterial3: true,
+      ).toTheme;
+    }
+    return FlexColorScheme.light(
+      colors: flexSchemeColor,
+      useMaterial3: true,
+    ).toTheme;
+  }
+
+  static FlexSchemeColor _toFlexSchemeColor({
+    required ColorScheme colorScheme,
+  }) {
+    return FlexSchemeColor(
+      primary: colorScheme.primary,
+      primaryContainer: colorScheme.primaryContainer,
+      secondary: colorScheme.secondary,
+      secondaryContainer: colorScheme.secondaryContainer,
+      tertiary: colorScheme.tertiary,
+      tertiaryContainer: colorScheme.tertiaryContainer,
+      appBarColor: colorScheme.surface,
+      error: colorScheme.error,
+      errorContainer: colorScheme.errorContainer,
     );
   }
 

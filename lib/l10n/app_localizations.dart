@@ -100,6 +100,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Lumos'**
   String get appTitle;
+
+  /// No description provided for @commonCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get commonCancel;
+
+  /// No description provided for @commonCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Create'**
+  String get commonCreate;
+
+  /// No description provided for @commonSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get commonSave;
+
+  /// No description provided for @commonDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get commonDelete;
+
+  /// No description provided for @commonRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get commonRetry;
+
+  /// No description provided for @commonRename.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename'**
+  String get commonRename;
+
+  /// No description provided for @folderNewFolder.
+  ///
+  /// In en, this message translates to:
+  /// **'New Folder'**
+  String get folderNewFolder;
+
+  /// No description provided for @folderCreateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create folder'**
+  String get folderCreateTitle;
+
+  /// No description provided for @folderRenameTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename folder'**
+  String get folderRenameTitle;
+
+  /// No description provided for @folderDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete folder'**
+  String get folderDeleteTitle;
+
+  /// No description provided for @folderNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Folder name'**
+  String get folderNameLabel;
+
+  /// No description provided for @folderManagerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Folder Manager'**
+  String get folderManagerTitle;
+
+  /// No description provided for @folderManagerSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Browse tree, create, rename, and soft-delete folders.'**
+  String get folderManagerSubtitle;
+
+  /// No description provided for @folderRoot.
+  ///
+  /// In en, this message translates to:
+  /// **'Root'**
+  String get folderRoot;
+
+  /// No description provided for @folderEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No folders here yet.'**
+  String get folderEmptyTitle;
+
+  /// No description provided for @folderEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create one to start organizing content.'**
+  String get folderEmptySubtitle;
+
+  /// No description provided for @folderDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete \"{name}\" and all subfolders?'**
+  String folderDeleteConfirm(Object name);
+
+  /// No description provided for @folderDepth.
+  ///
+  /// In en, this message translates to:
+  /// **'Depth {depth}'**
+  String folderDepth(int depth);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -24,7 +24,8 @@ class LumosSkillTree extends StatelessWidget {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: nodes.length,
-      separatorBuilder: (_, __) => const SizedBox(height: Insets.spacing8),
+      separatorBuilder: (BuildContext context, int index) =>
+          const SizedBox(height: Insets.spacing8),
       itemBuilder: (BuildContext context, int index) {
         final SkillNodeData node = nodes[index];
         return LumosSkillNode(

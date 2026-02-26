@@ -28,12 +28,7 @@ class QualityContractConst {
 
   static const String lineCommentPrefix = '//';
 
-  static const String maxFileMarker = 'quality-guard: allow-large-file';
-  static const String maxClassMarker = 'quality-guard: allow-large-class';
-  static const String maxFunctionMarker = 'quality-guard: allow-long-function';
-  static const String listChildrenMarker = 'quality-guard: allow-list-children';
-  static const String cachePolicyMarker =
-      'quality-guard: allow-unbounded-cache';
+  static const String forbiddenMarkerPrefix = 'quality-guard:';
 }
 
 enum Severity {
@@ -236,8 +231,6 @@ class FileContext {
   final LineInfo lineInfo;
   final String sourceText;
   final bool isGeneratedLikeFile;
-
-  bool containsMarker(String marker) => sourceText.contains(marker);
 }
 
 abstract class QualityRule {
@@ -261,6 +254,7 @@ Future<void> main() async {
   final QualityContext ctx = QualityContext(config: config, allPaths: allPaths);
 
   final List<QualityRule> rules = <QualityRule>[
+    NoQualityGuardMarkerRule(),
     FileLengthRule(),
     ModelAnnotationRule(),
     RepositoryBoundaryRule(),
@@ -536,8 +530,6 @@ class FileLengthRule implements QualityRule {
 
   @override
   void check(QualityContext ctx, FileContext file) {
-    if (file.containsMarker(QualityContractConst.maxFileMarker)) return;
-
     final int len = file.lines.length;
     if (len <= ctx.config.maxFileLines) return;
 
@@ -548,10 +540,36 @@ class FileLengthRule implements QualityRule {
         severity: Severity.warning,
         rule: name,
         reason:
-            'File length exceeds ${ctx.config.maxFileLines} lines. Split file or add `${QualityContractConst.maxFileMarker}` with justification.',
+            'File length exceeds ${ctx.config.maxFileLines} lines. Split file.',
         lineContent: '$len lines',
       ),
     );
+  }
+}
+
+class NoQualityGuardMarkerRule implements QualityRule {
+  @override
+  String get name => 'NoQualityGuardMarkerRule';
+
+  @override
+  void check(QualityContext ctx, FileContext file) {
+    for (int index = 0; index < file.lines.length; index++) {
+      final String line = file.lines[index];
+      if (!line.contains(QualityContractConst.forbiddenMarkerPrefix)) {
+        continue;
+      }
+      ctx.violations.add(
+        QualityViolation(
+          filePath: file.path,
+          lineNumber: index + 1,
+          severity: Severity.error,
+          rule: name,
+          reason:
+              'quality-guard markers are forbidden. Fix code instead of bypassing rules.',
+          lineContent: line.trim(),
+        ),
+      );
+    }
   }
 }
 
@@ -649,22 +667,9 @@ class ClassAndFunctionLengthRule implements QualityRule {
   }
 
   void _checkClasses(QualityContext ctx, FileContext file) {
-    if (file.containsMarker(QualityContractConst.maxClassMarker)) {
-      // file-level allow
-      return;
-    }
-
     for (final Declaration decl in file.unit.declarations) {
       if (decl is! ClassDeclaration) continue;
-
-      // class-level allow marker on same line (best effort)
       final int startLine = _lineFromOffset(file.lineInfo, decl.offset);
-      if (_lineContentAt(
-        file.lines,
-        startLine,
-      ).contains(QualityContractConst.maxClassMarker)) {
-        continue;
-      }
 
       final int endLine = _lineFromOffset(file.lineInfo, decl.endToken.offset);
       final int len = endLine - startLine + 1;
@@ -678,7 +683,7 @@ class ClassAndFunctionLengthRule implements QualityRule {
           severity: Severity.warning,
           rule: name,
           reason:
-              'Class length exceeds ${ctx.config.maxClassLines} lines. Split class or add `${QualityContractConst.maxClassMarker}` with justification.',
+              'Class length exceeds ${ctx.config.maxClassLines} lines. Split class.',
           lineContent: '$len lines',
         ),
       );
@@ -686,11 +691,6 @@ class ClassAndFunctionLengthRule implements QualityRule {
   }
 
   void _checkFunctions(QualityContext ctx, FileContext file) {
-    if (file.containsMarker(QualityContractConst.maxFunctionMarker)) {
-      // file-level allow
-      return;
-    }
-
     final _FunctionCollector collector = _FunctionCollector();
     file.unit.accept(collector);
 
@@ -701,14 +701,6 @@ class ClassAndFunctionLengthRule implements QualityRule {
 
       if (len <= ctx.config.maxFunctionLines) continue;
 
-      // function-level allow marker on the signature line (best effort)
-      if (_lineContentAt(
-        file.lines,
-        startLine,
-      ).contains(QualityContractConst.maxFunctionMarker)) {
-        continue;
-      }
-
       ctx.violations.add(
         QualityViolation(
           filePath: file.path,
@@ -716,7 +708,7 @@ class ClassAndFunctionLengthRule implements QualityRule {
           severity: Severity.warning,
           rule: name,
           reason:
-              'Function length exceeds ${ctx.config.maxFunctionLines} lines. Extract smaller units or add `${QualityContractConst.maxFunctionMarker}` with justification.',
+              'Function length exceeds ${ctx.config.maxFunctionLines} lines. Extract smaller units.',
           lineContent: '$len lines',
         ),
       );
@@ -1322,7 +1314,6 @@ class UiChildrenPerformanceRule implements QualityRule {
   @override
   void check(QualityContext ctx, FileContext file) {
     if (!_isUiFile(file.path)) return;
-    if (file.containsMarker(QualityContractConst.listChildrenMarker)) return;
 
     final _UiChildrenVisitor v = _UiChildrenVisitor();
     file.unit.accept(v);
@@ -1374,7 +1365,6 @@ class CachePolicyRule implements QualityRule {
   @override
   void check(QualityContext ctx, FileContext file) {
     if (!_isRepositoryOrServiceFile(file.path)) return;
-    if (file.containsMarker(QualityContractConst.cachePolicyMarker)) return;
 
     final _CacheVisitor v = _CacheVisitor();
     file.unit.accept(v);
@@ -1401,7 +1391,7 @@ class CachePolicyRule implements QualityRule {
         severity: Severity.warning,
         rule: name,
         reason:
-            'Cache-like field detected without eviction/TTL policy. Add bounded cache policy or `${QualityContractConst.cachePolicyMarker}` with justification.',
+            'Cache-like field detected without eviction/TTL policy. Add bounded cache policy.',
         lineContent: file.path,
       ),
     );

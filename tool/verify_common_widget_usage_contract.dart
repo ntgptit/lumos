@@ -175,6 +175,16 @@ String _stripLineComment(String line) {
 List<_DisallowedWidgetRule> _disallowedRules() {
   return <_DisallowedWidgetRule>[
     _DisallowedWidgetRule(
+      widgetName: 'AppBar',
+      replacement: 'LumosAppBar',
+      pattern: r'\bAppBar\s*\(',
+    ),
+    _DisallowedWidgetRule(
+      widgetName: 'AlertDialog',
+      replacement: 'LumosDialog/LumosPromptDialog',
+      pattern: r'\bAlertDialog\s*\(',
+    ),
+    _DisallowedWidgetRule(
       widgetName: 'TextField',
       replacement: 'LumosTextField/LumosTextBox/LumosTextArea/LumosSearchBar',
       pattern: r'\bTextField\s*\(',
@@ -213,6 +223,26 @@ List<_DisallowedWidgetRule> _disallowedRules() {
       widgetName: 'FloatingActionButton',
       replacement: 'LumosFloatingActionButton',
       pattern: r'\bFloatingActionButton(?:\.[A-Za-z0-9_]+)?\s*\(',
+    ),
+    _DisallowedWidgetRule(
+      widgetName: 'PopupMenuButton',
+      replacement: 'LumosPopupMenuButton',
+      pattern: r'\bPopupMenuButton(?:\.[A-Za-z0-9_]+)?\s*\(',
+    ),
+    _DisallowedWidgetRule(
+      widgetName: 'ActionChip',
+      replacement: 'LumosActionChip',
+      pattern: r'\bActionChip\s*\(',
+    ),
+    _DisallowedWidgetRule(
+      widgetName: 'DropdownButtonFormField',
+      replacement: 'LumosDropdown',
+      pattern: r'\bDropdownButtonFormField(?:\.[A-Za-z0-9_]+)?\s*\(',
+    ),
+    _DisallowedWidgetRule(
+      widgetName: 'RadioListTile',
+      replacement: 'LumosRadioGroup',
+      pattern: r'\bRadioListTile(?:\.[A-Za-z0-9_]+)?\s*\(',
     ),
   ];
 }

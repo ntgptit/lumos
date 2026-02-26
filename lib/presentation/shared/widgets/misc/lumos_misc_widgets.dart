@@ -178,7 +178,7 @@ class LumosProgressRing extends StatelessWidget {
               color ?? Theme.of(context).colorScheme.primary,
             ),
           ),
-          if (centerChild != null) centerChild!,
+          if (centerChild case final Widget child) child,
         ],
       ),
     );

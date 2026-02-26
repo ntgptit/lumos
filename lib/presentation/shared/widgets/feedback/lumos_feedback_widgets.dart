@@ -10,10 +10,9 @@ class LumosSnackbar extends SnackBar {
     required BuildContext context,
     required String message,
     super.key,
+    super.duration = MotionDurations.snackbar,
     LumosSnackbarType type = LumosSnackbarType.info,
-    Duration duration = MotionDurations.snackbar,
   }) : super(
-         duration: duration,
          behavior: SnackBarBehavior.floating,
          content: LumosText(
            message,

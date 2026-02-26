@@ -8,9 +8,6 @@ class AppColorSchemeConst {
 
   // Single seed keeps light/dark palettes aligned when switching mode.
   static const Color seedColor = Color(0xFF2E5AAC);
-  // Brand accents override generated values for stronger identity.
-  static const Color customBlue = Color(0xFF2E5AAC);
-  static const Color customOrange = Color(0xFFE66F00);
   static const Color highContrastLightForeground = Color(0xFFFFFFFF);
   static const Color highContrastDarkForeground = Color(0xFF000000);
   static const double minimumTextContrastRatio = 4.5;
@@ -36,12 +33,10 @@ ColorScheme _buildColorScheme({
   );
   final Color resolvedOnPrimary = _resolveOnPrimary(
     seededColorScheme: seededColorScheme,
-    primary: AppColorSchemeConst.customBlue,
+    primary: seededColorScheme.primary,
   );
   final ColorScheme colorScheme = seededColorScheme.copyWith(
-    primary: AppColorSchemeConst.customBlue,
     onPrimary: resolvedOnPrimary,
-    tertiary: AppColorSchemeConst.customOrange,
   );
   assert(() {
     _validateColorSchemeContrast(colorScheme: colorScheme);

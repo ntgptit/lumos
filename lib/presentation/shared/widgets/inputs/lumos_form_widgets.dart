@@ -118,7 +118,7 @@ class LumosDropdown<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField<T>(
-      value: value,
+      initialValue: value,
       onChanged: onChanged,
       items: items,
       decoration: InputDecoration(labelText: label, hintText: hint),
@@ -144,12 +144,21 @@ class LumosRadioGroup<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final List<Widget> tiles = _buildTiles();
     if (direction == Axis.horizontal) {
-      return Wrap(spacing: Insets.spacing8, children: _buildTiles());
+      return RadioGroup<T>(
+        groupValue: value,
+        onChanged: onChanged,
+        child: Wrap(spacing: Insets.spacing8, children: tiles),
+      );
     }
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: _buildTiles(),
+    return RadioGroup<T>(
+      groupValue: value,
+      onChanged: onChanged,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: tiles,
+      ),
     );
   }
 
@@ -159,8 +168,6 @@ class LumosRadioGroup<T> extends StatelessWidget {
           (T option) => RadioListTile<T>(
             title: Text(labelBuilder(option), overflow: TextOverflow.ellipsis),
             value: option,
-            groupValue: value,
-            onChanged: onChanged,
             contentPadding: EdgeInsets.zero,
           ),
         )

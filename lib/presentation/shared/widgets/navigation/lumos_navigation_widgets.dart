@@ -3,6 +3,13 @@ import 'package:flutter/material.dart';
 import '../../../../core/constants/dimensions.dart';
 import '../lumos_models.dart';
 
+class LumosScreenTransitionConst {
+  const LumosScreenTransitionConst._();
+
+  static const int durationMs = 360;
+  static const double slideOffsetY = 0.06;
+}
+
 class LumosAppBar extends StatelessWidget implements PreferredSizeWidget {
   const LumosAppBar({
     super.key,
@@ -41,6 +48,56 @@ class LumosAppBar extends StatelessWidget implements PreferredSizeWidget {
       return null;
     }
     return Text(title!, overflow: TextOverflow.ellipsis);
+  }
+}
+
+class LumosScreenTransition extends StatelessWidget {
+  const LumosScreenTransition({
+    required this.child,
+    required this.switchKey,
+    super.key,
+    this.moveForward = true,
+  });
+
+  final Widget child;
+  final Key switchKey;
+  final bool moveForward;
+
+  @override
+  Widget build(BuildContext context) {
+    final Offset beginOffset = moveForward
+        ? const Offset(Insets.spacing0, LumosScreenTransitionConst.slideOffsetY)
+        : const Offset(Insets.spacing0, -LumosScreenTransitionConst.slideOffsetY);
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: LumosScreenTransitionConst.durationMs),
+      switchInCurve: Curves.easeOutCubic,
+      switchOutCurve: Curves.easeInCubic,
+      layoutBuilder: (Widget? currentChild, List<Widget> previousChildren) {
+        return Stack(
+          children: <Widget>[
+            ...previousChildren,
+            if (currentChild case final Widget value) value,
+          ],
+        );
+      },
+      transitionBuilder: (Widget transitionChild, Animation<double> animation) {
+        final Animation<Offset> slideAnimation = Tween<Offset>(
+          begin: beginOffset,
+          end: Offset.zero,
+        ).animate(animation);
+        return FadeTransition(
+          opacity: animation,
+          child: SlideTransition(
+            position: slideAnimation,
+            child: transitionChild,
+          ),
+        );
+      },
+      child: KeyedSubtree(
+        key: switchKey,
+        child: child,
+      ),
+    );
   }
 }
 
