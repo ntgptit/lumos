@@ -7,7 +7,7 @@ class AppColorSchemeConst {
   const AppColorSchemeConst._();
 
   // Single seed keeps light/dark palettes aligned when switching mode.
-  static const Color seedColor = Color(0xFF2E5AAC);
+  static const Color seedColor = Color(0xFF3F5F46);
   static const Color highContrastLightForeground = Color(0xFFFFFFFF);
   static const Color highContrastDarkForeground = Color(0xFF000000);
   static const double minimumTextContrastRatio = 4.5;
@@ -30,6 +30,7 @@ ColorScheme _buildColorScheme({
   final ColorScheme seededColorScheme = ColorScheme.fromSeed(
     seedColor: resolvedSeedColor,
     brightness: brightness,
+    dynamicSchemeVariant: DynamicSchemeVariant.neutral,
   );
   final Color resolvedOnPrimary = _resolveOnPrimary(
     seededColorScheme: seededColorScheme,

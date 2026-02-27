@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/constants/dimensions.dart';
-import '../../../shared/widgets/lumos_widgets.dart';
+import '../../../../../../core/constants/dimensions.dart';
+import '../../../../../shared/widgets/lumos_widgets.dart';
 
 class HomePlaceholderTab extends StatelessWidget {
   const HomePlaceholderTab({

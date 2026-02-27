@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/constants/dimensions.dart';
-import '../../../shared/widgets/lumos_widgets.dart';
-import '../screens/home_screen.dart';
+import '../../../../../../core/constants/dimensions.dart';
+import '../../../../../shared/widgets/lumos_widgets.dart';
+import '../../home_contract.dart';
 
 class HomeStatItem {
   const HomeStatItem({

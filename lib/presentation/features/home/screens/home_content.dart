@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/constants/dimensions.dart';
 import '../../../shared/widgets/lumos_widgets.dart';
-import '../screens/home_screen.dart';
-import 'home_sections_widget.dart';
+import 'home_contract.dart';
+import 'widgets/blocks/home_sections_block.dart';
 
 class HomeContentConst {
   const HomeContentConst._();
@@ -13,12 +13,11 @@ class HomeContentConst {
 }
 
 class HomeContent extends StatelessWidget {
-  const HomeContent({required this.deviceType, super.key});
-
-  final DeviceType deviceType;
+  const HomeContent({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final DeviceType deviceType = context.deviceType;
     final double horizontalPadding = ResponsiveDimensions.adaptive(
       context: context,
       baseValue: Insets.paddingScreen,
