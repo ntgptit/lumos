@@ -21,47 +21,31 @@ class HomeContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final DeviceType deviceType = context.deviceType;
     final AppLocalizations l10n = AppLocalizations.of(context)!;
-    final double horizontalPadding = ResponsiveDimensions.adaptive(
-      context: context,
-      baseValue: Insets.paddingScreen,
-    );
     return Stack(
       children: <Widget>[
         const HomeBackground(),
         SingleChildScrollView(
-          child: Align(
-            alignment: Alignment.topCenter,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                maxWidth: WidgetSizes.maxContentWidth,
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: horizontalPadding,
-                  vertical: Insets.gapBetweenSections,
+          child: LumosScreenFrame(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                _buildAnimatedReveal(
+                  order: 0,
+                  child: HomeHeaderBlock(l10n: l10n),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    _buildAnimatedReveal(
-                      order: 0,
-                      child: HomeHeaderBlock(l10n: l10n),
-                    ),
-                    const SizedBox(height: Insets.gapBetweenSections),
-                    _buildAnimatedReveal(
-                      order: 1,
-                      child: HomeHeroCard(deviceType: deviceType, l10n: l10n),
-                    ),
-                    const SizedBox(height: Insets.gapBetweenSections),
-                    _buildAnimatedReveal(order: 2, child: const HomeStatGrid()),
-                    const SizedBox(height: Insets.gapBetweenSections),
-                    _buildAnimatedReveal(
-                      order: 3,
-                      child: HomeSplitSection(deviceType: deviceType),
-                    ),
-                  ],
+                const SizedBox(height: Insets.gapBetweenSections),
+                _buildAnimatedReveal(
+                  order: 1,
+                  child: HomeHeroCard(deviceType: deviceType, l10n: l10n),
                 ),
-              ),
+                const SizedBox(height: Insets.gapBetweenSections),
+                _buildAnimatedReveal(order: 2, child: const HomeStatGrid()),
+                const SizedBox(height: Insets.gapBetweenSections),
+                _buildAnimatedReveal(
+                  order: 3,
+                  child: HomeSplitSection(deviceType: deviceType),
+                ),
+              ],
             ),
           ),
         ),

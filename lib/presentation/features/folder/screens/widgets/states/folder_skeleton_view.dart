@@ -9,15 +9,22 @@ class FolderSkeletonView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      padding: const EdgeInsets.all(Insets.spacing16),
+      padding: EdgeInsets.zero,
       children: <Widget>[
-        const LumosSkeletonBox(height: Insets.spacing64),
-        const SizedBox(height: Insets.spacing16),
-        ...List<Widget>.generate(
-          6,
-          (int index) => const Padding(
-            padding: EdgeInsets.only(bottom: Insets.spacing8),
-            child: LumosSkeletonBox(height: Insets.spacing64),
+        LumosScreenFrame(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              const LumosSkeletonBox(height: Insets.spacing64),
+              const SizedBox(height: Insets.spacing16),
+              ...List<Widget>.generate(
+                6,
+                (int index) => const Padding(
+                  padding: EdgeInsets.only(bottom: Insets.spacing8),
+                  child: LumosSkeletonBox(height: Insets.spacing64),
+                ),
+              ),
+            ],
           ),
         ),
       ],

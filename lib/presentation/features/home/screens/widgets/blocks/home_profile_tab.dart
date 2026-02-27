@@ -67,6 +67,7 @@ class HomeProfileTab extends ConsumerWidget {
     required AppThemePreference selectedPreference,
   }) {
     return LumosCard(
+      margin: EdgeInsets.zero,
       child: Padding(
         padding: const EdgeInsets.all(Insets.spacing16),
         child: Column(

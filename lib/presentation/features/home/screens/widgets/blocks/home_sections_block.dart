@@ -94,6 +94,7 @@ class HomeStatTile extends StatelessWidget {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return LumosCard(
       padding: const EdgeInsets.all(Insets.spacing16),
+      margin: EdgeInsets.zero,
       child: Row(
         children: <Widget>[
           Container(
@@ -183,6 +184,7 @@ class HomeFocusCard extends StatelessWidget {
       container: true,
       excludeSemantics: true,
       child: LumosCard(
+        margin: EdgeInsets.zero,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -259,6 +261,7 @@ class HomeRecentActivityCard extends StatelessWidget {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return LumosCard(
+      margin: EdgeInsets.zero,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[

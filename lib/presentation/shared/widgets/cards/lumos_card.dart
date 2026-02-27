@@ -9,6 +9,7 @@ class LumosCardConst {
   static const EdgeInsetsGeometry defaultPadding = EdgeInsets.all(
     Insets.paddingScreen,
   );
+  static const double selectedElevationBoost = 1;
 }
 
 class LumosCard extends StatelessWidget {
@@ -39,12 +40,12 @@ class LumosCard extends StatelessWidget {
         borderRadius ?? BorderRadii.medium;
     final BorderSide? borderSide = _resolveBorderSide(colorScheme: colorScheme);
     final ShapeBorder resolvedShape = _resolveShape(
+      theme: theme,
       borderRadius: resolvedBorderRadius,
       borderSide: borderSide,
     );
     final Color? resolvedColor = _resolveCardColor(colorScheme: colorScheme);
-    final double resolvedElevation =
-        elevation ?? theme.cardTheme.elevation ?? WidgetSizes.none;
+    final double resolvedElevation = _resolveElevation(theme: theme);
     final EdgeInsetsGeometry? resolvedMargin = margin ?? theme.cardTheme.margin;
     final Widget content = Padding(padding: padding, child: child);
     final Widget themedContent = _buildThemedContent(
@@ -69,16 +70,34 @@ class LumosCard extends StatelessWidget {
   }
 
   ShapeBorder _resolveShape({
+    required ThemeData theme,
     required BorderRadius borderRadius,
     required BorderSide? borderSide,
   }) {
-    if (borderSide == null) {
-      return RoundedRectangleBorder(borderRadius: borderRadius);
+    if (borderSide case final BorderSide value) {
+      if (borderRadius == BorderRadii.medium) {
+        return AppShape.cardShape(side: value);
+      }
+      return RoundedRectangleBorder(borderRadius: borderRadius, side: value);
     }
+
     if (borderRadius == BorderRadii.medium) {
-      return AppShape.cardShape(side: borderSide);
+      if (theme.cardTheme.shape case final ShapeBorder cardShape) {
+        return cardShape;
+      }
+      return AppShape.cardShape();
     }
-    return RoundedRectangleBorder(borderRadius: borderRadius, side: borderSide);
+
+    return RoundedRectangleBorder(borderRadius: borderRadius);
+  }
+
+  double _resolveElevation({required ThemeData theme}) {
+    final double baseElevation =
+        elevation ?? theme.cardTheme.elevation ?? WidgetSizes.none;
+    if (!isSelected) {
+      return baseElevation;
+    }
+    return baseElevation + LumosCardConst.selectedElevationBoost;
   }
 
   BorderSide? _resolveBorderSide({required ColorScheme colorScheme}) {

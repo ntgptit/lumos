@@ -24,6 +24,7 @@ class HomePlaceholderTab extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(Insets.spacing16),
           child: LumosCard(
+            margin: EdgeInsets.zero,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[

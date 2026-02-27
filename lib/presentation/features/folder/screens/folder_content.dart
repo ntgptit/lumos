@@ -14,6 +14,12 @@ import 'widgets/states/folder_empty_view.dart';
 import 'widgets/states/folder_error_banner.dart';
 import 'widgets/states/folder_mutating_overlay.dart';
 
+class FolderContentConst {
+  const FolderContentConst._();
+
+  static const double listBottomSpacing = Insets.spacing64;
+}
+
 class FolderContent extends ConsumerWidget {
   const FolderContent({required this.state, super.key});
 
@@ -22,6 +28,9 @@ class FolderContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
+    final double horizontalInset = LumosScreenFrame.resolveHorizontalInset(
+      context,
+    );
     final FolderAsyncController controller = ref.read(
       folderAsyncControllerProvider.notifier,
     );
@@ -34,7 +43,12 @@ class FolderContent extends ConsumerWidget {
           controller: controller,
           visibleFolders: visibleFolders,
         ),
-        _buildCreateButton(context: context, ref: ref, l10n: l10n),
+        _buildCreateButton(
+          context: context,
+          ref: ref,
+          l10n: l10n,
+          horizontalInset: horizontalInset,
+        ),
         _buildMutatingOverlay(context: context),
       ],
     );
@@ -49,26 +63,33 @@ class FolderContent extends ConsumerWidget {
     return RefreshIndicator(
       onRefresh: controller.refresh,
       child: ListView(
-        padding: const EdgeInsets.all(Insets.spacing16),
+        padding: EdgeInsets.zero,
         children: <Widget>[
-          FolderHeader(
-            breadcrumbItems: state.breadcrumbItems,
-            currentParentId: state.currentParentId,
-            onOpenRoot: controller.openRoot,
-            onOpenBreadcrumb: controller.goToBreadcrumb,
+          LumosScreenFrame(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                FolderHeader(
+                  breadcrumbItems: state.breadcrumbItems,
+                  currentParentId: state.currentParentId,
+                  onOpenRoot: controller.openRoot,
+                  onOpenBreadcrumb: controller.goToBreadcrumb,
+                ),
+                const SizedBox(height: Insets.spacing16),
+                if (state.inlineErrorMessage case final String message)
+                  FolderErrorBanner(message: message),
+                if (state.inlineErrorMessage != null)
+                  const SizedBox(height: Insets.spacing12),
+                ..._buildFolderTiles(
+                  context: context,
+                  ref: ref,
+                  visibleFolders: visibleFolders,
+                ),
+                if (visibleFolders.isEmpty) const FolderEmptyView(),
+                const SizedBox(height: FolderContentConst.listBottomSpacing),
+              ],
+            ),
           ),
-          const SizedBox(height: Insets.spacing16),
-          if (state.inlineErrorMessage case final String message)
-            FolderErrorBanner(message: message),
-          if (state.inlineErrorMessage != null)
-            const SizedBox(height: Insets.spacing12),
-          ..._buildFolderTiles(
-            context: context,
-            ref: ref,
-            visibleFolders: visibleFolders,
-          ),
-          if (visibleFolders.isEmpty) const FolderEmptyView(),
-          const SizedBox(height: Insets.spacing64),
         ],
       ),
     );
@@ -123,13 +144,14 @@ class FolderContent extends ConsumerWidget {
     required BuildContext context,
     required WidgetRef ref,
     required AppLocalizations l10n,
+    required double horizontalInset,
   }) {
     if (state.isMutating) {
       return const SizedBox.shrink();
     }
     return Positioned(
-      right: Insets.spacing16,
-      bottom: Insets.spacing16,
+      right: horizontalInset,
+      bottom: Insets.gapBetweenSections,
       child: LumosFloatingActionButton(
         onPressed: () => showFolderNameDialog(
           context: context,
