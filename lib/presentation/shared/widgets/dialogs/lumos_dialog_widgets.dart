@@ -15,6 +15,8 @@ class LumosDialog extends StatelessWidget {
     this.onConfirm,
     this.onCancel,
     this.isDestructive = false,
+    this.constraints,
+    this.insetPadding,
   });
 
   final String title;
@@ -24,10 +26,14 @@ class LumosDialog extends StatelessWidget {
   final VoidCallback? onConfirm;
   final VoidCallback? onCancel;
   final bool isDestructive;
+  final BoxConstraints? constraints;
+  final EdgeInsets? insetPadding;
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      constraints: constraints,
+      insetPadding: insetPadding,
       title: Text(title, overflow: TextOverflow.ellipsis),
       content: _buildContent(),
       actions: _buildActions(),
@@ -73,6 +79,8 @@ class LumosPromptDialog extends StatelessWidget {
     required this.onConfirm,
     super.key,
     this.initialValue = '',
+    this.constraints,
+    this.insetPadding,
   });
 
   final String title;
@@ -82,6 +90,8 @@ class LumosPromptDialog extends StatelessWidget {
   final VoidCallback onCancel;
   final ValueChanged<String> onConfirm;
   final String initialValue;
+  final BoxConstraints? constraints;
+  final EdgeInsets? insetPadding;
 
   @override
   Widget build(BuildContext context) {
@@ -89,6 +99,8 @@ class LumosPromptDialog extends StatelessWidget {
       text: initialValue,
     );
     return AlertDialog(
+      constraints: constraints,
+      insetPadding: insetPadding,
       title: Text(title, overflow: TextOverflow.ellipsis),
       content: LumosTextField(controller: controller, label: label),
       actions: <Widget>[

@@ -38,10 +38,13 @@ class FolderTile extends StatelessWidget {
         LumosActionListItem(
           key: FolderTileActionKey.rename,
           label: l10n.commonRename,
+          icon: Icons.drive_file_rename_outline_rounded,
         ),
         LumosActionListItem(
           key: FolderTileActionKey.delete,
           label: l10n.commonDelete,
+          icon: Icons.delete_outline_rounded,
+          tone: LumosActionListItemTone.critical,
         ),
       ],
       onActionSelected: (String actionKey) {

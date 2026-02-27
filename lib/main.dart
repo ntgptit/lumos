@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -52,11 +53,32 @@ String _resolveEnvFileByFlavor() {
   return '${AppBootstrapConst.envPrefix}$flavor';
 }
 
-class AppEntryPoint extends ConsumerWidget {
+class AppEntryPoint extends ConsumerStatefulWidget {
   const AppEntryPoint({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AppEntryPoint> createState() {
+    return _AppEntryPointState();
+  }
+}
+
+class _AppEntryPointState extends ConsumerState<AppEntryPoint> {
+  @override
+  void reassemble() {
+    super.reassemble();
+    if (!kDebugMode) {
+      return;
+    }
+    _invalidateThemeProviders();
+  }
+
+  void _invalidateThemeProviders() {
+    ref.invalidate(appLightThemeProvider);
+    ref.invalidate(appDarkThemeProvider);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final routerConfig = ref.watch(appRouterProvider);
     final themeMode = ref.watch(appThemeModeProvider);
     final lightTheme = ref.watch(appLightThemeProvider);
