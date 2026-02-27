@@ -18,8 +18,8 @@ class LumosShimmer extends StatelessWidget {
     return TweenAnimationBuilder<double>(
       duration: duration,
       tween: Tween<double>(
-        begin: WidgetOpacities.shimmerStart,
-        end: WidgetOpacities.shimmerEnd,
+        begin: WidgetOpacities.elevationLevel2,
+        end: WidgetOpacities.stateDrag,
       ),
       builder: (BuildContext context, double animatedOpacity, Widget? child) {
         return ShaderMask(
@@ -31,9 +31,8 @@ class LumosShimmer extends StatelessWidget {
                 colorScheme.surfaceContainerHighest.withValues(
                   alpha: animatedOpacity,
                 ),
-                colorScheme.surfaceContainerHigh.withValues(
-                  alpha:
-                      animatedOpacity + WidgetOpacities.shimmerHighlightOffset,
+                colorScheme.surfaceContainer.withValues(
+                  alpha: WidgetOpacities.statePress,
                 ),
                 colorScheme.surfaceContainerHighest.withValues(
                   alpha: animatedOpacity,

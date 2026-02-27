@@ -28,7 +28,7 @@ class InputDecorationThemes {
     return InputDecorationTheme(
       filled: InputDecorationThemeConst.filled,
       fillColor: colorScheme.onSurface.withValues(
-        alpha: WidgetSizes.inputFillOpacity,
+        alpha: WidgetOpacities.stateHover,
       ),
       border: baseBorder,
       enabledBorder: baseBorder,

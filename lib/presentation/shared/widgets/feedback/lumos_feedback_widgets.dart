@@ -69,7 +69,7 @@ class LumosCelebration extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(
           context,
-        ).colorScheme.tertiary.withValues(alpha: WidgetSizes.inputFillOpacity),
+        ).colorScheme.tertiary.withValues(alpha: WidgetOpacities.stateHover),
         borderRadius: BorderRadii.large,
       ),
       child: Row(
@@ -192,7 +192,7 @@ class LumosTipMessage extends StatelessWidget {
       decoration: BoxDecoration(
         color: _resolveColor(
           context,
-        ).withValues(alpha: WidgetSizes.inputFillOpacity),
+        ).withValues(alpha: WidgetOpacities.stateHover),
         borderRadius: BorderRadii.medium,
       ),
       child: Row(

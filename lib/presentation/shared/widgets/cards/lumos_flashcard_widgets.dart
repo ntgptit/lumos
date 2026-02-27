@@ -308,12 +308,12 @@ class LumosFlashcard extends StatelessWidget {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     if (status == FlashcardStatus.correct) {
       return colorScheme.tertiaryContainer.withValues(
-        alpha: WidgetSizes.inputFillOpacity,
+        alpha: WidgetOpacities.stateHover,
       );
     }
     if (status == FlashcardStatus.incorrect) {
       return colorScheme.errorContainer.withValues(
-        alpha: WidgetSizes.inputFillOpacity,
+        alpha: WidgetOpacities.stateHover,
       );
     }
     return null;

@@ -292,7 +292,7 @@ class HomeActivityItem extends StatelessWidget {
       padding: const EdgeInsets.all(Insets.spacing12),
       decoration: BoxDecoration(
         borderRadius: BorderRadii.medium,
-        color: color.withValues(alpha: WidgetOpacities.level08),
+        color: color.withValues(alpha: WidgetOpacities.stateHover),
       ),
       child: Row(
         children: <Widget>[

@@ -30,3 +30,8 @@ extension ThemeContextExtension on BuildContext {
     return AppSemanticColors.fromColorScheme(colorScheme: colorScheme);
   }
 }
+
+extension ColorSchemeCompatibilityExtension on ColorScheme {
+  // Compatibility alias to keep project contract naming stable.
+  Color get inverseOnSurface => onInverseSurface;
+}

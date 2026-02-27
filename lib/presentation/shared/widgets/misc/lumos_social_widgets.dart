@@ -158,9 +158,9 @@ class LumosLeaderboardRow extends StatelessWidget {
       decoration: BoxDecoration(
         color: isCurrentUser
             ? Theme.of(context).colorScheme.primaryContainer
-            : Theme.of(
-                context,
-              ).colorScheme.surface.withValues(alpha: WidgetOpacities.none),
+            : Theme.of(context).colorScheme.surface.withValues(
+                alpha: WidgetOpacities.transparent,
+              ),
         borderRadius: BorderRadii.medium,
       ),
       child: Row(

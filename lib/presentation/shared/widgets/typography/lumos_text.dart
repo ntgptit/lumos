@@ -4,6 +4,9 @@ class LumosTextConst {
   const LumosTextConst._();
 
   static const LumosTextStyle defaultStyle = LumosTextStyle.bodyMedium;
+  static const LumosTextTone defaultTone = LumosTextTone.auto;
+  static const LumosTextContainerRole defaultContainerRole =
+      LumosTextContainerRole.surface;
 }
 
 enum LumosTextStyle {
@@ -24,11 +27,17 @@ enum LumosTextStyle {
   labelSmall,
 }
 
+enum LumosTextTone { auto, primary, secondary }
+
+enum LumosTextContainerRole { surface, primaryContainer, secondaryContainer }
+
 class LumosText extends StatelessWidget {
   const LumosText(
     this.text, {
     super.key,
     this.style = LumosTextConst.defaultStyle,
+    this.tone = LumosTextConst.defaultTone,
+    this.containerRole = LumosTextConst.defaultContainerRole,
     this.align,
     this.color,
     this.maxLines,
@@ -37,6 +46,8 @@ class LumosText extends StatelessWidget {
 
   final String text;
   final LumosTextStyle style;
+  final LumosTextTone tone;
+  final LumosTextContainerRole containerRole;
   final TextAlign? align;
   final Color? color;
   final int? maxLines;
@@ -44,9 +55,11 @@ class LumosText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextTheme textTheme = Theme.of(context).textTheme;
+    final ThemeData theme = Theme.of(context);
+    final TextTheme textTheme = theme.textTheme;
     final TextStyle baseStyle = _resolveTextStyle(textTheme);
-    final TextStyle resolvedStyle = _resolveColorOverride(baseStyle);
+    final Color resolvedColor = _resolveColor(theme: theme);
+    final TextStyle resolvedStyle = baseStyle.copyWith(color: resolvedColor);
     return Text(
       text,
       style: resolvedStyle,
@@ -102,10 +115,62 @@ class LumosText extends StatelessWidget {
     return textTheme.bodyMedium ?? const TextStyle();
   }
 
-  TextStyle _resolveColorOverride(TextStyle baseStyle) {
-    if (color == null) {
-      return baseStyle;
+  Color _resolveColor({required ThemeData theme}) {
+    if (color case final Color explicitColor) {
+      return explicitColor;
     }
-    return baseStyle.copyWith(color: color);
+    final ColorScheme colorScheme = theme.colorScheme;
+    final LumosTextTone resolvedTone = _resolveTone();
+    if (containerRole == LumosTextContainerRole.primaryContainer) {
+      return colorScheme.onPrimaryContainer;
+    }
+    if (containerRole == LumosTextContainerRole.secondaryContainer) {
+      return colorScheme.onSecondaryContainer;
+    }
+    if (resolvedTone == LumosTextTone.primary) {
+      return colorScheme.onSurface;
+    }
+    return colorScheme.onSurfaceVariant;
+  }
+
+  LumosTextTone _resolveTone() {
+    if (tone != LumosTextTone.auto) {
+      return tone;
+    }
+    if (_isPrimaryStyle()) {
+      return LumosTextTone.primary;
+    }
+    return LumosTextTone.secondary;
+  }
+
+  bool _isPrimaryStyle() {
+    if (style == LumosTextStyle.displayLarge) {
+      return true;
+    }
+    if (style == LumosTextStyle.displayMedium) {
+      return true;
+    }
+    if (style == LumosTextStyle.displaySmall) {
+      return true;
+    }
+    if (style == LumosTextStyle.headlineLarge) {
+      return true;
+    }
+    if (style == LumosTextStyle.headlineMedium) {
+      return true;
+    }
+    if (style == LumosTextStyle.headlineSmall) {
+      return true;
+    }
+    if (style == LumosTextStyle.titleLarge) {
+      return true;
+    }
+    if (style == LumosTextStyle.titleMedium) {
+      return true;
+    }
+    if (style == LumosTextStyle.titleSmall) {
+      return true;
+    }
+    return false;
   }
 }

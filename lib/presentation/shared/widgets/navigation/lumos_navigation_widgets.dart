@@ -181,9 +181,9 @@ class LumosSegmentedControl extends StatelessWidget {
           decoration: BoxDecoration(
             color: isSelected
                 ? Theme.of(context).colorScheme.primary
-                : Theme.of(
-                    context,
-                  ).colorScheme.surface.withValues(alpha: WidgetOpacities.none),
+                : Theme.of(context).colorScheme.surface.withValues(
+                    alpha: WidgetOpacities.transparent,
+                  ),
             borderRadius: BorderRadii.medium,
           ),
           child: Text(

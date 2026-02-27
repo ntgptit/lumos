@@ -95,46 +95,90 @@ class LumosButton extends StatelessWidget {
   }
 
   ButtonStyle _resolveButtonStyle(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final _ButtonStyleTokens tokens = _resolveButtonStyleTokens(
+      colorScheme: colorScheme,
+    );
+    if (type == LumosButtonType.primary) {
+      final ButtonStyle baseStyle = _buildFilledStyle(tokens: tokens);
+      return _withStateOverlay(style: baseStyle, colorScheme: colorScheme);
+    }
+    if (type == LumosButtonType.secondary) {
+      final ButtonStyle baseStyle = _buildFilledStyle(tokens: tokens);
+      return _withStateOverlay(style: baseStyle, colorScheme: colorScheme);
+    }
+    if (type == LumosButtonType.outline) {
+      final ButtonStyle baseStyle = _buildOutlineStyle(
+        colorScheme: colorScheme,
+        tokens: tokens,
+      );
+      return _withStateOverlay(style: baseStyle, colorScheme: colorScheme);
+    }
+    final ButtonStyle baseStyle = _buildTextStyle(tokens: tokens);
+    return _withStateOverlay(style: baseStyle, colorScheme: colorScheme);
+  }
+
+  _ButtonStyleTokens _resolveButtonStyleTokens({
+    required ColorScheme colorScheme,
+  }) {
     final double buttonHeight = _resolveButtonHeight();
     final EdgeInsetsGeometry buttonPadding = _resolveButtonPadding();
     final OutlinedBorder shape = const RoundedRectangleBorder(
       borderRadius: BorderRadii.medium,
     );
-    if (type == LumosButtonType.primary) {
-      return FilledButton.styleFrom(
-        minimumSize: Size(WidgetSizes.minTouchTarget, buttonHeight),
-        padding: buttonPadding,
-        shape: shape,
-        backgroundColor: customColor,
-      );
-    }
-    if (type == LumosButtonType.secondary) {
-      return FilledButton.styleFrom(
-        minimumSize: Size(WidgetSizes.minTouchTarget, buttonHeight),
-        padding: buttonPadding,
-        shape: shape,
-        backgroundColor: customColor,
-      );
-    }
-    if (type == LumosButtonType.outline) {
-      final Color borderColor =
-          customColor ?? Theme.of(context).colorScheme.outline;
-      return OutlinedButton.styleFrom(
-        minimumSize: Size(WidgetSizes.minTouchTarget, buttonHeight),
-        padding: buttonPadding,
-        shape: shape,
-        side: BorderSide(
-          color: borderColor,
-          width: WidgetSizes.borderWidthRegular,
-        ),
-        foregroundColor: customColor,
-      );
-    }
-    return TextButton.styleFrom(
-      minimumSize: Size(WidgetSizes.minTouchTarget, buttonHeight),
-      padding: buttonPadding,
+    final Color disabledBackground = colorScheme.onSurface.withValues(
+      alpha: WidgetOpacities.divider,
+    );
+    final Color disabledForeground = colorScheme.onSurface.withValues(
+      alpha: WidgetOpacities.disabledContent,
+    );
+    return _ButtonStyleTokens(
+      buttonHeight: buttonHeight,
+      buttonPadding: buttonPadding,
       shape: shape,
+      disabledBackground: disabledBackground,
+      disabledForeground: disabledForeground,
+    );
+  }
+
+  ButtonStyle _buildFilledStyle({required _ButtonStyleTokens tokens}) {
+    return FilledButton.styleFrom(
+      minimumSize: Size(WidgetSizes.minTouchTarget, tokens.buttonHeight),
+      padding: tokens.buttonPadding,
+      shape: tokens.shape,
+      backgroundColor: customColor,
+      disabledBackgroundColor: tokens.disabledBackground,
+      disabledForegroundColor: tokens.disabledForeground,
+    );
+  }
+
+  ButtonStyle _buildOutlineStyle({
+    required ColorScheme colorScheme,
+    required _ButtonStyleTokens tokens,
+  }) {
+    final Color borderColor = customColor ?? colorScheme.outline;
+    return OutlinedButton.styleFrom(
+      minimumSize: Size(WidgetSizes.minTouchTarget, tokens.buttonHeight),
+      padding: tokens.buttonPadding,
+      shape: tokens.shape,
+      side: BorderSide(
+        color: borderColor,
+        width: WidgetSizes.borderWidthRegular,
+      ),
       foregroundColor: customColor,
+      disabledBackgroundColor: tokens.disabledBackground,
+      disabledForegroundColor: tokens.disabledForeground,
+    );
+  }
+
+  ButtonStyle _buildTextStyle({required _ButtonStyleTokens tokens}) {
+    return TextButton.styleFrom(
+      minimumSize: Size(WidgetSizes.minTouchTarget, tokens.buttonHeight),
+      padding: tokens.buttonPadding,
+      shape: tokens.shape,
+      foregroundColor: customColor,
+      disabledBackgroundColor: tokens.disabledBackground,
+      disabledForegroundColor: tokens.disabledForeground,
     );
   }
 
@@ -198,4 +242,61 @@ class LumosButton extends StatelessWidget {
     }
     return colorScheme.primary;
   }
+
+  ButtonStyle _withStateOverlay({
+    required ButtonStyle style,
+    required ColorScheme colorScheme,
+  }) {
+    final Color overlayBaseColor = _resolveOverlayBaseColor(
+      colorScheme: colorScheme,
+    );
+    return style.copyWith(
+      overlayColor: WidgetStateProperty.resolveWith<Color?>((
+        Set<WidgetState> states,
+      ) {
+        if (states.contains(WidgetState.pressed)) {
+          return overlayBaseColor.withValues(alpha: WidgetOpacities.statePress);
+        }
+        if (states.contains(WidgetState.focused)) {
+          return overlayBaseColor.withValues(alpha: WidgetOpacities.stateFocus);
+        }
+        if (states.contains(WidgetState.hovered)) {
+          return overlayBaseColor.withValues(alpha: WidgetOpacities.stateHover);
+        }
+        return null;
+      }),
+      shadowColor: WidgetStatePropertyAll<Color>(
+        colorScheme.surface.withValues(alpha: WidgetOpacities.transparent),
+      ),
+      surfaceTintColor: WidgetStatePropertyAll<Color>(
+        colorScheme.surface.withValues(alpha: WidgetOpacities.transparent),
+      ),
+    );
+  }
+
+  Color _resolveOverlayBaseColor({required ColorScheme colorScheme}) {
+    if (type == LumosButtonType.primary) {
+      return colorScheme.primary;
+    }
+    if (type == LumosButtonType.secondary) {
+      return colorScheme.primary;
+    }
+    return colorScheme.onSurface;
+  }
+}
+
+class _ButtonStyleTokens {
+  const _ButtonStyleTokens({
+    required this.buttonHeight,
+    required this.buttonPadding,
+    required this.shape,
+    required this.disabledBackground,
+    required this.disabledForeground,
+  });
+
+  final double buttonHeight;
+  final EdgeInsetsGeometry buttonPadding;
+  final OutlinedBorder shape;
+  final Color disabledBackground;
+  final Color disabledForeground;
 }

@@ -11,9 +11,10 @@ class AppShape {
     );
   }
 
-  static RoundedRectangleBorder cardShape() {
+  static RoundedRectangleBorder cardShape({BorderSide side = BorderSide.none}) {
     return RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(Radius.radiusCard),
+      side: side,
     );
   }
 

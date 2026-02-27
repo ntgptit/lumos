@@ -113,7 +113,7 @@ class HomeBackground extends StatelessWidget {
               right: -Insets.spacing64,
               child: HomeGlowBlob(
                 color: colorScheme.primary.withValues(
-                  alpha: WidgetOpacities.level14,
+                  alpha: WidgetOpacities.elevationLevel5,
                 ),
                 size: Insets.spacing64 * 3,
               ),
@@ -123,7 +123,7 @@ class HomeBackground extends StatelessWidget {
               top: Insets.spacing64 * 2,
               child: HomeGlowBlob(
                 color: colorScheme.tertiary.withValues(
-                  alpha: WidgetOpacities.level10,
+                  alpha: WidgetOpacities.elevationLevel3,
                 ),
                 size: Insets.spacing64 * 2.2,
               ),
@@ -271,7 +271,9 @@ class HomeHeroCard extends StatelessWidget {
       ),
       boxShadow: <BoxShadow>[
         BoxShadow(
-          color: colorScheme.primary.withValues(alpha: WidgetOpacities.level24),
+          color: colorScheme.primary.withValues(
+            alpha: WidgetOpacities.elevationLevel5,
+          ),
           blurRadius: Insets.spacing24,
           offset: const Offset(Insets.spacing0, Insets.spacing12),
         ),
@@ -295,7 +297,7 @@ class HomeHeroCard extends StatelessWidget {
           ),
           decoration: BoxDecoration(
             color: colorScheme.onPrimary.withValues(
-              alpha: WidgetOpacities.level20,
+              alpha: WidgetOpacities.elevationLevel4,
             ),
             borderRadius: BorderRadii.medium,
           ),

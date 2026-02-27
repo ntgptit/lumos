@@ -36,10 +36,11 @@ class Radius {
   static const double radiusLarge = 12;
   static const double radiusXLarge = 16;
   static const double radiusCircle = 100;
+  static const double radiusSurface = radiusMedium;
 
-  static const double radiusButton = radiusMedium;
-  static const double radiusCard = radiusMedium;
-  static const double radiusDialog = radiusLarge;
+  static const double radiusButton = radiusSurface;
+  static const double radiusCard = radiusSurface;
+  static const double radiusDialog = radiusSurface;
 }
 
 class BorderRadii {
@@ -75,7 +76,6 @@ class WidgetSizes {
 
   static const double none = Insets.spacing0;
   static const double borderWidthRegular = 1.2;
-  static const double inputFillOpacity = WidgetOpacities.level08;
   static const double minTouchTarget = 48;
 
   static const double buttonHeightSmall = 32;
@@ -92,17 +92,29 @@ class WidgetSizes {
 class WidgetOpacities {
   const WidgetOpacities._();
 
-  static const double none = Insets.spacing0;
-  static const double level08 = 0.08;
-  static const double level10 = 0.1;
-  static const double level13 = 0.13;
-  static const double level14 = 0.14;
-  static const double level20 = 0.2;
-  static const double level24 = 0.24;
+  static const double transparent = Insets.spacing0;
 
-  static const double shimmerStart = 0.25;
-  static const double shimmerEnd = 0.7;
-  static const double shimmerHighlightOffset = level10;
+  static const double divider = 0.12;
+
+  static const double scrimLight = 0.32;
+  static const double scrimDark = 0.4;
+
+  static const double disabledContent = 0.38;
+
+  static const double stateHover = 0.08;
+  static const double stateFocus = 0.12;
+  static const double statePress = 0.12;
+  static const double stateDrag = 0.16;
+
+  static const double elevationLevel1 = 0.05;
+  static const double elevationLevel2 = 0.08;
+  static const double elevationLevel3 = 0.11;
+  static const double elevationLevel4 = 0.12;
+  static const double elevationLevel5 = 0.14;
+
+  static const double lowEmphasis = Insets.spacing0;
+  static const double hint = Insets.spacing0;
+  static const double hintCustom = 0.38;
 }
 
 class AppDurations {

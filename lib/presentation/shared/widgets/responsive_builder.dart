@@ -11,25 +11,43 @@ class ResponsiveBuilder extends StatelessWidget {
     super.key,
     this.tabletBuilder,
     this.desktopBuilder,
+    this.padding = Insets.screenPadding,
+    this.applyPadding = true,
   });
 
   final ResponsiveWidgetBuilder mobileBuilder;
   final ResponsiveWidgetBuilder? tabletBuilder;
   final ResponsiveWidgetBuilder? desktopBuilder;
+  final EdgeInsetsGeometry padding;
+  final bool applyPadding;
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         final DeviceType deviceType = constraints.deviceType;
-        if (deviceType == DeviceType.desktop && desktopBuilder != null) {
-          return desktopBuilder!.call(context, deviceType);
+        final Widget body = _buildBody(
+          context: context,
+          deviceType: deviceType,
+        );
+        if (!applyPadding) {
+          return body;
         }
-        if (deviceType == DeviceType.tablet && tabletBuilder != null) {
-          return tabletBuilder!.call(context, deviceType);
-        }
-        return mobileBuilder.call(context, deviceType);
+        return Padding(padding: padding, child: body);
       },
     );
+  }
+
+  Widget _buildBody({
+    required BuildContext context,
+    required DeviceType deviceType,
+  }) {
+    if (deviceType == DeviceType.desktop && desktopBuilder != null) {
+      return desktopBuilder!.call(context, deviceType);
+    }
+    if (deviceType == DeviceType.tablet && tabletBuilder != null) {
+      return tabletBuilder!.call(context, deviceType);
+    }
+    return mobileBuilder.call(context, deviceType);
   }
 }
