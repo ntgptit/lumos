@@ -5,6 +5,17 @@ import '../buttons/lumos_button.dart';
 import '../inputs/lumos_form_widgets.dart';
 import '../lumos_models.dart';
 
+class LumosDialogSizingConst {
+  const LumosDialogSizingConst._();
+
+  static const double dialogWidthFactor = 0.84;
+  static const double dialogMinWidth = 340;
+  static const double dialogMaxWidth = 620;
+  static const double dialogHorizontalInset = Insets.spacing16;
+  static const double dialogMinScreenInset = Insets.spacing8;
+  static const double dialogVerticalInset = Insets.spacing24;
+}
+
 class LumosDialog extends StatelessWidget {
   const LumosDialog({
     required this.title,
@@ -31,9 +42,17 @@ class LumosDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final BoxConstraints resolvedConstraints =
+        constraints ?? _resolveDialogConstraints(context: context);
+    final EdgeInsets resolvedInsetPadding =
+        insetPadding ??
+        _resolveDialogInsetPadding(
+          context: context,
+          constraints: resolvedConstraints,
+        );
     return AlertDialog(
-      constraints: constraints,
-      insetPadding: insetPadding,
+      constraints: resolvedConstraints,
+      insetPadding: resolvedInsetPadding,
       title: Text(title, overflow: TextOverflow.ellipsis),
       content: _buildContent(),
       actions: _buildActions(),
@@ -98,9 +117,17 @@ class LumosPromptDialog extends StatelessWidget {
     final TextEditingController controller = TextEditingController(
       text: initialValue,
     );
+    final BoxConstraints resolvedConstraints =
+        constraints ?? _resolveDialogConstraints(context: context);
+    final EdgeInsets resolvedInsetPadding =
+        insetPadding ??
+        _resolveDialogInsetPadding(
+          context: context,
+          constraints: resolvedConstraints,
+        );
     return AlertDialog(
-      constraints: constraints,
-      insetPadding: insetPadding,
+      constraints: resolvedConstraints,
+      insetPadding: resolvedInsetPadding,
       title: Text(title, overflow: TextOverflow.ellipsis),
       content: LumosTextField(controller: controller, label: label),
       actions: <Widget>[
@@ -121,6 +148,49 @@ class LumosPromptDialog extends StatelessWidget {
       ],
     );
   }
+}
+
+BoxConstraints _resolveDialogConstraints({required BuildContext context}) {
+  final double dialogWidth = _resolveDialogWidth(context: context);
+  return BoxConstraints(minWidth: dialogWidth, maxWidth: dialogWidth);
+}
+
+EdgeInsets _resolveDialogInsetPadding({
+  required BuildContext context,
+  required BoxConstraints constraints,
+}) {
+  final double screenWidth = MediaQuery.sizeOf(context).width;
+  final double dialogWidth = constraints.maxWidth;
+  final double rawInset = (screenWidth - dialogWidth) / 2;
+  final double horizontalInset = rawInset
+      .clamp(LumosDialogSizingConst.dialogMinScreenInset, screenWidth)
+      .toDouble();
+  return EdgeInsets.symmetric(
+    horizontal: horizontalInset,
+    vertical: LumosDialogSizingConst.dialogVerticalInset,
+  );
+}
+
+double _resolveDialogWidth({required BuildContext context}) {
+  final double screenWidth = MediaQuery.sizeOf(context).width;
+  final double maxAvailableWidth =
+      screenWidth - (LumosDialogSizingConst.dialogHorizontalInset * 2);
+  if (maxAvailableWidth <= LumosDialogSizingConst.dialogMinWidth) {
+    return maxAvailableWidth;
+  }
+
+  final double scaledWidth =
+      screenWidth * LumosDialogSizingConst.dialogWidthFactor;
+  if (scaledWidth < LumosDialogSizingConst.dialogMinWidth) {
+    return LumosDialogSizingConst.dialogMinWidth;
+  }
+  if (scaledWidth > LumosDialogSizingConst.dialogMaxWidth) {
+    return LumosDialogSizingConst.dialogMaxWidth;
+  }
+  if (scaledWidth > maxAvailableWidth) {
+    return maxAvailableWidth;
+  }
+  return scaledWidth;
 }
 
 class LumosBottomSheet extends StatelessWidget {

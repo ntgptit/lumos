@@ -18,24 +18,15 @@ class FolderAsyncController extends _$FolderAsyncController {
 
   Future<void> refresh() async {
     final int? parentId = state.asData?.value.currentParentId;
-    state = const AsyncLoading<FolderState>();
-    state = await AsyncValue.guard<FolderState>(() async {
-      return _loadState(parentId: parentId);
-    });
+    await _replaceState(parentId: parentId);
   }
 
   Future<void> openRoot() async {
-    state = const AsyncLoading<FolderState>();
-    state = await AsyncValue.guard<FolderState>(() async {
-      return _loadState(parentId: null);
-    });
+    await _replaceState(parentId: null);
   }
 
   Future<void> openFolder(int folderId) async {
-    state = const AsyncLoading<FolderState>();
-    state = await AsyncValue.guard<FolderState>(() async {
-      return _loadState(parentId: folderId);
-    });
+    await _replaceState(parentId: folderId);
   }
 
   Future<void> goToBreadcrumb(int? folderId) async {
@@ -106,11 +97,23 @@ class FolderAsyncController extends _$FolderAsyncController {
       );
       return;
     }
+    try {
+      final FolderState nextState = await _loadState(
+        parentId: current.currentParentId,
+      );
+      state = AsyncData<FolderState>(nextState);
+    } catch (error, stackTrace) {
+      state = AsyncError<FolderState>(error, stackTrace);
+    }
+  }
 
-    state = const AsyncLoading<FolderState>();
-    state = await AsyncValue.guard<FolderState>(() async {
-      return _loadState(parentId: current.currentParentId);
-    });
+  Future<void> _replaceState({required int? parentId}) async {
+    try {
+      final FolderState nextState = await _loadState(parentId: parentId);
+      state = AsyncData<FolderState>(nextState);
+    } catch (error, stackTrace) {
+      state = AsyncError<FolderState>(error, stackTrace);
+    }
   }
 
   Future<FolderState> _loadState({required int? parentId}) async {
