@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../core/constants/dimensions.dart';
+import '../../../../../../core/themes/constants/dimensions.dart';
+import '../../../../../../l10n/app_localizations.dart';
 import '../../../../../shared/widgets/lumos_widgets.dart';
-import '../../home_contract.dart';
+import '../../../constants/home_contract.dart';
 
 class HomeStatItem {
   const HomeStatItem({
@@ -21,20 +22,21 @@ class HomeStatGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     final List<HomeStatItem> stats = <HomeStatItem>[
-      const HomeStatItem(
-        label: HomeScreenText.streakLabel,
-        value: '12 days',
+      HomeStatItem(
+        label: l10n.homeStreakLabel,
+        value: l10n.homeStatStreakValue,
         icon: Icons.local_fire_department_rounded,
       ),
-      const HomeStatItem(
-        label: HomeScreenText.accuracyLabel,
-        value: '94%',
+      HomeStatItem(
+        label: l10n.homeAccuracyLabel,
+        value: l10n.homeStatAccuracyValue,
         icon: Icons.track_changes_rounded,
       ),
-      const HomeStatItem(
-        label: HomeScreenText.xpLabel,
-        value: '2,460',
+      HomeStatItem(
+        label: l10n.homeXpLabel,
+        value: l10n.homeStatXpValue,
         icon: Icons.bolt_rounded,
       ),
     ];
@@ -156,6 +158,7 @@ class HomeFocusCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Semantics(
       label: HomeScreenSemantics.sectionCard,
@@ -165,27 +168,24 @@ class HomeFocusCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            const LumosText(
-              HomeScreenText.focusTitle,
-              style: LumosTextStyle.titleMedium,
-            ),
+            LumosText(l10n.homeFocusTitle, style: LumosTextStyle.titleMedium),
             const SizedBox(height: Insets.spacing12),
             HomeTaskLine(
-              title: 'Shadow listening - 15 min',
+              title: l10n.homeTaskShadowListeningTitle,
               progress: 0.66,
               icon: Icons.headphones_rounded,
               color: colorScheme.primary,
             ),
             const SizedBox(height: Insets.spacing12),
             HomeTaskLine(
-              title: 'Vocabulary sprint - 20 words',
+              title: l10n.homeTaskVocabularyTitle,
               progress: 0.45,
               icon: Icons.grid_view_rounded,
               color: colorScheme.tertiary,
             ),
             const SizedBox(height: Insets.spacing12),
             HomeTaskLine(
-              title: 'Pronunciation drill - 10 min',
+              title: l10n.homeTaskPronunciationTitle,
               progress: 0.8,
               icon: Icons.graphic_eq_rounded,
               color: colorScheme.secondary,
@@ -238,34 +238,32 @@ class HomeRecentActivityCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return LumosCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          const LumosText(
-            HomeScreenText.activityTitle,
-            style: LumosTextStyle.titleMedium,
-          ),
+          LumosText(l10n.homeActivityTitle, style: LumosTextStyle.titleMedium),
           const SizedBox(height: Insets.spacing12),
           HomeActivityItem(
-            title: 'Spanish Travel Pack',
-            subtitle: 'Completed 18 cards',
-            trailing: '+120 XP',
+            title: l10n.homeActivitySpanishTitle,
+            subtitle: l10n.homeActivitySpanishSubtitle,
+            trailing: l10n.homeActivitySpanishTrailing,
             color: colorScheme.primary,
           ),
           const SizedBox(height: Insets.spacing8),
           HomeActivityItem(
-            title: 'Grammar: Present Perfect',
-            subtitle: 'Scored 9/10',
-            trailing: '+60 XP',
+            title: l10n.homeActivityGrammarTitle,
+            subtitle: l10n.homeActivityGrammarSubtitle,
+            trailing: l10n.homeActivityGrammarTrailing,
             color: colorScheme.tertiary,
           ),
           const SizedBox(height: Insets.spacing8),
           HomeActivityItem(
-            title: 'Speaking Challenge',
-            subtitle: 'New best streak: 5',
-            trailing: 'Badge',
+            title: l10n.homeActivitySpeakingTitle,
+            subtitle: l10n.homeActivitySpeakingSubtitle,
+            trailing: l10n.homeActivitySpeakingTrailing,
             color: colorScheme.secondary,
           ),
         ],
@@ -294,7 +292,7 @@ class HomeActivityItem extends StatelessWidget {
       padding: const EdgeInsets.all(Insets.spacing12),
       decoration: BoxDecoration(
         borderRadius: BorderRadii.medium,
-        color: color.withValues(alpha: 0.08),
+        color: color.withValues(alpha: WidgetOpacities.level08),
       ),
       child: Row(
         children: <Widget>[

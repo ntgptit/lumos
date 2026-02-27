@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../core/constants/dimensions.dart';
+import '../../../../../../core/themes/constants/dimensions.dart';
 import '../../../../../../domain/entities/folder_models.dart';
 import '../../../../../../l10n/app_localizations.dart';
 import '../../../../../shared/widgets/lumos_widgets.dart';
@@ -26,9 +26,15 @@ class FolderHeader extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          LumosText(l10n.folderManagerTitle, style: LumosTextStyle.headlineSmall),
+          LumosText(
+            l10n.folderManagerTitle,
+            style: LumosTextStyle.headlineSmall,
+          ),
           const SizedBox(height: Insets.spacing8),
-          LumosText(l10n.folderManagerSubtitle, style: LumosTextStyle.bodySmall),
+          LumosText(
+            l10n.folderManagerSubtitle,
+            style: LumosTextStyle.bodySmall,
+          ),
           const SizedBox(height: Insets.spacing12),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/constants/dimensions.dart';
+import '../../../../core/themes/constants/dimensions.dart';
 import '../../../../domain/entities/folder_models.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../shared/widgets/lumos_widgets.dart';
@@ -22,7 +22,9 @@ class FolderContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
-    final FolderAsyncController controller = ref.read(folderAsyncControllerProvider.notifier);
+    final FolderAsyncController controller = ref.read(
+      folderAsyncControllerProvider.notifier,
+    );
     final List<FolderNode> visibleFolders = state.visibleFolders;
     return Stack(
       children: <Widget>[
@@ -60,7 +62,11 @@ class FolderContent extends ConsumerWidget {
             FolderErrorBanner(message: message),
           if (state.inlineErrorMessage != null)
             const SizedBox(height: Insets.spacing12),
-          ..._buildFolderTiles(context: context, ref: ref, visibleFolders: visibleFolders),
+          ..._buildFolderTiles(
+            context: context,
+            ref: ref,
+            visibleFolders: visibleFolders,
+          ),
           if (visibleFolders.isEmpty) const FolderEmptyView(),
           const SizedBox(height: Insets.spacing64),
         ],
@@ -73,38 +79,44 @@ class FolderContent extends ConsumerWidget {
     required WidgetRef ref,
     required List<FolderNode> visibleFolders,
   }) {
-    return visibleFolders.map((FolderNode item) {
-      return Padding(
-        padding: const EdgeInsets.only(bottom: Insets.spacing8),
-        child: FolderTile(
-          item: item,
-          onOpen: () => ref.read(folderAsyncControllerProvider.notifier).openFolder(item.id),
-          onRename: () => showFolderNameDialog(
-            context: context,
-            titleBuilder: (AppLocalizations l10n) => l10n.folderRenameTitle,
-            actionLabelBuilder: (AppLocalizations l10n) => l10n.commonSave,
-            initialValue: item.name,
-            onSubmitted: (String name) {
-              return ref.read(folderAsyncControllerProvider.notifier).renameFolder(
-                    folderId: item.id,
-                    name: name,
-                  );
-            },
-          ),
-          onDelete: () => showFolderConfirmDialog(
-            context: context,
-            titleBuilder: (AppLocalizations l10n) => l10n.folderDeleteTitle,
-            messageBuilder: (AppLocalizations l10n) {
-              return l10n.folderDeleteConfirm(item.name);
-            },
-            confirmLabelBuilder: (AppLocalizations l10n) => l10n.commonDelete,
-            onConfirmed: () {
-              return ref.read(folderAsyncControllerProvider.notifier).deleteFolder(item.id);
-            },
-          ),
-        ),
-      );
-    }).toList(growable: false);
+    return visibleFolders
+        .map((FolderNode item) {
+          return Padding(
+            padding: const EdgeInsets.only(bottom: Insets.spacing8),
+            child: FolderTile(
+              item: item,
+              onOpen: () => ref
+                  .read(folderAsyncControllerProvider.notifier)
+                  .openFolder(item.id),
+              onRename: () => showFolderNameDialog(
+                context: context,
+                titleBuilder: (AppLocalizations l10n) => l10n.folderRenameTitle,
+                actionLabelBuilder: (AppLocalizations l10n) => l10n.commonSave,
+                initialValue: item.name,
+                onSubmitted: (String name) {
+                  return ref
+                      .read(folderAsyncControllerProvider.notifier)
+                      .renameFolder(folderId: item.id, name: name);
+                },
+              ),
+              onDelete: () => showFolderConfirmDialog(
+                context: context,
+                titleBuilder: (AppLocalizations l10n) => l10n.folderDeleteTitle,
+                messageBuilder: (AppLocalizations l10n) {
+                  return l10n.folderDeleteConfirm(item.name);
+                },
+                confirmLabelBuilder: (AppLocalizations l10n) =>
+                    l10n.commonDelete,
+                onConfirmed: () {
+                  return ref
+                      .read(folderAsyncControllerProvider.notifier)
+                      .deleteFolder(item.id);
+                },
+              ),
+            ),
+          );
+        })
+        .toList(growable: false);
   }
 
   Widget _buildCreateButton({
@@ -125,7 +137,9 @@ class FolderContent extends ConsumerWidget {
           actionLabelBuilder: (AppLocalizations l10n) => l10n.commonCreate,
           initialValue: '',
           onSubmitted: (String name) {
-            return ref.read(folderAsyncControllerProvider.notifier).createFolder(name);
+            return ref
+                .read(folderAsyncControllerProvider.notifier)
+                .createFolder(name);
           },
         ),
         icon: Icons.create_new_folder_outlined,
@@ -141,7 +155,9 @@ class FolderContent extends ConsumerWidget {
     return Positioned.fill(
       child: IgnorePointer(
         child: ColoredBox(
-          color: Theme.of(context).colorScheme.scrim.withValues(alpha: 0.13),
+          color: Theme.of(
+            context,
+          ).colorScheme.scrim.withValues(alpha: WidgetOpacities.level13),
           child: const FolderMutatingOverlay(),
         ),
       ),

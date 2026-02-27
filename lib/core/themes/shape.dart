@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../constants/dimensions.dart';
+import 'constants/dimensions.dart';
 
 class AppShape {
   const AppShape._();

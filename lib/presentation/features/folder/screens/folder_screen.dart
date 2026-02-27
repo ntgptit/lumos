@@ -28,23 +28,26 @@ class _FolderScreenState extends ConsumerState<FolderScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final AsyncValue<FolderState> folderAsync = ref.watch(folderAsyncControllerProvider);
+    final AsyncValue<FolderState> folderAsync = ref.watch(
+      folderAsyncControllerProvider,
+    );
     return LumosScreenTransition(
       switchKey: ValueKey<String>(
         'folder-${folderAsync.runtimeType}-${folderAsync.asData?.value.currentParentId ?? -1}',
       ),
       moveForward: true,
       child: folderAsync.whenWithLoading(
-      loadingBuilder: (BuildContext context) => const FolderSkeletonView(),
-      dataBuilder: (BuildContext context, FolderState state) {
-        return FolderContent(state: state);
-      },
-      errorBuilder: (BuildContext context, Failure failure) {
-        return FolderFailureView(
-          message: failure.message,
-          onRetry: () => ref.read(folderAsyncControllerProvider.notifier).refresh(),
-        );
-      },
+        loadingBuilder: (BuildContext context) => const FolderSkeletonView(),
+        dataBuilder: (BuildContext context, FolderState state) {
+          return FolderContent(state: state);
+        },
+        errorBuilder: (BuildContext context, Failure failure) {
+          return FolderFailureView(
+            message: failure.message,
+            onRetry: () =>
+                ref.read(folderAsyncControllerProvider.notifier).refresh(),
+          );
+        },
       ),
     );
   }

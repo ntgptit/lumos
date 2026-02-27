@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 
-import '../constants/dimensions.dart';
+import 'constants/dimensions.dart';
 import 'component_themes/app_bar_theme.dart';
 import 'component_themes/bottom_navigation_bar_theme.dart';
 import 'component_themes/button_theme.dart';
@@ -9,7 +9,8 @@ import 'component_themes/card_theme.dart';
 import 'component_themes/dialog_theme.dart';
 import 'component_themes/input_decoration_theme.dart';
 import 'component_themes/navigation_bar_theme.dart';
-import 'color_schemes.dart';
+import 'constants/color_schemes.dart';
+import 'extensions/semantic_colors_extension.dart';
 import 'typography.dart';
 
 class AppThemeConst {
@@ -23,6 +24,7 @@ class AppThemeConst {
   static const TargetPlatform linuxPlatform = TargetPlatform.linux;
   static const TargetPlatform windowsPlatform = TargetPlatform.windows;
   static const TargetPlatform fuchsiaPlatform = TargetPlatform.fuchsia;
+  static const Type semanticColorsExtensionType = AppSemanticColors;
 }
 
 class AppTheme {
@@ -121,7 +123,12 @@ class AppTheme {
     required ColorScheme colorScheme,
     required TextTheme textTheme,
   }) {
+    final List<ThemeExtension<dynamic>> themeExtensions = _buildThemeExtensions(
+      baseTheme: baseTheme,
+      colorScheme: colorScheme,
+    );
     return baseTheme.copyWith(
+      extensions: themeExtensions,
       appBarTheme: _buildAppBarTheme(
         colorScheme: colorScheme,
         textTheme: textTheme,
@@ -148,6 +155,24 @@ class AppTheme {
         textTheme: textTheme,
       ),
     );
+  }
+
+  static List<ThemeExtension<dynamic>> _buildThemeExtensions({
+    required ThemeData baseTheme,
+    required ColorScheme colorScheme,
+  }) {
+    final List<ThemeExtension<dynamic>> baseExtensions = baseTheme
+        .extensions
+        .values
+        .where((ThemeExtension<dynamic> extension) {
+          return extension.runtimeType !=
+              AppThemeConst.semanticColorsExtensionType;
+        })
+        .toList(growable: true);
+    baseExtensions.add(
+      AppSemanticColors.fromColorScheme(colorScheme: colorScheme),
+    );
+    return baseExtensions;
   }
 
   static PageTransitionsTheme _buildPageTransitionsTheme() {

@@ -68,4 +68,109 @@ class AppLocalizationsEn extends AppLocalizations {
   String folderDepth(int depth) {
     return 'Depth $depth';
   }
+
+  @override
+  String get homeGreeting => 'Good evening, Learner';
+
+  @override
+  String get homeGoalProgress => 'You are 78% closer to your weekly goal.';
+
+  @override
+  String get homeHeroTitle => 'Build fluency with momentum';
+
+  @override
+  String get homeHeroBody => 'Daily sessions, focused practice, and visual progress in one modern workspace.';
+
+  @override
+  String get homeAiLearningPath => 'AI Learning Path';
+
+  @override
+  String get homePrimaryAction => 'Start Session';
+
+  @override
+  String get homeSecondaryAction => 'Review Deck';
+
+  @override
+  String get homeStreakLabel => 'Streak';
+
+  @override
+  String get homeAccuracyLabel => 'Accuracy';
+
+  @override
+  String get homeXpLabel => 'Weekly XP';
+
+  @override
+  String get homeStatStreakValue => '12 days';
+
+  @override
+  String get homeStatAccuracyValue => '94%';
+
+  @override
+  String get homeStatXpValue => '2,460';
+
+  @override
+  String get homeFocusTitle => 'Today\'s Focus';
+
+  @override
+  String get homeTaskShadowListeningTitle => 'Shadow listening - 15 min';
+
+  @override
+  String get homeTaskVocabularyTitle => 'Vocabulary sprint - 20 words';
+
+  @override
+  String get homeTaskPronunciationTitle => 'Pronunciation drill - 10 min';
+
+  @override
+  String get homeActivityTitle => 'Recent Activity';
+
+  @override
+  String get homeActivitySpanishTitle => 'Spanish Travel Pack';
+
+  @override
+  String get homeActivitySpanishSubtitle => 'Completed 18 cards';
+
+  @override
+  String get homeActivitySpanishTrailing => '+120 XP';
+
+  @override
+  String get homeActivityGrammarTitle => 'Grammar: Present Perfect';
+
+  @override
+  String get homeActivityGrammarSubtitle => 'Scored 9/10';
+
+  @override
+  String get homeActivityGrammarTrailing => '+60 XP';
+
+  @override
+  String get homeActivitySpeakingTitle => 'Speaking Challenge';
+
+  @override
+  String get homeActivitySpeakingSubtitle => 'New best streak: 5';
+
+  @override
+  String get homeActivitySpeakingTrailing => 'Badge';
+
+  @override
+  String get homeTabHome => 'Home';
+
+  @override
+  String get homeTabLibrary => 'Library';
+
+  @override
+  String get homeTabFolders => 'Folders';
+
+  @override
+  String get homeTabProgress => 'Progress';
+
+  @override
+  String get homeTabProfile => 'Profile';
+
+  @override
+  String get homeLibrarySubtitle => 'Your decks, lessons, and curated packs.';
+
+  @override
+  String get homeProgressSubtitle => 'Track streaks, XP trends, and weak skills.';
+
+  @override
+  String get homeProfileSubtitle => 'Manage your goals and learning preferences.';
 }

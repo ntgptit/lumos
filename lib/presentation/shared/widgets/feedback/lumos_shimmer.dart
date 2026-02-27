@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/constants/dimensions.dart';
+import '../../../../core/themes/constants/dimensions.dart';
 
 class LumosShimmer extends StatelessWidget {
   const LumosShimmer({
@@ -17,7 +17,10 @@ class LumosShimmer extends StatelessWidget {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return TweenAnimationBuilder<double>(
       duration: duration,
-      tween: Tween<double>(begin: 0.25, end: 0.7),
+      tween: Tween<double>(
+        begin: WidgetOpacities.shimmerStart,
+        end: WidgetOpacities.shimmerEnd,
+      ),
       builder: (BuildContext context, double animatedOpacity, Widget? child) {
         return ShaderMask(
           shaderCallback: (Rect bounds) {
@@ -25,9 +28,16 @@ class LumosShimmer extends StatelessWidget {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: <Color>[
-                colorScheme.surfaceContainerHighest.withValues(alpha: animatedOpacity),
-                colorScheme.surfaceContainerHigh.withValues(alpha: animatedOpacity + 0.1),
-                colorScheme.surfaceContainerHighest.withValues(alpha: animatedOpacity),
+                colorScheme.surfaceContainerHighest.withValues(
+                  alpha: animatedOpacity,
+                ),
+                colorScheme.surfaceContainerHigh.withValues(
+                  alpha:
+                      animatedOpacity + WidgetOpacities.shimmerHighlightOffset,
+                ),
+                colorScheme.surfaceContainerHighest.withValues(
+                  alpha: animatedOpacity,
+                ),
               ],
             ).createShader(bounds);
           },
@@ -54,15 +64,14 @@ class LumosSkeletonBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color baseColor = Theme.of(context).colorScheme.surfaceContainerHighest;
+    final Color baseColor = Theme.of(
+      context,
+    ).colorScheme.surfaceContainerHighest;
     return LumosShimmer(
       child: Container(
         height: height,
         width: width,
-        decoration: BoxDecoration(
-          color: baseColor,
-          borderRadius: borderRadius,
-        ),
+        decoration: BoxDecoration(color: baseColor, borderRadius: borderRadius),
       ),
     );
   }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'text_styles.dart';
+import '../constants/text_styles.dart';
 
 class AppTextThemeBuilder {
   const AppTextThemeBuilder._();

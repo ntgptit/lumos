@@ -4,7 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'core/localization/locale_provider.dart';
-import 'core/themes/theme_provider.dart';
+import 'core/themes/providers/theme_provider.dart';
 import 'l10n/app_localizations.dart';
 import 'presentation/routes/app_router.dart';
 

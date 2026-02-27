@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'text_styles.dart';
+import '../constants/text_styles.dart';
 
 extension AppTextThemeExtension on TextTheme {
   TextStyle get emphasisValue {

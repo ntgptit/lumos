@@ -46,7 +46,9 @@ class RetryInterceptor extends Interceptor {
       );
       await _delayForAttempt(nextAttempt);
       try {
-        final Response<dynamic> response = await _dio.fetch<dynamic>(requestOptions);
+        final Response<dynamic> response = await _dio.fetch<dynamic>(
+          requestOptions,
+        );
         handler.resolve(response);
         return;
       } on DioException catch (retryError) {
@@ -68,7 +70,8 @@ class RetryInterceptor extends Interceptor {
   }
 
   bool _isBypassRetry(RequestOptions requestOptions) {
-    final Object? rawValue = requestOptions.extra[RetryInterceptorConst.bypassRetryKey];
+    final Object? rawValue =
+        requestOptions.extra[RetryInterceptorConst.bypassRetryKey];
     if (rawValue is bool) {
       return rawValue;
     }
@@ -99,7 +102,8 @@ class RetryInterceptor extends Interceptor {
   }
 
   int _readAttempt(RequestOptions requestOptions) {
-    final Object? rawValue = requestOptions.extra[RetryInterceptorConst.retryAttemptKey];
+    final Object? rawValue =
+        requestOptions.extra[RetryInterceptorConst.retryAttemptKey];
     if (rawValue is int) {
       return rawValue;
     }

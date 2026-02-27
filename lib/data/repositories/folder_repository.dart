@@ -33,9 +33,7 @@ abstract class FolderRepository {
     required String name,
   });
 
-  Future<Either<Failure, Unit>> deleteFolder({
-    required int folderId,
-  });
+  Future<Either<Failure, Unit>> deleteFolder({required int folderId});
 }
 
 class DioFolderRepository implements FolderRepository {
@@ -110,15 +108,14 @@ class DioFolderRepository implements FolderRepository {
   }) async {
     final String normalizedName = _normalizeName(name);
     if (normalizedName.isEmpty) {
-      return left(const Failure.validation(message: 'Folder name is required.'));
+      return left(
+        const Failure.validation(message: 'Folder name is required.'),
+      );
     }
     try {
       await _dio.post<dynamic>(
         '/api/v1/folders',
-        data: <String, dynamic>{
-          'name': normalizedName,
-          'parentId': parentId,
-        },
+        data: <String, dynamic>{'name': normalizedName, 'parentId': parentId},
       );
       return right(unit);
     } on Object catch (error) {
@@ -133,7 +130,9 @@ class DioFolderRepository implements FolderRepository {
   }) async {
     final String normalizedName = _normalizeName(name);
     if (normalizedName.isEmpty) {
-      return left(const Failure.validation(message: 'Folder name is required.'));
+      return left(
+        const Failure.validation(message: 'Folder name is required.'),
+      );
     }
     try {
       await _dio.patch<dynamic>(
@@ -147,9 +146,7 @@ class DioFolderRepository implements FolderRepository {
   }
 
   @override
-  Future<Either<Failure, Unit>> deleteFolder({
-    required int folderId,
-  }) async {
+  Future<Either<Failure, Unit>> deleteFolder({required int folderId}) async {
     try {
       await _dio.delete<dynamic>('/api/v1/folders/$folderId');
       return right(unit);

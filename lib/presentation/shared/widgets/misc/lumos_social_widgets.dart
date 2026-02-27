@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/constants/dimensions.dart';
+import '../../../../core/themes/constants/dimensions.dart';
 import '../buttons/lumos_button.dart';
 import '../cards/lumos_card.dart';
 import '../typography/lumos_text.dart';
@@ -158,7 +158,9 @@ class LumosLeaderboardRow extends StatelessWidget {
       decoration: BoxDecoration(
         color: isCurrentUser
             ? Theme.of(context).colorScheme.primaryContainer
-            : Colors.transparent,
+            : Theme.of(
+                context,
+              ).colorScheme.surface.withValues(alpha: WidgetOpacities.none),
         borderRadius: BorderRadii.medium,
       ),
       child: Row(

@@ -4,10 +4,7 @@ import '../navigation/lumos_menu_widgets.dart';
 import 'lumos_entity_list_item_card.dart';
 
 class LumosActionListItem {
-  const LumosActionListItem({
-    required this.key,
-    required this.label,
-  });
+  const LumosActionListItem({required this.key, required this.label});
 
   final String key;
   final String label;

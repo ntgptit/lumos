@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/constants/dimensions.dart';
+import '../../../../core/themes/constants/dimensions.dart';
 import '../buttons/lumos_button.dart';
 import '../inputs/lumos_form_widgets.dart';
 import '../lumos_models.dart';

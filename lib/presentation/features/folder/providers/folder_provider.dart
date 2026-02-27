@@ -80,14 +80,12 @@ class FolderAsyncController extends _$FolderAsyncController {
     required Future<Either<Failure, Unit>> Function(
       FolderRepository repository,
       int? currentParentId,
-    ) mutation,
+    )
+    mutation,
   }) async {
     final FolderState current = state.asData?.value ?? FolderState.initial();
     state = AsyncData<FolderState>(
-      current.copyWith(
-        mutationType: mutationType,
-        inlineErrorMessage: null,
-      ),
+      current.copyWith(mutationType: mutationType, inlineErrorMessage: null),
     );
     final FolderRepository repository = ref.read(folderRepositoryProvider);
     final Either<Failure, Unit> result = await mutation(

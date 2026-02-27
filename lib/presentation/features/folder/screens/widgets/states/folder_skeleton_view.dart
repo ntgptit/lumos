@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../core/constants/dimensions.dart';
+import '../../../../../../core/themes/constants/dimensions.dart';
 import '../../../../../shared/widgets/lumos_widgets.dart';
 
 class FolderSkeletonView extends StatelessWidget {

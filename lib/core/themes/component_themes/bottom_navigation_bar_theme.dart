@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../constants/dimensions.dart';
+import '../constants/dimensions.dart';
 
 class BottomNavigationBarThemeConst {
   const BottomNavigationBarThemeConst._();

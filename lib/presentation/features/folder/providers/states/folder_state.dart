@@ -4,12 +4,7 @@ import '../../../../../domain/entities/folder_models.dart';
 
 part 'folder_state.freezed.dart';
 
-enum FolderMutationType {
-  none,
-  creating,
-  renaming,
-  deleting,
-}
+enum FolderMutationType { none, creating, renaming, deleting }
 
 @freezed
 abstract class FolderState with _$FolderState {
@@ -41,7 +36,9 @@ abstract class FolderState with _$FolderState {
         .where((FolderNode item) => item.parentId == currentParentId)
         .toList(growable: false);
     final List<FolderNode> sortedResults = List<FolderNode>.from(results);
-    sortedResults.sort((FolderNode a, FolderNode b) => a.name.compareTo(b.name));
+    sortedResults.sort(
+      (FolderNode a, FolderNode b) => a.name.compareTo(b.name),
+    );
     return sortedResults;
   }
 

@@ -2,31 +2,29 @@
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../../l10n/app_localizations.dart';
 import '../../folder/screens/folder_screen.dart';
 import '../screens/home_content.dart';
-import '../screens/home_contract.dart';
 import '../screens/widgets/blocks/home_placeholder_tab.dart';
 import 'states/home_state.dart';
 
 part 'home_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-class HomeAsyncController extends _$HomeAsyncController {
+class HomeController extends _$HomeController {
   @override
-  Future<HomeState> build() async {
+  HomeState build() {
     return HomeState.initial();
   }
 
   void selectTab(int newIndex) {
-    final HomeState current = state.asData?.value ?? HomeState.initial();
+    final HomeState current = state;
     if (current.selectedIndex == newIndex) {
       return;
     }
-    state = AsyncData<HomeState>(
-      HomeState(
-        selectedIndex: newIndex,
-        previousIndex: current.selectedIndex,
-      ),
+    state = HomeState(
+      selectedIndex: newIndex,
+      previousIndex: current.selectedIndex,
     );
   }
 }
@@ -35,27 +33,27 @@ class HomeAsyncController extends _$HomeAsyncController {
 List<HomeNavigationItem> homeNavigationItems(Ref ref) {
   return const <HomeNavigationItem>[
     HomeNavigationItem(
-      label: HomeScreenText.tabHome,
+      tabId: HomeTabId.home,
       icon: Icons.home_outlined,
       selectedIcon: Icons.home_rounded,
     ),
     HomeNavigationItem(
-      label: HomeScreenText.tabLibrary,
+      tabId: HomeTabId.library,
       icon: Icons.auto_stories_outlined,
       selectedIcon: Icons.auto_stories_rounded,
     ),
     HomeNavigationItem(
-      label: HomeScreenText.tabFolders,
+      tabId: HomeTabId.folders,
       icon: Icons.folder_open_outlined,
       selectedIcon: Icons.folder_open_rounded,
     ),
     HomeNavigationItem(
-      label: HomeScreenText.tabProgress,
+      tabId: HomeTabId.progress,
       icon: Icons.insights_outlined,
       selectedIcon: Icons.insights_rounded,
     ),
     HomeNavigationItem(
-      label: HomeScreenText.tabProfile,
+      tabId: HomeTabId.profile,
       icon: Icons.person_outline_rounded,
       selectedIcon: Icons.person_rounded,
     ),
@@ -64,48 +62,53 @@ List<HomeNavigationItem> homeNavigationItems(Ref ref) {
 
 @Riverpod(keepAlive: true)
 int homeSelectedIndex(Ref ref) {
-  final AsyncValue<HomeState> stateAsync = ref.watch(homeAsyncControllerProvider);
-  if (stateAsync.hasValue) {
-    return stateAsync.requireValue.selectedIndex;
-  }
-  return HomeState.initial().selectedIndex;
+  final HomeState state = ref.watch(homeControllerProvider);
+  return state.selectedIndex;
 }
 
 @Riverpod(keepAlive: true)
 int homePreviousIndex(Ref ref) {
-  final AsyncValue<HomeState> stateAsync = ref.watch(homeAsyncControllerProvider);
-  if (stateAsync.hasValue) {
-    return stateAsync.requireValue.previousIndex;
-  }
-  return HomeState.initial().previousIndex;
+  final HomeState state = ref.watch(homeControllerProvider);
+  return state.previousIndex;
 }
 
 @Riverpod(keepAlive: true)
-String homeSelectedTitle(Ref ref) {
+HomeTabId homeSelectedTab(Ref ref) {
   final int selectedIndex = ref.watch(homeSelectedIndexProvider);
   final List<HomeNavigationItem> items = ref.watch(homeNavigationItemsProvider);
-  return items[selectedIndex].label;
+  return items[selectedIndex].tabId;
 }
 
+typedef HomePageBuilder = Widget Function(BuildContext context);
+
 @Riverpod(keepAlive: true)
-Widget homeTabPage(Ref ref, int selectedIndex) {
-  return switch (selectedIndex) {
-    0 => const HomeContent(),
-    1 => const HomePlaceholderTab(
-      title: HomeScreenText.tabLibrary,
-      subtitle: 'Your decks, lessons, and curated packs.',
-      icon: Icons.auto_stories_rounded,
-    ),
-    2 => const FolderScreen(),
-    3 => const HomePlaceholderTab(
-      title: HomeScreenText.tabProgress,
-      subtitle: 'Track streaks, XP trends, and weak skills.',
-      icon: Icons.insights_rounded,
-    ),
-    _ => const HomePlaceholderTab(
-      title: HomeScreenText.tabProfile,
-      subtitle: 'Manage your goals and learning preferences.',
-      icon: Icons.person_rounded,
-    ),
+HomePageBuilder homeTabPage(Ref ref, HomeTabId selectedTab) {
+  return switch (selectedTab) {
+    HomeTabId.home => (BuildContext context) => const HomeContent(),
+    HomeTabId.library => (BuildContext context) {
+      final AppLocalizations l10n = AppLocalizations.of(context)!;
+      return HomePlaceholderTab(
+        title: l10n.homeTabLibrary,
+        subtitle: l10n.homeLibrarySubtitle,
+        icon: Icons.auto_stories_rounded,
+      );
+    },
+    HomeTabId.folders => (BuildContext context) => const FolderScreen(),
+    HomeTabId.progress => (BuildContext context) {
+      final AppLocalizations l10n = AppLocalizations.of(context)!;
+      return HomePlaceholderTab(
+        title: l10n.homeTabProgress,
+        subtitle: l10n.homeProgressSubtitle,
+        icon: Icons.insights_rounded,
+      );
+    },
+    HomeTabId.profile => (BuildContext context) {
+      final AppLocalizations l10n = AppLocalizations.of(context)!;
+      return HomePlaceholderTab(
+        title: l10n.homeTabProfile,
+        subtitle: l10n.homeProfileSubtitle,
+        icon: Icons.person_rounded,
+      );
+    },
   };
 }

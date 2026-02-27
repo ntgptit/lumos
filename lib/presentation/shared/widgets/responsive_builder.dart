@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/constants/dimensions.dart';
+import '../../../core/themes/constants/dimensions.dart';
 
 typedef ResponsiveWidgetBuilder =
     Widget Function(BuildContext context, DeviceType deviceType);

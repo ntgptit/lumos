@@ -75,7 +75,7 @@ class WidgetSizes {
 
   static const double none = Insets.spacing0;
   static const double borderWidthRegular = 1.2;
-  static const double inputFillOpacity = 0.08;
+  static const double inputFillOpacity = WidgetOpacities.level08;
   static const double minTouchTarget = 48;
 
   static const double buttonHeightSmall = 32;
@@ -87,6 +87,22 @@ class WidgetSizes {
   static const double avatarMedium = 32;
   static const double avatarLarge = 48;
   static const double navigationBarHeight = appBarHeight + Radius.radiusLarge;
+}
+
+class WidgetOpacities {
+  const WidgetOpacities._();
+
+  static const double none = Insets.spacing0;
+  static const double level08 = 0.08;
+  static const double level10 = 0.1;
+  static const double level13 = 0.13;
+  static const double level14 = 0.14;
+  static const double level20 = 0.2;
+  static const double level24 = 0.24;
+
+  static const double shimmerStart = 0.25;
+  static const double shimmerEnd = 0.7;
+  static const double shimmerHighlightOffset = level10;
 }
 
 class AppDurations {

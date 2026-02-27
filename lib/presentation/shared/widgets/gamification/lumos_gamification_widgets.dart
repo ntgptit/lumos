@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/constants/dimensions.dart';
+import '../../../../core/themes/constants/dimensions.dart';
 import '../cards/lumos_card.dart';
 import '../feedback/lumos_progress_bar.dart';
 import '../typography/lumos_text.dart';

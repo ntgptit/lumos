@@ -208,6 +208,216 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Depth {depth}'**
   String folderDepth(int depth);
+
+  /// No description provided for @homeGreeting.
+  ///
+  /// In en, this message translates to:
+  /// **'Good evening, Learner'**
+  String get homeGreeting;
+
+  /// No description provided for @homeGoalProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'You are 78% closer to your weekly goal.'**
+  String get homeGoalProgress;
+
+  /// No description provided for @homeHeroTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Build fluency with momentum'**
+  String get homeHeroTitle;
+
+  /// No description provided for @homeHeroBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily sessions, focused practice, and visual progress in one modern workspace.'**
+  String get homeHeroBody;
+
+  /// No description provided for @homeAiLearningPath.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Learning Path'**
+  String get homeAiLearningPath;
+
+  /// No description provided for @homePrimaryAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Session'**
+  String get homePrimaryAction;
+
+  /// No description provided for @homeSecondaryAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Review Deck'**
+  String get homeSecondaryAction;
+
+  /// No description provided for @homeStreakLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Streak'**
+  String get homeStreakLabel;
+
+  /// No description provided for @homeAccuracyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Accuracy'**
+  String get homeAccuracyLabel;
+
+  /// No description provided for @homeXpLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly XP'**
+  String get homeXpLabel;
+
+  /// No description provided for @homeStatStreakValue.
+  ///
+  /// In en, this message translates to:
+  /// **'12 days'**
+  String get homeStatStreakValue;
+
+  /// No description provided for @homeStatAccuracyValue.
+  ///
+  /// In en, this message translates to:
+  /// **'94%'**
+  String get homeStatAccuracyValue;
+
+  /// No description provided for @homeStatXpValue.
+  ///
+  /// In en, this message translates to:
+  /// **'2,460'**
+  String get homeStatXpValue;
+
+  /// No description provided for @homeFocusTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Focus'**
+  String get homeFocusTitle;
+
+  /// No description provided for @homeTaskShadowListeningTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Shadow listening - 15 min'**
+  String get homeTaskShadowListeningTitle;
+
+  /// No description provided for @homeTaskVocabularyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Vocabulary sprint - 20 words'**
+  String get homeTaskVocabularyTitle;
+
+  /// No description provided for @homeTaskPronunciationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pronunciation drill - 10 min'**
+  String get homeTaskPronunciationTitle;
+
+  /// No description provided for @homeActivityTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Activity'**
+  String get homeActivityTitle;
+
+  /// No description provided for @homeActivitySpanishTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Spanish Travel Pack'**
+  String get homeActivitySpanishTitle;
+
+  /// No description provided for @homeActivitySpanishSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed 18 cards'**
+  String get homeActivitySpanishSubtitle;
+
+  /// No description provided for @homeActivitySpanishTrailing.
+  ///
+  /// In en, this message translates to:
+  /// **'+120 XP'**
+  String get homeActivitySpanishTrailing;
+
+  /// No description provided for @homeActivityGrammarTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Grammar: Present Perfect'**
+  String get homeActivityGrammarTitle;
+
+  /// No description provided for @homeActivityGrammarSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Scored 9/10'**
+  String get homeActivityGrammarSubtitle;
+
+  /// No description provided for @homeActivityGrammarTrailing.
+  ///
+  /// In en, this message translates to:
+  /// **'+60 XP'**
+  String get homeActivityGrammarTrailing;
+
+  /// No description provided for @homeActivitySpeakingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Speaking Challenge'**
+  String get homeActivitySpeakingTitle;
+
+  /// No description provided for @homeActivitySpeakingSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New best streak: 5'**
+  String get homeActivitySpeakingSubtitle;
+
+  /// No description provided for @homeActivitySpeakingTrailing.
+  ///
+  /// In en, this message translates to:
+  /// **'Badge'**
+  String get homeActivitySpeakingTrailing;
+
+  /// No description provided for @homeTabHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get homeTabHome;
+
+  /// No description provided for @homeTabLibrary.
+  ///
+  /// In en, this message translates to:
+  /// **'Library'**
+  String get homeTabLibrary;
+
+  /// No description provided for @homeTabFolders.
+  ///
+  /// In en, this message translates to:
+  /// **'Folders'**
+  String get homeTabFolders;
+
+  /// No description provided for @homeTabProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Progress'**
+  String get homeTabProgress;
+
+  /// No description provided for @homeTabProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get homeTabProfile;
+
+  /// No description provided for @homeLibrarySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your decks, lessons, and curated packs.'**
+  String get homeLibrarySubtitle;
+
+  /// No description provided for @homeProgressSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Track streaks, XP trends, and weak skills.'**
+  String get homeProgressSubtitle;
+
+  /// No description provided for @homeProfileSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage your goals and learning preferences.'**
+  String get homeProfileSubtitle;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

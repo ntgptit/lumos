@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'text_theme.dart';
-import 'text_styles.dart';
+import 'component_themes/text_theme.dart';
+import 'constants/text_styles.dart';
 
-export 'text_styles.dart';
-export 'typography_extensions.dart';
+export 'constants/text_styles.dart';
+export 'extensions/typography_extensions.dart';
 
 class AppTypography {
   const AppTypography._();

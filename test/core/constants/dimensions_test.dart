@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:lumos/core/constants/dimensions.dart';
+import 'package:lumos/core/themes/constants/dimensions.dart';
 
 void main() {
   group('DeviceTypeHelper', () {

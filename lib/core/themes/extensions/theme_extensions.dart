@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'semantic_colors_extension.dart';
+
 extension ThemeContextExtension on BuildContext {
   ThemeData get theme => Theme.of(this);
 
@@ -19,4 +21,12 @@ extension ThemeContextExtension on BuildContext {
       theme.bottomNavigationBarTheme;
 
   NavigationBarThemeData get navigationBarTheme => theme.navigationBarTheme;
+
+  AppSemanticColors get semanticColors {
+    final AppSemanticColors? colors = theme.extension<AppSemanticColors>();
+    if (colors != null) {
+      return colors;
+    }
+    return AppSemanticColors.fromColorScheme(colorScheme: colorScheme);
+  }
 }

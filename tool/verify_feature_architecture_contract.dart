@@ -23,7 +23,6 @@ class FeatureArchitectureGuardConst {
 
   static const String allowProviderUiDiToken =
       'feature-architecture-guard: allow_ui_di';
-
 }
 
 class ArchitectureViolation {
@@ -108,14 +107,24 @@ Future<void> _checkFeature(
     '${screenWidgets.path}/${FeatureArchitectureGuardConst.widgetStatesDir}',
   );
 
-  _requireDirectory(providers, violations, featurePath, 'Missing providers/ directory.');
+  _requireDirectory(
+    providers,
+    violations,
+    featurePath,
+    'Missing providers/ directory.',
+  );
   _requireDirectory(
     providerStates,
     violations,
     featurePath,
     'Missing providers/states/ directory.',
   );
-  _requireDirectory(screens, violations, featurePath, 'Missing screens/ directory.');
+  _requireDirectory(
+    screens,
+    violations,
+    featurePath,
+    'Missing screens/ directory.',
+  );
   _requireDirectory(
     screenWidgets,
     violations,
@@ -141,7 +150,9 @@ Future<void> _checkFeature(
     'Missing screens/widgets/states/ directory.',
   );
 
-  final File providerFile = File('${providers.path}/${featureName}_provider.dart');
+  final File providerFile = File(
+    '${providers.path}/${featureName}_provider.dart',
+  );
   final File stateFile = File(
     '${providerStates.path}/${featureName}_state.dart',
   );
@@ -185,6 +196,7 @@ Future<void> _checkFeature(
   );
   await _checkScreenFile(
     screenFile: screenFile,
+    screenWidgetsDir: screenWidgets,
     providerFile: providerFile,
     featureName: featureName,
     featureClassPrefix: featureClassPrefix,
@@ -196,6 +208,10 @@ Future<void> _checkFeature(
     violations: violations,
   );
   await _checkUiBoundary(screens, violations);
+  await _checkNoTextConstantClass(
+    featureDir: featureDir,
+    violations: violations,
+  );
 }
 
 void _requireDirectory(
@@ -236,13 +252,11 @@ void _requireFile(
   );
 }
 
-Future<void> _checkProviderFile(
-  {
+Future<void> _checkProviderFile({
   required File providerFile,
   required String featureClassPrefix,
   required List<ArchitectureViolation> violations,
-}
-) async {
+}) async {
   if (!providerFile.existsSync()) {
     return;
   }
@@ -276,17 +290,24 @@ Future<void> _checkProviderFile(
     );
   }
 
-  final String expectedProviderClass = '${featureClassPrefix}AsyncController';
-  if (!RegExp(
-    'class\\s+$expectedProviderClass\\s+extends\\s+_\\\$'
-    '$expectedProviderClass\\b',
-  ).hasMatch(content)) {
+  final String expectedAsyncProviderClass =
+      '${featureClassPrefix}AsyncController';
+  final String expectedSyncProviderClass = '${featureClassPrefix}Controller';
+  final bool hasAsyncController = RegExp(
+    'class\\s+$expectedAsyncProviderClass\\s+extends\\s+_\\\$'
+    '$expectedAsyncProviderClass\\b',
+  ).hasMatch(content);
+  final bool hasSyncController = RegExp(
+    'class\\s+$expectedSyncProviderClass\\s+extends\\s+_\\\$'
+    '$expectedSyncProviderClass\\b',
+  ).hasMatch(content);
+  if (!hasAsyncController && !hasSyncController) {
     violations.add(
       ArchitectureViolation(
         filePath: path,
         lineNumber: 1,
         reason:
-            'Provider class name must be `${featureClassPrefix}AsyncController` and extend generated base.',
+            'Provider class name must be `${featureClassPrefix}AsyncController` or `${featureClassPrefix}Controller` and extend generated base.',
         lineContent: path,
       ),
     );
@@ -310,13 +331,11 @@ Future<void> _checkProviderFile(
   }
 }
 
-Future<void> _checkStateFile(
-  {
+Future<void> _checkStateFile({
   required File stateFile,
   required String featureClassPrefix,
   required List<ArchitectureViolation> violations,
-}
-) async {
+}) async {
   if (!stateFile.existsSync()) {
     return;
   }
@@ -363,15 +382,14 @@ Future<void> _checkStateFile(
   }
 }
 
-Future<void> _checkScreenFile(
-  {
+Future<void> _checkScreenFile({
   required File screenFile,
+  required Directory screenWidgetsDir,
   required File providerFile,
   required String featureName,
   required String featureClassPrefix,
   required List<ArchitectureViolation> violations,
-}
-) async {
+}) async {
   if (!screenFile.existsSync()) {
     return;
   }
@@ -396,34 +414,43 @@ Future<void> _checkScreenFile(
       ArchitectureViolation(
         filePath: path,
         lineNumber: 1,
-        reason: 'Screen file must orchestrate state by reading provider (ref.watch).',
+        reason:
+            'Screen file must orchestrate state by reading provider (ref.watch).',
         lineContent: path,
       ),
     );
   }
 
-  if (!content.contains('AsyncValue<')) {
-    violations.add(
-      ArchitectureViolation(
-        filePath: path,
-        lineNumber: 1,
-        reason: 'Screen file must orchestrate AsyncValue state.',
-        lineContent: path,
-      ),
-    );
+  bool hasNavigationWidget =
+      content.contains('NavigationBar(') || content.contains('NavigationRail(');
+  if (!hasNavigationWidget) {
+    hasNavigationWidget = await _hasNavigationWidgetInWidgets(screenWidgetsDir);
   }
+  if (!hasNavigationWidget) {
+    if (!content.contains('AsyncValue<')) {
+      violations.add(
+        ArchitectureViolation(
+          filePath: path,
+          lineNumber: 1,
+          reason: 'Screen file must orchestrate AsyncValue state.',
+          lineContent: path,
+        ),
+      );
+    }
 
-  final bool hasAsyncRender =
-      content.contains('.when(') || content.contains('.whenWithLoading(');
-  if (!hasAsyncRender) {
-    violations.add(
-      ArchitectureViolation(
-        filePath: path,
-        lineNumber: 1,
-        reason: 'Screen file must render AsyncValue with .when/.whenWithLoading.',
-        lineContent: path,
-      ),
-    );
+    final bool hasAsyncRender =
+        content.contains('.when(') || content.contains('.whenWithLoading(');
+    if (!hasAsyncRender) {
+      violations.add(
+        ArchitectureViolation(
+          filePath: path,
+          lineNumber: 1,
+          reason:
+              'Screen file must render AsyncValue with .when/.whenWithLoading.',
+          lineContent: path,
+        ),
+      );
+    }
   }
 
   await _checkTabPageDiAndFineGrained(
@@ -435,13 +462,45 @@ Future<void> _checkScreenFile(
   );
 }
 
-Future<void> _checkContentFile(
-  {
+Future<bool> _hasNavigationWidgetInWidgets(Directory screenWidgetsDir) async {
+  if (!screenWidgetsDir.existsSync()) {
+    return false;
+  }
+
+  final List<FileSystemEntity> entities = screenWidgetsDir.listSync(
+    recursive: true,
+  );
+  for (final FileSystemEntity entity in entities) {
+    if (entity is! File) {
+      continue;
+    }
+
+    final String path = _normalizePath(entity.path);
+    if (!path.endsWith(FeatureArchitectureGuardConst.dartExtension)) {
+      continue;
+    }
+    if (path.endsWith('.g.dart') || path.endsWith('.freezed.dart')) {
+      continue;
+    }
+
+    final String content = await entity.readAsString();
+    final bool hasNavigationBar = content.contains('NavigationBar(');
+    if (hasNavigationBar) {
+      return true;
+    }
+    final bool hasNavigationRail = content.contains('NavigationRail(');
+    if (hasNavigationRail) {
+      return true;
+    }
+  }
+  return false;
+}
+
+Future<void> _checkContentFile({
   required File contentFile,
   required String featureClassPrefix,
   required List<ArchitectureViolation> violations,
-}
-) async {
+}) async {
   if (!contentFile.existsSync()) {
     return;
   }
@@ -550,7 +609,7 @@ Future<void> _checkTabPageDiAndFineGrained({
 
   final String featureCamel = _toCamelCase(featureName);
   final String selectedIndexProvider = '${featureCamel}SelectedIndexProvider';
-  final String selectedTitleProvider = '${featureCamel}SelectedTitleProvider';
+  final String selectedTabProvider = '${featureCamel}SelectedTabProvider';
   final String tabPageProvider = '${featureCamel}TabPageProvider';
 
   if (!screenContent.contains(selectedIndexProvider)) {
@@ -564,13 +623,13 @@ Future<void> _checkTabPageDiAndFineGrained({
       ),
     );
   }
-  if (!screenContent.contains(selectedTitleProvider)) {
+  if (!screenContent.contains(selectedTabProvider)) {
     violations.add(
       ArchitectureViolation(
         filePath: screenPath,
         lineNumber: 1,
         reason:
-            'Fine-grained rule: screen with Navigation must use `${featureCamel}SelectedTitleProvider`.',
+            'Fine-grained rule: screen with Navigation must use `${featureCamel}SelectedTabProvider`.',
         lineContent: screenPath,
       ),
     );
@@ -617,7 +676,7 @@ Future<void> _checkTabPageDiAndFineGrained({
   final String providerContent = await providerFile.readAsString();
   final List<String> requiredProviderFns = <String>[
     '${featureCamel}SelectedIndex(',
-    '${featureCamel}SelectedTitle(',
+    '${featureCamel}SelectedTab(',
     '${featureCamel}TabPage(',
   ];
   for (final String requiredFn in requiredProviderFns) {
@@ -633,6 +692,42 @@ Future<void> _checkTabPageDiAndFineGrained({
         lineContent: providerPath,
       ),
     );
+  }
+}
+
+Future<void> _checkNoTextConstantClass({
+  required Directory featureDir,
+  required List<ArchitectureViolation> violations,
+}) async {
+  final List<FileSystemEntity> entities = featureDir.listSync(recursive: true);
+  for (final FileSystemEntity entity in entities) {
+    if (entity is! File) {
+      continue;
+    }
+    final String path = _normalizePath(entity.path);
+    if (!path.endsWith(FeatureArchitectureGuardConst.dartExtension)) {
+      continue;
+    }
+    if (path.endsWith('.g.dart') || path.endsWith('.freezed.dart')) {
+      continue;
+    }
+
+    final List<String> lines = await entity.readAsLines();
+    for (int i = 0; i < lines.length; i++) {
+      final String line = _stripLineComment(lines[i]).trim();
+      if (!RegExp(r'class\s+\w*ScreenText\b').hasMatch(line)) {
+        continue;
+      }
+      violations.add(
+        ArchitectureViolation(
+          filePath: path,
+          lineNumber: i + 1,
+          reason:
+              'Do not define ScreenText constants. Use l10n (AppLocalizations) for user-visible text.',
+          lineContent: lines[i].trim(),
+        ),
+      );
+    }
   }
 }
 

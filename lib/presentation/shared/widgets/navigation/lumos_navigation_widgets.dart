@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/constants/dimensions.dart';
+import '../../../../core/themes/constants/dimensions.dart';
 import '../lumos_models.dart';
 
 class LumosScreenTransitionConst {
@@ -67,9 +67,14 @@ class LumosScreenTransition extends StatelessWidget {
   Widget build(BuildContext context) {
     final Offset beginOffset = moveForward
         ? const Offset(Insets.spacing0, LumosScreenTransitionConst.slideOffsetY)
-        : const Offset(Insets.spacing0, -LumosScreenTransitionConst.slideOffsetY);
+        : const Offset(
+            Insets.spacing0,
+            -LumosScreenTransitionConst.slideOffsetY,
+          );
     return AnimatedSwitcher(
-      duration: const Duration(milliseconds: LumosScreenTransitionConst.durationMs),
+      duration: const Duration(
+        milliseconds: LumosScreenTransitionConst.durationMs,
+      ),
       switchInCurve: Curves.easeOutCubic,
       switchOutCurve: Curves.easeInCubic,
       layoutBuilder: (Widget? currentChild, List<Widget> previousChildren) {
@@ -93,10 +98,7 @@ class LumosScreenTransition extends StatelessWidget {
           ),
         );
       },
-      child: KeyedSubtree(
-        key: switchKey,
-        child: child,
-      ),
+      child: KeyedSubtree(key: switchKey, child: child),
     );
   }
 }
@@ -179,7 +181,9 @@ class LumosSegmentedControl extends StatelessWidget {
           decoration: BoxDecoration(
             color: isSelected
                 ? Theme.of(context).colorScheme.primary
-                : Colors.transparent,
+                : Theme.of(
+                    context,
+                  ).colorScheme.surface.withValues(alpha: WidgetOpacities.none),
             borderRadius: BorderRadii.medium,
           ),
           child: Text(
