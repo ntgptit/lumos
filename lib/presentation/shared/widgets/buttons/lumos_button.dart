@@ -95,27 +95,32 @@ class LumosButton extends StatelessWidget {
   }
 
   ButtonStyle _resolveButtonStyle(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
+    final ButtonStyle themeStyle = _resolveThemeStyle(theme: theme);
     final _ButtonStyleTokens tokens = _resolveButtonStyleTokens(
       colorScheme: colorScheme,
     );
+    final ButtonStyle baseStyle = _buildBaseStyle(tokens: tokens);
+    final ButtonStyle mergedStyle = themeStyle.merge(baseStyle);
+    final ButtonStyle customStyle = _buildCustomColorStyle(
+      colorScheme: colorScheme,
+    );
+    final ButtonStyle resolvedStyle = mergedStyle.merge(customStyle);
+    return _withStateOverlay(style: resolvedStyle, colorScheme: colorScheme);
+  }
+
+  ButtonStyle _resolveThemeStyle({required ThemeData theme}) {
     if (type == LumosButtonType.primary) {
-      final ButtonStyle baseStyle = _buildFilledStyle(tokens: tokens);
-      return _withStateOverlay(style: baseStyle, colorScheme: colorScheme);
+      return theme.filledButtonTheme.style ?? const ButtonStyle();
     }
     if (type == LumosButtonType.secondary) {
-      final ButtonStyle baseStyle = _buildFilledStyle(tokens: tokens);
-      return _withStateOverlay(style: baseStyle, colorScheme: colorScheme);
+      return theme.filledButtonTheme.style ?? const ButtonStyle();
     }
     if (type == LumosButtonType.outline) {
-      final ButtonStyle baseStyle = _buildOutlineStyle(
-        colorScheme: colorScheme,
-        tokens: tokens,
-      );
-      return _withStateOverlay(style: baseStyle, colorScheme: colorScheme);
+      return theme.outlinedButtonTheme.style ?? const ButtonStyle();
     }
-    final ButtonStyle baseStyle = _buildTextStyle(tokens: tokens);
-    return _withStateOverlay(style: baseStyle, colorScheme: colorScheme);
+    return theme.textButtonTheme.style ?? const ButtonStyle();
   }
 
   _ButtonStyleTokens _resolveButtonStyleTokens({
@@ -126,59 +131,56 @@ class LumosButton extends StatelessWidget {
     final OutlinedBorder shape = const RoundedRectangleBorder(
       borderRadius: BorderRadii.medium,
     );
-    final Color disabledBackground = colorScheme.onSurface.withValues(
-      alpha: WidgetOpacities.divider,
-    );
-    final Color disabledForeground = colorScheme.onSurface.withValues(
-      alpha: WidgetOpacities.disabledContent,
-    );
     return _ButtonStyleTokens(
       buttonHeight: buttonHeight,
       buttonPadding: buttonPadding,
       shape: shape,
-      disabledBackground: disabledBackground,
-      disabledForeground: disabledForeground,
+      colorScheme: colorScheme,
     );
   }
 
-  ButtonStyle _buildFilledStyle({required _ButtonStyleTokens tokens}) {
-    return FilledButton.styleFrom(
-      minimumSize: Size(WidgetSizes.minTouchTarget, tokens.buttonHeight),
-      padding: tokens.buttonPadding,
-      shape: tokens.shape,
-      backgroundColor: customColor,
-      disabledBackgroundColor: tokens.disabledBackground,
-      disabledForegroundColor: tokens.disabledForeground,
-    );
-  }
-
-  ButtonStyle _buildOutlineStyle({
-    required ColorScheme colorScheme,
-    required _ButtonStyleTokens tokens,
-  }) {
-    final Color borderColor = customColor ?? colorScheme.outline;
-    return OutlinedButton.styleFrom(
-      minimumSize: Size(WidgetSizes.minTouchTarget, tokens.buttonHeight),
-      padding: tokens.buttonPadding,
-      shape: tokens.shape,
-      side: BorderSide(
-        color: borderColor,
-        width: WidgetSizes.borderWidthRegular,
+  ButtonStyle _buildBaseStyle({required _ButtonStyleTokens tokens}) {
+    final ButtonStyle baseStyle = ButtonStyle(
+      minimumSize: WidgetStatePropertyAll<Size>(
+        Size(WidgetSizes.minTouchTarget, tokens.buttonHeight),
       ),
-      foregroundColor: customColor,
-      disabledBackgroundColor: tokens.disabledBackground,
-      disabledForegroundColor: tokens.disabledForeground,
+      padding: WidgetStatePropertyAll<EdgeInsetsGeometry>(tokens.buttonPadding),
+      shape: WidgetStatePropertyAll<OutlinedBorder>(tokens.shape),
     );
+    if (type != LumosButtonType.outline) {
+      return baseStyle;
+    }
+    final BorderSide side = BorderSide(
+      color: tokens.colorScheme.primary,
+      width: WidgetSizes.borderWidthRegular,
+    );
+    return baseStyle.copyWith(side: WidgetStatePropertyAll<BorderSide>(side));
   }
 
-  ButtonStyle _buildTextStyle({required _ButtonStyleTokens tokens}) {
-    return TextButton.styleFrom(
-      minimumSize: Size(WidgetSizes.minTouchTarget, tokens.buttonHeight),
-      padding: tokens.buttonPadding,
-      shape: tokens.shape,
-      foregroundColor: customColor,
-      disabledBackgroundColor: tokens.disabledBackground,
-      disabledForegroundColor: tokens.disabledForeground,
+  ButtonStyle _buildCustomColorStyle({required ColorScheme colorScheme}) {
+    if (customColor == null) {
+      return const ButtonStyle();
+    }
+    if (type == LumosButtonType.outline) {
+      return ButtonStyle(
+        foregroundColor: WidgetStatePropertyAll<Color>(customColor!),
+        side: WidgetStatePropertyAll<BorderSide>(
+          BorderSide(
+            color: customColor!,
+            width: WidgetSizes.borderWidthRegular,
+          ),
+        ),
+      );
+    }
+    if (type == LumosButtonType.text) {
+      return ButtonStyle(
+        foregroundColor: WidgetStatePropertyAll<Color>(customColor!),
+      );
+    }
+    final Color foreground = colorScheme.onPrimary;
+    return ButtonStyle(
+      backgroundColor: WidgetStatePropertyAll<Color>(customColor!),
+      foregroundColor: WidgetStatePropertyAll<Color>(foreground),
     );
   }
 
@@ -290,13 +292,11 @@ class _ButtonStyleTokens {
     required this.buttonHeight,
     required this.buttonPadding,
     required this.shape,
-    required this.disabledBackground,
-    required this.disabledForeground,
+    required this.colorScheme,
   });
 
   final double buttonHeight;
   final EdgeInsetsGeometry buttonPadding;
   final OutlinedBorder shape;
-  final Color disabledBackground;
-  final Color disabledForeground;
+  final ColorScheme colorScheme;
 }

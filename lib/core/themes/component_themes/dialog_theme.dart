@@ -12,7 +12,7 @@ class DialogThemes {
   }) {
     return DialogThemeData(
       elevation: WidgetSizes.none,
-      backgroundColor: colorScheme.surface,
+      backgroundColor: colorScheme.surfaceContainer,
       shape: AppShape.dialogShape(),
       titleTextStyle: textTheme.titleLarge?.copyWith(
         color: colorScheme.onSurface,

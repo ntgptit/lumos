@@ -9,7 +9,6 @@ class LumosCardConst {
   static const EdgeInsetsGeometry defaultPadding = EdgeInsets.all(
     Insets.paddingScreen,
   );
-  static const double minLuminanceDelta = 0.03;
 }
 
 class LumosCard extends StatelessWidget {
@@ -40,15 +39,12 @@ class LumosCard extends StatelessWidget {
     final ColorScheme colorScheme = theme.colorScheme;
     final BorderRadius resolvedBorderRadius =
         borderRadius ?? BorderRadii.medium;
-    final BorderSide borderSide = _resolveBorderSide(colorScheme: colorScheme);
+    final BorderSide? borderSide = _resolveBorderSide(colorScheme: colorScheme);
     final ShapeBorder resolvedShape = _resolveShape(
       borderRadius: resolvedBorderRadius,
       borderSide: borderSide,
     );
-    final Color resolvedColor = _resolveCardColor(
-      theme: theme,
-      colorScheme: colorScheme,
-    );
+    final Color? resolvedColor = _resolveCardColor(colorScheme: colorScheme);
     final double resolvedElevation =
         elevation ?? theme.cardTheme.elevation ?? WidgetSizes.none;
     final EdgeInsetsGeometry? resolvedMargin = margin ?? theme.cardTheme.margin;
@@ -76,49 +72,35 @@ class LumosCard extends StatelessWidget {
 
   ShapeBorder _resolveShape({
     required BorderRadius borderRadius,
-    required BorderSide borderSide,
+    required BorderSide? borderSide,
   }) {
+    if (borderSide == null) {
+      return RoundedRectangleBorder(borderRadius: borderRadius);
+    }
     if (borderRadius == BorderRadii.medium) {
       return AppShape.cardShape(side: borderSide);
     }
     return RoundedRectangleBorder(borderRadius: borderRadius, side: borderSide);
   }
 
-  BorderSide _resolveBorderSide({required ColorScheme colorScheme}) {
+  BorderSide? _resolveBorderSide({required ColorScheme colorScheme}) {
     if (isSelected) {
       return BorderSide(
         color: colorScheme.primary,
         width: WidgetSizes.borderWidthRegular,
       );
     }
-    return BorderSide(
-      color: colorScheme.outlineVariant.withValues(
-        alpha: WidgetOpacities.stateDrag,
-      ),
-      width: WidgetSizes.borderWidthRegular,
-    );
+    return null;
   }
 
-  Color _resolveCardColor({
-    required ThemeData theme,
-    required ColorScheme colorScheme,
-  }) {
+  Color? _resolveCardColor({required ColorScheme colorScheme}) {
     if (color != null) {
       return color!;
     }
     if (isSelected) {
       return colorScheme.primaryContainer;
     }
-    final Color defaultColor =
-        theme.cardTheme.color ?? colorScheme.surfaceContainerLow;
-    final double luminanceDelta =
-        (defaultColor.computeLuminance() -
-                theme.scaffoldBackgroundColor.computeLuminance())
-            .abs();
-    if (luminanceDelta >= LumosCardConst.minLuminanceDelta) {
-      return defaultColor;
-    }
-    return colorScheme.surfaceContainer;
+    return null;
   }
 
   Widget _buildThemedContent({

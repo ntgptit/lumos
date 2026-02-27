@@ -26,13 +26,19 @@ class LumosProgressBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final ProgressIndicatorThemeData indicatorTheme =
+        theme.progressIndicatorTheme;
     final double normalizedValue = _normalizeValue(value);
     final double resolvedHeight = height ?? LumosProgressBarConst.defaultHeight;
     final Color resolvedBackgroundColor =
-        backgroundColor ?? colorScheme.surfaceContainerHigh;
+        backgroundColor ??
+        indicatorTheme.linearTrackColor ??
+        colorScheme.surfaceContainerHighest;
     final Color defaultProgressColor = _resolveDefaultProgressColor(
       colorScheme: colorScheme,
+      indicatorTheme: indicatorTheme,
     );
     final Color resolvedProgressColor = progressColor ?? defaultProgressColor;
     return ClipRRect(
@@ -57,10 +63,13 @@ class LumosProgressBar extends StatelessWidget {
     return normalizedValue;
   }
 
-  Color _resolveDefaultProgressColor({required ColorScheme colorScheme}) {
+  Color _resolveDefaultProgressColor({
+    required ColorScheme colorScheme,
+    required ProgressIndicatorThemeData indicatorTheme,
+  }) {
     if (useTertiary) {
       return colorScheme.tertiary;
     }
-    return colorScheme.primary;
+    return indicatorTheme.color ?? colorScheme.primary;
   }
 }

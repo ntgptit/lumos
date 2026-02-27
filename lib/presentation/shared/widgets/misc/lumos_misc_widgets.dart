@@ -174,9 +174,7 @@ class LumosProgressRing extends StatelessWidget {
           CircularProgressIndicator(
             value: progress,
             strokeWidth: WidgetSizes.borderWidthRegular * Insets.spacing4,
-            valueColor: AlwaysStoppedAnimation<Color>(
-              color ?? Theme.of(context).colorScheme.primary,
-            ),
+            color: color,
           ),
           if (centerChild case final Widget child) child,
         ],

@@ -45,7 +45,7 @@ class ButtonThemes {
         textStyle: textTheme.labelLarge,
         shape: AppShape.buttonShape(),
         side: BorderSide(
-          color: colorScheme.outline,
+          color: colorScheme.primary,
           width: WidgetSizes.borderWidthRegular,
         ),
       ),
