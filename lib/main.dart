@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'core/localization/locale_provider.dart';
+import 'core/themes/google_fonts_bootstrap.dart';
 import 'core/themes/providers/theme_provider.dart';
 import 'l10n/app_localizations.dart';
 import 'presentation/routes/app_router.dart';
@@ -19,8 +19,10 @@ class AppBootstrapConst {
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  GoogleFonts.config.allowRuntimeFetching = false;
-  await _loadEnvironment();
+  await Future.wait<void>(<Future<void>>[
+    AppGoogleFontsBootstrap.ensureFontsReady(),
+    _loadEnvironment(),
+  ]);
   runApp(const ProviderScope(child: AppEntryPoint()));
 }
 

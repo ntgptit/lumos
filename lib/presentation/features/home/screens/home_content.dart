@@ -76,12 +76,9 @@ class HomeContent extends StatelessWidget {
       tween: Tween<double>(begin: 0, end: 1),
       builder: (BuildContext context, double value, Widget? animatedChild) {
         final double dy = Insets.spacing16 * (1 - value);
-        return Opacity(
-          opacity: value,
-          child: Transform.translate(
-            offset: Offset(Insets.spacing0, dy),
-            child: animatedChild,
-          ),
+        return Transform.translate(
+          offset: Offset(Insets.spacing0, dy),
+          child: animatedChild,
         );
       },
       child: child,
@@ -113,9 +110,7 @@ class HomeBackground extends StatelessWidget {
               top: -Insets.spacing64,
               right: -Insets.spacing64,
               child: HomeGlowBlob(
-                color: colorScheme.primary.withValues(
-                  alpha: WidgetOpacities.stateHover,
-                ),
+                color: colorScheme.primaryContainer,
                 size: Insets.spacing64 * 3,
               ),
             ),
@@ -123,9 +118,7 @@ class HomeBackground extends StatelessWidget {
               left: -Insets.spacing48,
               top: Insets.spacing64 * 2,
               child: HomeGlowBlob(
-                color: colorScheme.secondary.withValues(
-                  alpha: WidgetOpacities.elevationLevel2,
-                ),
+                color: colorScheme.secondaryContainer,
                 size: Insets.spacing64 * 2.2,
               ),
             ),
@@ -276,9 +269,7 @@ class HomeHeroCard extends StatelessWidget {
       border: Border.all(color: colorScheme.outlineVariant),
       boxShadow: <BoxShadow>[
         BoxShadow(
-          color: colorScheme.primary.withValues(
-            alpha: WidgetOpacities.elevationLevel3,
-          ),
+          color: colorScheme.shadow,
           blurRadius: Insets.spacing24,
           offset: const Offset(Insets.spacing0, Insets.spacing12),
         ),

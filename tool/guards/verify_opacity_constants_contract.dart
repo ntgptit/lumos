@@ -6,6 +6,9 @@ class OpacityContractConst {
   static const String libRoot = 'lib';
   static const String dimensionsPath =
       'lib/core/themes/constants/dimensions.dart';
+  static const String allowedSharedWidgetsPath =
+      'lib/presentation/shared/widgets/';
+  static const String allowedCoreThemesPath = 'lib/core/themes/';
   static const String allowedClassName = 'WidgetOpacities';
   static const String generatedSuffix = '.g.dart';
   static const String freezedSuffix = '.freezed.dart';
@@ -53,12 +56,19 @@ final RegExp _opacityWordRegExp = RegExp(r'(opacity|Opacity|alpha|Alpha)');
 final RegExp _widgetOpacitiesUseRegExp = RegExp(
   r'WidgetOpacities\.([A-Za-z0-9_]+)',
 );
+final RegExp _withOpacityUseRegExp = RegExp(r'\bwithOpacity\s*\(');
+final RegExp _withValuesAlphaUseRegExp = RegExp(
+  r'\bwithValues\s*\([^)]*\balpha\s*:',
+);
+final RegExp _opacityNamedArgumentRegExp = RegExp(r'\bopacity\s*:');
+final RegExp _alphaNamedArgumentRegExp = RegExp(r'\balpha\s*:');
 
 Future<void> main() async {
   final List<OpacityViolation> violations = <OpacityViolation>[];
   await _checkWidgetOpacitiesClass(violations);
   await _checkNoExtraOpacityConstants(violations);
   await _checkOnlyAllowedWidgetOpacityUsages(violations);
+  await _checkOpacityUsageRestrictedByPath(violations);
 
   if (violations.isEmpty) {
     stdout.writeln('Opacity constants contract passed.');
@@ -301,10 +311,97 @@ Future<void> _checkOnlyAllowedWidgetOpacityUsages(
   }
 }
 
+Future<void> _checkOpacityUsageRestrictedByPath(
+  List<OpacityViolation> violations,
+) async {
+  final Directory root = Directory(OpacityContractConst.libRoot);
+  if (!root.existsSync()) {
+    return;
+  }
+
+  final List<FileSystemEntity> entities = root.listSync(recursive: true);
+  for (final FileSystemEntity entity in entities) {
+    if (entity is! File) {
+      continue;
+    }
+    final String normalizedPath = _normalizePath(entity.path);
+    if (!normalizedPath.endsWith(OpacityContractConst.dartSuffix)) {
+      continue;
+    }
+    if (normalizedPath.endsWith(OpacityContractConst.generatedSuffix)) {
+      continue;
+    }
+    if (normalizedPath.endsWith(OpacityContractConst.freezedSuffix)) {
+      continue;
+    }
+    if (_isAllowedOpacityPath(normalizedPath)) {
+      continue;
+    }
+
+    final List<String> lines = await entity.readAsLines();
+    for (int i = 0; i < lines.length; i++) {
+      final String rawLine = lines[i];
+      final String line = _stripLineComment(rawLine).trim();
+      if (line.isEmpty) {
+        continue;
+      }
+      if (!_containsRestrictedOpacityUsage(line)) {
+        continue;
+      }
+      violations.add(
+        OpacityViolation(
+          filePath: normalizedPath,
+          lineNumber: i + 1,
+          message:
+              'Opacity usage is only allowed in shared widgets and core themes.',
+          lineContent: rawLine.trim(),
+        ),
+      );
+    }
+  }
+}
+
+bool _isAllowedOpacityPath(String normalizedPath) {
+  if (normalizedPath.startsWith(OpacityContractConst.allowedSharedWidgetsPath)) {
+    return true;
+  }
+  if (normalizedPath.startsWith(OpacityContractConst.allowedCoreThemesPath)) {
+    return true;
+  }
+  return false;
+}
+
+bool _containsRestrictedOpacityUsage(String line) {
+  if (_widgetOpacitiesUseRegExp.hasMatch(line)) {
+    return true;
+  }
+  if (_withOpacityUseRegExp.hasMatch(line)) {
+    return true;
+  }
+  if (_withValuesAlphaUseRegExp.hasMatch(line)) {
+    return true;
+  }
+  if (_opacityNamedArgumentRegExp.hasMatch(line)) {
+    return true;
+  }
+  if (_alphaNamedArgumentRegExp.hasMatch(line)) {
+    return true;
+  }
+  return false;
+}
+
 int _countChar(String source, String char) {
   return char.allMatches(source).length;
 }
 
 String _normalizePath(String rawPath) {
   return rawPath.replaceAll('\\', '/');
+}
+
+String _stripLineComment(String sourceLine) {
+  final int commentIndex = sourceLine.indexOf('//');
+  if (commentIndex < 0) {
+    return sourceLine;
+  }
+  return sourceLine.substring(0, commentIndex);
 }

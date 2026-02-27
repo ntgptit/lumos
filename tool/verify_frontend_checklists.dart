@@ -7,6 +7,7 @@ import 'guards/verify_component_theme_usage_contract.dart'
     as component_theme_guard;
 import 'guards/verify_feature_surface_contract.dart' as feature_surface_guard;
 import 'guards/verify_navigation_go_router_contract.dart' as navigation_guard;
+import 'guards/verify_opacity_constants_contract.dart' as opacity_guard;
 import 'guards/verify_riverpod_annotation.dart' as riverpod_annotation_guard;
 import 'guards/verify_shared_widget_override_contract.dart'
     as shared_widget_override_guard;
@@ -158,6 +159,11 @@ List<_GuardTask> _buildDefaultTasks() {
       id: 'navigation',
       fileName: 'guards/verify_navigation_go_router_contract.dart',
       run: navigation_guard.main,
+    ),
+    _GuardTask(
+      id: 'opacity-contract',
+      fileName: 'guards/verify_opacity_constants_contract.dart',
+      run: opacity_guard.main,
     ),
     _GuardTask(
       id: 'common-widget-boundaries',

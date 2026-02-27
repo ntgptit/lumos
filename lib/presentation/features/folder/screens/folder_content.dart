@@ -155,20 +155,10 @@ class FolderContent extends ConsumerWidget {
     return Positioned.fill(
       child: IgnorePointer(
         child: ColoredBox(
-          color: Theme.of(
-            context,
-          ).colorScheme.scrim.withValues(alpha: _resolveScrimAlpha(context)),
+          color: Theme.of(context).colorScheme.scrim,
           child: const FolderMutatingOverlay(),
         ),
       ),
     );
-  }
-
-  double _resolveScrimAlpha(BuildContext context) {
-    final Brightness brightness = Theme.of(context).brightness;
-    if (brightness == Brightness.dark) {
-      return WidgetOpacities.scrimDark;
-    }
-    return WidgetOpacities.scrimLight;
   }
 }
