@@ -17,7 +17,9 @@ class HomeNavigationScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
+      backgroundColor: colorScheme.surfaceContainerLow,
       appBar: const HomeAppBar(),
       body: SafeArea(
         child: HomeAdaptiveBody(

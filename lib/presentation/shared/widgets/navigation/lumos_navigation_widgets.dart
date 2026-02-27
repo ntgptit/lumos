@@ -17,7 +17,6 @@ class LumosAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.actions,
     this.leading,
     this.automaticallyImplyLeading = true,
-    this.backgroundColor,
     this.elevation,
   });
 
@@ -25,7 +24,6 @@ class LumosAppBar extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget>? actions;
   final Widget? leading;
   final bool automaticallyImplyLeading;
-  final Color? backgroundColor;
   final double? elevation;
 
   @override
@@ -38,7 +36,6 @@ class LumosAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: actions,
       leading: leading,
       automaticallyImplyLeading: automaticallyImplyLeading,
-      backgroundColor: backgroundColor,
       elevation: elevation,
     );
   }

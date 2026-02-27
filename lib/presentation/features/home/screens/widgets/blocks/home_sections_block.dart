@@ -5,6 +5,15 @@ import '../../../../../../l10n/app_localizations.dart';
 import '../../../../../shared/widgets/lumos_widgets.dart';
 import '../../../constants/home_contract.dart';
 
+class HomeSectionsConst {
+  const HomeSectionsConst._();
+
+  static const double statIconContainerSize =
+      Insets.spacing32 + Insets.spacing8;
+  static const double activityAccentBarHeight = Insets.spacing32;
+  static const double activityAccentBarWidth = Insets.spacing8;
+}
+
 class HomeStatItem {
   const HomeStatItem({
     required this.label,
@@ -88,21 +97,30 @@ class HomeStatTile extends StatelessWidget {
       child: Row(
         children: <Widget>[
           Container(
-            width: Insets.spacing32 + Insets.spacing8,
-            height: Insets.spacing32 + Insets.spacing8,
+            width: HomeSectionsConst.statIconContainerSize,
+            height: HomeSectionsConst.statIconContainerSize,
             decoration: BoxDecoration(
               borderRadius: BorderRadii.medium,
-              color: colorScheme.secondaryContainer,
+              border: Border.all(color: colorScheme.outlineVariant),
+              color: colorScheme.surfaceContainerHighest,
             ),
-            child: Icon(stat.icon, color: colorScheme.onSecondaryContainer),
+            child: Icon(stat.icon, color: colorScheme.primary),
           ),
           const SizedBox(width: Insets.spacing12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                LumosText(stat.value, style: LumosTextStyle.titleLarge),
-                LumosText(stat.label, style: LumosTextStyle.labelMedium),
+                LumosText(
+                  stat.value,
+                  style: LumosTextStyle.titleLarge,
+                  tone: LumosTextTone.primary,
+                ),
+                LumosText(
+                  stat.label,
+                  style: LumosTextStyle.labelMedium,
+                  tone: LumosTextTone.secondary,
+                ),
               ],
             ),
           ),
@@ -288,17 +306,19 @@ class HomeActivityItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Container(
       padding: const EdgeInsets.all(Insets.spacing12),
       decoration: BoxDecoration(
         borderRadius: BorderRadii.medium,
-        color: color.withValues(alpha: WidgetOpacities.stateHover),
+        border: Border.all(color: colorScheme.outlineVariant),
+        color: colorScheme.surfaceContainerHigh,
       ),
       child: Row(
         children: <Widget>[
           Container(
-            width: Insets.spacing8,
-            height: Insets.spacing32,
+            width: HomeSectionsConst.activityAccentBarWidth,
+            height: HomeSectionsConst.activityAccentBarHeight,
             decoration: BoxDecoration(
               borderRadius: BorderRadii.medium,
               color: color,
@@ -325,7 +345,11 @@ class HomeActivityItem extends StatelessWidget {
             ),
           ),
           const SizedBox(width: Insets.spacing8),
-          LumosText(trailing, style: LumosTextStyle.labelSmall),
+          LumosText(
+            trailing,
+            style: LumosTextStyle.labelSmall,
+            tone: LumosTextTone.secondary,
+          ),
         ],
       ),
     );

@@ -92,10 +92,7 @@ lib/
 - [ ] Đã tách fine-grained subscriptions (không watch toàn bộ state ở root widget).
 - [ ] Đã dùng shared widgets thay vì raw Material widgets.
 - [ ] Pass các guard bắt buộc:
-  - `dart run tool/verify_riverpod_annotation.dart`
-  - `dart run tool/verify_state_management_contract.dart`
-  - `dart run tool/verify_common_widget_boundaries.dart`
-  - `dart run tool/verify_common_widget_usage_contract.dart`
+  - `dart run tool/verify_frontend_checklists.dart`
   - `flutter analyze`
   - `flutter test`
 

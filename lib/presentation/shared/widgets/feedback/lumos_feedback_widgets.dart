@@ -17,7 +17,7 @@ class LumosSnackbar extends SnackBar {
          content: LumosText(
            message,
            style: LumosTextStyle.bodyMedium,
-           color: Theme.of(context).colorScheme.onInverseSurface,
+           containerRole: LumosTextContainerRole.inverseSurface,
          ),
          backgroundColor: _resolveBackgroundColor(
            type: type,

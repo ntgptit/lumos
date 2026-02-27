@@ -30,13 +30,14 @@ class HomePlaceholderTab extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(Insets.spacing16),
                   decoration: BoxDecoration(
-                    color: colorScheme.secondaryContainer,
+                    border: Border.all(color: colorScheme.outlineVariant),
+                    color: colorScheme.surfaceContainerHighest,
                     borderRadius: BorderRadii.large,
                   ),
                   child: Icon(
                     icon,
                     size: IconSizes.iconXLarge,
-                    color: colorScheme.onSecondaryContainer,
+                    color: colorScheme.primary,
                   ),
                 ),
                 const SizedBox(height: Insets.spacing16),

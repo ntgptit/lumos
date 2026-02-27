@@ -13,15 +13,11 @@ class LumosProgressBar extends StatelessWidget {
     required this.value,
     super.key,
     this.height,
-    this.backgroundColor,
-    this.progressColor,
     this.useTertiary = false,
   });
 
   final double value;
   final double? height;
-  final Color? backgroundColor;
-  final Color? progressColor;
   final bool useTertiary;
 
   @override
@@ -33,21 +29,18 @@ class LumosProgressBar extends StatelessWidget {
     final double normalizedValue = _normalizeValue(value);
     final double resolvedHeight = height ?? LumosProgressBarConst.defaultHeight;
     final Color resolvedBackgroundColor =
-        backgroundColor ??
-        indicatorTheme.linearTrackColor ??
-        colorScheme.surfaceContainerHighest;
+        indicatorTheme.linearTrackColor ?? colorScheme.surfaceContainerHighest;
     final Color defaultProgressColor = _resolveDefaultProgressColor(
       colorScheme: colorScheme,
       indicatorTheme: indicatorTheme,
     );
-    final Color resolvedProgressColor = progressColor ?? defaultProgressColor;
     return ClipRRect(
       borderRadius: BorderRadii.medium,
       child: LinearProgressIndicator(
         value: normalizedValue,
         minHeight: resolvedHeight,
         backgroundColor: resolvedBackgroundColor,
-        valueColor: AlwaysStoppedAnimation<Color>(resolvedProgressColor),
+        valueColor: AlwaysStoppedAnimation<Color>(defaultProgressColor),
       ),
     );
   }

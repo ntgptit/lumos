@@ -14,14 +14,12 @@ class LumosIconButton extends StatelessWidget {
     super.key,
     this.onPressed,
     this.size,
-    this.color,
     this.tooltip,
   });
 
   final IconData icon;
   final VoidCallback? onPressed;
   final double? size;
-  final Color? color;
   final String? tooltip;
 
   @override
@@ -38,7 +36,7 @@ class LumosIconButton extends StatelessWidget {
           WidgetSizes.minTouchTarget,
         ),
       ),
-      icon: Icon(icon, color: color),
+      icon: Icon(icon),
     );
   }
 }

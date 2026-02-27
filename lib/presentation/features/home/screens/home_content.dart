@@ -11,6 +11,7 @@ class HomeContentConst {
 
   static const double heroMinHeightMobile = 280;
   static const double heroMinHeightLarge = 250;
+  static const double avatarRadius = Insets.spacing16;
 }
 
 class HomeContent extends StatelessWidget {
@@ -101,8 +102,8 @@ class HomeBackground extends StatelessWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: <Color>[
-              colorScheme.surface,
-              colorScheme.surfaceContainerLowest,
+              colorScheme.surfaceContainerLow,
+              colorScheme.surfaceDim,
             ],
           ),
         ),
@@ -113,7 +114,7 @@ class HomeBackground extends StatelessWidget {
               right: -Insets.spacing64,
               child: HomeGlowBlob(
                 color: colorScheme.primary.withValues(
-                  alpha: WidgetOpacities.elevationLevel5,
+                  alpha: WidgetOpacities.stateHover,
                 ),
                 size: Insets.spacing64 * 3,
               ),
@@ -122,8 +123,8 @@ class HomeBackground extends StatelessWidget {
               left: -Insets.spacing48,
               top: Insets.spacing64 * 2,
               child: HomeGlowBlob(
-                color: colorScheme.tertiary.withValues(
-                  alpha: WidgetOpacities.elevationLevel3,
+                color: colorScheme.secondary.withValues(
+                  alpha: WidgetOpacities.elevationLevel2,
                 ),
                 size: Insets.spacing64 * 2.2,
               ),
@@ -186,9 +187,12 @@ class HomeHeaderBlock extends StatelessWidget {
             border: Border.all(color: colorScheme.outlineVariant),
           ),
           child: CircleAvatar(
-            radius: Insets.spacing16,
-            backgroundColor: colorScheme.secondaryContainer,
-            child: const Text('L'),
+            radius: HomeContentConst.avatarRadius,
+            backgroundColor: colorScheme.primaryContainer,
+            child: Text(
+              'L',
+              style: TextStyle(color: colorScheme.onPrimaryContainer),
+            ),
           ),
         ),
       ],
@@ -238,13 +242,13 @@ class HomeHeroCard extends StatelessWidget {
               LumosText(
                 l10n.homeHeroTitle,
                 style: LumosTextStyle.headlineMedium,
-                color: colorScheme.onPrimary,
+                containerRole: LumosTextContainerRole.primaryContainer,
               ),
               const SizedBox(height: Insets.spacing8),
               LumosText(
                 l10n.homeHeroBody,
                 style: LumosTextStyle.bodyMedium,
-                color: colorScheme.onPrimary,
+                containerRole: LumosTextContainerRole.primaryContainer,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -264,15 +268,16 @@ class HomeHeroCard extends StatelessWidget {
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: <Color>[
-          colorScheme.primary,
           colorScheme.primaryContainer,
+          colorScheme.secondaryContainer,
           colorScheme.tertiaryContainer,
         ],
       ),
+      border: Border.all(color: colorScheme.outlineVariant),
       boxShadow: <BoxShadow>[
         BoxShadow(
           color: colorScheme.primary.withValues(
-            alpha: WidgetOpacities.elevationLevel5,
+            alpha: WidgetOpacities.elevationLevel3,
           ),
           blurRadius: Insets.spacing24,
           offset: const Offset(Insets.spacing0, Insets.spacing12),
@@ -287,7 +292,7 @@ class HomeHeroCard extends StatelessWidget {
         Icon(
           Icons.auto_awesome_rounded,
           size: IconSizes.iconMedium,
-          color: colorScheme.onPrimary,
+          color: colorScheme.primary,
         ),
         const SizedBox(width: Insets.spacing8),
         Container(
@@ -296,15 +301,13 @@ class HomeHeroCard extends StatelessWidget {
             vertical: Insets.spacing4,
           ),
           decoration: BoxDecoration(
-            color: colorScheme.onPrimary.withValues(
-              alpha: WidgetOpacities.elevationLevel4,
-            ),
+            color: colorScheme.surfaceContainerHighest,
             borderRadius: BorderRadii.medium,
           ),
           child: LumosText(
             l10n.homeAiLearningPath,
             style: LumosTextStyle.labelSmall,
-            color: colorScheme.onPrimary,
+            tone: LumosTextTone.primary,
           ),
         ),
       ],
@@ -327,8 +330,7 @@ class HomeHeroCard extends StatelessWidget {
         LumosButton(
           label: l10n.homeSecondaryAction,
           onPressed: () {},
-          type: LumosButtonType.text,
-          customColor: colorScheme.onPrimary,
+          type: LumosButtonType.secondary,
         ),
       ],
     );

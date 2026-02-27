@@ -20,7 +20,7 @@ class FolderErrorBanner extends StatelessWidget {
       child: LumosText(
         message,
         style: LumosTextStyle.bodySmall,
-        color: colorScheme.onErrorContainer,
+        containerRole: LumosTextContainerRole.errorContainer,
       ),
     );
   }

@@ -6,7 +6,7 @@
 //   yaml: ^3.1.2
 //
 // Run:
-//   dart run tool/verify_code_quality_contract.dart
+//   dart run tool/verify_frontend_checklists.dart --only=code-quality
 
 import 'dart:collection';
 import 'dart:convert';

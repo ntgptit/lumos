@@ -23,7 +23,6 @@ class LumosButton extends StatelessWidget {
     this.isLoading = false,
     this.icon,
     this.expanded = false,
-    this.customColor,
   });
 
   final String label;
@@ -33,7 +32,6 @@ class LumosButton extends StatelessWidget {
   final bool isLoading;
   final IconData? icon;
   final bool expanded;
-  final Color? customColor;
 
   @override
   Widget build(BuildContext context) {
@@ -102,11 +100,7 @@ class LumosButton extends StatelessWidget {
       colorScheme: colorScheme,
     );
     final ButtonStyle baseStyle = _buildBaseStyle(tokens: tokens);
-    final ButtonStyle mergedStyle = themeStyle.merge(baseStyle);
-    final ButtonStyle customStyle = _buildCustomColorStyle(
-      colorScheme: colorScheme,
-    );
-    final ButtonStyle resolvedStyle = mergedStyle.merge(customStyle);
+    final ButtonStyle resolvedStyle = themeStyle.merge(baseStyle);
     return _withStateOverlay(style: resolvedStyle, colorScheme: colorScheme);
   }
 
@@ -155,33 +149,6 @@ class LumosButton extends StatelessWidget {
       width: WidgetSizes.borderWidthRegular,
     );
     return baseStyle.copyWith(side: WidgetStatePropertyAll<BorderSide>(side));
-  }
-
-  ButtonStyle _buildCustomColorStyle({required ColorScheme colorScheme}) {
-    if (customColor == null) {
-      return const ButtonStyle();
-    }
-    if (type == LumosButtonType.outline) {
-      return ButtonStyle(
-        foregroundColor: WidgetStatePropertyAll<Color>(customColor!),
-        side: WidgetStatePropertyAll<BorderSide>(
-          BorderSide(
-            color: customColor!,
-            width: WidgetSizes.borderWidthRegular,
-          ),
-        ),
-      );
-    }
-    if (type == LumosButtonType.text) {
-      return ButtonStyle(
-        foregroundColor: WidgetStatePropertyAll<Color>(customColor!),
-      );
-    }
-    final Color foreground = colorScheme.onPrimary;
-    return ButtonStyle(
-      backgroundColor: WidgetStatePropertyAll<Color>(customColor!),
-      foregroundColor: WidgetStatePropertyAll<Color>(foreground),
-    );
   }
 
   double _resolveButtonHeight() {

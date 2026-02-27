@@ -18,7 +18,6 @@ class LumosCard extends StatelessWidget {
     this.onTap,
     this.padding = LumosCardConst.defaultPadding,
     this.elevation,
-    this.color,
     this.borderRadius,
     this.isSelected = false,
     this.margin,
@@ -28,7 +27,6 @@ class LumosCard extends StatelessWidget {
   final VoidCallback? onTap;
   final EdgeInsetsGeometry padding;
   final double? elevation;
-  final Color? color;
   final BorderRadius? borderRadius;
   final bool isSelected;
   final EdgeInsetsGeometry? margin;
@@ -94,9 +92,6 @@ class LumosCard extends StatelessWidget {
   }
 
   Color? _resolveCardColor({required ColorScheme colorScheme}) {
-    if (color != null) {
-      return color!;
-    }
     if (isSelected) {
       return colorScheme.primaryContainer;
     }

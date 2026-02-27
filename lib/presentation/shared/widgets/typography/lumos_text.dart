@@ -29,7 +29,13 @@ enum LumosTextStyle {
 
 enum LumosTextTone { auto, primary, secondary }
 
-enum LumosTextContainerRole { surface, primaryContainer, secondaryContainer }
+enum LumosTextContainerRole {
+  surface,
+  primaryContainer,
+  secondaryContainer,
+  errorContainer,
+  inverseSurface,
+}
 
 class LumosText extends StatelessWidget {
   const LumosText(
@@ -39,7 +45,6 @@ class LumosText extends StatelessWidget {
     this.tone = LumosTextConst.defaultTone,
     this.containerRole = LumosTextConst.defaultContainerRole,
     this.align,
-    this.color,
     this.maxLines,
     this.overflow,
   });
@@ -49,7 +54,6 @@ class LumosText extends StatelessWidget {
   final LumosTextTone tone;
   final LumosTextContainerRole containerRole;
   final TextAlign? align;
-  final Color? color;
   final int? maxLines;
   final TextOverflow? overflow;
 
@@ -116,9 +120,6 @@ class LumosText extends StatelessWidget {
   }
 
   Color _resolveColor({required ThemeData theme}) {
-    if (color case final Color explicitColor) {
-      return explicitColor;
-    }
     final ColorScheme colorScheme = theme.colorScheme;
     final LumosTextTone resolvedTone = _resolveTone();
     if (containerRole == LumosTextContainerRole.primaryContainer) {
@@ -126,6 +127,12 @@ class LumosText extends StatelessWidget {
     }
     if (containerRole == LumosTextContainerRole.secondaryContainer) {
       return colorScheme.onSecondaryContainer;
+    }
+    if (containerRole == LumosTextContainerRole.errorContainer) {
+      return colorScheme.onErrorContainer;
+    }
+    if (containerRole == LumosTextContainerRole.inverseSurface) {
+      return colorScheme.onInverseSurface;
     }
     if (resolvedTone == LumosTextTone.primary) {
       return colorScheme.onSurface;

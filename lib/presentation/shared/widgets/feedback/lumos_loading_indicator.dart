@@ -10,15 +10,9 @@ class LumosLoadingIndicatorConst {
 }
 
 class LumosLoadingIndicator extends StatelessWidget {
-  const LumosLoadingIndicator({
-    super.key,
-    this.size,
-    this.color,
-    this.isLinear = false,
-  });
+  const LumosLoadingIndicator({super.key, this.size, this.isLinear = false});
 
   final double? size;
-  final Color? color;
   final bool isLinear;
 
   @override
@@ -32,13 +26,7 @@ class LumosLoadingIndicator extends StatelessWidget {
   Widget _buildLinearIndicator() {
     final double indicatorHeight =
         size ?? LumosLoadingIndicatorConst.defaultLinearHeight;
-    if (color == null) {
-      return LinearProgressIndicator(minHeight: indicatorHeight);
-    }
-    return LinearProgressIndicator(
-      minHeight: indicatorHeight,
-      valueColor: AlwaysStoppedAnimation<Color>(color!),
-    );
+    return LinearProgressIndicator(minHeight: indicatorHeight);
   }
 
   Widget _buildCircularIndicator() {
@@ -53,14 +41,8 @@ class LumosLoadingIndicator extends StatelessWidget {
   }
 
   Widget _buildCircularProgressIndicator() {
-    if (color == null) {
-      return CircularProgressIndicator(
-        strokeWidth: WidgetSizes.borderWidthRegular,
-      );
-    }
     return CircularProgressIndicator(
       strokeWidth: WidgetSizes.borderWidthRegular,
-      valueColor: AlwaysStoppedAnimation<Color>(color!),
     );
   }
 }

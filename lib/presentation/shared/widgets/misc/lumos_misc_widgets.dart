@@ -43,27 +43,27 @@ class LumosAvatar extends StatelessWidget {
 }
 
 class LumosBadge extends StatelessWidget {
-  const LumosBadge({required this.count, super.key, this.color});
+  const LumosBadge({required this.count, super.key});
 
   final int count;
-  final Color? color;
 
   @override
   Widget build(BuildContext context) {
-    final Color resolvedColor = color ?? Theme.of(context).colorScheme.error;
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: Insets.spacing8,
         vertical: Insets.spacing4,
       ),
       decoration: BoxDecoration(
-        color: resolvedColor,
+        color: colorScheme.error,
         borderRadius: BorderRadii.large,
       ),
-      child: LumosText(
+      child: Text(
         '$count',
-        style: LumosTextStyle.labelSmall,
-        color: Theme.of(context).colorScheme.onError,
+        overflow: TextOverflow.ellipsis,
+        style: theme.textTheme.labelSmall?.copyWith(color: colorScheme.onError),
       ),
     );
   }
@@ -154,13 +154,11 @@ class LumosProgressRing extends StatelessWidget {
     required this.progress,
     required this.size,
     super.key,
-    this.color,
     this.centerChild,
   });
 
   final double progress;
   final double size;
-  final Color? color;
   final Widget? centerChild;
 
   @override
@@ -174,7 +172,6 @@ class LumosProgressRing extends StatelessWidget {
           CircularProgressIndicator(
             value: progress,
             strokeWidth: WidgetSizes.borderWidthRegular * Insets.spacing4,
-            color: color,
           ),
           if (centerChild case final Widget child) child,
         ],
