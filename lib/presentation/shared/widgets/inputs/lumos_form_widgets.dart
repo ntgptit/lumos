@@ -60,13 +60,15 @@ class LumosSearchBar extends StatelessWidget {
     required this.onSearch,
     super.key,
     this.onClear,
+    this.clearTooltip,
     this.hint,
     this.autoFocus = false,
     this.controller,
-  });
+  }) : assert(onClear == null || clearTooltip != null || hint != null);
 
   final ValueChanged<String> onSearch;
   final VoidCallback? onClear;
+  final String? clearTooltip;
   final String? hint;
   final bool autoFocus;
   final TextEditingController? controller;
@@ -92,10 +94,18 @@ class LumosSearchBar extends StatelessWidget {
     }
     return IconButton(
       onPressed: onClear,
+      tooltip: _resolveClearTooltip(),
       icon: const Icon(Icons.clear),
       iconSize: IconSizes.iconButton,
       padding: const EdgeInsets.all(Insets.spacing8),
     );
+  }
+
+  String? _resolveClearTooltip() {
+    if (clearTooltip != null) {
+      return clearTooltip;
+    }
+    return hint;
   }
 }
 

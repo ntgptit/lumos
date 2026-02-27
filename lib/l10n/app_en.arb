@@ -68,5 +68,12 @@
   "homeTabProfile": "Profile",
   "homeLibrarySubtitle": "Your decks, lessons, and curated packs.",
   "homeProgressSubtitle": "Track streaks, XP trends, and weak skills.",
-  "homeProfileSubtitle": "Manage your goals and learning preferences."
+  "homeProfileSubtitle": "Manage your goals and learning preferences.",
+  "profileThemeSectionTitle": "Appearance",
+  "profileThemeSectionSubtitle": "Choose how the app theme is displayed.",
+  "profileThemeSystem": "Follow system",
+  "profileThemeLight": "Light",
+  "profileThemeDark": "Dark",
+  "profileThemeToggleToLight": "Quick switch to light mode",
+  "profileThemeToggleToDark": "Quick switch to dark mode"
 }

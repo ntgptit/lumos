@@ -65,5 +65,12 @@
   "homeTabProfile": "Hồ sơ",
   "homeLibrarySubtitle": "Bộ thẻ, bài học và gói học đã tuyển chọn của bạn.",
   "homeProgressSubtitle": "Theo dõi chuỗi ngày, xu hướng XP và kỹ năng còn yếu.",
-  "homeProfileSubtitle": "Quản lý mục tiêu và tùy chọn học tập của bạn."
+  "homeProfileSubtitle": "Quản lý mục tiêu và tùy chọn học tập của bạn.",
+  "profileThemeSectionTitle": "Giao diện",
+  "profileThemeSectionSubtitle": "Chọn cách hiển thị chủ đề của ứng dụng.",
+  "profileThemeSystem": "Theo hệ thống",
+  "profileThemeLight": "Sáng",
+  "profileThemeDark": "Tối",
+  "profileThemeToggleToLight": "Chuyển nhanh sang chế độ sáng",
+  "profileThemeToggleToDark": "Chuyển nhanh sang chế độ tối"
 }

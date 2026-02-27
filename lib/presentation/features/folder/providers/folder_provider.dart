@@ -2,8 +2,9 @@ import 'package:dartz/dartz.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/error/failures.dart';
-import '../../../../data/repositories/folder_repository.dart';
+import '../../../../data/repositories/folder_repository_impl.dart';
 import '../../../../domain/entities/folder_models.dart';
+import '../../../../domain/repositories/folder_repository.dart';
 import 'states/folder_state.dart';
 
 part 'folder_provider.g.dart';

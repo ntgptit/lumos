@@ -173,4 +173,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get homeProfileSubtitle => 'Manage your goals and learning preferences.';
+
+  @override
+  String get profileThemeSectionTitle => 'Appearance';
+
+  @override
+  String get profileThemeSectionSubtitle => 'Choose how the app theme is displayed.';
+
+  @override
+  String get profileThemeSystem => 'Follow system';
+
+  @override
+  String get profileThemeLight => 'Light';
+
+  @override
+  String get profileThemeDark => 'Dark';
+
+  @override
+  String get profileThemeToggleToLight => 'Quick switch to light mode';
+
+  @override
+  String get profileThemeToggleToDark => 'Quick switch to dark mode';
 }

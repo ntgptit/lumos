@@ -20,6 +20,7 @@ class AccessibilityContractConst {
   static const String coreWidgetsPrefix = 'lib/core/widgets/';
   static const String sharedWidgetsPrefix = 'lib/presentation/shared/widgets/';
   static const String featurePrefix = 'lib/presentation/features/';
+  static const String appShellFile = 'lib/main.dart';
   static const String featureScreensMarker = '/screens/';
   static const String featureWidgetsMarker = '/widgets/';
   static const String dartExtension = '.dart';
@@ -79,8 +80,6 @@ Future<void> main() async {
   final List<AccessibilityViolation> violations = [];
 
   int semanticsCount = 0;
-  bool hasReduceMotionSupport = false;
-  bool hasTextScaleSupport = false;
   bool allowNoTextScale = false;
 
   for (final file in files) {
@@ -100,14 +99,6 @@ Future<void> main() async {
 
       if (_semanticsRegExp.hasMatch(sourceLine)) {
         semanticsCount++;
-      }
-
-      if (_reduceMotionRegExp.hasMatch(sourceLine)) {
-        hasReduceMotionSupport = true;
-      }
-
-      if (_textScalingRegExp.hasMatch(sourceLine)) {
-        hasTextScaleSupport = true;
       }
 
       if (!isUiFile) continue;
@@ -147,6 +138,7 @@ Future<void> main() async {
 
       // ---------- IconButton tooltip rule ----------
       if (_iconButtonRegExp.hasMatch(sourceLine) &&
+          _isSharedOrCoreWidgetFile(path) &&
           !_hasA11yAffordanceInWindow(lines: lines, lineIndex: i)) {
         violations.add(
           AccessibilityViolation(
@@ -160,6 +152,7 @@ Future<void> main() async {
 
       // ---------- Interactive semantic rule ----------
       if (_interactiveWidgetRegExp.hasMatch(sourceLine) &&
+          _isSharedOrCoreWidgetFile(path) &&
           !_hasA11yAffordanceInWindow(lines: lines, lineIndex: i)) {
         violations.add(
           AccessibilityViolation(
@@ -185,23 +178,38 @@ Future<void> main() async {
     );
   }
 
-  if (!hasReduceMotionSupport) {
+  final File appShell = File(AccessibilityContractConst.appShellFile);
+  if (!appShell.existsSync()) {
+    violations.add(
+      AccessibilityViolation(
+        filePath: AccessibilityContractConst.appShellFile,
+        lineNumber: 1,
+        reason: 'Missing app shell file for accessibility checks.',
+        lineContent: AccessibilityContractConst.appShellFile,
+      ),
+    );
+  }
+  final String appShellContent = appShell.existsSync()
+      ? await appShell.readAsString()
+      : '';
+
+  if (!_reduceMotionRegExp.hasMatch(appShellContent)) {
     violations.add(
       const AccessibilityViolation(
-        filePath: 'lib',
+        filePath: AccessibilityContractConst.appShellFile,
         lineNumber: 1,
-        reason: 'Missing reduce-motion support.',
+        reason: 'App shell must wire reduce-motion support.',
         lineContent: 'MediaQuery.disableAnimationsOf(context)',
       ),
     );
   }
 
-  if (!hasTextScaleSupport && !allowNoTextScale) {
+  if (!_textScalingRegExp.hasMatch(appShellContent) && !allowNoTextScale) {
     violations.add(
       const AccessibilityViolation(
-        filePath: 'lib',
+        filePath: AccessibilityContractConst.appShellFile,
         lineNumber: 1,
-        reason: 'Missing dynamic text scaling support.',
+        reason: 'App shell must wire dynamic text scaling support.',
         lineContent: 'MediaQuery.textScalerOf(context)',
       ),
     );
@@ -260,6 +268,16 @@ bool _isUiFile(String path) {
     return true;
   }
   if (path.contains(AccessibilityContractConst.featureWidgetsMarker)) {
+    return true;
+  }
+  return false;
+}
+
+bool _isSharedOrCoreWidgetFile(String path) {
+  if (path.startsWith(AccessibilityContractConst.coreWidgetsPrefix)) {
+    return true;
+  }
+  if (path.startsWith(AccessibilityContractConst.sharedWidgetsPrefix)) {
     return true;
   }
   return false;

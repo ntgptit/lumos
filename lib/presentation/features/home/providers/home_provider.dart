@@ -5,6 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../folder/screens/folder_screen.dart';
 import '../screens/home_content.dart';
+import '../screens/widgets/blocks/home_profile_tab.dart';
 import '../screens/widgets/blocks/home_placeholder_tab.dart';
 import 'states/home_state.dart';
 
@@ -102,13 +103,6 @@ HomePageBuilder homeTabPage(Ref ref, HomeTabId selectedTab) {
         icon: Icons.insights_rounded,
       );
     },
-    HomeTabId.profile => (BuildContext context) {
-      final AppLocalizations l10n = AppLocalizations.of(context)!;
-      return HomePlaceholderTab(
-        title: l10n.homeTabProfile,
-        subtitle: l10n.homeProfileSubtitle,
-        icon: Icons.person_rounded,
-      );
-    },
+    HomeTabId.profile => (BuildContext context) => const HomeProfileTab(),
   };
 }

@@ -173,4 +173,25 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get homeProfileSubtitle => 'Quản lý mục tiêu và tùy chọn học tập của bạn.';
+
+  @override
+  String get profileThemeSectionTitle => 'Giao diện';
+
+  @override
+  String get profileThemeSectionSubtitle => 'Chọn cách hiển thị chủ đề của ứng dụng.';
+
+  @override
+  String get profileThemeSystem => 'Theo hệ thống';
+
+  @override
+  String get profileThemeLight => 'Sáng';
+
+  @override
+  String get profileThemeDark => 'Tối';
+
+  @override
+  String get profileThemeToggleToLight => 'Chuyển nhanh sang chế độ sáng';
+
+  @override
+  String get profileThemeToggleToDark => 'Chuyển nhanh sang chế độ tối';
 }

@@ -66,6 +66,20 @@ class AppEntryPoint extends ConsumerWidget {
       onGenerateTitle: (BuildContext context) {
         return AppLocalizations.of(context)?.appTitle ?? 'Lumos';
       },
+      builder: (BuildContext context, Widget? child) {
+        final bool disableAnimations = MediaQuery.disableAnimationsOf(context);
+        final TextScaler textScaler = MediaQuery.textScalerOf(context);
+        if (child == null) {
+          return const SizedBox.shrink();
+        }
+        final MediaQueryData mediaQueryData = MediaQuery.of(
+          context,
+        ).copyWith(textScaler: textScaler);
+        return MediaQuery(
+          data: mediaQueryData,
+          child: TickerMode(enabled: !disableAnimations, child: child),
+        );
+      },
       theme: lightTheme,
       darkTheme: darkTheme,
       themeMode: themeMode,

@@ -418,6 +418,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Manage your goals and learning preferences.'**
   String get homeProfileSubtitle;
+
+  /// No description provided for @profileThemeSectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get profileThemeSectionTitle;
+
+  /// No description provided for @profileThemeSectionSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose how the app theme is displayed.'**
+  String get profileThemeSectionSubtitle;
+
+  /// No description provided for @profileThemeSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'Follow system'**
+  String get profileThemeSystem;
+
+  /// No description provided for @profileThemeLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get profileThemeLight;
+
+  /// No description provided for @profileThemeDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get profileThemeDark;
+
+  /// No description provided for @profileThemeToggleToLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick switch to light mode'**
+  String get profileThemeToggleToLight;
+
+  /// No description provided for @profileThemeToggleToDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick switch to dark mode'**
+  String get profileThemeToggleToDark;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
