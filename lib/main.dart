@@ -3,10 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'core/localization/locale_provider.dart';
+import 'core/routes/app_router.dart';
 import 'core/themes/google_fonts_bootstrap.dart';
 import 'core/themes/providers/theme_provider.dart';
 import 'l10n/app_localizations.dart';
-import 'presentation/routes/app_router.dart';
 
 class AppBootstrapConst {
   const AppBootstrapConst._();
