@@ -1,24 +1,21 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/themes/constants/dimensions.dart';
+import '../buttons/lumos_icon_button.dart';
 import '../navigation/lumos_menu_widgets.dart';
 import 'lumos_entity_list_item_card.dart';
 
 class LumosActionListItemCardConst {
   const LumosActionListItemCardConst._();
 
-  static const EdgeInsetsGeometry menuTriggerPadding = EdgeInsets.all(
-    Insets.spacing8,
-  );
   static const EdgeInsets popupItemPadding = EdgeInsets.symmetric(
     horizontal: Insets.spacing12,
-    vertical: Insets.spacing4,
+    vertical: Insets.spacing8,
   );
   static const EdgeInsetsGeometry badgePadding = EdgeInsets.symmetric(
     horizontal: Insets.spacing8,
     vertical: Insets.spacing4,
   );
-  static const double menuTriggerBorderWidth = WidgetSizes.borderWidthRegular;
   static const double menuItemSpacing = Insets.spacing12;
   static const double contentSpacing = Insets.spacing4;
 }
@@ -65,8 +62,7 @@ class LumosActionListItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final Widget trailingMenu = _buildTrailingMenu(theme: theme);
+    final Widget trailingMenu = _buildTrailingMenu();
     return LumosEntityListItemCard(
       title: title,
       subtitle: subtitle,
@@ -76,47 +72,26 @@ class LumosActionListItemCard extends StatelessWidget {
     );
   }
 
-  Widget _buildTrailingMenu({required ThemeData theme}) {
-    final ColorScheme colorScheme = theme.colorScheme;
+  Widget _buildTrailingMenu() {
     return LumosPopupMenuButton<String>(
       onSelected: onActionSelected,
-      icon: _ActionMenuTrigger(colorScheme: colorScheme),
+      icon: const LumosIconButton(
+        icon: Icons.more_vert_rounded,
+        variant: LumosIconButtonVariant.outlined,
+      ),
       itemBuilder: (BuildContext context) {
         return actions
             .map((LumosActionListItem action) {
               return PopupMenuItem<String>(
                 value: action.key,
                 enabled: action.isEnabled,
+                height: WidgetSizes.minTouchTarget,
                 padding: LumosActionListItemCardConst.popupItemPadding,
                 child: _ActionMenuItem(action: action),
               );
             })
             .toList(growable: false);
       },
-    );
-  }
-}
-
-class _ActionMenuTrigger extends StatelessWidget {
-  const _ActionMenuTrigger({required this.colorScheme});
-
-  final ColorScheme colorScheme;
-
-  @override
-  Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerHigh,
-        borderRadius: BorderRadii.medium,
-        border: Border.all(
-          color: colorScheme.outlineVariant,
-          width: LumosActionListItemCardConst.menuTriggerBorderWidth,
-        ),
-      ),
-      child: const Padding(
-        padding: LumosActionListItemCardConst.menuTriggerPadding,
-        child: Icon(Icons.more_horiz_rounded, size: IconSizes.iconSmall),
-      ),
     );
   }
 }
@@ -214,7 +189,7 @@ class _ActionBadge extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         color: colorScheme.secondaryContainer,
-        borderRadius: BorderRadii.medium,
+        borderRadius: BorderRadii.large,
       ),
       child: Padding(
         padding: LumosActionListItemCardConst.badgePadding,

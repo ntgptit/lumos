@@ -14,6 +14,15 @@ class LumosDialogSizingConst {
   static const double dialogHorizontalInset = Insets.spacing16;
   static const double dialogMinScreenInset = Insets.spacing8;
   static const double dialogVerticalInset = Insets.spacing24;
+  static const EdgeInsetsGeometry dialogActionsPadding = EdgeInsets.fromLTRB(
+    Insets.spacing16,
+    Insets.spacing0,
+    Insets.spacing16,
+    Insets.spacing16,
+  );
+  static const EdgeInsetsGeometry dialogActionButtonPadding = EdgeInsets.only(
+    left: Insets.spacing8,
+  );
 }
 
 class LumosDialog extends StatelessWidget {
@@ -53,6 +62,9 @@ class LumosDialog extends StatelessWidget {
     return AlertDialog(
       constraints: resolvedConstraints,
       insetPadding: resolvedInsetPadding,
+      scrollable: true,
+      actionsPadding: LumosDialogSizingConst.dialogActionsPadding,
+      buttonPadding: LumosDialogSizingConst.dialogActionButtonPadding,
       title: Text(title, overflow: TextOverflow.ellipsis),
       content: _buildContent(),
       actions: _buildActions(),
@@ -63,7 +75,7 @@ class LumosDialog extends StatelessWidget {
     if (content == null) {
       return null;
     }
-    return Text(content!, maxLines: 5, overflow: TextOverflow.ellipsis);
+    return Text(content!);
   }
 
   List<Widget> _buildActions() {
@@ -128,6 +140,9 @@ class LumosPromptDialog extends StatelessWidget {
     return AlertDialog(
       constraints: resolvedConstraints,
       insetPadding: resolvedInsetPadding,
+      scrollable: true,
+      actionsPadding: LumosDialogSizingConst.dialogActionsPadding,
+      buttonPadding: LumosDialogSizingConst.dialogActionButtonPadding,
       title: Text(title, overflow: TextOverflow.ellipsis),
       content: LumosTextField(controller: controller, label: label),
       actions: <Widget>[
@@ -207,24 +222,37 @@ class LumosBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double height = initialHeight ?? WidgetSizes.maxContentWidth * 0.4;
+    final double screenHeight = MediaQuery.sizeOf(context).height;
+    final double resolvedHeight = initialHeight ?? (screenHeight * 0.9);
+    final double maxHeight = resolvedHeight
+        .clamp(WidgetSizes.minTouchTarget, screenHeight)
+        .toDouble();
     return Container(
       constraints: BoxConstraints(
         minHeight: WidgetSizes.minTouchTarget,
-        maxHeight: height,
+        maxHeight: maxHeight,
       ),
       padding: Insets.screenPadding,
-      decoration: const BoxDecoration(borderRadius: BorderRadii.topMedium),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: BorderRadii.topMedium,
+      ),
       child: child,
     );
   }
 }
 
 class LumosActionSheet extends StatelessWidget {
-  const LumosActionSheet({required this.actions, super.key, this.cancelText});
+  const LumosActionSheet({
+    required this.actions,
+    super.key,
+    this.cancelText,
+    this.onCancel,
+  });
 
   final List<LumosActionItem> actions;
   final String? cancelText;
+  final VoidCallback? onCancel;
 
   @override
   Widget build(BuildContext context) {
@@ -238,7 +266,7 @@ class LumosActionSheet extends StatelessWidget {
             padding: const EdgeInsets.only(top: Insets.gapBetweenItems),
             child: LumosButton(
               label: cancelText!,
-              onPressed: null,
+              onPressed: onCancel,
               type: LumosButtonType.text,
             ),
           ),

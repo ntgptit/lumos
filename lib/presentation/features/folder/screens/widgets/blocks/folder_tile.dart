@@ -13,7 +13,8 @@ class FolderTileConst {
   static const double leadingSize = WidgetSizes.avatarLarge;
   static const double leadingIconSize = IconSizes.iconMedium;
   static const double leadingBorderWidth = WidgetSizes.borderWidthRegular;
-  static const double badgeSize = Insets.spacing16;
+  static const double badgeMinSize = Insets.spacing20;
+  static const double badgeHorizontalPadding = Insets.spacing4;
   static const double badgeFontSize = FontSizes.fontSizeSmall;
 }
 
@@ -46,7 +47,10 @@ class FolderTile extends StatelessWidget {
       title: item.name,
       subtitle: subtitle,
       onTap: onOpen,
-      leading: _FolderTileLeading(depth: item.depth),
+      leading: _FolderTileLeading(
+        depth: item.depth,
+        childFolderCount: item.childFolderCount,
+      ),
       actions: _buildActions(l10n: l10n),
       onActionSelected: (String actionKey) {
         _handleAction(actionKey: actionKey);
@@ -92,9 +96,13 @@ class FolderTile extends StatelessWidget {
 }
 
 class _FolderTileLeading extends StatelessWidget {
-  const _FolderTileLeading({required this.depth});
+  const _FolderTileLeading({
+    required this.depth,
+    required this.childFolderCount,
+  });
 
   final int depth;
+  final int childFolderCount;
 
   @override
   Widget build(BuildContext context) {
@@ -140,7 +148,10 @@ class _FolderTileLeading extends StatelessWidget {
           Positioned(
             right: Insets.spacing0,
             bottom: Insets.spacing0,
-            child: _FolderDepthBadge(depth: depth, isRoot: isRoot),
+            child: _FolderChildCountBadge(
+              childFolderCount: childFolderCount,
+              isRoot: isRoot,
+            ),
           ),
         ],
       ),
@@ -178,10 +189,13 @@ class _FolderTileLeading extends StatelessWidget {
   }
 }
 
-class _FolderDepthBadge extends StatelessWidget {
-  const _FolderDepthBadge({required this.depth, required this.isRoot});
+class _FolderChildCountBadge extends StatelessWidget {
+  const _FolderChildCountBadge({
+    required this.childFolderCount,
+    required this.isRoot,
+  });
 
-  final int depth;
+  final int childFolderCount;
   final bool isRoot;
 
   @override
@@ -192,18 +206,26 @@ class _FolderDepthBadge extends StatelessWidget {
     final Color badgeTextColor = _resolveBadgeTextColor(
       colorScheme: colorScheme,
     );
-    return SizedBox(
-      width: FolderTileConst.badgeSize,
-      height: FolderTileConst.badgeSize,
-      child: DecoratedBox(
-        decoration: BoxDecoration(color: badgeColor, shape: BoxShape.circle),
-        child: Center(
-          child: Text(
-            '$depth',
-            style: TextStyle(
-              color: badgeTextColor,
-              fontSize: FolderTileConst.badgeFontSize,
-            ),
+    return Container(
+      constraints: const BoxConstraints(
+        minWidth: FolderTileConst.badgeMinSize,
+        minHeight: FolderTileConst.badgeMinSize,
+      ),
+      padding: const EdgeInsets.symmetric(
+        horizontal: FolderTileConst.badgeHorizontalPadding,
+      ),
+      decoration: BoxDecoration(
+        color: badgeColor,
+        borderRadius: BorderRadii.large,
+      ),
+      child: Center(
+        child: Text(
+          '$childFolderCount',
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            color: badgeTextColor,
+            fontSize: FolderTileConst.badgeFontSize,
           ),
         ),
       ),

@@ -5,6 +5,7 @@ public record FolderResponse(
         String name,
         Long parentId,
         Integer depth,
+        Integer childFolderCount,
         AuditMetadataResponse audit
 ) {
 }

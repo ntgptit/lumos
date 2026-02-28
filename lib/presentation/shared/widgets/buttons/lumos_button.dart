@@ -7,6 +7,9 @@ class LumosButtonConst {
 
   static const LumosButtonType defaultType = LumosButtonType.primary;
   static const LumosButtonSize defaultSize = LumosButtonSize.medium;
+  static const double defaultSmallHeight = WidgetSizes.buttonHeightSmall;
+  static const double defaultMediumHeight = WidgetSizes.buttonHeightMedium;
+  static const double defaultLargeHeight = WidgetSizes.buttonHeightLarge;
 }
 
 enum LumosButtonType { primary, secondary, outline, text }
@@ -97,6 +100,7 @@ class LumosButton extends StatelessWidget {
     final ColorScheme colorScheme = theme.colorScheme;
     final ButtonStyle themeStyle = _resolveThemeStyle(theme: theme);
     final _ButtonStyleTokens tokens = _resolveButtonStyleTokens(
+      theme: theme,
       colorScheme: colorScheme,
     );
     final ButtonStyle baseStyle = _buildBaseStyle(tokens: tokens);
@@ -118,34 +122,40 @@ class LumosButton extends StatelessWidget {
   }
 
   _ButtonStyleTokens _resolveButtonStyleTokens({
+    required ThemeData theme,
     required ColorScheme colorScheme,
   }) {
     final double buttonHeight = _resolveButtonHeight();
     final EdgeInsetsGeometry buttonPadding = _resolveButtonPadding();
-    final OutlinedBorder shape = const RoundedRectangleBorder(
-      borderRadius: BorderRadii.medium,
-    );
+    final OutlinedBorder shape = const StadiumBorder();
+    final TextStyle? labelStyle = theme.textTheme.labelLarge;
     return _ButtonStyleTokens(
       buttonHeight: buttonHeight,
       buttonPadding: buttonPadding,
       shape: shape,
+      labelStyle: labelStyle,
       colorScheme: colorScheme,
     );
   }
 
   ButtonStyle _buildBaseStyle({required _ButtonStyleTokens tokens}) {
+    final double touchTargetHeight = _resolveTouchTargetHeight(
+      buttonHeight: tokens.buttonHeight,
+    );
     final ButtonStyle baseStyle = ButtonStyle(
       minimumSize: WidgetStatePropertyAll<Size>(
-        Size(WidgetSizes.minTouchTarget, tokens.buttonHeight),
+        Size(WidgetSizes.minTouchTarget, touchTargetHeight),
       ),
       padding: WidgetStatePropertyAll<EdgeInsetsGeometry>(tokens.buttonPadding),
       shape: WidgetStatePropertyAll<OutlinedBorder>(tokens.shape),
+      textStyle: WidgetStatePropertyAll<TextStyle?>(tokens.labelStyle),
+      tapTargetSize: MaterialTapTargetSize.padded,
     );
     if (type != LumosButtonType.outline) {
       return baseStyle;
     }
     final BorderSide side = BorderSide(
-      color: tokens.colorScheme.primary,
+      color: tokens.colorScheme.outline,
       width: WidgetSizes.borderWidthRegular,
     );
     return baseStyle.copyWith(side: WidgetStatePropertyAll<BorderSide>(side));
@@ -153,12 +163,19 @@ class LumosButton extends StatelessWidget {
 
   double _resolveButtonHeight() {
     if (size == LumosButtonSize.small) {
-      return WidgetSizes.buttonHeightSmall;
+      return LumosButtonConst.defaultSmallHeight;
     }
     if (size == LumosButtonSize.large) {
-      return WidgetSizes.buttonHeightLarge;
+      return LumosButtonConst.defaultLargeHeight;
     }
-    return WidgetSizes.buttonHeightMedium;
+    return LumosButtonConst.defaultMediumHeight;
+  }
+
+  double _resolveTouchTargetHeight({required double buttonHeight}) {
+    if (buttonHeight >= WidgetSizes.minTouchTarget) {
+      return buttonHeight;
+    }
+    return WidgetSizes.minTouchTarget;
   }
 
   EdgeInsetsGeometry _resolveButtonPadding() {
@@ -250,7 +267,7 @@ class LumosButton extends StatelessWidget {
     if (type == LumosButtonType.secondary) {
       return colorScheme.primary;
     }
-    return colorScheme.onSurface;
+    return colorScheme.primary;
   }
 }
 
@@ -259,11 +276,13 @@ class _ButtonStyleTokens {
     required this.buttonHeight,
     required this.buttonPadding,
     required this.shape,
+    required this.labelStyle,
     required this.colorScheme,
   });
 
   final double buttonHeight;
   final EdgeInsetsGeometry buttonPadding;
   final OutlinedBorder shape;
+  final TextStyle? labelStyle;
   final ColorScheme colorScheme;
 }

@@ -1,9 +1,11 @@
 package com.lumos.folder.service.impl;
 
 import java.time.Instant;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -116,8 +118,17 @@ public class FolderServiceImpl implements FolderService {
      */
     @Override
     @Transactional(readOnly = true)
-    public Page<FolderResponse> getFolders(Pageable pageable) {
-        return this.folderRepository.findAllByDeletedAtIsNull(pageable).map(this.folderMapper::toFolderResponse);
+    public List<FolderResponse> getFolders(Pageable pageable) {
+        final var folderPage = this.folderRepository.findAllByDeletedAtIsNull(pageable);
+        final var folders = folderPage.getContent();
+        final var childCountByParentId = resolveChildCountByParentId(folders);
+        return folders.stream().map(folder -> {
+            final var childFolderCount = childCountByParentId.getOrDefault(
+                    folder.getId(),
+                    FolderConstants.DEFAULT_CHILD_FOLDER_COUNT
+            );
+            return this.folderMapper.toFolderResponse(folder, childFolderCount);
+        }).toList();
     }
 
     private Folder findActiveFolder(Long folderId) {
@@ -152,6 +163,20 @@ public class FolderServiceImpl implements FolderService {
         if (exists) {
             throw new FolderNameConflictException(name);
         }
+    }
+
+    private Map<Long, Integer> resolveChildCountByParentId(List<Folder> folders) {
+        final var folderIds = folders.stream()
+                .map(Folder::getId)
+                .toList();
+        if (folderIds.isEmpty()) {
+            return Map.of();
+        }
+        return this.folderRepository.findChildCountByParentIds(folderIds).stream()
+                .collect(Collectors.toMap(
+                        row -> row.getParentId(),
+                        row -> row.getChildFolderCount().intValue()
+                ));
     }
 
 }

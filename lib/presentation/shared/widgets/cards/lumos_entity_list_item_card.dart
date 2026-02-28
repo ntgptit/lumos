@@ -4,6 +4,16 @@ import '../../../../core/themes/constants/dimensions.dart';
 import '../typography/lumos_text.dart';
 import 'lumos_card.dart';
 
+class LumosEntityListItemCardConst {
+  const LumosEntityListItemCardConst._();
+
+  static const EdgeInsetsGeometry contentPadding = EdgeInsets.symmetric(
+    horizontal: Insets.spacing16,
+    vertical: Insets.spacing4,
+  );
+  static const double subtitleTopSpacing = Insets.spacing4;
+}
+
 class LumosEntityListItemCard extends StatelessWidget {
   const LumosEntityListItemCard({
     required this.title,
@@ -24,33 +34,36 @@ class LumosEntityListItemCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return LumosCard(
       onTap: onTap,
-      padding: const EdgeInsets.all(Insets.spacing12),
-      child: Row(
-        children: <Widget>[
-          if (leading case final Widget value) ...<Widget>[
-            value,
-            const SizedBox(width: Insets.spacing12),
-          ],
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                LumosText(
-                  title,
-                  style: LumosTextStyle.titleSmall,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                if (subtitle case final String value)
-                  LumosText(value, style: LumosTextStyle.labelSmall),
-              ],
-            ),
-          ),
-          if (trailing case final Widget value) ...<Widget>[
-            const SizedBox(width: Insets.spacing8),
-            value,
-          ],
-        ],
+      variant: LumosCardVariant.outlined,
+      padding: EdgeInsets.zero,
+      child: ListTile(
+        contentPadding: LumosEntityListItemCardConst.contentPadding,
+        leading: leading,
+        trailing: trailing,
+        title: LumosText(
+          title,
+          style: LumosTextStyle.titleMedium,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        subtitle: _buildSubtitle(),
+      ),
+    );
+  }
+
+  Widget? _buildSubtitle() {
+    if (subtitle == null) {
+      return null;
+    }
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: LumosEntityListItemCardConst.subtitleTopSpacing,
+      ),
+      child: LumosText(
+        subtitle!,
+        style: LumosTextStyle.bodySmall,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
       ),
     );
   }

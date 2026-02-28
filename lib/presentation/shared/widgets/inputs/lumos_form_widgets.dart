@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/themes/constants/dimensions.dart';
 import '../buttons/lumos_button.dart';
+import '../buttons/lumos_icon_button.dart';
 import '../lumos_models.dart';
 
 class LumosTextField extends StatelessWidget {
@@ -36,6 +37,13 @@ class LumosTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final InputDecoration decoration = InputDecoration(
+      labelText: label,
+      hintText: hint,
+      prefixIcon: prefixIcon,
+      suffixIcon: suffixIcon,
+      alignLabelWithHint: maxLines != 1,
+    );
     return TextFormField(
       initialValue: initialValue,
       controller: controller,
@@ -45,12 +53,7 @@ class LumosTextField extends StatelessWidget {
       keyboardType: keyboardType,
       maxLines: maxLines,
       enabled: enabled,
-      decoration: InputDecoration(
-        labelText: label,
-        hintText: hint,
-        prefixIcon: prefixIcon,
-        suffixIcon: suffixIcon,
-      ),
+      decoration: decoration,
     );
   }
 }
@@ -75,30 +78,40 @@ class LumosSearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LumosTextField(
+    return SearchBar(
       controller: controller,
+      hintText: hint,
       onChanged: onSearch,
-      hint: hint,
-      prefixIcon: const Icon(Icons.search),
-      suffixIcon: _buildClearAction(),
-      keyboardType: TextInputType.text,
-      maxLines: 1,
-      enabled: true,
-      obscureText: false,
+      onSubmitted: onSearch,
+      autoFocus: autoFocus,
+      leading: const Icon(Icons.search),
+      trailing: _buildTrailingActions(),
+      constraints: const BoxConstraints(minHeight: WidgetSizes.minTouchTarget),
+      padding: const WidgetStatePropertyAll<EdgeInsets>(
+        EdgeInsets.symmetric(horizontal: Insets.spacing12),
+      ),
+      elevation: const WidgetStatePropertyAll<double>(WidgetSizes.none),
+      shape: const WidgetStatePropertyAll<OutlinedBorder>(StadiumBorder()),
+      side: WidgetStatePropertyAll<BorderSide>(
+        BorderSide(
+          color: Theme.of(context).colorScheme.outlineVariant,
+          width: WidgetSizes.borderWidthRegular,
+        ),
+      ),
     );
   }
 
-  Widget? _buildClearAction() {
+  List<Widget>? _buildTrailingActions() {
     if (onClear == null) {
       return null;
     }
-    return IconButton(
-      onPressed: onClear,
-      tooltip: _resolveClearTooltip(),
-      icon: const Icon(Icons.clear),
-      iconSize: IconSizes.iconButton,
-      padding: const EdgeInsets.all(Insets.spacing8),
-    );
+    return <Widget>[
+      LumosIconButton(
+        icon: Icons.close_rounded,
+        tooltip: _resolveClearTooltip(),
+        onPressed: onClear,
+      ),
+    ];
   }
 
   String? _resolveClearTooltip() {

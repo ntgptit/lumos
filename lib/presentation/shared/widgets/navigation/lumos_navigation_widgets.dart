@@ -146,55 +146,45 @@ class LumosSegmentedControl extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(Insets.spacing4),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerHighest,
-        borderRadius: BorderRadii.large,
-      ),
-      child: Row(
-        children: options
-            .asMap()
-            .entries
-            .map((MapEntry<int, String> entry) => _buildOption(context, entry))
-            .toList(),
-      ),
+    final List<ButtonSegment<int>> segments = options
+        .asMap()
+        .entries
+        .map((MapEntry<int, String> entry) {
+          return ButtonSegment<int>(
+            value: entry.key,
+            label: Text(entry.value, overflow: TextOverflow.ellipsis),
+          );
+        })
+        .toList(growable: false);
+    final Set<int> selectedValues = _resolveSelectedValues();
+    return SegmentedButton<int>(
+      segments: segments,
+      selected: selectedValues,
+      showSelectedIcon: false,
+      onSelectionChanged: (Set<int> nextSelection) {
+        if (nextSelection.isEmpty) {
+          return;
+        }
+        onChanged(nextSelection.first);
+      },
     );
   }
 
-  Widget _buildOption(BuildContext context, MapEntry<int, String> entry) {
-    final bool isSelected = entry.key == selectedIndex;
-    return Expanded(
-      child: GestureDetector(
-        onTap: () {
-          onChanged(entry.key);
-        },
-        child: AnimatedContainer(
-          duration: MotionDurations.animationFast,
-          padding: const EdgeInsets.symmetric(
-            horizontal: Insets.spacing8,
-            vertical: Insets.spacing8,
-          ),
-          decoration: BoxDecoration(
-            color: isSelected
-                ? Theme.of(context).colorScheme.primary
-                : Theme.of(context).colorScheme.surface.withValues(
-                    alpha: WidgetOpacities.transparent,
-                  ),
-            borderRadius: BorderRadii.medium,
-          ),
-          child: Text(
-            entry.value,
-            textAlign: TextAlign.center,
-            overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.labelLarge?.copyWith(
-              color: isSelected
-                  ? Theme.of(context).colorScheme.onPrimary
-                  : Theme.of(context).colorScheme.onSurface,
-            ),
-          ),
-        ),
-      ),
-    );
+  Set<int> _resolveSelectedValues() {
+    if (options.isEmpty) {
+      return <int>{};
+    }
+    final int resolvedSelectedIndex = _resolveSelectedIndex();
+    return <int>{resolvedSelectedIndex};
+  }
+
+  int _resolveSelectedIndex() {
+    if (selectedIndex < 0) {
+      return 0;
+    }
+    if (selectedIndex >= options.length) {
+      return options.length - 1;
+    }
+    return selectedIndex;
   }
 }

@@ -1,7 +1,7 @@
 package com.lumos.folder.service;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import java.util.List;
 
 import com.lumos.folder.dto.request.CreateFolderRequest;
 import com.lumos.folder.dto.request.RenameFolderRequest;
@@ -48,5 +48,5 @@ public interface FolderService {
      * @param pageable pagination options
      * @return paged folder response
      */
-    Page<FolderResponse> getFolders(Pageable pageable);
+    List<FolderResponse> getFolders(Pageable pageable);
 }

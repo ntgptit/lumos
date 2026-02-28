@@ -12,6 +12,8 @@ class LumosCardConst {
   static const double selectedElevationBoost = 1;
 }
 
+enum LumosCardVariant { elevated, filled, outlined }
+
 class LumosCard extends StatelessWidget {
   const LumosCard({
     required this.child,
@@ -22,6 +24,7 @@ class LumosCard extends StatelessWidget {
     this.borderRadius,
     this.isSelected = false,
     this.margin,
+    this.variant = LumosCardVariant.elevated,
   });
 
   final Widget child;
@@ -31,6 +34,7 @@ class LumosCard extends StatelessWidget {
   final BorderRadius? borderRadius;
   final bool isSelected;
   final EdgeInsetsGeometry? margin;
+  final LumosCardVariant variant;
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +62,7 @@ class LumosCard extends StatelessWidget {
       content: themedContent,
       borderRadius: resolvedBorderRadius,
     );
-    return Card(
+    return _buildCardByVariant(
       elevation: resolvedElevation,
       color: resolvedColor,
       margin: resolvedMargin,
@@ -66,6 +70,48 @@ class LumosCard extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       shape: resolvedShape,
       child: cardChild,
+    );
+  }
+
+  Widget _buildCardByVariant({
+    required double elevation,
+    required Color? color,
+    required EdgeInsetsGeometry? margin,
+    required Color? surfaceTintColor,
+    required Clip clipBehavior,
+    required ShapeBorder shape,
+    required Widget child,
+  }) {
+    if (variant == LumosCardVariant.filled) {
+      return Card.filled(
+        elevation: elevation,
+        color: color,
+        margin: margin,
+        surfaceTintColor: surfaceTintColor,
+        clipBehavior: clipBehavior,
+        shape: shape,
+        child: child,
+      );
+    }
+    if (variant == LumosCardVariant.outlined) {
+      return Card.outlined(
+        elevation: elevation,
+        color: color,
+        margin: margin,
+        surfaceTintColor: surfaceTintColor,
+        clipBehavior: clipBehavior,
+        shape: shape,
+        child: child,
+      );
+    }
+    return Card(
+      elevation: elevation,
+      color: color,
+      margin: margin,
+      surfaceTintColor: surfaceTintColor,
+      clipBehavior: clipBehavior,
+      shape: shape,
+      child: child,
     );
   }
 
@@ -92,12 +138,22 @@ class LumosCard extends StatelessWidget {
   }
 
   double _resolveElevation({required ThemeData theme}) {
-    final double baseElevation =
+    final double themeElevation =
         elevation ?? theme.cardTheme.elevation ?? WidgetSizes.none;
+    final double baseElevation = _resolveVariantElevation(
+      themeElevation: themeElevation,
+    );
     if (!isSelected) {
       return baseElevation;
     }
     return baseElevation + LumosCardConst.selectedElevationBoost;
+  }
+
+  double _resolveVariantElevation({required double themeElevation}) {
+    if (variant == LumosCardVariant.elevated) {
+      return themeElevation;
+    }
+    return WidgetSizes.none;
   }
 
   BorderSide? _resolveBorderSide({required ColorScheme colorScheme}) {
@@ -107,12 +163,21 @@ class LumosCard extends StatelessWidget {
         width: WidgetSizes.borderWidthRegular,
       );
     }
+    if (variant == LumosCardVariant.outlined) {
+      return BorderSide(
+        color: colorScheme.outlineVariant,
+        width: WidgetSizes.borderWidthRegular,
+      );
+    }
     return null;
   }
 
   Color? _resolveCardColor({required ColorScheme colorScheme}) {
     if (isSelected) {
       return colorScheme.primaryContainer;
+    }
+    if (variant == LumosCardVariant.filled) {
+      return colorScheme.surfaceContainerHighest;
     }
     return null;
   }

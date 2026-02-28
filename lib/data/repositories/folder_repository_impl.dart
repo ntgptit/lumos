@@ -47,10 +47,11 @@ class DioFolderRepository implements FolderRepository {
               FolderRepositoryImplConst.sortByNameAscending,
         },
       );
-      final FolderPageModel pageModel = FolderPageModel.fromJson(
-        _castMap(response.data),
+      final List<Map<String, dynamic>> folderJsonList = _castList(
+        response.data,
       );
-      final List<FolderNode> folders = pageModel.content
+      final List<FolderNode> folders = folderJsonList
+          .map(FolderModel.fromJson)
           .map((FolderModel model) => model.toEntity())
           .toList(growable: false);
       return right<Failure, List<FolderNode>>(folders);
@@ -154,6 +155,13 @@ class DioFolderRepository implements FolderRepository {
       return rawValue.cast<String, dynamic>();
     }
     return <String, dynamic>{};
+  }
+
+  List<Map<String, dynamic>> _castList(dynamic rawValue) {
+    if (rawValue is! List<dynamic>) {
+      return <Map<String, dynamic>>[];
+    }
+    return rawValue.map(_castMap).toList(growable: false);
   }
 }
 

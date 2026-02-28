@@ -16,15 +16,21 @@ class LumosActionChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
     return ActionChip(
       label: label,
       onPressed: onPressed,
       avatar: avatar,
-      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      visualDensity: const VisualDensity(
-        horizontal: Insets.spacing0,
-        vertical: Insets.spacing0,
+      labelStyle: theme.textTheme.labelLarge?.copyWith(
+        color: colorScheme.onSurface,
       ),
+      side: BorderSide(
+        color: colorScheme.outlineVariant,
+        width: WidgetSizes.borderWidthRegular,
+      ),
+      shape: const StadiumBorder(),
+      materialTapTargetSize: MaterialTapTargetSize.padded,
     );
   }
 }
@@ -35,11 +41,13 @@ class LumosPopupMenuButton<T> extends StatelessWidget {
     required this.itemBuilder,
     super.key,
     this.icon,
+    this.tooltip,
   });
 
   final ValueChanged<T> onSelected;
   final PopupMenuItemBuilder<T> itemBuilder;
   final Widget? icon;
+  final String? tooltip;
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +55,15 @@ class LumosPopupMenuButton<T> extends StatelessWidget {
       onSelected: onSelected,
       itemBuilder: itemBuilder,
       icon: icon,
+      tooltip: tooltip,
+      style: IconButton.styleFrom(
+        minimumSize: const Size(
+          WidgetSizes.minTouchTarget,
+          WidgetSizes.minTouchTarget,
+        ),
+        padding: const EdgeInsets.all(Insets.spacing8),
+        tapTargetSize: MaterialTapTargetSize.padded,
+      ),
     );
   }
 }

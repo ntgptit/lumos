@@ -8,6 +8,7 @@ part 'folder_model.g.dart';
 const int folderDataDefaultId = 0;
 const String folderDataDefaultName = '';
 const int folderDataDefaultDepth = 0;
+const int folderDataDefaultChildFolderCount = 0;
 
 @freezed
 abstract class FolderModel with _$FolderModel {
@@ -16,20 +17,11 @@ abstract class FolderModel with _$FolderModel {
     @Default(folderDataDefaultName) String name,
     int? parentId,
     @Default(folderDataDefaultDepth) int depth,
+    @Default(folderDataDefaultChildFolderCount) int childFolderCount,
   }) = _FolderModel;
 
   factory FolderModel.fromJson(Map<String, dynamic> json) =>
       _$FolderModelFromJson(json);
-}
-
-@freezed
-abstract class FolderPageModel with _$FolderPageModel {
-  const factory FolderPageModel({
-    @Default(<FolderModel>[]) List<FolderModel> content,
-  }) = _FolderPageModel;
-
-  factory FolderPageModel.fromJson(Map<String, dynamic> json) =>
-      _$FolderPageModelFromJson(json);
 }
 
 @freezed
@@ -55,7 +47,13 @@ abstract class BreadcrumbPageModel with _$BreadcrumbPageModel {
 
 extension FolderModelMapper on FolderModel {
   FolderNode toEntity() {
-    return FolderNode(id: id, name: name, parentId: parentId, depth: depth);
+    return FolderNode(
+      id: id,
+      name: name,
+      parentId: parentId,
+      depth: depth,
+      childFolderCount: childFolderCount,
+    );
   }
 }
 
