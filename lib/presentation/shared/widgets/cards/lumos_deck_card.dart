@@ -14,17 +14,18 @@ abstract final class LumosDeckCardConst {
   LumosDeckCardConst._();
 
   // Swipe threshold: how far user must drag to reveal action (fraction of card width).
-  static const double swipeExtentRatio = 0.25;
+  static const double swipeExtentRatio = WidgetRatios.swipeRevealExtent;
 
   // Action button width in swipe panel.
-  static const double swipeActionWidth = 64.0;
+  static const double swipeActionWidth = WidgetSizes.buttonMinWidth;
 
   // Spring animation for swipe return.
   static const Duration swipeAnimationDuration = AppDurations.medium;
 
   // Responsive max width for card content on tablet/desktop.
-  static const double maxContentWidthTablet = 480.0;
-  static const double maxContentWidthDesktop = 560.0;
+  static const double maxContentWidthTablet = WidgetSizes.overlayMaxWidthTablet;
+  static const double maxContentWidthDesktop =
+      WidgetSizes.overlayMaxWidthDesktop;
 }
 
 // ---------------------------------------------------------------------------

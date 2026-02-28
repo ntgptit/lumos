@@ -33,21 +33,12 @@ class LumosIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double iconSize = size ?? LumosIconButtonConst.defaultIconSize;
-    final ButtonStyle style = IconButton.styleFrom(
-      padding: const EdgeInsets.all(Insets.spacing8),
-      minimumSize: const Size(
-        WidgetSizes.minTouchTarget,
-        WidgetSizes.minTouchTarget,
-      ),
-      tapTargetSize: MaterialTapTargetSize.padded,
-    );
     final Widget iconWidget = _buildIcon();
     if (variant == LumosIconButtonVariant.filled) {
       return IconButton.filled(
         onPressed: onPressed,
         tooltip: tooltip,
         iconSize: iconSize,
-        style: style,
         icon: iconWidget,
       );
     }
@@ -56,7 +47,6 @@ class LumosIconButton extends StatelessWidget {
         onPressed: onPressed,
         tooltip: tooltip,
         iconSize: iconSize,
-        style: style,
         icon: iconWidget,
       );
     }
@@ -65,7 +55,6 @@ class LumosIconButton extends StatelessWidget {
         onPressed: onPressed,
         tooltip: tooltip,
         iconSize: iconSize,
-        style: style,
         icon: iconWidget,
       );
     }
@@ -73,7 +62,6 @@ class LumosIconButton extends StatelessWidget {
       onPressed: onPressed,
       tooltip: tooltip,
       iconSize: iconSize,
-      style: style,
       icon: iconWidget,
     );
   }

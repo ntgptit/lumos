@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/themes/constants/dimensions.dart';
+import '../../../../core/themes/extensions/theme_extensions.dart';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -14,7 +15,8 @@ abstract final class LumosCardConst {
   );
 
   // Selected state: slight elevation boost to lift card above siblings.
-  static const double selectedElevationBoost = 1.0;
+  static const double selectedElevationBoost =
+      WidgetSizes.selectionElevationBoost;
 
   // Animation duration for selected state transition.
   static const Duration selectionAnimationDuration = AppDurations.medium;
@@ -345,13 +347,15 @@ class _LumosCardState extends State<LumosCard>
       colorScheme.onPrimaryContainer,
       selectionProgress,
     )!;
+    final TextStyle contentTextStyle = theme.textTheme.bodyMedium
+        .withResolvedColor(iconTextColor);
+    final IconThemeData contentIconTheme = theme.iconTheme.withResolvedColor(
+      iconTextColor,
+    );
 
     return DefaultTextStyle.merge(
-      style: TextStyle(color: iconTextColor),
-      child: IconTheme(
-        data: IconThemeData(color: iconTextColor),
-        child: content,
-      ),
+      style: contentTextStyle,
+      child: IconTheme(data: contentIconTheme, child: content),
     );
   }
 
@@ -456,21 +460,25 @@ class _LumosCardSkeletonState extends State<_LumosCardSkeleton>
                 _shimmerLine(
                   color: shimmerColor,
                   opacity: _shimmerAnimation.value,
-                  widthFactor: 0.6,
+                  widthFactor: WidgetRatios.shimmerLineWidthShort,
                   height: Insets.spacing16,
                 ),
                 const SizedBox(height: Insets.spacing8),
                 _shimmerLine(
                   color: shimmerColor,
-                  opacity: _shimmerAnimation.value * 0.7,
-                  widthFactor: 1.0,
+                  opacity:
+                      _shimmerAnimation.value *
+                      WidgetRatios.shimmerSecondaryBlendScale,
+                  widthFactor: WidgetRatios.shimmerLineWidthFull,
                   height: Insets.spacing12,
                 ),
                 const SizedBox(height: Insets.spacing4),
                 _shimmerLine(
                   color: shimmerColor,
-                  opacity: _shimmerAnimation.value * 0.5,
-                  widthFactor: 0.8,
+                  opacity:
+                      _shimmerAnimation.value *
+                      WidgetRatios.shimmerTertiaryBlendScale,
+                  widthFactor: WidgetRatios.shimmerLineWidthMedium,
                   height: Insets.spacing12,
                 ),
               ],

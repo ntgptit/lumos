@@ -127,6 +127,29 @@ abstract final class ButtonThemes {
     );
   }
 
+  static ButtonStyle tonalStyle({
+    required ColorScheme colorScheme,
+    required TextTheme textTheme,
+    ButtonSize size = ButtonSize.medium,
+    DeviceType deviceType = DeviceType.mobile,
+  }) {
+    final ButtonStyle base = FilledButton.styleFrom(
+      backgroundColor: colorScheme.secondaryContainer,
+      foregroundColor: colorScheme.onSecondaryContainer,
+      disabledBackgroundColor: colorScheme.disabledContainerColor,
+      disabledForegroundColor: colorScheme.disabledContentColor,
+      textStyle: _textStyle(textTheme: textTheme, size: size),
+      minimumSize: _minimumSize(size: size),
+      padding: _padding(size: size, deviceType: deviceType),
+      shape: _buttonShape(),
+    );
+
+    return base.copyWith(
+      overlayColor: colorScheme.onSecondaryContainer
+          .asInteractiveOverlayProperty(),
+    );
+  }
+
   static ButtonStyle outlinedStyle({
     required ColorScheme colorScheme,
     required TextTheme textTheme,

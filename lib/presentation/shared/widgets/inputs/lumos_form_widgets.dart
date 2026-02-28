@@ -86,18 +86,6 @@ class LumosSearchBar extends StatelessWidget {
       autoFocus: autoFocus,
       leading: const Icon(Icons.search),
       trailing: _buildTrailingActions(),
-      constraints: const BoxConstraints(minHeight: WidgetSizes.minTouchTarget),
-      padding: const WidgetStatePropertyAll<EdgeInsets>(
-        EdgeInsets.symmetric(horizontal: Insets.spacing12),
-      ),
-      elevation: const WidgetStatePropertyAll<double>(WidgetSizes.none),
-      shape: const WidgetStatePropertyAll<OutlinedBorder>(StadiumBorder()),
-      side: WidgetStatePropertyAll<BorderSide>(
-        BorderSide(
-          color: Theme.of(context).colorScheme.outlineVariant,
-          width: WidgetSizes.borderWidthRegular,
-        ),
-      ),
     );
   }
 

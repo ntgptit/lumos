@@ -40,3 +40,16 @@ extension ColorSchemeCompatibilityExtension on ColorScheme {
   // Compatibility alias to keep project contract naming stable.
   Color get inverseOnSurface => onInverseSurface;
 }
+
+extension AppIconThemeDataExtension on IconThemeData {
+  IconThemeData withResolvedColor(Color color) {
+    return copyWith(color: color);
+  }
+
+  IconThemeData withResolvedColorAndSize({
+    required Color color,
+    required double size,
+  }) {
+    return copyWith(color: color, size: size);
+  }
+}

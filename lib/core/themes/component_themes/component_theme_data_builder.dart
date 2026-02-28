@@ -16,6 +16,7 @@ import 'navigation_bar_theme.dart';
 import 'progress_indicator_theme.dart';
 import 'radio_theme.dart';
 import 'scaffold_theme.dart';
+import 'search_bar_theme.dart';
 import 'slider_theme.dart';
 import 'snack_bar_theme.dart';
 import 'switch_theme.dart';
@@ -73,6 +74,10 @@ abstract final class ComponentThemeDataBuilder {
       ),
       iconButtonTheme: ButtonThemes.icon(colorScheme: colorScheme),
       inputDecorationTheme: InputDecorationThemes.build(
+        colorScheme: colorScheme,
+        textTheme: textTheme,
+      ),
+      searchBarTheme: SearchBarThemes.build(
         colorScheme: colorScheme,
         textTheme: textTheme,
       ),

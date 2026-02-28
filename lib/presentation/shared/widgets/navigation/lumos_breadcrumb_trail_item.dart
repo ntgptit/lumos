@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/themes/constants/dimensions.dart';
+import '../typography/lumos_text.dart';
 
 class LumosBreadcrumbTrailItem extends StatelessWidget {
   const LumosBreadcrumbTrailItem({
@@ -34,8 +35,7 @@ class LumosBreadcrumbTrailItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final ColorScheme colorScheme = theme.colorScheme;
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final Widget content = AnimatedContainer(
       duration: AppDurations.fast,
       curve: Curves.easeOutCubic,
@@ -67,15 +67,14 @@ class LumosBreadcrumbTrailItem extends StatelessWidget {
           const SizedBox(width: Insets.spacing8),
           SizedBox(
             width: _resolveLabelWidth(context: context),
-            child: Text(
+            child: LumosText(
               label,
+              style: LumosTextStyle.bodyMedium,
+              tone: isInteractive
+                  ? LumosTextTone.secondary
+                  : LumosTextTone.primary,
               maxLines: 1,
-              softWrap: false,
               overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: _resolveForegroundColor(colorScheme: colorScheme),
-                fontWeight: _resolveFontWeight(),
-              ),
             ),
           ),
         ],
@@ -91,13 +90,6 @@ class LumosBreadcrumbTrailItem extends StatelessWidget {
     );
   }
 
-  FontWeight _resolveFontWeight() {
-    if (isInteractive) {
-      return FontWeight.w500;
-    }
-    return FontWeight.w600;
-  }
-
   Color _resolveBackgroundColor({required ColorScheme colorScheme}) {
     if (isCurrent) {
       return colorScheme.surface;
@@ -106,13 +98,6 @@ class LumosBreadcrumbTrailItem extends StatelessWidget {
       return colorScheme.surfaceContainerHighest;
     }
     return colorScheme.surface;
-  }
-
-  Color _resolveForegroundColor({required ColorScheme colorScheme}) {
-    if (isInteractive) {
-      return colorScheme.onSurfaceVariant;
-    }
-    return colorScheme.onSurface;
   }
 
   Color _resolveIconBadgeColor({required ColorScheme colorScheme}) {

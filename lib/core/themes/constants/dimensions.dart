@@ -33,6 +33,10 @@ abstract final class Material3ComponentSizeTokens {
   static const double buttonHeight = 40;
   static const double buttonHeightLarge = 48;
   static const double buttonMinWidth = 64;
+  static const double dialogMinWidth = 340;
+  static const double swipeActionWidth = 72;
+  static const double progressIndicatorStrokeWidth = 2;
+  static const double selectionElevationBoost = 1;
 
   static const double fabRegular = 56;
   static const double fabSmall = 40;
@@ -163,6 +167,14 @@ abstract final class WidgetSizes {
       Material3ComponentSizeTokens.buttonHeightLarge;
   static const double buttonMinWidth =
       Material3ComponentSizeTokens.buttonMinWidth;
+  static const double dialogMinWidth =
+      Material3ComponentSizeTokens.dialogMinWidth;
+  static const double swipeActionWidth =
+      Material3ComponentSizeTokens.swipeActionWidth;
+  static const double progressIndicatorStrokeWidth =
+      Material3ComponentSizeTokens.progressIndicatorStrokeWidth;
+  static const double selectionElevationBoost =
+      Material3ComponentSizeTokens.selectionElevationBoost;
 
   static const double fabRegular = Material3ComponentSizeTokens.fabRegular;
   static const double fabSmall = Material3ComponentSizeTokens.fabSmall;
@@ -184,6 +196,25 @@ abstract final class WidgetSizes {
       Material3ComponentSizeTokens.progressTrackHeight;
   static const double sliderTrackHeight =
       Material3ComponentSizeTokens.sliderTrackHeight;
+}
+
+abstract final class WidgetRatios {
+  static const double none = Insets.spacing0;
+  static const double half = 0.5;
+  static const double full = 1;
+  static const double transitionSlideOffsetY = 0.06;
+
+  static const double swipeRevealExtent = 0.25;
+  static const double swipeRevealThreshold = 0.35;
+
+  static const double dialogWidthFactor = 0.84;
+  static const double bottomSheetInitialHeightFactor = 0.9;
+
+  static const double shimmerLineWidthShort = 0.6;
+  static const double shimmerLineWidthMedium = 0.8;
+  static const double shimmerLineWidthFull = full;
+  static const double shimmerSecondaryBlendScale = 0.7;
+  static const double shimmerTertiaryBlendScale = half;
 }
 
 abstract final class WidgetOpacities {
@@ -209,11 +240,13 @@ abstract final class WidgetOpacities {
 abstract final class AppDurations {
   static const Duration fast = Duration(milliseconds: 180);
   static const Duration medium = Duration(milliseconds: 250);
+  static const Duration slow = Duration(milliseconds: 360);
 }
 
 abstract final class MotionDurations {
   static const Duration animationFast = Duration(milliseconds: 180);
   static const Duration animationMedium = Duration(milliseconds: 250);
+  static const Duration animationSlow = Duration(milliseconds: 360);
   static const Duration snackbar = Duration(seconds: 3);
   static const Duration tip = Duration(seconds: 5);
 }

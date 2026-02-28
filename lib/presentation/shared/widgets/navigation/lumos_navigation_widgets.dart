@@ -6,8 +6,8 @@ import '../lumos_models.dart';
 abstract final class LumosScreenTransitionConst {
   LumosScreenTransitionConst._();
 
-  static const int durationMs = 360;
-  static const double slideOffsetY = 0.06;
+  static const Duration duration = MotionDurations.animationSlow;
+  static const double slideOffsetY = WidgetRatios.transitionSlideOffsetY;
 }
 
 class LumosAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -69,9 +69,7 @@ class LumosScreenTransition extends StatelessWidget {
             -LumosScreenTransitionConst.slideOffsetY,
           );
     return AnimatedSwitcher(
-      duration: const Duration(
-        milliseconds: LumosScreenTransitionConst.durationMs,
-      ),
+      duration: LumosScreenTransitionConst.duration,
       switchInCurve: Curves.easeOutCubic,
       switchOutCurve: Curves.easeInCubic,
       layoutBuilder: (Widget? currentChild, List<Widget> previousChildren) {

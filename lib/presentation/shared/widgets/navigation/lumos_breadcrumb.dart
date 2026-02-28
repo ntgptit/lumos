@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/themes/constants/dimensions.dart';
+import '../typography/lumos_text.dart';
 import 'lumos_breadcrumb_trail_item.dart';
 
 abstract final class LumosBreadcrumbConst {
@@ -298,8 +299,7 @@ class _OverflowItem<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final ColorScheme colorScheme = theme.colorScheme;
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return PopupMenuButton<_BreadcrumbEntry<T>>(
       tooltip: '',
       padding: EdgeInsets.zero,
@@ -326,11 +326,10 @@ class _OverflowItem<T> extends StatelessWidget {
           color: colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadii.large,
         ),
-        child: Text(
+        child: LumosText(
           LumosBreadcrumbConst.overflowTrailLabel,
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: colorScheme.onSurfaceVariant,
-          ),
+          style: LumosTextStyle.bodyMedium,
+          tone: LumosTextTone.secondary,
         ),
       ),
     );

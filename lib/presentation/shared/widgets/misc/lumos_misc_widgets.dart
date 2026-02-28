@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/themes/constants/dimensions.dart';
+import '../../../../core/themes/extensions/theme_extensions.dart';
 import '../lumos_models.dart';
 import '../typography/lumos_text.dart';
 
@@ -63,7 +64,9 @@ class LumosBadge extends StatelessWidget {
       child: Text(
         '$count',
         overflow: TextOverflow.ellipsis,
-        style: theme.textTheme.labelSmall?.copyWith(color: colorScheme.onError),
+        style: theme.textTheme.labelSmall.withResolvedColor(
+          colorScheme.onError,
+        ),
       ),
     );
   }

@@ -8,9 +8,9 @@ import '../lumos_models.dart';
 abstract final class LumosDialogSizingConst {
   LumosDialogSizingConst._();
 
-  static const double dialogWidthFactor = 0.84;
-  static const double dialogMinWidth = 340;
-  static const double dialogMaxWidth = 620;
+  static const double dialogWidthFactor = WidgetRatios.dialogWidthFactor;
+  static const double dialogMinWidth = WidgetSizes.dialogMinWidth;
+  static const double dialogMaxWidth = WidgetSizes.overlayMaxWidthDesktop;
   static const double dialogHorizontalInset = Insets.spacing16;
   static const double dialogMinScreenInset = Insets.spacing8;
   static const double dialogVerticalInset = Insets.spacing24;
@@ -223,7 +223,9 @@ class LumosBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.sizeOf(context).height;
-    final double resolvedHeight = initialHeight ?? (screenHeight * 0.9);
+    final double resolvedHeight =
+        initialHeight ??
+        (screenHeight * WidgetRatios.bottomSheetInitialHeightFactor);
     final double maxHeight = resolvedHeight
         .clamp(WidgetSizes.minTouchTarget, screenHeight)
         .toDouble();

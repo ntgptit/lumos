@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/themes/constants/dimensions.dart';
+import '../../../../core/themes/extensions/theme_extensions.dart';
 import '../typography/lumos_text.dart';
 import 'lumos_card.dart';
 
@@ -36,10 +37,10 @@ abstract final class LumosEntityListItemCardConst {
   static const double checkboxSize = IconSizes.iconMedium; // 24dp
 
   // Swipe action panel width per action button.
-  static const double swipeActionWidth = 64.0;
+  static const double swipeActionWidth = WidgetSizes.buttonMinWidth;
 
   // Swipe reveal threshold (fraction of widget width).
-  static const double swipeExtentRatio = 0.25;
+  static const double swipeExtentRatio = WidgetRatios.swipeRevealExtent;
 
   static const Duration swipeAnimationDuration = AppDurations.medium;
 }
@@ -254,7 +255,7 @@ class _LumosEntityListItemCardState extends State<LumosEntityListItemCard>
             item.label,
             style: Theme.of(
               context,
-            ).textTheme.bodyMedium?.copyWith(color: labelColor),
+            ).textTheme.bodyMedium.withResolvedColor(labelColor),
           ),
         ],
       ),
@@ -306,7 +307,9 @@ class _LumosEntityListItemCardState extends State<LumosEntityListItemCard>
 
     return Opacity(
       // Dim entire card when disabled — communicates non-interactivity.
-      opacity: widget.isEnabled ? 1.0 : WidgetOpacities.disabledContent,
+      opacity: widget.isEnabled
+          ? WidgetRatios.full
+          : WidgetOpacities.disabledContent,
       child: LumosCard(
         onTap: widget.isEnabled ? widget.onTap : null,
         onLongPress: _hasContextMenu ? _showContextMenu : null,

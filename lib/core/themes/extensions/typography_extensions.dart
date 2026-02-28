@@ -8,3 +8,18 @@ extension AppTextThemeExtension on TextTheme {
     return baseStyle.copyWith(fontWeight: AppTypographyConst.kFontWeightBold);
   }
 }
+
+extension AppTextStyleExtension on TextStyle? {
+  TextStyle withResolvedColor(Color color) {
+    final TextStyle baseStyle = this ?? const TextStyle();
+    return baseStyle.copyWith(color: color);
+  }
+
+  TextStyle withResolvedColorAndWeight({
+    required Color color,
+    required FontWeight fontWeight,
+  }) {
+    final TextStyle baseStyle = this ?? const TextStyle();
+    return baseStyle.copyWith(color: color, fontWeight: fontWeight);
+  }
+}

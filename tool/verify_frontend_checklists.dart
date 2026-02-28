@@ -11,6 +11,8 @@ import 'guards/verify_opacity_constants_contract.dart' as opacity_guard;
 import 'guards/verify_riverpod_annotation.dart' as riverpod_annotation_guard;
 import 'guards/verify_shared_widget_override_contract.dart'
     as shared_widget_override_guard;
+import 'guards/verify_shared_widgets_m3_coverage.dart'
+    as shared_widgets_m3_coverage_guard;
 import 'guards/verify_state_management_contract.dart' as state_management_guard;
 import 'guards/verify_string_utils_contract.dart' as string_utils_guard;
 import 'guards/verify_ui_constants_centralization.dart'
@@ -92,7 +94,9 @@ Future<void> main(List<String> args) async {
   );
   if (unknownIds.isNotEmpty) {
     stderr.writeln('Unknown guard id(s): ${unknownIds.join(', ')}');
-    stderr.writeln('Use `${FrontendChecklistConst.listFlag}` to see valid ids.');
+    stderr.writeln(
+      'Use `${FrontendChecklistConst.listFlag}` to see valid ids.',
+    );
     exitCode = 1;
     return;
   }
@@ -204,6 +208,11 @@ List<_GuardTask> _buildDefaultTasks() {
       id: 'shared-widget-override',
       fileName: 'guards/verify_shared_widget_override_contract.dart',
       run: shared_widget_override_guard.main,
+    ),
+    _GuardTask(
+      id: 'shared-widgets-m3-coverage',
+      fileName: 'guards/verify_shared_widgets_m3_coverage.dart',
+      run: shared_widgets_m3_coverage_guard.main,
     ),
   ];
 }
@@ -332,9 +341,13 @@ void _printTaskList(List<_GuardTask> tasks) {
 }
 
 void _printUsage() {
-  stdout.writeln('Usage: dart run tool/verify_frontend_checklists.dart [options]');
+  stdout.writeln(
+    'Usage: dart run tool/verify_frontend_checklists.dart [options]',
+  );
   stdout.writeln('Options:');
-  stdout.writeln('  ${FrontendChecklistConst.listFlag}            List guard ids');
+  stdout.writeln(
+    '  ${FrontendChecklistConst.listFlag}            List guard ids',
+  );
   stdout.writeln(
     '  ${FrontendChecklistConst.onlyPrefix}<ids>   Run only selected ids (comma separated)',
   );

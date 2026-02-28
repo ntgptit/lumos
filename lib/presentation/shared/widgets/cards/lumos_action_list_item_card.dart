@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/themes/constants/dimensions.dart';
+import '../../../../core/themes/extensions/theme_extensions.dart';
 import '../buttons/lumos_icon_button.dart';
 import '../navigation/lumos_menu_widgets.dart';
 import 'lumos_entity_list_item_card.dart';
@@ -24,9 +25,9 @@ abstract final class LumosActionListItemCardConst {
   static const double contentSpacing = Insets.spacing4;
 
   // Swipe threshold: fraction of card width to trigger action.
-  static const double swipeThreshold = 0.35;
+  static const double swipeThreshold = WidgetRatios.swipeRevealThreshold;
   static const double swipeIconSize = IconSizes.iconMedium;
-  static const double swipeRevealWidth = 72.0;
+  static const double swipeRevealWidth = WidgetSizes.swipeActionWidth;
 }
 
 // ---------------------------------------------------------------------------
@@ -228,9 +229,13 @@ class _ActionMenuItem extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colorScheme = theme.colorScheme;
     final Color labelColor = _resolveLabelColor(colorScheme: colorScheme);
+    final IconThemeData iconTheme = theme.iconTheme.withResolvedColorAndSize(
+      color: labelColor,
+      size: IconSizes.iconSmall,
+    );
 
     return IconTheme.merge(
-      data: IconThemeData(color: labelColor, size: IconSizes.iconSmall),
+      data: iconTheme,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
@@ -257,7 +262,10 @@ class _ActionMenuItem extends StatelessWidget {
     if (action.isLoading) {
       return SizedBox.square(
         dimension: IconSizes.iconSmall,
-        child: CircularProgressIndicator(strokeWidth: 2, color: labelColor),
+        child: CircularProgressIndicator(
+          strokeWidth: WidgetSizes.progressIndicatorStrokeWidth,
+          color: labelColor,
+        ),
       );
     }
     if (action.icon case final IconData iconValue) {
@@ -280,7 +288,7 @@ class _ActionMenuItem extends StatelessWidget {
           action.label,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: textTheme.bodyMedium?.copyWith(color: labelColor),
+          style: textTheme.bodyMedium.withResolvedColor(labelColor),
         ),
         if (action.supportingText case final String supportingTextValue)
           Padding(
@@ -291,8 +299,8 @@ class _ActionMenuItem extends StatelessWidget {
               supportingTextValue,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: textTheme.labelSmall?.copyWith(
-                color: colorScheme.onSurfaceVariant,
+              style: textTheme.labelSmall.withResolvedColor(
+                colorScheme.onSurfaceVariant,
               ),
             ),
           ),
@@ -337,8 +345,8 @@ class _ActionBadge extends StatelessWidget {
           label,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: theme.textTheme.labelSmall?.copyWith(
-            color: colorScheme.onSecondaryContainer,
+          style: theme.textTheme.labelSmall.withResolvedColor(
+            colorScheme.onSecondaryContainer,
           ),
         ),
       ),
@@ -495,7 +503,7 @@ class _SwipeActionButton extends StatelessWidget {
             const SizedBox(height: LumosActionListItemCardConst.contentSpacing),
             Text(
               action.label,
-              style: textTheme.labelSmall?.copyWith(color: fgColor),
+              style: textTheme.labelSmall.withResolvedColor(fgColor),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),

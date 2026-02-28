@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/themes/extensions/theme_extensions.dart';
+
 abstract final class LumosTextConst {
   LumosTextConst._();
 
@@ -63,7 +65,7 @@ class LumosText extends StatelessWidget {
     final TextTheme textTheme = theme.textTheme;
     final TextStyle baseStyle = _resolveTextStyle(textTheme);
     final Color resolvedColor = _resolveColor(theme: theme);
-    final TextStyle resolvedStyle = baseStyle.copyWith(color: resolvedColor);
+    final TextStyle resolvedStyle = baseStyle.withResolvedColor(resolvedColor);
     return Text(
       text,
       style: resolvedStyle,
