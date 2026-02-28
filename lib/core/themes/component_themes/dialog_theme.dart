@@ -54,20 +54,18 @@ abstract final class DialogThemes {
     required TextTheme textTheme,
     DeviceType deviceType = DeviceType.mobile,
   }) {
-    final bool isDark = colorScheme.brightness == Brightness.dark;
-
     return DialogThemeData(
-      // surfaceContainerHigh: M3 spec for dialog — visually above surface background.
-      backgroundColor: isDark
-          ? colorScheme.surfaceContainerHigh
-          : colorScheme.surfaceContainerLowest,
+      // M3 alert dialogs use a raised surface container.
+      backgroundColor: colorScheme.surfaceContainerHigh,
       elevation: _elevationDialog,
       shadowColor: colorScheme.shadow.withValues(
         alpha: WidgetOpacities.elevationLevel2, // 0.08
       ),
       // Scrim: darker on dark mode to maintain contrast with deep surface.
       barrierColor: colorScheme.scrim.withValues(
-        alpha: isDark ? WidgetOpacities.scrimDark : WidgetOpacities.scrimLight,
+        alpha: colorScheme.brightness == Brightness.dark
+            ? WidgetOpacities.scrimDark
+            : WidgetOpacities.scrimLight,
       ),
       shape: AppShape.dialog(),
       alignment: _dialogAlignment(deviceType),
@@ -88,18 +86,16 @@ abstract final class DialogThemes {
     required TextTheme textTheme,
     DeviceType deviceType = DeviceType.mobile,
   }) {
-    final bool isDark = colorScheme.brightness == Brightness.dark;
-
     return BottomSheetThemeData(
-      backgroundColor: isDark
-          ? colorScheme.surfaceContainerHigh
-          : colorScheme.surfaceContainerLowest,
+      backgroundColor: colorScheme.surfaceContainerLow,
       elevation: _elevationBottomSheet,
       shadowColor: colorScheme.shadow.withValues(
         alpha: WidgetOpacities.elevationLevel1, // 0.05
       ),
       modalBarrierColor: colorScheme.scrim.withValues(
-        alpha: isDark ? WidgetOpacities.scrimDark : WidgetOpacities.scrimLight,
+        alpha: colorScheme.brightness == Brightness.dark
+            ? WidgetOpacities.scrimDark
+            : WidgetOpacities.scrimLight,
       ),
       // Only top corners rounded — bottom flush with screen edge.
       shape: AppShape.bottomSheet(),
@@ -133,17 +129,17 @@ abstract final class DialogThemes {
     required ColorScheme colorScheme,
     required TextTheme textTheme,
   }) {
-    final bool isDark = colorScheme.brightness == Brightness.dark;
-
     return DialogThemeData(
       // Full-screen uses surface directly — it IS the surface.
-      backgroundColor: isDark
-          ? colorScheme.surface
-          : colorScheme.surfaceContainerLowest,
+      backgroundColor: colorScheme.surface,
       elevation: _elevationFullScreen,
-      shadowColor: Colors.transparent,
+      shadowColor: colorScheme.shadow.withValues(
+        alpha: WidgetOpacities.transparent,
+      ),
       // No scrim — full-screen dialog covers entire screen.
-      barrierColor: Colors.transparent,
+      barrierColor: colorScheme.scrim.withValues(
+        alpha: WidgetOpacities.transparent,
+      ),
       shape: const RoundedRectangleBorder(), // no radius — edge-to-edge
       alignment: Alignment.center,
       insetPadding: EdgeInsets.zero,
@@ -164,18 +160,16 @@ abstract final class DialogThemes {
     required TextTheme textTheme,
     DeviceType deviceType = DeviceType.mobile,
   }) {
-    final bool isDark = colorScheme.brightness == Brightness.dark;
-
     return DialogThemeData(
-      backgroundColor: isDark
-          ? colorScheme.surfaceContainerHigh
-          : colorScheme.surfaceContainerLowest,
+      backgroundColor: colorScheme.surfaceContainerHigh,
       elevation: _elevationDialog,
       shadowColor: colorScheme.shadow.withValues(
         alpha: WidgetOpacities.elevationLevel2,
       ),
       barrierColor: colorScheme.scrim.withValues(
-        alpha: isDark ? WidgetOpacities.scrimDark : WidgetOpacities.scrimLight,
+        alpha: colorScheme.brightness == Brightness.dark
+            ? WidgetOpacities.scrimDark
+            : WidgetOpacities.scrimLight,
       ),
       // cardLarge (12dp radius) — softer, more editorial feel for rich content.
       shape: AppShape.cardLarge(),

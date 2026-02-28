@@ -71,12 +71,17 @@ abstract final class ComponentThemeDataBuilder {
         colorScheme: colorScheme,
         textTheme: textTheme,
       ),
+      iconButtonTheme: ButtonThemes.icon(colorScheme: colorScheme),
       inputDecorationTheme: InputDecorationThemes.build(
         colorScheme: colorScheme,
         textTheme: textTheme,
       ),
       cardTheme: CardThemes.build(colorScheme: colorScheme),
       dialogTheme: DialogThemes.build(
+        colorScheme: colorScheme,
+        textTheme: textTheme,
+      ),
+      bottomSheetTheme: DialogThemes.buildBottomSheet(
         colorScheme: colorScheme,
         textTheme: textTheme,
       ),

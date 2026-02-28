@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import '../constants/dimensions.dart';
 
 abstract final class AppBarThemeConst {
-  static const bool centerTitle = true;
+  static const bool centerTitle = false;
+  static const double elevation = 0.0;
+  static const double scrolledUnderElevation = 3.0;
 }
 
 abstract final class AppBarThemes {
@@ -13,14 +15,17 @@ abstract final class AppBarThemes {
   }) {
     return AppBarTheme(
       centerTitle: AppBarThemeConst.centerTitle,
-      elevation: WidgetSizes.none,
+      elevation: AppBarThemeConst.elevation,
+      scrolledUnderElevation: AppBarThemeConst.scrolledUnderElevation,
+      toolbarHeight: WidgetSizes.appBarHeight,
       backgroundColor: colorScheme.surface,
       foregroundColor: colorScheme.onSurface,
-      scrolledUnderElevation: WidgetSizes.none,
+      surfaceTintColor: colorScheme.surfaceTint,
       titleTextStyle: textTheme.titleLarge?.copyWith(
         color: colorScheme.onSurface,
       ),
       actionsIconTheme: IconThemeData(color: colorScheme.onSurface),
+      iconTheme: IconThemeData(color: colorScheme.onSurface),
     );
   }
 }

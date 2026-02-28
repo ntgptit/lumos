@@ -47,7 +47,7 @@ enum ChipSize { small, medium, large }
 /// ```
 abstract final class ChipThemes {
   // Pill radius for filter / input / suggestion chips (M3 standard).
-  static const double _radiusPill = Radius.radiusCircle; // 100dp
+  static const double _radiusPill = Radius.radiusMedium; // 8dp
   // Square radius for category tab-style chips.
   static const double _radiusSquare = Radius.radiusLarge; // 12dp
 
@@ -118,7 +118,7 @@ abstract final class ChipThemes {
     required double radius,
   }) {
     return ChipThemeData(
-      backgroundColor: colorScheme.surfaceContainerHighest,
+      backgroundColor: colorScheme.surfaceContainerLow,
       selectedColor: colorScheme.secondaryContainer,
       disabledColor: colorScheme.onSurface.withValues(
         alpha: WidgetOpacities.divider, // 0.12
@@ -134,9 +134,7 @@ abstract final class ChipThemes {
       // For explicit per-state border control, override at widget level:
       //   FilterChip(side: BorderSide(...), ...)
       side: BorderSide(
-        color: colorScheme.outline.withValues(
-          alpha: WidgetOpacities.elevationLevel3, // 0.11
-        ),
+        color: colorScheme.outline,
         width: WidgetSizes.borderWidthRegular, // 1.2
       ),
 
@@ -149,7 +147,7 @@ abstract final class ChipThemes {
       labelStyle: _labelStyle(
         textTheme: textTheme,
         size: size,
-        color: colorScheme.onSurfaceVariant,
+        color: colorScheme.onSurface,
       ),
       secondaryLabelStyle: _labelStyle(
         textTheme: textTheme,
@@ -160,8 +158,8 @@ abstract final class ChipThemes {
       padding: _padding(size: size, deviceType: deviceType),
       labelPadding: _labelPadding(size),
 
-      // Checkmark hidden — selection communicated via color change.
-      showCheckmark: false,
+      // M3 filter chip shows selection affordance by default.
+      showCheckmark: true,
 
       elevation: WidgetSizes.none,
       pressElevation: WidgetSizes.none,

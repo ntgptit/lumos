@@ -1,48 +1,18 @@
 import 'package:flutter/material.dart';
 
 import '../constants/dimensions.dart';
-import '../shape.dart';
 
-/// Button size variants.
-///
-/// - [small]  : Inline actions, tags, compact UI (32dp height).
-/// - [medium] : Default for most interactions (40dp height).
-/// - [large]  : Primary CTA, full-width actions (48dp height).
 enum ButtonSize { small, medium, large }
 
-/// Centralised button theming for Social/Lifestyle app.
-///
-/// Supports:
-///   - All 4 Material button types: elevated, filled, outlined, text
-///   - [ButtonSize] — small / medium / large
-///   - [DeviceType] — compact padding on mobile, relaxed on tablet/desktop
-///   - Icon buttons via [IconButton] theme
-///
-/// Usage — global theme:
-/// ```dart
-/// elevatedButtonTheme : ButtonThemes.elevated(colorScheme: cs, textTheme: tt),
-/// filledButtonTheme   : ButtonThemes.filled(colorScheme: cs, textTheme: tt),
-/// outlinedButtonTheme : ButtonThemes.outlined(colorScheme: cs, textTheme: tt),
-/// textButtonTheme     : ButtonThemes.text(colorScheme: cs, textTheme: tt),
-/// iconButtonTheme     : ButtonThemes.icon(colorScheme: cs),
-/// ```
-///
-/// Usage — per-widget size override:
-/// ```dart
-/// ElevatedButton(
-///   style: ButtonThemes.elevatedStyle(
-///     colorScheme: colorScheme,
-///     textTheme: textTheme,
-///     size: ButtonSize.small,
-///   ),
-///   ...
-/// )
-/// ```
-abstract final class ButtonThemes {
-  // ---------------------------------------------------------------------------
-  // Global theme builders — wired into ThemeData
-  // ---------------------------------------------------------------------------
+const double _cornerRadius = 20.0;
+const double _minimumWidth = 64.0;
+const double _elevationResting = 1.0;
+const double _elevationHovered = 3.0;
+const double _elevationFocused = 1.0;
+const double _elevationPressed = 1.0;
+const double _elevationDisabled = 0.0;
 
+abstract final class ButtonThemes {
   static ElevatedButtonThemeData elevated({
     required ColorScheme colorScheme,
     required TextTheme textTheme,
@@ -108,31 +78,30 @@ abstract final class ButtonThemes {
     );
   }
 
-  // ---------------------------------------------------------------------------
-  // Per-widget style builders — use for size overrides in specific widgets
-  // ---------------------------------------------------------------------------
-
   static ButtonStyle elevatedStyle({
     required ColorScheme colorScheme,
     required TextTheme textTheme,
     ButtonSize size = ButtonSize.medium,
     DeviceType deviceType = DeviceType.mobile,
   }) {
-    return ElevatedButton.styleFrom(
-      backgroundColor: colorScheme.primary,
-      foregroundColor: colorScheme.onPrimary,
-      disabledBackgroundColor: colorScheme.onSurface.withValues(
-        alpha: WidgetOpacities.disabledContent, // 0.38
-      ),
-      disabledForegroundColor: colorScheme.onSurface.withValues(
-        alpha: WidgetOpacities.disabledContent,
-      ),
-      elevation: WidgetSizes.none,
-      shadowColor: Colors.transparent,
+    final ButtonStyle base = ElevatedButton.styleFrom(
+      backgroundColor: colorScheme.surfaceContainerLow,
+      foregroundColor: colorScheme.primary,
+      disabledBackgroundColor: _disabledContainer(colorScheme),
+      disabledForegroundColor: _disabledForeground(colorScheme),
       textStyle: _textStyle(textTheme: textTheme, size: size),
-      minimumSize: _minimumSize(size: size, deviceType: deviceType),
+      minimumSize: _minimumSize(size: size),
       padding: _padding(size: size, deviceType: deviceType),
-      shape: AppShape.button(),
+      shape: _buttonShape(),
+      shadowColor: colorScheme.shadow.withValues(
+        alpha: WidgetOpacities.elevationLevel2,
+      ),
+      surfaceTintColor: colorScheme.surfaceTint,
+    );
+
+    return base.copyWith(
+      elevation: WidgetStateProperty.resolveWith(_resolveElevatedElevation),
+      overlayColor: _overlayColor(colorScheme.primary),
     );
   }
 
@@ -142,20 +111,18 @@ abstract final class ButtonThemes {
     ButtonSize size = ButtonSize.medium,
     DeviceType deviceType = DeviceType.mobile,
   }) {
-    return FilledButton.styleFrom(
-      backgroundColor: colorScheme.primaryContainer,
-      foregroundColor: colorScheme.onPrimaryContainer,
-      disabledBackgroundColor: colorScheme.onSurface.withValues(
-        alpha: WidgetOpacities.disabledContent,
-      ),
-      disabledForegroundColor: colorScheme.onSurface.withValues(
-        alpha: WidgetOpacities.disabledContent,
-      ),
+    final ButtonStyle base = FilledButton.styleFrom(
+      backgroundColor: colorScheme.primary,
+      foregroundColor: colorScheme.onPrimary,
+      disabledBackgroundColor: _disabledContainer(colorScheme),
+      disabledForegroundColor: _disabledForeground(colorScheme),
       textStyle: _textStyle(textTheme: textTheme, size: size),
-      minimumSize: _minimumSize(size: size, deviceType: deviceType),
+      minimumSize: _minimumSize(size: size),
       padding: _padding(size: size, deviceType: deviceType),
-      shape: AppShape.button(),
+      shape: _buttonShape(),
     );
+
+    return base.copyWith(overlayColor: _overlayColor(colorScheme.onPrimary));
   }
 
   static ButtonStyle outlinedStyle({
@@ -164,36 +131,34 @@ abstract final class ButtonThemes {
     ButtonSize size = ButtonSize.medium,
     DeviceType deviceType = DeviceType.mobile,
   }) {
-    return OutlinedButton.styleFrom(
+    final ButtonStyle base = OutlinedButton.styleFrom(
       foregroundColor: colorScheme.primary,
-      disabledForegroundColor: colorScheme.onSurface.withValues(
-        alpha: WidgetOpacities.disabledContent,
-      ),
+      disabledForegroundColor: _disabledForeground(colorScheme),
       textStyle: _textStyle(textTheme: textTheme, size: size),
-      minimumSize: _minimumSize(size: size, deviceType: deviceType),
+      minimumSize: _minimumSize(size: size),
       padding: _padding(size: size, deviceType: deviceType),
-      shape: AppShape.button(
-        side: BorderSide(
-          color: colorScheme.primary,
-          width: WidgetSizes.borderWidthRegular, // 1.2
-        ),
+      shape: _buttonShape(),
+      side: BorderSide(
+        color: colorScheme.outline,
+        width: WidgetSizes.borderWidthRegular,
       ),
-    ).copyWith(
-      // Dim border when disabled — styleFrom does not expose disabledSide directly.
-      side: WidgetStateProperty.resolveWith((states) {
+      backgroundColor: _transparentSurface(colorScheme),
+    );
+
+    return base.copyWith(
+      side: WidgetStateProperty.resolveWith((Set<WidgetState> states) {
         if (states.contains(WidgetState.disabled)) {
           return BorderSide(
-            color: colorScheme.onSurface.withValues(
-              alpha: WidgetOpacities.disabledContent,
-            ),
+            color: _disabledContainer(colorScheme),
             width: WidgetSizes.borderWidthRegular,
           );
         }
         return BorderSide(
-          color: colorScheme.primary,
+          color: colorScheme.outline,
           width: WidgetSizes.borderWidthRegular,
         );
       }),
+      overlayColor: _overlayColor(colorScheme.primary),
     );
   }
 
@@ -203,105 +168,144 @@ abstract final class ButtonThemes {
     ButtonSize size = ButtonSize.medium,
     DeviceType deviceType = DeviceType.mobile,
   }) {
-    return TextButton.styleFrom(
+    final ButtonStyle base = TextButton.styleFrom(
       foregroundColor: colorScheme.primary,
-      disabledForegroundColor: colorScheme.onSurface.withValues(
-        alpha: WidgetOpacities.disabledContent,
-      ),
+      disabledForegroundColor: _disabledForeground(colorScheme),
       textStyle: _textStyle(textTheme: textTheme, size: size),
-      minimumSize: _minimumSize(size: size, deviceType: deviceType),
+      minimumSize: _minimumSize(size: size),
       padding: _padding(size: size, deviceType: deviceType),
-      shape: AppShape.button(),
+      shape: _buttonShape(),
+      backgroundColor: _transparentSurface(colorScheme),
     );
+    return base.copyWith(overlayColor: _overlayColor(colorScheme.primary));
   }
 
   static ButtonStyle iconStyle({
     required ColorScheme colorScheme,
     DeviceType deviceType = DeviceType.mobile,
   }) {
-    return IconButton.styleFrom(
+    final ButtonStyle base = IconButton.styleFrom(
       foregroundColor: colorScheme.onSurfaceVariant,
-      // Minimum touch target: 48dp regardless of device (WCAG 2.5.5).
+      disabledForegroundColor: _disabledForeground(colorScheme),
       minimumSize: const Size(
         WidgetSizes.minTouchTarget,
         WidgetSizes.minTouchTarget,
       ),
       iconSize: _iconSize(deviceType),
+      padding: const EdgeInsets.all(Insets.spacing8),
+      shape: _buttonShape(),
+      backgroundColor: _transparentSurface(colorScheme),
+    );
+
+    return base.copyWith(
+      foregroundColor: WidgetStateProperty.resolveWith((
+        Set<WidgetState> states,
+      ) {
+        if (states.contains(WidgetState.disabled)) {
+          return _disabledForeground(colorScheme);
+        }
+        if (states.contains(WidgetState.selected)) {
+          return colorScheme.primary;
+        }
+        return colorScheme.onSurfaceVariant;
+      }),
+      overlayColor: _overlayColor(colorScheme.onSurfaceVariant),
     );
   }
+}
 
-  // ---------------------------------------------------------------------------
-  // Size helpers
-  // ---------------------------------------------------------------------------
-
-  static TextStyle? _textStyle({
-    required TextTheme textTheme,
-    required ButtonSize size,
-  }) {
-    return switch (size) {
-      ButtonSize.small => textTheme.labelMedium,
-      ButtonSize.medium => textTheme.labelLarge,
-      ButtonSize.large => textTheme.labelLarge,
-    };
+double _resolveElevatedElevation(Set<WidgetState> states) {
+  if (states.contains(WidgetState.disabled)) {
+    return _elevationDisabled;
   }
-
-  /// Minimum tap area — ensures touch targets meet WCAG on all sizes.
-  static Size _minimumSize({
-    required ButtonSize size,
-    required DeviceType deviceType,
-  }) {
-    final double height = switch (size) {
-      ButtonSize.small => WidgetSizes.buttonHeightSmall, // 32dp
-      ButtonSize.medium => WidgetSizes.buttonHeightMedium, // 40dp
-      ButtonSize.large => WidgetSizes.buttonHeightLarge, // 48dp
-    };
-
-    // Tablet/desktop: slightly wider minimum to avoid overly narrow buttons
-    // on larger screens where content is more spread out.
-    final double minWidth = switch (deviceType) {
-      DeviceType.mobile =>
-        WidgetSizes.buttonHeightLarge, // 48dp — square-ish minimum
-      DeviceType.tablet => WidgetSizes.buttonHeightLarge * 1.5, // 72dp
-      DeviceType.desktop => WidgetSizes.buttonHeightLarge * 2, // 96dp
-    };
-
-    return Size(minWidth, height);
+  if (states.contains(WidgetState.hovered)) {
+    return _elevationHovered;
   }
-
-  static EdgeInsets _padding({
-    required ButtonSize size,
-    required DeviceType deviceType,
-  }) {
-    // Base horizontal padding per size.
-    final double hBase = switch (size) {
-      ButtonSize.small => Insets.spacing12,
-      ButtonSize.medium => Insets.spacing16,
-      ButtonSize.large => Insets.spacing24,
-    };
-
-    // Base vertical padding per size.
-    final double vBase = switch (size) {
-      ButtonSize.small => Insets.spacing4,
-      ButtonSize.medium => Insets.spacing8,
-      ButtonSize.large => Insets.spacing12,
-    };
-
-    // Tablet/desktop: add extra horizontal breathing room.
-    final double hExtra = switch (deviceType) {
-      DeviceType.mobile => 0,
-      DeviceType.tablet => Insets.spacing4,
-      DeviceType.desktop => Insets.spacing8,
-    };
-
-    return EdgeInsets.symmetric(horizontal: hBase + hExtra, vertical: vBase);
+  if (states.contains(WidgetState.focused)) {
+    return _elevationFocused;
   }
-
-  static double _iconSize(DeviceType deviceType) {
-    return switch (deviceType) {
-      DeviceType.mobile => IconSizes.iconMedium, // 24dp
-      DeviceType.tablet =>
-        IconSizes.iconMedium, // 24dp — icon size stays stable
-      DeviceType.desktop => IconSizes.iconMedium,
-    };
+  if (states.contains(WidgetState.pressed)) {
+    return _elevationPressed;
   }
+  return _elevationResting;
+}
+
+TextStyle? _textStyle({
+  required TextTheme textTheme,
+  required ButtonSize size,
+}) {
+  return switch (size) {
+    ButtonSize.small => textTheme.labelMedium,
+    ButtonSize.medium => textTheme.labelLarge,
+    ButtonSize.large => textTheme.labelLarge,
+  };
+}
+
+Size _minimumSize({required ButtonSize size}) {
+  final double height = switch (size) {
+    ButtonSize.small => WidgetSizes.buttonHeightSmall,
+    ButtonSize.medium => WidgetSizes.buttonHeightMedium,
+    ButtonSize.large => WidgetSizes.buttonHeightLarge,
+  };
+  return Size(_minimumWidth, height);
+}
+
+EdgeInsets _padding({
+  required ButtonSize size,
+  required DeviceType deviceType,
+}) {
+  final double horizontal = switch (size) {
+    ButtonSize.small => Insets.spacing12,
+    ButtonSize.medium => Insets.spacing24,
+    ButtonSize.large => Insets.spacing24,
+  };
+  final double vertical = switch (size) {
+    ButtonSize.small => Insets.spacing4,
+    ButtonSize.medium => Insets.spacing8,
+    ButtonSize.large => Insets.spacing12,
+  };
+  return EdgeInsets.symmetric(horizontal: horizontal, vertical: vertical);
+}
+
+double _iconSize(DeviceType deviceType) {
+  return switch (deviceType) {
+    DeviceType.mobile => IconSizes.iconMedium,
+    DeviceType.tablet => IconSizes.iconMedium,
+    DeviceType.desktop => IconSizes.iconMedium,
+  };
+}
+
+RoundedRectangleBorder _buttonShape() {
+  return RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(_cornerRadius),
+  );
+}
+
+WidgetStateProperty<Color?> _overlayColor(Color color) {
+  return WidgetStateProperty.resolveWith((Set<WidgetState> states) {
+    if (states.contains(WidgetState.pressed)) {
+      return color.withValues(alpha: WidgetOpacities.statePress);
+    }
+    if (states.contains(WidgetState.hovered)) {
+      return color.withValues(alpha: WidgetOpacities.stateHover);
+    }
+    if (states.contains(WidgetState.focused)) {
+      return color.withValues(alpha: WidgetOpacities.stateFocus);
+    }
+    return null;
+  });
+}
+
+Color _disabledForeground(ColorScheme colorScheme) {
+  return colorScheme.onSurface.withValues(
+    alpha: WidgetOpacities.disabledContent,
+  );
+}
+
+Color _disabledContainer(ColorScheme colorScheme) {
+  return colorScheme.onSurface.withValues(alpha: WidgetOpacities.divider);
+}
+
+Color _transparentSurface(ColorScheme colorScheme) {
+  return colorScheme.surface.withValues(alpha: WidgetOpacities.transparent);
 }

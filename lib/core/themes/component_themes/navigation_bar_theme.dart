@@ -9,11 +9,22 @@ abstract final class NavigationBarThemes {
   }) {
     return NavigationBarThemeData(
       elevation: WidgetSizes.none,
-      backgroundColor: colorScheme.surface,
-      labelTextStyle: WidgetStatePropertyAll<TextStyle?>(
-        textTheme.labelSmall?.copyWith(color: colorScheme.onSurface),
-      ),
+      backgroundColor: colorScheme.surfaceContainer,
       indicatorColor: colorScheme.secondaryContainer,
+      height: WidgetSizes.navigationBarHeight,
+      labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+      labelTextStyle: WidgetStateProperty.resolveWith<TextStyle?>((
+        Set<WidgetState> states,
+      ) {
+        if (states.contains(WidgetState.selected)) {
+          return textTheme.labelMedium?.copyWith(
+            color: colorScheme.onSecondaryContainer,
+          );
+        }
+        return textTheme.labelMedium?.copyWith(
+          color: colorScheme.onSurfaceVariant,
+        );
+      }),
       iconTheme: WidgetStateProperty.resolveWith<IconThemeData?>((
         Set<WidgetState> states,
       ) {
@@ -22,7 +33,6 @@ abstract final class NavigationBarThemes {
         }
         return IconThemeData(color: colorScheme.onSurfaceVariant);
       }),
-      height: WidgetSizes.navigationBarHeight,
     );
   }
 }

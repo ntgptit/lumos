@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../constants/dimensions.dart';
-import '../shape.dart';
 
 /// FAB color variants aligned with M3 color roles.
 ///
@@ -56,6 +55,7 @@ abstract final class FloatingActionButtonThemes {
   // FAB sizes
   static const double _sizeFabRegular = 56.0;
   static const double _sizeFabSmall = 40.0;
+  static const double _fabCornerRadius = Radius.radiusXLarge;
 
   // ---------------------------------------------------------------------------
   // Global theme builder
@@ -86,8 +86,10 @@ abstract final class FloatingActionButtonThemes {
       highlightElevation: isDark ? WidgetSizes.none : _elevationPressed,
       disabledElevation: _elevationDisabled,
 
-      // Regular FAB: radiusXLarge (16dp) per M3 spec — NOT button radius (8dp).
-      shape: AppShape.button(side: BorderSide.none),
+      // Regular FAB: 16dp corner radius per M3.
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(_fabCornerRadius),
+      ),
 
       // Extended FAB text style.
       extendedTextStyle: textTheme.labelLarge?.copyWith(

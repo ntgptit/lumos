@@ -147,7 +147,9 @@ abstract final class SnackBarThemes {
       disabledActionTextColor: colors.onBackground.withValues(
         alpha: WidgetOpacities.disabledContent, // 0.38
       ),
-      actionBackgroundColor: Colors.transparent,
+      actionBackgroundColor: colors.background.withValues(
+        alpha: WidgetOpacities.transparent,
+      ),
       behavior: SnackBarBehavior.floating,
       elevation: _elevation,
       shape: _snackBarShape(),

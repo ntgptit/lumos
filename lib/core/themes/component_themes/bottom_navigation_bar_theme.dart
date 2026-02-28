@@ -5,6 +5,7 @@ import '../constants/dimensions.dart';
 abstract final class BottomNavigationBarThemeConst {
   static const bool showUnselectedLabels = true;
   static const BottomNavigationBarType type = BottomNavigationBarType.fixed;
+  static const double elevation = 0.0;
 }
 
 abstract final class BottomNavigationBarThemes {
@@ -13,14 +14,20 @@ abstract final class BottomNavigationBarThemes {
     required TextTheme textTheme,
   }) {
     return BottomNavigationBarThemeData(
-      elevation: WidgetSizes.none,
+      elevation: BottomNavigationBarThemeConst.elevation,
       showUnselectedLabels: BottomNavigationBarThemeConst.showUnselectedLabels,
       type: BottomNavigationBarThemeConst.type,
-      backgroundColor: colorScheme.surface,
-      selectedItemColor: colorScheme.primary,
+      backgroundColor: colorScheme.surfaceContainer,
+      selectedItemColor: colorScheme.onSecondaryContainer,
       unselectedItemColor: colorScheme.onSurfaceVariant,
-      selectedLabelStyle: textTheme.labelSmall,
-      unselectedLabelStyle: textTheme.labelSmall,
+      selectedIconTheme: IconThemeData(size: IconSizes.iconBottomNavBar),
+      unselectedIconTheme: IconThemeData(size: IconSizes.iconBottomNavBar),
+      selectedLabelStyle: textTheme.labelMedium?.copyWith(
+        color: colorScheme.onSecondaryContainer,
+      ),
+      unselectedLabelStyle: textTheme.labelMedium?.copyWith(
+        color: colorScheme.onSurfaceVariant,
+      ),
     );
   }
 }
