@@ -105,7 +105,10 @@ class HomeStatTile extends StatelessWidget {
               border: Border.all(color: colorScheme.outlineVariant),
               color: colorScheme.surfaceContainerHighest,
             ),
-            child: Icon(stat.icon, color: colorScheme.primary),
+            child: IconTheme(
+              data: IconThemeData(color: colorScheme.primary),
+              child: LumosIcon(stat.icon),
+            ),
           ),
           const SizedBox(width: Insets.spacing12),
           Expanded(
@@ -236,7 +239,10 @@ class HomeTaskLine extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Icon(icon, size: IconSizes.iconSmall, color: color),
+        IconTheme(
+          data: IconThemeData(color: color),
+          child: LumosIcon(icon, size: IconSizes.iconSmall),
+        ),
         const SizedBox(width: Insets.spacing8),
         Expanded(
           child: Column(

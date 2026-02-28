@@ -70,10 +70,12 @@ class FolderContent extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 FolderHeader(
-                  breadcrumbItems: state.breadcrumbItems,
-                  currentParentId: state.currentParentId,
-                  onOpenRoot: controller.openRoot,
-                  onOpenBreadcrumb: controller.goToBreadcrumb,
+                  currentDepth: state.currentDepth,
+                  searchQuery: state.searchQuery,
+                  onSearchChanged: controller.updateSearchQuery,
+                  sortType: state.sortType,
+                  onSortTypeChanged: controller.updateSortType,
+                  onOpenParentFolder: controller.openParentFolder,
                 ),
                 const SizedBox(height: Insets.spacing16),
                 if (state.inlineErrorMessage case final String message)
@@ -108,7 +110,7 @@ class FolderContent extends ConsumerWidget {
               item: item,
               onOpen: () => ref
                   .read(folderAsyncControllerProvider.notifier)
-                  .openFolder(item.id),
+                  .openFolder(folderId: item.id, depth: item.depth),
               onRename: () => showFolderNameDialog(
                 context: context,
                 titleBuilder: (AppLocalizations l10n) => l10n.folderRenameTitle,

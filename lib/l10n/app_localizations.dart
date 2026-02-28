@@ -179,6 +179,36 @@ abstract class AppLocalizations {
   /// **'Browse tree, create, rename, and soft-delete folders.'**
   String get folderManagerSubtitle;
 
+  /// No description provided for @folderSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search folders'**
+  String get folderSearchHint;
+
+  /// No description provided for @folderSearchClearTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear search'**
+  String get folderSearchClearTooltip;
+
+  /// No description provided for @folderSortTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort folders'**
+  String get folderSortTitle;
+
+  /// No description provided for @folderSortNameAscending.
+  ///
+  /// In en, this message translates to:
+  /// **'Name A-Z'**
+  String get folderSortNameAscending;
+
+  /// No description provided for @folderSortNameDescending.
+  ///
+  /// In en, this message translates to:
+  /// **'Name Z-A'**
+  String get folderSortNameDescending;
+
   /// No description provided for @folderRoot.
   ///
   /// In en, this message translates to:

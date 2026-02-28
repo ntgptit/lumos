@@ -35,10 +35,9 @@ class HomePlaceholderTab extends StatelessWidget {
                     color: colorScheme.surfaceContainerHighest,
                     borderRadius: BorderRadii.large,
                   ),
-                  child: Icon(
-                    icon,
-                    size: IconSizes.iconXLarge,
-                    color: colorScheme.primary,
+                  child: IconTheme(
+                    data: IconThemeData(color: colorScheme.primary),
+                    child: LumosIcon(icon, size: IconSizes.iconXLarge),
                   ),
                 ),
                 const SizedBox(height: Insets.spacing16),

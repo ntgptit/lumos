@@ -4,6 +4,7 @@ import '../../../../../../core/themes/constants/dimensions.dart';
 import '../../../../../../domain/entities/folder_models.dart';
 import '../../../../../../l10n/app_localizations.dart';
 import '../../../../../shared/widgets/cards/lumos_action_list_item_card.dart';
+import '../../../../../shared/widgets/misc/lumos_misc_widgets.dart';
 
 abstract final class FolderTileConst {
   FolderTileConst._();
@@ -42,7 +43,9 @@ class FolderTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
-    final String subtitle = _resolveSubtitle(l10n: l10n);
+    final String subtitle = item.depth == FolderTileConst.rootDepth
+        ? l10n.folderRoot
+        : l10n.folderDepth(item.depth);
     return LumosActionListItemCard(
       title: item.name,
       subtitle: subtitle,
@@ -56,13 +59,6 @@ class FolderTile extends StatelessWidget {
         _handleAction(actionKey: actionKey);
       },
     );
-  }
-
-  String _resolveSubtitle({required AppLocalizations l10n}) {
-    if (item.depth == FolderTileConst.rootDepth) {
-      return l10n.folderRoot;
-    }
-    return l10n.folderDepth(item.depth);
   }
 
   List<LumosActionListItem> _buildActions({required AppLocalizations l10n}) {
@@ -138,10 +134,12 @@ class _FolderTileLeading extends StatelessWidget {
               ),
             ),
             child: Center(
-              child: Icon(
-                Icons.folder_open_rounded,
-                size: FolderTileConst.leadingIconSize,
-                color: foregroundColor,
+              child: IconTheme(
+                data: IconThemeData(color: foregroundColor),
+                child: const LumosIcon(
+                  Icons.folder_open_rounded,
+                  size: FolderTileConst.leadingIconSize,
+                ),
               ),
             ),
           ),
@@ -219,7 +217,7 @@ class _FolderChildCountBadge extends StatelessWidget {
         borderRadius: BorderRadii.large,
       ),
       child: Center(
-        child: Text(
+        child: LumosInlineText(
           '$childFolderCount',
           maxLines: 1,
           overflow: TextOverflow.ellipsis,

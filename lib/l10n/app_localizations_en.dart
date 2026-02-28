@@ -51,6 +51,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get folderManagerSubtitle => 'Browse tree, create, rename, and soft-delete folders.';
 
   @override
+  String get folderSearchHint => 'Search folders';
+
+  @override
+  String get folderSearchClearTooltip => 'Clear search';
+
+  @override
+  String get folderSortTitle => 'Sort folders';
+
+  @override
+  String get folderSortNameAscending => 'Name A-Z';
+
+  @override
+  String get folderSortNameDescending => 'Name Z-A';
+
+  @override
   String get folderRoot => 'Root';
 
   @override

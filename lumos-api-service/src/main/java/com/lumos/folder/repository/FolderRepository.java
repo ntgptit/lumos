@@ -12,40 +12,60 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.lumos.folder.entity.Folder;
-import com.lumos.folder.repository.projection.BreadcrumbRowProjection;
 import com.lumos.folder.repository.projection.FolderChildCountProjection;
 
 public interface FolderRepository extends JpaRepository<Folder, Long> {
 
 	Optional<Folder> findByIdAndDeletedAtIsNull(Long id);
 
-	Page<Folder> findAllByDeletedAtIsNull(Pageable pageable);
-
 	List<Folder> findAllByParentIdAndDeletedAtIsNull(Long parentId);
 
-	@Query(value = """
-			WITH RECURSIVE breadcrumb AS (
-			    SELECT f.id, f.name, f.depth, f.parent_id, 0 AS level
-			    FROM folders f
-			    WHERE f.id = :folderId AND f.deleted_at IS NULL
-			    UNION ALL
-			    SELECT p.id, p.name, p.depth, p.parent_id, b.level + 1
-			    FROM folders p
-			    JOIN breadcrumb b ON b.parent_id = p.id
-			    WHERE p.deleted_at IS NULL
-			)
-			SELECT id, name, depth
-			FROM breadcrumb
-			ORDER BY level DESC
-			""", nativeQuery = true)
-	List<BreadcrumbRowProjection> findBreadcrumbRows(@Param("folderId") Long folderId);
+	@Query(nativeQuery = true, value = """
+			SELECT f.*
+			FROM folders f
+			WHERE f.deleted_at IS NULL
+			  AND (
+			        (:parentId IS NULL AND f.parent_id IS NULL)
+			        OR f.parent_id = :parentId
+			      )
+			  AND (
+			        :searchQuery IS NULL
+			        OR TRIM(:searchQuery) = ''
+			        OR LOWER(f.name) LIKE LOWER(CONCAT('%', TRIM(:searchQuery), '%'))
+			      )
+			ORDER BY
+			  CASE
+			    WHEN LOWER(COALESCE(TRIM(:sortType), '')) = 'namedescending'
+			    THEN LOWER(f.name)
+			  END DESC,
+			  CASE
+			    WHEN LOWER(COALESCE(TRIM(:sortType), '')) <> 'namedescending'
+			    THEN LOWER(f.name)
+			  END ASC,
+			  f.id ASC
+			""", countQuery = """
+			SELECT COUNT(1)
+			FROM folders f
+			WHERE f.deleted_at IS NULL
+			  AND (
+			        (:parentId IS NULL AND f.parent_id IS NULL)
+			        OR f.parent_id = :parentId
+			      )
+			  AND (
+			        :searchQuery IS NULL
+			        OR TRIM(:searchQuery) = ''
+			        OR LOWER(f.name) LIKE LOWER(CONCAT('%', TRIM(:searchQuery), '%'))
+			      )
+			""")
+	Page<Folder> searchFolders(@Param("parentId") Long parentId, @Param("searchQuery") String searchQuery,
+			@Param("sortType") String sortType, Pageable pageable);
 
-	@Query("""
-			SELECT f.parent.id AS parentId, COUNT(f.id) AS childFolderCount
-			FROM Folder f
-			WHERE f.deletedAt IS NULL
-			  AND f.parent.id IN :parentIds
-			GROUP BY f.parent.id
+	@Query(nativeQuery = true, value = """
+			SELECT f.parent_id AS parentId, COUNT(f.id) AS childFolderCount
+			FROM folders f
+			WHERE f.deleted_at IS NULL
+			  AND f.parent_id IN (:parentIds)
+			GROUP BY f.parent_id
 			""")
 	List<FolderChildCountProjection> findChildCountByParentIds(@Param("parentIds") List<Long> parentIds);
 

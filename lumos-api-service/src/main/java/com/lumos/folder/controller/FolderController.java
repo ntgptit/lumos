@@ -6,16 +6,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lumos.common.dto.request.SearchRequest;
 import com.lumos.folder.dto.request.CreateFolderRequest;
 import com.lumos.folder.dto.request.RenameFolderRequest;
-import com.lumos.folder.dto.response.BreadcrumbResponse;
 import com.lumos.folder.dto.response.FolderResponse;
 import com.lumos.folder.service.FolderService;
 
@@ -69,22 +71,15 @@ public class FolderController {
 	}
 
 	/**
-	 * Get breadcrumb from root to current folder.
-	 */
-	@Operation(summary = "Get folder breadcrumb")
-	@GetMapping("/{folderId}/breadcrumb")
-	public ResponseEntity<BreadcrumbResponse> getBreadcrumb(@PathVariable Long folderId) {
-		final var breadcrumb = this.folderService.getBreadcrumb(folderId);
-		return ResponseEntity.ok(breadcrumb);
-	}
-
-	/**
 	 * Get paginated folders.
 	 */
 	@Operation(summary = "Get folders")
 	@GetMapping
-	public ResponseEntity<List<FolderResponse>> getFolders(Pageable pageable) {
-		final var folders = this.folderService.getFolders(pageable);
+	public ResponseEntity<List<FolderResponse>> getFolders(
+			@RequestParam(required = false) Long parentId,
+			@ModelAttribute SearchRequest searchRequest,
+			Pageable pageable) {
+		final var folders = this.folderService.getFolders(parentId, searchRequest, pageable);
 		return ResponseEntity.ok(folders);
 	}
 }

@@ -3,6 +3,8 @@ import 'dart:io';
 import 'guards/verify_code_quality_contract.dart' as code_quality_guard;
 import 'guards/verify_common_widget_boundaries.dart'
     as common_widget_boundaries_guard;
+import 'guards/verify_common_widget_usage_contract.dart'
+    as common_widget_usage_guard;
 import 'guards/verify_component_theme_usage_contract.dart'
     as component_theme_guard;
 import 'guards/verify_feature_surface_contract.dart' as feature_surface_guard;
@@ -18,6 +20,8 @@ import 'guards/verify_string_utils_contract.dart' as string_utils_guard;
 import 'guards/verify_ui_constants_centralization.dart'
     as ui_constants_centralization_guard;
 import 'guards/verify_ui_design_guard.dart' as ui_design_guard;
+import 'guards/verify_ui_logic_separation_contract.dart'
+    as ui_logic_separation_guard;
 
 class FrontendChecklistConst {
   const FrontendChecklistConst._();
@@ -160,6 +164,11 @@ List<_GuardTask> _buildDefaultTasks() {
       run: state_management_guard.main,
     ),
     _GuardTask(
+      id: 'ui-logic-separation',
+      fileName: 'guards/verify_ui_logic_separation_contract.dart',
+      run: ui_logic_separation_guard.main,
+    ),
+    _GuardTask(
       id: 'navigation',
       fileName: 'guards/verify_navigation_go_router_contract.dart',
       run: navigation_guard.main,
@@ -173,6 +182,11 @@ List<_GuardTask> _buildDefaultTasks() {
       id: 'common-widget-boundaries',
       fileName: 'guards/verify_common_widget_boundaries.dart',
       run: common_widget_boundaries_guard.main,
+    ),
+    _GuardTask(
+      id: 'common-widget-usage',
+      fileName: 'guards/verify_common_widget_usage_contract.dart',
+      run: () => common_widget_usage_guard.main(<String>[]),
     ),
     _GuardTask(
       id: 'ui-constants',

@@ -6,6 +6,15 @@ part 'folder_state.freezed.dart';
 
 enum FolderMutationType { none, creating, renaming, deleting }
 
+enum FolderSortType { nameAscending, nameDescending }
+
+abstract final class FolderStateConst {
+  FolderStateConst._();
+
+  static const String emptySearchQuery = '';
+  static const int rootDepth = 0;
+}
+
 @freezed
 abstract class FolderState with _$FolderState {
   const FolderState._();
@@ -14,32 +23,35 @@ abstract class FolderState with _$FolderState {
     required FolderTreeState tree,
     required FolderMutationType mutationType,
     required String? inlineErrorMessage,
+    required FolderViewState view,
   }) = _FolderState;
 
   factory FolderState.initial() {
     return const FolderState(
       tree: FolderTreeState(
         folders: <FolderNode>[],
-        breadcrumbItems: <BreadcrumbNode>[],
         currentParentId: null,
+        currentDepth: FolderStateConst.rootDepth,
+        openedFolderPath: <int>[],
       ),
       mutationType: FolderMutationType.none,
       inlineErrorMessage: null,
+      view: FolderViewState(
+        searchQuery: FolderStateConst.emptySearchQuery,
+        sortType: FolderSortType.nameAscending,
+      ),
     );
   }
 
   List<FolderNode> get folders => tree.folders;
-  List<BreadcrumbNode> get breadcrumbItems => tree.breadcrumbItems;
   int? get currentParentId => tree.currentParentId;
+  int get currentDepth => tree.currentDepth;
+  List<int> get openedFolderPath => tree.openedFolderPath;
+  String get searchQuery => view.searchQuery;
+  FolderSortType get sortType => view.sortType;
+
   List<FolderNode> get visibleFolders {
-    final List<FolderNode> results = folders
-        .where((FolderNode item) => item.parentId == currentParentId)
-        .toList(growable: false);
-    final List<FolderNode> sortedResults = List<FolderNode>.from(results);
-    sortedResults.sort(
-      (FolderNode a, FolderNode b) => a.name.compareTo(b.name),
-    );
-    return sortedResults;
+    return folders;
   }
 
   bool get isMutating {
@@ -51,7 +63,23 @@ abstract class FolderState with _$FolderState {
 abstract class FolderTreeState with _$FolderTreeState {
   const factory FolderTreeState({
     required List<FolderNode> folders,
-    required List<BreadcrumbNode> breadcrumbItems,
     required int? currentParentId,
+    required int currentDepth,
+    required List<int> openedFolderPath,
   }) = _FolderTreeState;
+}
+
+@freezed
+abstract class FolderViewState with _$FolderViewState {
+  const factory FolderViewState({
+    required String searchQuery,
+    required FolderSortType sortType,
+  }) = _FolderViewState;
+
+  factory FolderViewState.initial() {
+    return const FolderViewState(
+      searchQuery: FolderStateConst.emptySearchQuery,
+      sortType: FolderSortType.nameAscending,
+    );
+  }
 }

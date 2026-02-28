@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../../l10n/app_localizations.dart';
+import '../../../../../shared/widgets/lumos_widgets.dart';
 import '../../../providers/home_provider.dart';
 import '../../../providers/states/home_state.dart';
 import '../../../extensions/home_tab_id_l10n_extension.dart';
@@ -24,8 +25,8 @@ class HomeBottomNav extends ConsumerWidget {
       destinations: items
           .map(
             (HomeNavigationItem item) => NavigationDestination(
-              icon: Icon(item.icon),
-              selectedIcon: Icon(item.selectedIcon),
+              icon: LumosIcon(item.icon),
+              selectedIcon: LumosIcon(item.selectedIcon),
               label: item.tabId.toLocalizedLabel(l10n),
             ),
           )

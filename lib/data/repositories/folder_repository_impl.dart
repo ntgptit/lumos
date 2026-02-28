@@ -17,10 +17,11 @@ abstract final class FolderRepositoryImplConst {
 
   static const int maxFetchSize = 500;
   static const String foldersPath = '/api/v1/folders';
-  static const String sortByNameAscending = 'name,asc';
   static const String pageQueryKey = 'page';
   static const String sizeQueryKey = 'size';
-  static const String sortQueryKey = 'sort';
+  static const String parentIdQueryKey = 'parentId';
+  static const String searchQueryKey = 'searchQuery';
+  static const String sortTypeQueryKey = 'sortType';
   static const int firstPage = 0;
   static const String nameField = 'name';
   static const String parentIdField = 'parentId';
@@ -34,18 +35,26 @@ class DioFolderRepository implements FolderRepository {
   final Dio _dio;
 
   @override
-  Future<Either<Failure, List<FolderNode>>> getFolders() async {
+  Future<Either<Failure, List<FolderNode>>> getFolders({
+    required int? parentId,
+    required String searchQuery,
+    required String sortType,
+  }) async {
+    final Map<String, dynamic> queryParameters = <String, dynamic>{
+      FolderRepositoryImplConst.pageQueryKey:
+          FolderRepositoryImplConst.firstPage,
+      FolderRepositoryImplConst.sizeQueryKey:
+          FolderRepositoryImplConst.maxFetchSize,
+      FolderRepositoryImplConst.searchQueryKey: searchQuery,
+      FolderRepositoryImplConst.sortTypeQueryKey: sortType,
+    };
+    if (parentId != null) {
+      queryParameters[FolderRepositoryImplConst.parentIdQueryKey] = parentId;
+    }
     try {
       final Response<dynamic> response = await _dio.get<dynamic>(
         FolderRepositoryImplConst.foldersPath,
-        queryParameters: <String, dynamic>{
-          FolderRepositoryImplConst.pageQueryKey:
-              FolderRepositoryImplConst.firstPage,
-          FolderRepositoryImplConst.sizeQueryKey:
-              FolderRepositoryImplConst.maxFetchSize,
-          FolderRepositoryImplConst.sortQueryKey:
-              FolderRepositoryImplConst.sortByNameAscending,
-        },
+        queryParameters: queryParameters,
       );
       final List<Map<String, dynamic>> folderJsonList = _castList(
         response.data,
@@ -57,25 +66,6 @@ class DioFolderRepository implements FolderRepository {
       return right<Failure, List<FolderNode>>(folders);
     } on Object catch (error) {
       return left<Failure, List<FolderNode>>(error.toFailure());
-    }
-  }
-
-  @override
-  Future<Either<Failure, List<BreadcrumbNode>>> getBreadcrumb({
-    required int folderId,
-  }) async {
-    try {
-      final Response<dynamic> response = await _dio.get<dynamic>(
-        '${_folderPath(folderId: folderId)}/breadcrumb',
-      );
-      final BreadcrumbPageModel breadcrumbPageModel =
-          BreadcrumbPageModel.fromJson(_castMap(response.data));
-      final List<BreadcrumbNode> breadcrumbs = breadcrumbPageModel.items
-          .map((BreadcrumbModel model) => model.toEntity())
-          .toList(growable: false);
-      return right<Failure, List<BreadcrumbNode>>(breadcrumbs);
-    } on Object catch (error) {
-      return left<Failure, List<BreadcrumbNode>>(error.toFailure());
     }
   }
 

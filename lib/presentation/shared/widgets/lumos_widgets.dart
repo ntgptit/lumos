@@ -23,8 +23,6 @@ export 'misc/lumos_misc_widgets.dart';
 export 'misc/lumos_social_widgets.dart';
 export 'navigation/lumos_navigation_widgets.dart';
 export 'navigation/lumos_menu_widgets.dart';
-export 'navigation/lumos_breadcrumb.dart';
-export 'navigation/lumos_breadcrumb_trail_item.dart';
 export 'onboarding/lumos_onboarding_widgets.dart';
 export 'responsive_builder.dart';
 export 'skill/lumos_skill_widgets.dart';

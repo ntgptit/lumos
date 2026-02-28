@@ -16,11 +16,3 @@ class FolderNode {
   final int depth;
   final int childFolderCount;
 }
-
-@immutable
-class BreadcrumbNode {
-  const BreadcrumbNode({required this.id, required this.name});
-
-  final int id;
-  final String name;
-}

@@ -25,8 +25,6 @@ lib/presentation/shared/widgets/lumos_models.dart
 lib/presentation/shared/widgets/lumos_widgets.dart
 lib/presentation/shared/widgets/misc/lumos_misc_widgets.dart
 lib/presentation/shared/widgets/misc/lumos_social_widgets.dart
-lib/presentation/shared/widgets/navigation/lumos_breadcrumb.dart
-lib/presentation/shared/widgets/navigation/lumos_breadcrumb_trail_item.dart
 lib/presentation/shared/widgets/navigation/lumos_menu_widgets.dart
 lib/presentation/shared/widgets/navigation/lumos_navigation_widgets.dart
 lib/presentation/shared/widgets/onboarding/lumos_onboarding_widgets.dart

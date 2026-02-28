@@ -51,9 +51,9 @@ class HomeAdaptiveBody extends ConsumerWidget {
           destinations: items
               .map(
                 (HomeNavigationItem item) => NavigationRailDestination(
-                  icon: Icon(item.icon),
-                  selectedIcon: Icon(item.selectedIcon),
-                  label: Text(item.tabId.toLocalizedLabel(l10n)),
+                  icon: LumosIcon(item.icon),
+                  selectedIcon: LumosIcon(item.selectedIcon),
+                  label: LumosInlineText(item.tabId.toLocalizedLabel(l10n)),
                 ),
               )
               .toList(),

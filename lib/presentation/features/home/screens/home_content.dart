@@ -99,7 +99,7 @@ class HomeHeaderBlock extends StatelessWidget {
           child: CircleAvatar(
             radius: HomeContentConst.avatarRadius,
             backgroundColor: colorScheme.primaryContainer,
-            child: Text(
+            child: LumosInlineText(
               'L',
               style: TextStyle(color: colorScheme.onPrimaryContainer),
             ),
@@ -197,10 +197,12 @@ class HomeHeroCard extends StatelessWidget {
   Widget _buildHeroBadge({required ColorScheme colorScheme}) {
     return Row(
       children: <Widget>[
-        Icon(
-          Icons.auto_awesome_rounded,
-          size: IconSizes.iconMedium,
-          color: colorScheme.primary,
+        IconTheme(
+          data: IconThemeData(color: colorScheme.primary),
+          child: const LumosIcon(
+            Icons.auto_awesome_rounded,
+            size: IconSizes.iconMedium,
+          ),
         ),
         const SizedBox(width: Insets.spacing8),
         Container(

@@ -51,6 +51,21 @@ class AppLocalizationsVi extends AppLocalizations {
   String get folderManagerSubtitle => 'Duyệt cây thư mục, tạo, đổi tên và xóa mềm thư mục.';
 
   @override
+  String get folderSearchHint => 'Tìm thư mục';
+
+  @override
+  String get folderSearchClearTooltip => 'Xóa tìm kiếm';
+
+  @override
+  String get folderSortTitle => 'Sắp xếp thư mục';
+
+  @override
+  String get folderSortNameAscending => 'Tên A-Z';
+
+  @override
+  String get folderSortNameDescending => 'Tên Z-A';
+
+  @override
   String get folderRoot => 'Gốc';
 
   @override

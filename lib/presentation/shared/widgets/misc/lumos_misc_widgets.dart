@@ -5,6 +5,91 @@ import '../../../../core/themes/extensions/theme_extensions.dart';
 import '../lumos_models.dart';
 import '../typography/lumos_text.dart';
 
+class LumosInlineText extends StatelessWidget {
+  const LumosInlineText(
+    this.text, {
+    super.key,
+    this.style,
+    this.align,
+    this.maxLines,
+    this.overflow,
+  });
+
+  final String text;
+  final TextStyle? style;
+  final TextAlign? align;
+  final int? maxLines;
+  final TextOverflow? overflow;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: style,
+      textAlign: align,
+      maxLines: maxLines,
+      overflow: overflow,
+    );
+  }
+}
+
+class LumosIcon extends StatelessWidget {
+  const LumosIcon(
+    this.icon, {
+    super.key,
+    this.size,
+    this.color,
+    this.semanticLabel,
+  });
+
+  final IconData icon;
+  final double? size;
+  final Color? color;
+  final String? semanticLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    return Icon(icon, size: size, color: color, semanticLabel: semanticLabel);
+  }
+}
+
+class LumosListTile extends StatelessWidget {
+  const LumosListTile({
+    super.key,
+    this.leading,
+    this.title,
+    this.subtitle,
+    this.trailing,
+    this.contentPadding,
+    this.enabled = true,
+    this.selected = false,
+    this.onTap,
+  });
+
+  final Widget? leading;
+  final Widget? title;
+  final Widget? subtitle;
+  final Widget? trailing;
+  final EdgeInsetsGeometry? contentPadding;
+  final bool enabled;
+  final bool selected;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: leading,
+      title: title,
+      subtitle: subtitle,
+      trailing: trailing,
+      contentPadding: contentPadding,
+      enabled: enabled,
+      selected: selected,
+      onTap: onTap,
+    );
+  }
+}
+
 class LumosMarkdownText extends StatelessWidget {
   const LumosMarkdownText({required this.data, super.key});
 

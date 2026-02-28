@@ -78,12 +78,17 @@ class LumosSearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const WidgetStateProperty<OutlinedBorder> searchBarShape =
+        WidgetStatePropertyAll<OutlinedBorder>(
+          RoundedRectangleBorder(borderRadius: BorderRadii.large),
+        );
     return SearchBar(
       controller: controller,
       hintText: hint,
       onChanged: onSearch,
       onSubmitted: onSearch,
       autoFocus: autoFocus,
+      shape: searchBarShape,
       leading: const Icon(Icons.search),
       trailing: _buildTrailingActions(),
     );

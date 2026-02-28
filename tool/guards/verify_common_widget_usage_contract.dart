@@ -4,11 +4,17 @@ class CommonWidgetUsageGuardConst {
   const CommonWidgetUsageGuardConst._();
 
   static const String libDirectory = 'lib';
+  static const String presentationFeaturesPrefix = 'lib/presentation/features/';
+  static const String featureScreensMarker = '/screens/';
+  static const String featureWidgetsMarker = '/widgets/';
+  static const String providersMarker = '/providers/';
   static const List<String> sharedWidgetsPrefixes = <String>[
     'lib/core/widgets/',
     'lib/presentation/shared/widgets/',
   ];
   static const String coreThemesPrefix = 'lib/core/themes/';
+  static const String allowMaterialWidgetOverrideMarker =
+      'common-widget-usage-guard: allow-material-widget';
   static const String baselinePath = 'tool/common_widget_usage_baseline.txt';
   static const String dartExtension = '.dart';
   static const String generatedExtension = '.g.dart';
@@ -111,7 +117,15 @@ List<CommonWidgetUsageViolation> _collectViolations({
       if (line.isEmpty) {
         continue;
       }
+      if (line.contains(
+        CommonWidgetUsageGuardConst.allowMaterialWidgetOverrideMarker,
+      )) {
+        continue;
+      }
       for (final _DisallowedWidgetRule rule in rules) {
+        if (rule.featureUiOnly && !_isFeatureUiPath(normalizedPath)) {
+          continue;
+        }
         if (!rule.pattern.hasMatch(line)) {
           continue;
         }
@@ -139,6 +153,24 @@ bool _isSharedWidgetPath(String path) {
     if (path.startsWith(prefix)) {
       return true;
     }
+  }
+  return false;
+}
+
+bool _isFeatureUiPath(String path) {
+  if (!path.startsWith(
+    CommonWidgetUsageGuardConst.presentationFeaturesPrefix,
+  )) {
+    return false;
+  }
+  if (path.contains(CommonWidgetUsageGuardConst.providersMarker)) {
+    return false;
+  }
+  if (path.contains(CommonWidgetUsageGuardConst.featureScreensMarker)) {
+    return true;
+  }
+  if (path.contains(CommonWidgetUsageGuardConst.featureWidgetsMarker)) {
+    return true;
   }
   return false;
 }
@@ -244,6 +276,24 @@ List<_DisallowedWidgetRule> _disallowedRules() {
       replacement: 'LumosRadioGroup',
       pattern: r'\bRadioListTile(?:\.[A-Za-z0-9_]+)?\s*\(',
     ),
+    _DisallowedWidgetRule(
+      widgetName: 'Icon',
+      replacement: 'LumosIcon',
+      pattern: r'\bIcon\s*\(',
+      featureUiOnly: true,
+    ),
+    _DisallowedWidgetRule(
+      widgetName: 'Text',
+      replacement: 'LumosText/LumosInlineText',
+      pattern: r'\bText\s*\(',
+      featureUiOnly: true,
+    ),
+    _DisallowedWidgetRule(
+      widgetName: 'ListTile',
+      replacement: 'LumosListTile',
+      pattern: r'\bListTile\s*\(',
+      featureUiOnly: true,
+    ),
   ];
 }
 
@@ -312,9 +362,11 @@ class _DisallowedWidgetRule {
     required this.widgetName,
     required this.replacement,
     required String pattern,
+    this.featureUiOnly = false,
   }) : pattern = RegExp(pattern);
 
   final String widgetName;
   final String replacement;
   final RegExp pattern;
+  final bool featureUiOnly;
 }

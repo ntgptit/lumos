@@ -3,9 +3,9 @@ package com.lumos.folder.service;
 import org.springframework.data.domain.Pageable;
 import java.util.List;
 
+import com.lumos.common.dto.request.SearchRequest;
 import com.lumos.folder.dto.request.CreateFolderRequest;
 import com.lumos.folder.dto.request.RenameFolderRequest;
-import com.lumos.folder.dto.response.BreadcrumbResponse;
 import com.lumos.folder.dto.response.FolderResponse;
 
 public interface FolderService {
@@ -35,18 +35,12 @@ public interface FolderService {
     void deleteFolder(Long folderId);
 
     /**
-     * Get breadcrumb from root to target folder.
-     *
-     * @param folderId folder identifier
-     * @return breadcrumb response
-     */
-    BreadcrumbResponse getBreadcrumb(Long folderId);
-
-    /**
      * Get paginated folders.
      *
-     * @param pageable pagination options
+     * @param parentId      parent folder identifier, null for root
+     * @param searchRequest common search request
+     * @param pageable      pagination options
      * @return paged folder response
      */
-    List<FolderResponse> getFolders(Pageable pageable);
+    List<FolderResponse> getFolders(Long parentId, SearchRequest searchRequest, Pageable pageable);
 }

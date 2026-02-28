@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:dartz/dartz.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/error/failures.dart';
+import '../../../../core/utils/string_utils.dart';
 import '../../../../data/repositories/folder_repository_impl.dart';
 import '../../../../domain/entities/folder_models.dart';
 import '../../../../domain/repositories/folder_repository.dart';
@@ -13,28 +16,120 @@ part 'folder_provider.g.dart';
 class FolderAsyncController extends _$FolderAsyncController {
   @override
   Future<FolderState> build() async {
-    return _loadState(parentId: null);
+    return _loadState(
+      parentId: null,
+      currentDepth: FolderStateConst.rootDepth,
+      openedFolderPath: const <int>[],
+      view: FolderViewState.initial(),
+    );
+  }
+
+  void updateSearchQuery(String rawQuery) {
+    final FolderState? currentState = state.asData?.value;
+    if (currentState == null) {
+      return;
+    }
+    final String normalizedQuery = StringUtils.normalizeName(rawQuery);
+    if (normalizedQuery == currentState.searchQuery) {
+      return;
+    }
+    final FolderViewState nextView = currentState.view.copyWith(
+      searchQuery: normalizedQuery,
+    );
+    unawaited(
+      _replaceState(
+        parentId: currentState.currentParentId,
+        currentDepth: currentState.currentDepth,
+        openedFolderPath: currentState.openedFolderPath,
+        view: nextView,
+      ),
+    );
+  }
+
+  void updateSortType(FolderSortType sortType) {
+    final FolderState? currentState = state.asData?.value;
+    if (currentState == null) {
+      return;
+    }
+    if (sortType == currentState.sortType) {
+      return;
+    }
+    final FolderViewState nextView = currentState.view.copyWith(
+      sortType: sortType,
+    );
+    unawaited(
+      _replaceState(
+        parentId: currentState.currentParentId,
+        currentDepth: currentState.currentDepth,
+        openedFolderPath: currentState.openedFolderPath,
+        view: nextView,
+      ),
+    );
   }
 
   Future<void> refresh() async {
-    final int? parentId = state.asData?.value.currentParentId;
-    await _replaceState(parentId: parentId);
+    final FolderState currentState =
+        state.asData?.value ?? FolderState.initial();
+    await _replaceState(
+      parentId: currentState.currentParentId,
+      currentDepth: currentState.currentDepth,
+      openedFolderPath: currentState.openedFolderPath,
+      view: currentState.view,
+    );
   }
 
   Future<void> openRoot() async {
-    await _replaceState(parentId: null);
+    final FolderViewState currentView =
+        state.asData?.value.view ?? FolderViewState.initial();
+    await _replaceState(
+      parentId: null,
+      currentDepth: FolderStateConst.rootDepth,
+      openedFolderPath: const <int>[],
+      view: currentView,
+    );
   }
 
-  Future<void> openFolder(int folderId) async {
-    await _replaceState(parentId: folderId);
+  Future<void> openFolder({required int folderId, required int depth}) async {
+    final FolderState currentState =
+        state.asData?.value ?? FolderState.initial();
+    final FolderViewState currentView = currentState.view;
+    final List<int> nextOpenedFolderPath = <int>[
+      ...currentState.openedFolderPath,
+      folderId,
+    ];
+    await _replaceState(
+      parentId: folderId,
+      currentDepth: depth,
+      openedFolderPath: nextOpenedFolderPath,
+      view: currentView,
+    );
   }
 
-  Future<void> goToBreadcrumb(int? folderId) async {
-    if (folderId == null) {
+  Future<void> openParentFolder() async {
+    final FolderState? currentState = state.asData?.value;
+    if (currentState == null) {
+      return;
+    }
+    if (currentState.currentDepth == FolderStateConst.rootDepth) {
+      return;
+    }
+    if (currentState.openedFolderPath.isEmpty) {
       await openRoot();
       return;
     }
-    await openFolder(folderId);
+    final List<int> nextOpenedFolderPath = List<int>.from(
+      currentState.openedFolderPath,
+    )..removeLast();
+    final int nextDepth = nextOpenedFolderPath.length;
+    final int? nextParentId = nextOpenedFolderPath.isEmpty
+        ? null
+        : nextOpenedFolderPath.last;
+    await _replaceState(
+      parentId: nextParentId,
+      currentDepth: nextDepth,
+      openedFolderPath: nextOpenedFolderPath,
+      view: currentState.view,
+    );
   }
 
   Future<void> createFolder(String name) async {
@@ -100,6 +195,9 @@ class FolderAsyncController extends _$FolderAsyncController {
     try {
       final FolderState nextState = await _loadState(
         parentId: current.currentParentId,
+        currentDepth: current.currentDepth,
+        openedFolderPath: current.openedFolderPath,
+        view: current.view,
       );
       state = AsyncData<FolderState>(nextState);
     } catch (error, stackTrace) {
@@ -107,19 +205,38 @@ class FolderAsyncController extends _$FolderAsyncController {
     }
   }
 
-  Future<void> _replaceState({required int? parentId}) async {
+  Future<void> _replaceState({
+    required int? parentId,
+    required int currentDepth,
+    required List<int> openedFolderPath,
+    required FolderViewState view,
+  }) async {
     try {
-      final FolderState nextState = await _loadState(parentId: parentId);
+      final FolderState nextState = await _loadState(
+        parentId: parentId,
+        currentDepth: currentDepth,
+        openedFolderPath: openedFolderPath,
+        view: view,
+      );
       state = AsyncData<FolderState>(nextState);
     } catch (error, stackTrace) {
       state = AsyncError<FolderState>(error, stackTrace);
     }
   }
 
-  Future<FolderState> _loadState({required int? parentId}) async {
+  Future<FolderState> _loadState({
+    required int? parentId,
+    required int currentDepth,
+    required List<int> openedFolderPath,
+    required FolderViewState view,
+  }) async {
     final FolderRepository repository = ref.read(folderRepositoryProvider);
     final Either<Failure, List<FolderNode>> foldersResult = await repository
-        .getFolders();
+        .getFolders(
+          parentId: parentId,
+          searchQuery: view.searchQuery,
+          sortType: view.sortType.name,
+        );
 
     if (foldersResult.isLeft()) {
       final Failure failure = foldersResult.swap().getOrElse(
@@ -131,35 +248,16 @@ class FolderAsyncController extends _$FolderAsyncController {
     final List<FolderNode> folders = foldersResult.getOrElse(
       () => <FolderNode>[],
     );
-    if (parentId == null) {
-      return FolderState(
-        tree: FolderTreeState(
-          folders: folders,
-          breadcrumbItems: const <BreadcrumbNode>[],
-          currentParentId: null,
-        ),
-        mutationType: FolderMutationType.none,
-        inlineErrorMessage: null,
-      );
-    }
-
-    final Either<Failure, List<BreadcrumbNode>> breadcrumbResult =
-        await repository.getBreadcrumb(folderId: parentId);
-    if (breadcrumbResult.isLeft()) {
-      final Failure failure = breadcrumbResult.swap().getOrElse(
-        () => const Failure.unknown(message: 'Unknown error'),
-      );
-      throw failure;
-    }
-
     return FolderState(
       tree: FolderTreeState(
         folders: folders,
-        breadcrumbItems: breadcrumbResult.getOrElse(() => <BreadcrumbNode>[]),
         currentParentId: parentId,
+        currentDepth: currentDepth,
+        openedFolderPath: openedFolderPath,
       ),
       mutationType: FolderMutationType.none,
       inlineErrorMessage: null,
+      view: view,
     );
   }
 }

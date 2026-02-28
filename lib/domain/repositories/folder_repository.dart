@@ -4,10 +4,10 @@ import '../../core/error/failures.dart';
 import '../entities/folder_models.dart';
 
 abstract class FolderRepository {
-  Future<Either<Failure, List<FolderNode>>> getFolders();
-
-  Future<Either<Failure, List<BreadcrumbNode>>> getBreadcrumb({
-    required int folderId,
+  Future<Either<Failure, List<FolderNode>>> getFolders({
+    required int? parentId,
+    required String searchQuery,
+    required String sortType,
   });
 
   Future<Either<Failure, Unit>> createFolder({

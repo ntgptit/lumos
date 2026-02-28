@@ -9,6 +9,7 @@ class OpacityContractConst {
   static const String allowedSharedWidgetsPath =
       'lib/presentation/shared/widgets/';
   static const String allowedCoreThemesPath = 'lib/core/themes/';
+  static const String allowedFeaturePath = 'lib/presentation/features/';
   static const String allowedClassName = 'WidgetOpacities';
   static const String generatedSuffix = '.g.dart';
   static const String freezedSuffix = '.freezed.dart';
@@ -362,10 +363,15 @@ Future<void> _checkOpacityUsageRestrictedByPath(
 }
 
 bool _isAllowedOpacityPath(String normalizedPath) {
-  if (normalizedPath.startsWith(OpacityContractConst.allowedSharedWidgetsPath)) {
+  if (normalizedPath.startsWith(
+    OpacityContractConst.allowedSharedWidgetsPath,
+  )) {
     return true;
   }
   if (normalizedPath.startsWith(OpacityContractConst.allowedCoreThemesPath)) {
+    return true;
+  }
+  if (normalizedPath.startsWith(OpacityContractConst.allowedFeaturePath)) {
     return true;
   }
   return false;
