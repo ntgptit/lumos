@@ -38,10 +38,6 @@ abstract final class SnackBarThemes {
   // Floating snackbar elevation: M3 spec uses 6dp to lift above page content.
   static const double _elevation = 6.0;
 
-  // Width constraints for tablet/desktop — snackbar should not span full width.
-  static const double _maxWidthTablet = 480.0;
-  static const double _maxWidthDesktop = 560.0;
-
   // ---------------------------------------------------------------------------
   // Global theme builder — wired into ThemeData.snackBarTheme
   // Uses info/neutral severity as the default.
@@ -233,8 +229,8 @@ abstract final class SnackBarThemes {
   static double? _snackBarWidth(DeviceType deviceType) {
     return switch (deviceType) {
       DeviceType.mobile => null,
-      DeviceType.tablet => _maxWidthTablet,
-      DeviceType.desktop => _maxWidthDesktop,
+      DeviceType.tablet => WidgetSizes.overlayMaxWidthTablet,
+      DeviceType.desktop => WidgetSizes.overlayMaxWidthDesktop,
     };
   }
 }

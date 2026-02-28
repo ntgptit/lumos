@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../constants/dimensions.dart';
-import '../extensions/color_scheme_state_extensions.dart';
-import '../extensions/widget_state_extensions.dart';
+import '../extensions/theme_extensions.dart';
 
 abstract final class CheckboxThemes {
   static CheckboxThemeData build({required ColorScheme colorScheme}) {

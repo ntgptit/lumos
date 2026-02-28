@@ -4,7 +4,7 @@ import '../constants/dimensions.dart';
 
 abstract final class AppBarThemeConst {
   static const bool centerTitle = false;
-  static const double elevation = 0.0;
+  static const double elevation = WidgetSizes.none;
   static const double scrolledUnderElevation = 3.0;
 }
 

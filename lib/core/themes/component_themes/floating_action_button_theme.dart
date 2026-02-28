@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../constants/dimensions.dart';
-import '../extensions/color_scheme_state_extensions.dart';
-import '../extensions/widget_state_extensions.dart';
+import '../extensions/theme_extensions.dart';
 
 /// FAB color variants aligned with M3 color roles.
 ///
@@ -55,8 +54,6 @@ abstract final class FloatingActionButtonThemes {
   static const double _elevationDisabled = 0.0;
 
   // FAB sizes
-  static const double _sizeFabRegular = 56.0;
-  static const double _sizeFabSmall = 40.0;
   static const double _fabCornerRadius = Radius.radiusXLarge;
 
   // ---------------------------------------------------------------------------
@@ -109,13 +106,13 @@ abstract final class FloatingActionButtonThemes {
       iconSize: IconSizes.iconMedium, // 24dp
       // Ensure minimum touch target.
       sizeConstraints: const BoxConstraints.tightFor(
-        width: _sizeFabRegular,
-        height: _sizeFabRegular,
+        width: WidgetSizes.fabRegular,
+        height: WidgetSizes.fabRegular,
       ),
 
       smallSizeConstraints: const BoxConstraints.tightFor(
-        width: _sizeFabSmall,
-        height: _sizeFabSmall,
+        width: WidgetSizes.fabSmall,
+        height: WidgetSizes.fabSmall,
       ),
     );
   }

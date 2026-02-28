@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../extensions/semantic_colors_extension.dart';
+import '../extensions/theme_extensions.dart';
 import 'app_bar_theme.dart';
 import 'bottom_navigation_bar_theme.dart';
 import 'button_theme.dart';

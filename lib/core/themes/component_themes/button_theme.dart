@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../constants/dimensions.dart';
-import '../extensions/color_scheme_state_extensions.dart';
-import '../extensions/widget_state_extensions.dart';
+import '../extensions/theme_extensions.dart';
 
 enum ButtonSize { small, medium, large }
 
-const double _cornerRadius = 20.0;
-const double _minimumWidth = 64.0;
+const double _cornerRadius = Radius.radiusXXLarge;
 const double _elevationResting = 1.0;
 const double _elevationHovered = 3.0;
 const double _elevationFocused = 1.0;
@@ -253,7 +251,7 @@ Size _minimumSize({required ButtonSize size}) {
     ButtonSize.medium => WidgetSizes.buttonHeightMedium,
     ButtonSize.large => WidgetSizes.buttonHeightLarge,
   };
-  return Size(_minimumWidth, height);
+  return Size(WidgetSizes.buttonMinWidth, height);
 }
 
 EdgeInsets _padding({

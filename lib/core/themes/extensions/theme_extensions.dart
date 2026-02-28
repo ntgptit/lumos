@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'semantic_colors_extension.dart';
 
+export 'color_scheme_state_extensions.dart';
+export 'semantic_colors_extension.dart';
+export 'typography_extensions.dart';
+export 'widget_state_extensions.dart';
+
 extension ThemeContextExtension on BuildContext {
   ThemeData get theme => Theme.of(this);
 

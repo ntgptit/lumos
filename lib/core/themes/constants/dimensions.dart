@@ -22,6 +22,7 @@ abstract final class Material3ShapeTokens {
   static const double small = 8;
   static const double medium = 12;
   static const double large = 16;
+  static const double extraLarge = 20;
   static const double full = 100;
 }
 
@@ -31,6 +32,10 @@ abstract final class Material3ComponentSizeTokens {
 
   static const double buttonHeight = 40;
   static const double buttonHeightLarge = 48;
+  static const double buttonMinWidth = 64;
+
+  static const double fabRegular = 56;
+  static const double fabSmall = 40;
 
   static const double appBarSmallHeight = 64;
   static const double navigationBarHeight = 80;
@@ -38,6 +43,12 @@ abstract final class Material3ComponentSizeTokens {
   static const double avatarSmall = 24;
   static const double avatarMedium = 32;
   static const double avatarLarge = 48;
+
+  static const double overlayMaxWidthTablet = 480;
+  static const double overlayMaxWidthDesktop = 560;
+
+  static const double progressTrackHeight = 4;
+  static const double sliderTrackHeight = 4;
 
   static const double maxContentWidth = 1200;
 }
@@ -103,6 +114,7 @@ abstract final class Radius {
   static const double radiusMedium = Material3ShapeTokens.small;
   static const double radiusLarge = Material3ShapeTokens.medium;
   static const double radiusXLarge = Material3ShapeTokens.large;
+  static const double radiusXXLarge = Material3ShapeTokens.extraLarge;
   static const double radiusCircle = Material3ShapeTokens.full;
 
   static const double radiusSurface = radiusLarge;
@@ -149,6 +161,11 @@ abstract final class WidgetSizes {
       Material3ComponentSizeTokens.buttonHeight;
   static const double buttonHeightLarge =
       Material3ComponentSizeTokens.buttonHeightLarge;
+  static const double buttonMinWidth =
+      Material3ComponentSizeTokens.buttonMinWidth;
+
+  static const double fabRegular = Material3ComponentSizeTokens.fabRegular;
+  static const double fabSmall = Material3ComponentSizeTokens.fabSmall;
 
   static const double maxContentWidth =
       Material3ComponentSizeTokens.maxContentWidth;
@@ -159,6 +176,14 @@ abstract final class WidgetSizes {
   static const double avatarLarge = Material3ComponentSizeTokens.avatarLarge;
   static const double navigationBarHeight =
       Material3ComponentSizeTokens.navigationBarHeight;
+  static const double overlayMaxWidthTablet =
+      Material3ComponentSizeTokens.overlayMaxWidthTablet;
+  static const double overlayMaxWidthDesktop =
+      Material3ComponentSizeTokens.overlayMaxWidthDesktop;
+  static const double progressTrackHeight =
+      Material3ComponentSizeTokens.progressTrackHeight;
+  static const double sliderTrackHeight =
+      Material3ComponentSizeTokens.sliderTrackHeight;
 }
 
 abstract final class WidgetOpacities {

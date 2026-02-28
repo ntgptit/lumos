@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../constants/dimensions.dart';
 
 abstract final class SliderThemes {
-  static const double _trackHeight = 4.0;
+  static const double _trackHeight = WidgetSizes.sliderTrackHeight;
 
   static SliderThemeData build({required ColorScheme colorScheme}) {
     return SliderThemeData(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../constants/dimensions.dart';
-import '../extensions/color_scheme_state_extensions.dart';
+import '../extensions/theme_extensions.dart';
 import '../shape.dart';
 
 /// Dialog visual variants.
@@ -11,6 +11,14 @@ import '../shape.dart';
 /// - [fullScreen] : Multi-step flow, media viewer, form.
 /// - [custom]     : Rich content, onboarding, feature highlight.
 enum DialogVariant { alert, bottomSheet, fullScreen, custom }
+
+abstract final class DialogThemesConst {
+  static const double alignmentYOffsetLargeScreen = -0.2;
+  static const double alertInsetTabletHorizontal = Insets.spacing40 * 3;
+  static const double alertInsetDesktopHorizontal = Insets.spacing40 * 6;
+  static const double customInsetTabletHorizontal = Insets.spacing40 * 2;
+  static const double customInsetDesktopHorizontal = Insets.spacing40 * 5;
+}
 
 /// Centralised dialog theming for Social/Lifestyle app.
 ///
@@ -130,9 +138,7 @@ abstract final class DialogThemes {
         alpha: WidgetOpacities.transparent,
       ),
       // No scrim — full-screen dialog covers entire screen.
-      barrierColor: colorScheme.scrim.withValues(
-        alpha: WidgetOpacities.transparent,
-      ),
+      barrierColor: colorScheme.transparentScrimColor,
       shape: const RoundedRectangleBorder(), // no radius — edge-to-edge
       alignment: Alignment.center,
       insetPadding: EdgeInsets.zero,
@@ -184,8 +190,14 @@ abstract final class DialogThemes {
   static AlignmentGeometry _dialogAlignment(DeviceType deviceType) {
     return switch (deviceType) {
       DeviceType.mobile => Alignment.center,
-      DeviceType.tablet => const Alignment(0, -0.2),
-      DeviceType.desktop => const Alignment(0, -0.2),
+      DeviceType.tablet => const Alignment(
+        0,
+        DialogThemesConst.alignmentYOffsetLargeScreen,
+      ),
+      DeviceType.desktop => const Alignment(
+        0,
+        DialogThemesConst.alignmentYOffsetLargeScreen,
+      ),
     };
   }
 
@@ -200,11 +212,11 @@ abstract final class DialogThemes {
         vertical: Insets.spacing48,
       ),
       DeviceType.tablet => const EdgeInsets.symmetric(
-        horizontal: 120,
+        horizontal: DialogThemesConst.alertInsetTabletHorizontal,
         vertical: Insets.spacing48,
       ),
       DeviceType.desktop => const EdgeInsets.symmetric(
-        horizontal: 240,
+        horizontal: DialogThemesConst.alertInsetDesktopHorizontal,
         vertical: Insets.spacing48,
       ),
     };
@@ -218,11 +230,11 @@ abstract final class DialogThemes {
         vertical: Insets.spacing48,
       ),
       DeviceType.tablet => const EdgeInsets.symmetric(
-        horizontal: 80,
+        horizontal: DialogThemesConst.customInsetTabletHorizontal,
         vertical: Insets.spacing48,
       ),
       DeviceType.desktop => const EdgeInsets.symmetric(
-        horizontal: 200,
+        horizontal: DialogThemesConst.customInsetDesktopHorizontal,
         vertical: Insets.spacing48,
       ),
     };
@@ -232,8 +244,12 @@ abstract final class DialogThemes {
   static BoxConstraints? _bottomSheetConstraints(DeviceType deviceType) {
     return switch (deviceType) {
       DeviceType.mobile => null, // full width on mobile
-      DeviceType.tablet => const BoxConstraints(maxWidth: 480),
-      DeviceType.desktop => const BoxConstraints(maxWidth: 560),
+      DeviceType.tablet => const BoxConstraints(
+        maxWidth: WidgetSizes.overlayMaxWidthTablet,
+      ),
+      DeviceType.desktop => const BoxConstraints(
+        maxWidth: WidgetSizes.overlayMaxWidthDesktop,
+      ),
     };
   }
 }

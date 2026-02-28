@@ -15,6 +15,10 @@ extension ColorSchemeStateColorsExtension on ColorScheme {
     return surface.withValues(alpha: WidgetOpacities.transparent);
   }
 
+  Color get transparentScrimColor {
+    return scrim.withValues(alpha: WidgetOpacities.transparent);
+  }
+
   Color get modalBarrierScrimColor {
     if (brightness == Brightness.dark) {
       return scrim.withValues(alpha: WidgetOpacities.scrimDark);

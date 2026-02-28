@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../constants/dimensions.dart';
+import '../extensions/theme_extensions.dart';
 
 /// Chip size variants — mirrors [ButtonSize] convention.
 ///
@@ -120,9 +121,7 @@ abstract final class ChipThemes {
     return ChipThemeData(
       backgroundColor: colorScheme.surfaceContainerLow,
       selectedColor: colorScheme.secondaryContainer,
-      disabledColor: colorScheme.onSurface.withValues(
-        alpha: WidgetOpacities.divider, // 0.12
-      ),
+      disabledColor: colorScheme.disabledContainerColor,
       deleteIconColor: colorScheme.onSurfaceVariant,
       iconTheme: IconThemeData(
         color: colorScheme.onSurfaceVariant,
@@ -135,7 +134,7 @@ abstract final class ChipThemes {
       //   FilterChip(side: BorderSide(...), ...)
       side: BorderSide(
         color: colorScheme.outline,
-        width: WidgetSizes.borderWidthRegular, // 1.2
+        width: WidgetSizes.borderWidthRegular, // 1dp
       ),
 
       // Shape accepts OutlinedBorder? only — no WidgetStateProperty support.
@@ -200,7 +199,7 @@ abstract final class ChipThemes {
     };
 
     final double hExtra = switch (deviceType) {
-      DeviceType.mobile => 0,
+      DeviceType.mobile => Insets.spacing0,
       DeviceType.tablet => Insets.spacing4,
       DeviceType.desktop => Insets.spacing8,
     };

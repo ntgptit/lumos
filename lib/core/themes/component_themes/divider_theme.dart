@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../constants/dimensions.dart';
 
 abstract final class DividerThemes {
-  static const double _thickness = 1.0;
+  static const double _thickness = WidgetSizes.borderWidthRegular;
 
   static DividerThemeData build({required ColorScheme colorScheme}) {
     return DividerThemeData(

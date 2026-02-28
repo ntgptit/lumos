@@ -5,7 +5,7 @@ import '../constants/dimensions.dart';
 abstract final class BottomNavigationBarThemeConst {
   static const bool showUnselectedLabels = true;
   static const BottomNavigationBarType type = BottomNavigationBarType.fixed;
-  static const double elevation = 0.0;
+  static const double elevation = WidgetSizes.none;
 }
 
 abstract final class BottomNavigationBarThemes {

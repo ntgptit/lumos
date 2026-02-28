@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../constants/dimensions.dart';
-import '../extensions/color_scheme_state_extensions.dart';
-import '../extensions/widget_state_extensions.dart';
+import '../extensions/theme_extensions.dart';
 import '../shape.dart';
 
 /// Input size variants — mirrors [ButtonSize] / [ChipSize] convention.
@@ -179,7 +178,7 @@ abstract final class InputDecorationThemes {
     };
 
     final double hExtra = switch (deviceType) {
-      DeviceType.mobile => 0,
+      DeviceType.mobile => Insets.spacing0,
       DeviceType.tablet => Insets.spacing4,
       DeviceType.desktop => Insets.spacing8,
     };

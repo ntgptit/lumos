@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../constants/dimensions.dart';
-import '../extensions/color_scheme_state_extensions.dart';
+import '../extensions/theme_extensions.dart';
 
 abstract final class ListTileThemes {
   static ListTileThemeData build({

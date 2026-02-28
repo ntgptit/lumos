@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../constants/dimensions.dart';
+import '../extensions/theme_extensions.dart';
 
 abstract final class NavigationBarThemes {
   static NavigationBarThemeData build({
@@ -16,7 +17,7 @@ abstract final class NavigationBarThemes {
       labelTextStyle: WidgetStateProperty.resolveWith<TextStyle?>((
         Set<WidgetState> states,
       ) {
-        if (states.contains(WidgetState.selected)) {
+        if (states.isSelected) {
           return textTheme.labelMedium?.copyWith(
             color: colorScheme.onSecondaryContainer,
           );
@@ -28,7 +29,7 @@ abstract final class NavigationBarThemes {
       iconTheme: WidgetStateProperty.resolveWith<IconThemeData?>((
         Set<WidgetState> states,
       ) {
-        if (states.contains(WidgetState.selected)) {
+        if (states.isSelected) {
           return IconThemeData(color: colorScheme.onSecondaryContainer);
         }
         return IconThemeData(color: colorScheme.onSurfaceVariant);
