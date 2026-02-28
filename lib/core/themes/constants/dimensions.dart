@@ -2,17 +2,89 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 
+abstract final class Material3SpacingTokens {
+  static const double none = 0;
+  static const double xSmall = 4;
+  static const double small = 8;
+  static const double medium = 12;
+  static const double large = 16;
+  static const double xLarge = 20;
+  static const double xxLarge = 24;
+  static const double xxxLarge = 32;
+  static const double section = 40;
+  static const double page = 48;
+  static const double canvas = 64;
+}
+
+abstract final class Material3ShapeTokens {
+  static const double none = 0;
+  static const double extraSmall = 4;
+  static const double small = 8;
+  static const double medium = 12;
+  static const double large = 16;
+  static const double full = 100;
+}
+
+abstract final class Material3ComponentSizeTokens {
+  static const double borderWidth = 1;
+  static const double minTouchTarget = 48;
+
+  static const double buttonHeight = 40;
+  static const double buttonHeightLarge = 48;
+
+  static const double appBarSmallHeight = 64;
+  static const double navigationBarHeight = 80;
+
+  static const double avatarSmall = 24;
+  static const double avatarMedium = 32;
+  static const double avatarLarge = 48;
+
+  static const double maxContentWidth = 1200;
+}
+
+abstract final class Material3StateOpacityTokens {
+  static const double transparent = 0;
+
+  static const double divider = 0.12;
+  static const double disabledContent = 0.38;
+
+  static const double stateHover = 0.08;
+  static const double stateFocus = 0.12;
+  static const double statePress = 0.12;
+  static const double stateDrag = 0.16;
+
+  static const double scrimLight = 0.32;
+  static const double scrimDark = 0.4;
+
+  static const double lowEmphasis = 0.6;
+  static const double hint = 0.38;
+}
+
+abstract final class Material3ElevationOpacityTokens {
+  static const double level1 = 0.05;
+  static const double level2 = 0.08;
+  static const double level3 = 0.11;
+  static const double level4 = 0.12;
+  static const double level5 = 0.14;
+}
+
+abstract final class Material3BreakpointTokens {
+  static const double compactMaxWidth = 600;
+  static const double mediumMaxWidth = 840;
+}
+
 abstract final class Insets {
-  static const double spacing0 = 0;
-  static const double spacing4 = 4;
-  static const double spacing8 = 8;
-  static const double spacing12 = 12;
-  static const double spacing16 = 16;
-  static const double spacing20 = 20;
-  static const double spacing24 = 24;
-  static const double spacing32 = 32;
-  static const double spacing48 = 48;
-  static const double spacing64 = 64;
+  static const double spacing0 = Material3SpacingTokens.none;
+  static const double spacing4 = Material3SpacingTokens.xSmall;
+  static const double spacing8 = Material3SpacingTokens.small;
+  static const double spacing12 = Material3SpacingTokens.medium;
+  static const double spacing16 = Material3SpacingTokens.large;
+  static const double spacing20 = Material3SpacingTokens.xLarge;
+  static const double spacing24 = Material3SpacingTokens.xxLarge;
+  static const double spacing32 = Material3SpacingTokens.xxxLarge;
+  static const double spacing40 = Material3SpacingTokens.section;
+  static const double spacing48 = Material3SpacingTokens.page;
+  static const double spacing64 = Material3SpacingTokens.canvas;
 
   static const double paddingScreen = spacing16;
   static const double gapBetweenItems = spacing12;
@@ -26,13 +98,14 @@ abstract final class Insets {
 }
 
 abstract final class Radius {
-  static const double radiusNone = 0;
-  static const double radiusSmall = 4;
-  static const double radiusMedium = 8;
-  static const double radiusLarge = 12;
-  static const double radiusXLarge = 16;
-  static const double radiusCircle = 100;
-  static const double radiusSurface = radiusMedium;
+  static const double radiusNone = Material3ShapeTokens.none;
+  static const double radiusSmall = Material3ShapeTokens.extraSmall;
+  static const double radiusMedium = Material3ShapeTokens.small;
+  static const double radiusLarge = Material3ShapeTokens.medium;
+  static const double radiusXLarge = Material3ShapeTokens.large;
+  static const double radiusCircle = Material3ShapeTokens.full;
+
+  static const double radiusSurface = radiusLarge;
 
   static const double radiusButton = radiusSurface;
   static const double radiusCard = radiusSurface;
@@ -65,41 +138,44 @@ abstract final class IconSizes {
 
 abstract final class WidgetSizes {
   static const double none = Insets.spacing0;
-  static const double borderWidthRegular = 1.2;
-  static const double minTouchTarget = 48;
+  static const double borderWidthRegular =
+      Material3ComponentSizeTokens.borderWidth;
+  static const double minTouchTarget =
+      Material3ComponentSizeTokens.minTouchTarget;
 
-  static const double buttonHeightSmall = 32;
-  static const double buttonHeightMedium = 40;
-  static const double buttonHeightLarge = 48;
-  static const double maxContentWidth = 1200;
-  static const double appBarHeight = kToolbarHeight;
-  static const double avatarSmall = 24;
-  static const double avatarMedium = 32;
-  static const double avatarLarge = 48;
-  static const double navigationBarHeight = appBarHeight + Radius.radiusLarge;
+  static const double buttonHeightSmall =
+      Material3ComponentSizeTokens.buttonHeight;
+  static const double buttonHeightMedium =
+      Material3ComponentSizeTokens.buttonHeight;
+  static const double buttonHeightLarge =
+      Material3ComponentSizeTokens.buttonHeightLarge;
+
+  static const double maxContentWidth =
+      Material3ComponentSizeTokens.maxContentWidth;
+  static const double appBarHeight =
+      Material3ComponentSizeTokens.appBarSmallHeight;
+  static const double avatarSmall = Material3ComponentSizeTokens.avatarSmall;
+  static const double avatarMedium = Material3ComponentSizeTokens.avatarMedium;
+  static const double avatarLarge = Material3ComponentSizeTokens.avatarLarge;
+  static const double navigationBarHeight =
+      Material3ComponentSizeTokens.navigationBarHeight;
 }
 
 abstract final class WidgetOpacities {
   static const double transparent = Insets.spacing0;
-
   static const double divider = 0.12;
-
   static const double scrimLight = 0.32;
   static const double scrimDark = 0.4;
-
   static const double disabledContent = 0.38;
-
   static const double stateHover = 0.08;
   static const double stateFocus = 0.12;
   static const double statePress = 0.12;
   static const double stateDrag = 0.16;
-
   static const double elevationLevel1 = 0.05;
   static const double elevationLevel2 = 0.08;
   static const double elevationLevel3 = 0.11;
   static const double elevationLevel4 = 0.12;
   static const double elevationLevel5 = 0.14;
-
   static const double lowEmphasis = Insets.spacing0;
   static const double hint = Insets.spacing0;
   static const double hintCustom = 0.38;
@@ -122,12 +198,14 @@ abstract final class FontSizes {
   static const double fontSizeMedium = 14;
   static const double fontSizeLarge = 16;
   static const double fontSizeXLarge = 20;
-  static const double fontSizeDisplay = 24;
+  static const double fontSizeDisplay = 34;
 }
 
 abstract final class Breakpoints {
-  static const double kMobileMaxWidth = 600;
-  static const double kTabletMaxWidth = 1200;
+  static const double kMobileMaxWidth =
+      Material3BreakpointTokens.compactMaxWidth;
+  static const double kTabletMaxWidth =
+      Material3BreakpointTokens.mediumMaxWidth;
 }
 
 enum DeviceType { mobile, tablet, desktop }

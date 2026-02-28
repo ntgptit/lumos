@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../constants/dimensions.dart';
+import '../extensions/color_scheme_state_extensions.dart';
 
 abstract final class ListTileThemes {
   static ListTileThemeData build({
@@ -11,9 +12,7 @@ abstract final class ListTileThemes {
       iconColor: colorScheme.onSurfaceVariant,
       textColor: colorScheme.onSurface,
       selectedColor: colorScheme.primary,
-      tileColor: colorScheme.surface.withValues(
-        alpha: WidgetOpacities.transparent,
-      ),
+      tileColor: colorScheme.transparentSurfaceColor,
       selectedTileColor: colorScheme.secondaryContainer,
       dense: false,
       minLeadingWidth: IconSizes.iconLarge,

@@ -24,7 +24,7 @@ abstract final class AppShape {
   // Card
   // ---------------------------------------------------------------------------
 
-  /// Default card shape. [radius] defaults to [Radius.radiusCard] (8dp).
+  /// Default card shape. [radius] defaults to [Radius.radiusCard] (12dp).
   /// Pass a custom [radius] for content-specific overrides (e.g. hero cards).
   static RoundedRectangleBorder card({
     BorderSide side = BorderSide.none,

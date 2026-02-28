@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../constants/dimensions.dart';
+import '../extensions/color_scheme_state_extensions.dart';
+import '../extensions/widget_state_extensions.dart';
 
 enum ButtonSize { small, medium, large }
 
@@ -87,8 +89,8 @@ abstract final class ButtonThemes {
     final ButtonStyle base = ElevatedButton.styleFrom(
       backgroundColor: colorScheme.surfaceContainerLow,
       foregroundColor: colorScheme.primary,
-      disabledBackgroundColor: _disabledContainer(colorScheme),
-      disabledForegroundColor: _disabledForeground(colorScheme),
+      disabledBackgroundColor: colorScheme.disabledContainerColor,
+      disabledForegroundColor: colorScheme.disabledContentColor,
       textStyle: _textStyle(textTheme: textTheme, size: size),
       minimumSize: _minimumSize(size: size),
       padding: _padding(size: size, deviceType: deviceType),
@@ -101,7 +103,7 @@ abstract final class ButtonThemes {
 
     return base.copyWith(
       elevation: WidgetStateProperty.resolveWith(_resolveElevatedElevation),
-      overlayColor: _overlayColor(colorScheme.primary),
+      overlayColor: colorScheme.primary.asInteractiveOverlayProperty(),
     );
   }
 
@@ -114,15 +116,17 @@ abstract final class ButtonThemes {
     final ButtonStyle base = FilledButton.styleFrom(
       backgroundColor: colorScheme.primary,
       foregroundColor: colorScheme.onPrimary,
-      disabledBackgroundColor: _disabledContainer(colorScheme),
-      disabledForegroundColor: _disabledForeground(colorScheme),
+      disabledBackgroundColor: colorScheme.disabledContainerColor,
+      disabledForegroundColor: colorScheme.disabledContentColor,
       textStyle: _textStyle(textTheme: textTheme, size: size),
       minimumSize: _minimumSize(size: size),
       padding: _padding(size: size, deviceType: deviceType),
       shape: _buttonShape(),
     );
 
-    return base.copyWith(overlayColor: _overlayColor(colorScheme.onPrimary));
+    return base.copyWith(
+      overlayColor: colorScheme.onPrimary.asInteractiveOverlayProperty(),
+    );
   }
 
   static ButtonStyle outlinedStyle({
@@ -133,7 +137,7 @@ abstract final class ButtonThemes {
   }) {
     final ButtonStyle base = OutlinedButton.styleFrom(
       foregroundColor: colorScheme.primary,
-      disabledForegroundColor: _disabledForeground(colorScheme),
+      disabledForegroundColor: colorScheme.disabledContentColor,
       textStyle: _textStyle(textTheme: textTheme, size: size),
       minimumSize: _minimumSize(size: size),
       padding: _padding(size: size, deviceType: deviceType),
@@ -142,14 +146,14 @@ abstract final class ButtonThemes {
         color: colorScheme.outline,
         width: WidgetSizes.borderWidthRegular,
       ),
-      backgroundColor: _transparentSurface(colorScheme),
+      backgroundColor: colorScheme.transparentSurfaceColor,
     );
 
     return base.copyWith(
       side: WidgetStateProperty.resolveWith((Set<WidgetState> states) {
-        if (states.contains(WidgetState.disabled)) {
+        if (states.isDisabled) {
           return BorderSide(
-            color: _disabledContainer(colorScheme),
+            color: colorScheme.disabledContainerColor,
             width: WidgetSizes.borderWidthRegular,
           );
         }
@@ -158,7 +162,7 @@ abstract final class ButtonThemes {
           width: WidgetSizes.borderWidthRegular,
         );
       }),
-      overlayColor: _overlayColor(colorScheme.primary),
+      overlayColor: colorScheme.primary.asInteractiveOverlayProperty(),
     );
   }
 
@@ -170,14 +174,16 @@ abstract final class ButtonThemes {
   }) {
     final ButtonStyle base = TextButton.styleFrom(
       foregroundColor: colorScheme.primary,
-      disabledForegroundColor: _disabledForeground(colorScheme),
+      disabledForegroundColor: colorScheme.disabledContentColor,
       textStyle: _textStyle(textTheme: textTheme, size: size),
       minimumSize: _minimumSize(size: size),
       padding: _padding(size: size, deviceType: deviceType),
       shape: _buttonShape(),
-      backgroundColor: _transparentSurface(colorScheme),
+      backgroundColor: colorScheme.transparentSurfaceColor,
     );
-    return base.copyWith(overlayColor: _overlayColor(colorScheme.primary));
+    return base.copyWith(
+      overlayColor: colorScheme.primary.asInteractiveOverlayProperty(),
+    );
   }
 
   static ButtonStyle iconStyle({
@@ -186,7 +192,7 @@ abstract final class ButtonThemes {
   }) {
     final ButtonStyle base = IconButton.styleFrom(
       foregroundColor: colorScheme.onSurfaceVariant,
-      disabledForegroundColor: _disabledForeground(colorScheme),
+      disabledForegroundColor: colorScheme.disabledContentColor,
       minimumSize: const Size(
         WidgetSizes.minTouchTarget,
         WidgetSizes.minTouchTarget,
@@ -194,37 +200,37 @@ abstract final class ButtonThemes {
       iconSize: _iconSize(deviceType),
       padding: const EdgeInsets.all(Insets.spacing8),
       shape: _buttonShape(),
-      backgroundColor: _transparentSurface(colorScheme),
+      backgroundColor: colorScheme.transparentSurfaceColor,
     );
 
     return base.copyWith(
       foregroundColor: WidgetStateProperty.resolveWith((
         Set<WidgetState> states,
       ) {
-        if (states.contains(WidgetState.disabled)) {
-          return _disabledForeground(colorScheme);
+        if (states.isDisabled) {
+          return colorScheme.disabledContentColor;
         }
-        if (states.contains(WidgetState.selected)) {
+        if (states.isSelected) {
           return colorScheme.primary;
         }
         return colorScheme.onSurfaceVariant;
       }),
-      overlayColor: _overlayColor(colorScheme.onSurfaceVariant),
+      overlayColor: colorScheme.onSurfaceVariant.asInteractiveOverlayProperty(),
     );
   }
 }
 
 double _resolveElevatedElevation(Set<WidgetState> states) {
-  if (states.contains(WidgetState.disabled)) {
+  if (states.isDisabled) {
     return _elevationDisabled;
   }
-  if (states.contains(WidgetState.hovered)) {
+  if (states.isHovered) {
     return _elevationHovered;
   }
-  if (states.contains(WidgetState.focused)) {
+  if (states.isFocused) {
     return _elevationFocused;
   }
-  if (states.contains(WidgetState.pressed)) {
+  if (states.isPressed) {
     return _elevationPressed;
   }
   return _elevationResting;
@@ -279,33 +285,4 @@ RoundedRectangleBorder _buttonShape() {
   return RoundedRectangleBorder(
     borderRadius: BorderRadius.circular(_cornerRadius),
   );
-}
-
-WidgetStateProperty<Color?> _overlayColor(Color color) {
-  return WidgetStateProperty.resolveWith((Set<WidgetState> states) {
-    if (states.contains(WidgetState.pressed)) {
-      return color.withValues(alpha: WidgetOpacities.statePress);
-    }
-    if (states.contains(WidgetState.hovered)) {
-      return color.withValues(alpha: WidgetOpacities.stateHover);
-    }
-    if (states.contains(WidgetState.focused)) {
-      return color.withValues(alpha: WidgetOpacities.stateFocus);
-    }
-    return null;
-  });
-}
-
-Color _disabledForeground(ColorScheme colorScheme) {
-  return colorScheme.onSurface.withValues(
-    alpha: WidgetOpacities.disabledContent,
-  );
-}
-
-Color _disabledContainer(ColorScheme colorScheme) {
-  return colorScheme.onSurface.withValues(alpha: WidgetOpacities.divider);
-}
-
-Color _transparentSurface(ColorScheme colorScheme) {
-  return colorScheme.surface.withValues(alpha: WidgetOpacities.transparent);
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../constants/dimensions.dart';
+import '../extensions/color_scheme_state_extensions.dart';
+import '../extensions/widget_state_extensions.dart';
 
 /// FAB color variants aligned with M3 color roles.
 ///
@@ -148,27 +150,33 @@ abstract final class FloatingActionButtonThemes {
 
     return ButtonStyle(
       backgroundColor: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.disabled)) {
-          return colorScheme.onSurface.withValues(
-            alpha: WidgetOpacities.divider, // 0.12
-          );
+        if (states.isDisabled) {
+          return colorScheme.disabledContainerColor;
         }
         return colors.container;
       }),
       foregroundColor: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.disabled)) {
-          return colorScheme.onSurface.withValues(
-            alpha: WidgetOpacities.disabledContent, // 0.38
-          );
+        if (states.isDisabled) {
+          return colorScheme.disabledContentColor;
         }
         return colors.onContainer;
       }),
       elevation: WidgetStateProperty.resolveWith((states) {
-        if (isDark) return WidgetSizes.none;
-        if (states.contains(WidgetState.disabled)) return _elevationDisabled;
-        if (states.contains(WidgetState.pressed)) return _elevationPressed;
-        if (states.contains(WidgetState.hovered)) return _elevationHover;
-        if (states.contains(WidgetState.focused)) return _elevationFocus;
+        if (isDark) {
+          return WidgetSizes.none;
+        }
+        if (states.isDisabled) {
+          return _elevationDisabled;
+        }
+        if (states.isPressed) {
+          return _elevationPressed;
+        }
+        if (states.isHovered) {
+          return _elevationHover;
+        }
+        if (states.isFocused) {
+          return _elevationFocus;
+        }
         return _elevationResting;
       }),
     );

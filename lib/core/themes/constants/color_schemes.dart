@@ -7,19 +7,25 @@ import 'package:flutter/material.dart';
 // ---------------------------------------------------------------------------
 @immutable
 abstract final class AppColorSchemeConst {
-  // Brand palette (from provided design reference)
-  // Midnight Blue, Dusty Blue, Ivory, Deep Navy, Buttercream.
-  static const Color paletteCadetBlue = Color(0xFF52677D); // Dusty Blue
-  static const Color paletteIndependence = Color(0xFF1C2E4A); // Midnight Blue
-  static const Color paletteCharcoal = Color(0xFF52677D); // Dusty Blue
-  static const Color paletteGunmetal = Color(0xFF0F1A2B); // Deep Navy
-  static const Color paletteEigengrau = Color(0xFF0F1A2B); // Deep Navy
+  // Semantic brand palette.
+  static const Color brandPrimary = Color(0xFF1C2E4A); // Midnight Blue
+  static const Color brandSecondary = Color(0xFF52677D); // Dusty Blue
+  static const Color brandDeep = Color(0xFF0F1A2B); // Deep Navy
+  static const Color surfaceLight = Color(0xFFD1CFC9); // Buttercream
+  static const Color surfaceLightContainer = Color(0xFFBDC4D4); // Ivory
+
+  // Backward-compatible aliases.
+  static const Color paletteCadetBlue = brandSecondary;
+  static const Color paletteIndependence = brandPrimary;
+  static const Color paletteCharcoal = brandSecondary;
+  static const Color paletteGunmetal = brandDeep;
+  static const Color paletteEigengrau = brandDeep;
   static const Color paletteAbsoluteBlack = Color(0xFF000000);
   static const Color paletteNeutralWhite = Color(0xFFFFFFFF);
 
   // Derived surface tones (light mode)
-  static const Color paletteSecondaryContainerLight = Color(0xFFBDC4D4); // Ivory
-  static const Color paletteTertiaryContainerLight = Color(0xFFD1CFC9); // Buttercream
+  static const Color paletteSecondaryContainerLight = surfaceLightContainer;
+  static const Color paletteTertiaryContainerLight = surfaceLight;
 
   // Derived surface tones (dark mode)
   static const Color paletteTertiaryDark = Color(
@@ -30,7 +36,9 @@ abstract final class AppColorSchemeConst {
   ); // Midnight Blue container for dark
 
   // Seed & contrast config
-  static const Color seedColor = paletteIndependence;
+  static const Color seedColor = brandPrimary;
+  static const DynamicSchemeVariant dynamicSchemeVariant =
+      DynamicSchemeVariant.tonalSpot;
   static const Color highContrastLightForeground = paletteAbsoluteBlack;
   static const Color highContrastDarkForeground = paletteNeutralWhite;
 
@@ -63,7 +71,7 @@ ColorScheme _buildColorScheme({
   final ColorScheme seeded = ColorScheme.fromSeed(
     seedColor: resolvedSeed,
     brightness: brightness,
-    dynamicSchemeVariant: DynamicSchemeVariant.neutral,
+    dynamicSchemeVariant: AppColorSchemeConst.dynamicSchemeVariant,
   );
 
   final ColorScheme withPalette = _applyPaletteRoles(

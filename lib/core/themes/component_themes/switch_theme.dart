@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../constants/dimensions.dart';
+import '../extensions/color_scheme_state_extensions.dart';
+import '../extensions/widget_state_extensions.dart';
 
 abstract final class SwitchThemes {
   static SwitchThemeData build({required ColorScheme colorScheme}) {
@@ -16,12 +18,12 @@ abstract final class SwitchThemes {
     required ColorScheme colorScheme,
   }) {
     return WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
-      if (states.contains(WidgetState.disabled)) {
-        return colorScheme.onSurface.withValues(
-          alpha: WidgetOpacities.disabledContent,
-        );
+      if (states.isDisabled) {
+        return colorScheme.disabledContentColor;
       }
-      if (states.contains(WidgetState.selected)) return colorScheme.onPrimary;
+      if (states.isSelected) {
+        return colorScheme.onPrimary;
+      }
       return colorScheme.outline;
     });
   }
@@ -30,10 +32,12 @@ abstract final class SwitchThemes {
     required ColorScheme colorScheme,
   }) {
     return WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
-      if (states.contains(WidgetState.disabled)) {
-        return colorScheme.onSurface.withValues(alpha: WidgetOpacities.divider);
+      if (states.isDisabled) {
+        return colorScheme.disabledContainerColor;
       }
-      if (states.contains(WidgetState.selected)) return colorScheme.primary;
+      if (states.isSelected) {
+        return colorScheme.primary;
+      }
       return colorScheme.surfaceContainerHighest;
     });
   }
@@ -42,15 +46,13 @@ abstract final class SwitchThemes {
     required ColorScheme colorScheme,
   }) {
     return WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
-      if (states.contains(WidgetState.selected)) {
+      if (states.isSelected) {
         return colorScheme.primary.withValues(
           alpha: WidgetOpacities.transparent,
         );
       }
-      if (states.contains(WidgetState.disabled)) {
-        return colorScheme.onSurface.withValues(
-          alpha: WidgetOpacities.disabledContent,
-        );
+      if (states.isDisabled) {
+        return colorScheme.disabledContentColor;
       }
       return colorScheme.outline;
     });
@@ -59,23 +61,6 @@ abstract final class SwitchThemes {
   static WidgetStateProperty<Color?> _overlayColor({
     required ColorScheme colorScheme,
   }) {
-    return WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
-      if (states.contains(WidgetState.pressed)) {
-        return colorScheme.primary.withValues(
-          alpha: WidgetOpacities.statePress,
-        );
-      }
-      if (states.contains(WidgetState.hovered)) {
-        return colorScheme.primary.withValues(
-          alpha: WidgetOpacities.stateHover,
-        );
-      }
-      if (states.contains(WidgetState.focused)) {
-        return colorScheme.primary.withValues(
-          alpha: WidgetOpacities.stateFocus,
-        );
-      }
-      return null;
-    });
+    return colorScheme.primary.asInteractiveOverlayProperty();
   }
 }

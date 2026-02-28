@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../constants/dimensions.dart';
+import '../extensions/color_scheme_state_extensions.dart';
 import '../shape.dart';
 
 /// Dialog visual variants.
@@ -62,11 +63,7 @@ abstract final class DialogThemes {
         alpha: WidgetOpacities.elevationLevel2, // 0.08
       ),
       // Scrim: darker on dark mode to maintain contrast with deep surface.
-      barrierColor: colorScheme.scrim.withValues(
-        alpha: colorScheme.brightness == Brightness.dark
-            ? WidgetOpacities.scrimDark
-            : WidgetOpacities.scrimLight,
-      ),
+      barrierColor: colorScheme.modalBarrierScrimColor,
       shape: AppShape.dialog(),
       alignment: _dialogAlignment(deviceType),
       insetPadding: _dialogInset(deviceType),
@@ -92,11 +89,7 @@ abstract final class DialogThemes {
       shadowColor: colorScheme.shadow.withValues(
         alpha: WidgetOpacities.elevationLevel1, // 0.05
       ),
-      modalBarrierColor: colorScheme.scrim.withValues(
-        alpha: colorScheme.brightness == Brightness.dark
-            ? WidgetOpacities.scrimDark
-            : WidgetOpacities.scrimLight,
-      ),
+      modalBarrierColor: colorScheme.modalBarrierScrimColor,
       // Only top corners rounded — bottom flush with screen edge.
       shape: AppShape.bottomSheet(),
       clipBehavior: Clip.antiAlias,
@@ -166,11 +159,7 @@ abstract final class DialogThemes {
       shadowColor: colorScheme.shadow.withValues(
         alpha: WidgetOpacities.elevationLevel2,
       ),
-      barrierColor: colorScheme.scrim.withValues(
-        alpha: colorScheme.brightness == Brightness.dark
-            ? WidgetOpacities.scrimDark
-            : WidgetOpacities.scrimLight,
-      ),
+      barrierColor: colorScheme.modalBarrierScrimColor,
       // cardLarge (12dp radius) — softer, more editorial feel for rich content.
       shape: AppShape.cardLarge(),
       alignment: _dialogAlignment(deviceType),

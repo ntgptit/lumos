@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../constants/dimensions.dart';
+import '../extensions/color_scheme_state_extensions.dart';
+import '../extensions/widget_state_extensions.dart';
 import '../shape.dart';
 
 /// Input size variants — mirrors [ButtonSize] / [ChipSize] convention.
@@ -209,11 +211,7 @@ OutlineInputBorder _buildFocusedErrorBorder({
 }
 
 OutlineInputBorder _buildDisabledBorder({required ColorScheme colorScheme}) {
-  return AppShape.input(
-    borderColor: colorScheme.onSurface.withValues(
-      alpha: WidgetOpacities.disabledContent,
-    ),
-  );
+  return AppShape.input(borderColor: colorScheme.disabledContentColor);
 }
 
 InputDecorationTheme _composeTheme({
@@ -267,18 +265,14 @@ WidgetStateTextStyle _buildFloatingLabelStyle({
     final TextStyle base =
         textTheme.bodySmall?.copyWith(color: colorScheme.onSurfaceVariant) ??
         const TextStyle();
-    if (states.contains(WidgetState.error)) {
+    if (states.isError) {
       return base.copyWith(color: colorScheme.error);
     }
-    if (states.contains(WidgetState.focused)) {
+    if (states.isFocused) {
       return base.copyWith(color: colorScheme.primary);
     }
-    if (states.contains(WidgetState.disabled)) {
-      return base.copyWith(
-        color: colorScheme.onSurface.withValues(
-          alpha: WidgetOpacities.disabledContent,
-        ),
-      );
+    if (states.isDisabled) {
+      return base.copyWith(color: colorScheme.disabledContentColor);
     }
     return base;
   });
@@ -286,12 +280,10 @@ WidgetStateTextStyle _buildFloatingLabelStyle({
 
 WidgetStateColor _buildPrefixIconColor({required ColorScheme colorScheme}) {
   return WidgetStateColor.resolveWith((Set<WidgetState> states) {
-    if (states.contains(WidgetState.disabled)) {
-      return colorScheme.onSurface.withValues(
-        alpha: WidgetOpacities.disabledContent,
-      );
+    if (states.isDisabled) {
+      return colorScheme.disabledContentColor;
     }
-    if (states.contains(WidgetState.focused)) {
+    if (states.isFocused) {
       return colorScheme.primary;
     }
     return colorScheme.onSurfaceVariant;
@@ -300,15 +292,13 @@ WidgetStateColor _buildPrefixIconColor({required ColorScheme colorScheme}) {
 
 WidgetStateColor _buildSuffixIconColor({required ColorScheme colorScheme}) {
   return WidgetStateColor.resolveWith((Set<WidgetState> states) {
-    if (states.contains(WidgetState.disabled)) {
-      return colorScheme.onSurface.withValues(
-        alpha: WidgetOpacities.disabledContent,
-      );
+    if (states.isDisabled) {
+      return colorScheme.disabledContentColor;
     }
-    if (states.contains(WidgetState.error)) {
+    if (states.isError) {
       return colorScheme.error;
     }
-    if (states.contains(WidgetState.focused)) {
+    if (states.isFocused) {
       return colorScheme.primary;
     }
     return colorScheme.onSurfaceVariant;
