@@ -5,8 +5,8 @@ import '../buttons/lumos_button.dart';
 import '../inputs/lumos_form_widgets.dart';
 import '../lumos_models.dart';
 
-class LumosDialogSizingConst {
-  const LumosDialogSizingConst._();
+abstract final class LumosDialogSizingConst {
+  LumosDialogSizingConst._();
 
   static const double dialogWidthFactor = 0.84;
   static const double dialogMinWidth = 340;

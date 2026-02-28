@@ -4,8 +4,8 @@ import '../../../../core/themes/constants/dimensions.dart';
 import '../buttons/lumos_button.dart';
 import '../typography/lumos_text.dart';
 
-class LumosEmptyStateConst {
-  const LumosEmptyStateConst._();
+abstract final class LumosEmptyStateConst {
+  LumosEmptyStateConst._();
 
   static const IconData defaultIcon = Icons.inbox_rounded;
 }

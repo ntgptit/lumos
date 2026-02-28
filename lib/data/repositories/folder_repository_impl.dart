@@ -12,8 +12,8 @@ import '../models/folder_model.dart';
 
 part 'folder_repository_impl.g.dart';
 
-class FolderRepositoryImplConst {
-  const FolderRepositoryImplConst._();
+abstract final class FolderRepositoryImplConst {
+  FolderRepositoryImplConst._();
 
   static const int maxFetchSize = 500;
   static const String foldersPath = '/api/v1/folders';

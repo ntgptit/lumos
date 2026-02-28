@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 
-class RetryInterceptorConst {
-  const RetryInterceptorConst._();
+abstract final class RetryInterceptorConst {
+  RetryInterceptorConst._();
 
   static const String retryAttemptKey = 'retry_attempt';
   static const String bypassRetryKey = 'bypass_retry';

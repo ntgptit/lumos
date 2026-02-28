@@ -14,6 +14,7 @@ import 'dart:io';
 
 import 'package:analyzer/dart/analysis/utilities.dart';
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/source/line_info.dart';
 import 'package:yaml/yaml.dart';
@@ -530,8 +531,8 @@ class FileLengthRule implements QualityRule {
 
   @override
   void check(QualityContext ctx, FileContext file) {
-    final int len = file.lines.length;
-    if (len <= ctx.config.maxFileLines) return;
+    final int effectiveCodeLines = _countEffectiveFileCodeLines(file);
+    if (effectiveCodeLines <= ctx.config.maxFileLines) return;
 
     ctx.violations.add(
       QualityViolation(
@@ -540,11 +541,49 @@ class FileLengthRule implements QualityRule {
         severity: Severity.warning,
         rule: name,
         reason:
-            'File length exceeds ${ctx.config.maxFileLines} lines. Split file.',
-        lineContent: '$len lines',
+            'Effective code length exceeds ${ctx.config.maxFileLines} lines (ignores comments, dartdoc, imports). Split file.',
+        lineContent:
+            'effective: $effectiveCodeLines lines, raw: ${file.lines.length} lines',
       ),
     );
   }
+}
+
+int _countEffectiveFileCodeLines(FileContext file) {
+  final Set<int> ignoredImportLines = _collectImportDirectiveLines(file);
+  final Set<int> effectiveLines = <int>{};
+
+  Token? token = file.unit.beginToken;
+  while (token != null) {
+    if (token.type == TokenType.EOF) {
+      break;
+    }
+
+    final int lineNumber = _lineFromOffset(file.lineInfo, token.offset);
+    if (!ignoredImportLines.contains(lineNumber)) {
+      effectiveLines.add(lineNumber);
+    }
+    token = token.next;
+  }
+
+  return effectiveLines.length;
+}
+
+Set<int> _collectImportDirectiveLines(FileContext file) {
+  final Set<int> lines = <int>{};
+
+  for (final Directive directive in file.unit.directives) {
+    if (directive is! ImportDirective) continue;
+
+    final int startLine = _lineFromOffset(file.lineInfo, directive.offset);
+    final int endLine = _lineFromOffset(file.lineInfo, directive.end);
+
+    for (int line = startLine; line <= endLine; line++) {
+      lines.add(line);
+    }
+  }
+
+  return lines;
 }
 
 class NoQualityGuardMarkerRule implements QualityRule {

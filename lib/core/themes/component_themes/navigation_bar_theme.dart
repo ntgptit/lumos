@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../constants/dimensions.dart';
 
-class NavigationBarThemes {
-  const NavigationBarThemes._();
-
+abstract final class NavigationBarThemes {
   static NavigationBarThemeData build({
     required ColorScheme colorScheme,
     required TextTheme textTheme,

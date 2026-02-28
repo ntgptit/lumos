@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-class AppTypographyConst {
-  const AppTypographyConst._();
-
+abstract final class AppTypographyConst {
   static const String kDefaultFontFamily = 'Roboto';
   static const String kGoogleFontInter = 'Inter';
   static const String kGoogleFontPoppins = 'Poppins';

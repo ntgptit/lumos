@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-class ListTileThemes {
-  const ListTileThemes._();
-
+abstract final class ListTileThemes {
   static ListTileThemeData build({
     required ColorScheme colorScheme,
     required TextTheme textTheme,
@@ -11,7 +9,9 @@ class ListTileThemes {
       iconColor: colorScheme.onSurfaceVariant,
       textColor: colorScheme.onSurface,
       selectedColor: colorScheme.primary,
-      titleTextStyle: textTheme.bodyLarge?.copyWith(color: colorScheme.onSurface),
+      titleTextStyle: textTheme.bodyLarge?.copyWith(
+        color: colorScheme.onSurface,
+      ),
       subtitleTextStyle: textTheme.bodyMedium?.copyWith(
         color: colorScheme.onSurfaceVariant,
       ),

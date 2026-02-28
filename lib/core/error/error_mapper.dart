@@ -3,8 +3,8 @@ import 'package:dio/dio.dart';
 import 'exceptions.dart';
 import 'failures.dart';
 
-class ErrorMapper {
-  const ErrorMapper._();
+abstract final class ErrorMapper {
+  ErrorMapper._();
 
   static AppException mapDioException(DioException error) {
     if (_isConnectivityError(error.type)) {

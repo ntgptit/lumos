@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import '../../../../../../core/themes/constants/dimensions.dart';
 import '../../../../../../domain/entities/folder_models.dart';
 import '../../../../../../l10n/app_localizations.dart';
-import '../../../../../shared/widgets/lumos_widgets.dart';
+import '../../../../../shared/widgets/cards/lumos_action_list_item_card.dart';
 
-class FolderTileConst {
-  const FolderTileConst._();
+abstract final class FolderTileConst {
+  FolderTileConst._();
 
   static const int rootDepth = 0;
 
@@ -18,8 +18,8 @@ class FolderTileConst {
   static const double badgeFontSize = FontSizes.fontSizeSmall;
 }
 
-class FolderTileActionKey {
-  const FolderTileActionKey._();
+abstract final class FolderTileActionKey {
+  FolderTileActionKey._();
 
   static const String rename = 'rename';
   static const String delete = 'delete';

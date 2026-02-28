@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'lumos_empty_state.dart';
 
-class LumosErrorStateConst {
-  const LumosErrorStateConst._();
+abstract final class LumosErrorStateConst {
+  LumosErrorStateConst._();
 
   static const String defaultTitle = 'Something went wrong';
   static const String defaultRetryLabel = 'Try again';

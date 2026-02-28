@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/themes/constants/dimensions.dart';
 
-class LumosLoadingIndicatorConst {
-  const LumosLoadingIndicatorConst._();
+abstract final class LumosLoadingIndicatorConst {
+  LumosLoadingIndicatorConst._();
 
   static const double defaultCircularSize = IconSizes.iconLarge;
   static const double defaultLinearHeight = Insets.spacing8;

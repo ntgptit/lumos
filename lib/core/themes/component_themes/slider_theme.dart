@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../constants/dimensions.dart';
 
-class SliderThemes {
-  const SliderThemes._();
-
+abstract final class SliderThemes {
   static SliderThemeData build({required ColorScheme colorScheme}) {
     return SliderThemeData(
       activeTrackColor: colorScheme.primary,

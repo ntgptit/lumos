@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/themes/constants/dimensions.dart';
 
-class LumosScreenFrameConst {
-  const LumosScreenFrameConst._();
+abstract final class LumosScreenFrameConst {
+  LumosScreenFrameConst._();
 
   static const double defaultMaxWidth = WidgetSizes.maxContentWidth;
   static const double defaultHorizontalPadding = Insets.paddingScreen;

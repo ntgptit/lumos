@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-class ProgressIndicatorThemes {
-  const ProgressIndicatorThemes._();
-
+abstract final class ProgressIndicatorThemes {
   static ProgressIndicatorThemeData build({required ColorScheme colorScheme}) {
     return ProgressIndicatorThemeData(
       color: colorScheme.primary,

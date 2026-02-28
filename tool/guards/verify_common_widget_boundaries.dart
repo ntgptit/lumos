@@ -56,6 +56,10 @@ class CommonWidgetGuardConst {
     'lib/presentation/shared/widgets/input/password_text_box.dart',
     'lib/presentation/shared/widgets/loader/shimmer_box.dart',
     'lib/presentation/shared/widgets/buttons/app_expandable_fab.dart',
+    'lib/presentation/shared/widgets/cards/lumos_action_list_item_card.dart',
+    'lib/presentation/shared/widgets/cards/lumos_card.dart',
+    'lib/presentation/shared/widgets/cards/lumos_deck_card.dart',
+    'lib/presentation/shared/widgets/cards/lumos_entity_list_item_card.dart',
   ];
 }
 

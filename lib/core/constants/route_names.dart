@@ -1,11 +1,11 @@
-class AppRoutePath {
-  const AppRoutePath._();
+abstract final class AppRoutePath {
+  AppRoutePath._();
 
   static const String home = '/';
 }
 
-class AppRouteName {
-  const AppRouteName._();
+abstract final class AppRouteName {
+  AppRouteName._();
 
   static const String home = 'home';
 }

@@ -12,9 +12,7 @@ part 'theme_provider.g.dart';
 enum AppThemePreference { system, light, dark }
 
 /// Shared constants for theme provider defaults.
-class ThemeProviderConst {
-  const ThemeProviderConst._();
-
+abstract final class ThemeProviderConst {
   static const ThemeMode defaultThemeMode = ThemeMode.system;
   static const String themeModeSystem = 'system';
   static const String themeModeLight = 'light';

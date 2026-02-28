@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-class AppSemanticColorsConst {
-  const AppSemanticColorsConst._();
-
+abstract final class AppSemanticColorsConst {
   static const Color successSeed = Color(0xFF2E7D32);
   static const Color warningSeed = Color(0xFFF9A825);
   static const Color infoSeed = Color(0xFF1565C0);

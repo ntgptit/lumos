@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../constants/dimensions.dart';
 
-class SwitchThemes {
-  const SwitchThemes._();
-
+abstract final class SwitchThemes {
   static SwitchThemeData build({required ColorScheme colorScheme}) {
     return SwitchThemeData(
       thumbColor: WidgetStateProperty.resolveWith<Color?>((

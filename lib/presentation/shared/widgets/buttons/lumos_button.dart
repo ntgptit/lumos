@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/themes/constants/dimensions.dart';
 
-class LumosButtonConst {
-  const LumosButtonConst._();
+abstract final class LumosButtonConst {
+  LumosButtonConst._();
 
   static const LumosButtonType defaultType = LumosButtonType.primary;
   static const LumosButtonSize defaultSize = LumosButtonSize.medium;

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/themes/constants/dimensions.dart';
 
-class LumosProgressBarConst {
-  const LumosProgressBarConst._();
+abstract final class LumosProgressBarConst {
+  LumosProgressBarConst._();
 
   static const double defaultHeight = Insets.spacing8;
 }

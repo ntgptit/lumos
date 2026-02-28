@@ -2,9 +2,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 
-class Insets {
-  const Insets._();
-
+abstract final class Insets {
   static const double spacing0 = 0;
   static const double spacing4 = 4;
   static const double spacing8 = 8;
@@ -27,9 +25,7 @@ class Insets {
   );
 }
 
-class Radius {
-  const Radius._();
-
+abstract final class Radius {
   static const double radiusNone = 0;
   static const double radiusSmall = 4;
   static const double radiusMedium = 8;
@@ -43,9 +39,7 @@ class Radius {
   static const double radiusDialog = radiusSurface;
 }
 
-class BorderRadii {
-  const BorderRadii._();
-
+abstract final class BorderRadii {
   static const BorderRadius medium = BorderRadius.all(
     ui.Radius.circular(Radius.radiusMedium),
   );
@@ -58,9 +52,7 @@ class BorderRadii {
   );
 }
 
-class IconSizes {
-  const IconSizes._();
-
+abstract final class IconSizes {
   static const double iconSmall = 16;
   static const double iconMedium = 24;
   static const double iconLarge = 32;
@@ -71,9 +63,7 @@ class IconSizes {
   static const double iconButton = iconSmall;
 }
 
-class WidgetSizes {
-  const WidgetSizes._();
-
+abstract final class WidgetSizes {
   static const double none = Insets.spacing0;
   static const double borderWidthRegular = 1.2;
   static const double minTouchTarget = 48;
@@ -89,9 +79,7 @@ class WidgetSizes {
   static const double navigationBarHeight = appBarHeight + Radius.radiusLarge;
 }
 
-class WidgetOpacities {
-  const WidgetOpacities._();
-
+abstract final class WidgetOpacities {
   static const double transparent = Insets.spacing0;
 
   static const double divider = 0.12;
@@ -117,25 +105,19 @@ class WidgetOpacities {
   static const double hintCustom = 0.38;
 }
 
-class AppDurations {
-  const AppDurations._();
-
+abstract final class AppDurations {
   static const Duration fast = Duration(milliseconds: 180);
   static const Duration medium = Duration(milliseconds: 250);
 }
 
-class MotionDurations {
-  const MotionDurations._();
-
+abstract final class MotionDurations {
   static const Duration animationFast = Duration(milliseconds: 180);
   static const Duration animationMedium = Duration(milliseconds: 250);
   static const Duration snackbar = Duration(seconds: 3);
   static const Duration tip = Duration(seconds: 5);
 }
 
-class FontSizes {
-  const FontSizes._();
-
+abstract final class FontSizes {
   static const double fontSizeSmall = 12;
   static const double fontSizeMedium = 14;
   static const double fontSizeLarge = 16;
@@ -143,18 +125,14 @@ class FontSizes {
   static const double fontSizeDisplay = 24;
 }
 
-class Breakpoints {
-  const Breakpoints._();
-
+abstract final class Breakpoints {
   static const double kMobileMaxWidth = 600;
   static const double kTabletMaxWidth = 1200;
 }
 
 enum DeviceType { mobile, tablet, desktop }
 
-class DeviceTypeHelper {
-  const DeviceTypeHelper._();
-
+abstract final class DeviceTypeHelper {
   static DeviceType fromWidth({required double width}) {
     if (width <= Breakpoints.kMobileMaxWidth) {
       return DeviceType.mobile;
@@ -166,9 +144,7 @@ class DeviceTypeHelper {
   }
 }
 
-class ResponsiveDimensions {
-  const ResponsiveDimensions._();
-
+abstract final class ResponsiveDimensions {
   static const double baseDesignWidth = 390;
   static const double minScaleFactor = 0.9;
   static const double maxScaleFactor = 1.2;

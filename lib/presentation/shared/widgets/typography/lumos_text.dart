@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class LumosTextConst {
-  const LumosTextConst._();
+abstract final class LumosTextConst {
+  LumosTextConst._();
 
   static const LumosTextStyle defaultStyle = LumosTextStyle.bodyMedium;
   static const LumosTextTone defaultTone = LumosTextTone.auto;

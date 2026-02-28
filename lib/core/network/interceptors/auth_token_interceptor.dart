@@ -3,8 +3,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../constants/storage_keys.dart';
 
-class AuthTokenInterceptorConst {
-  const AuthTokenInterceptorConst._();
+abstract final class AuthTokenInterceptorConst {
+  AuthTokenInterceptorConst._();
 
   static const String authorizationHeader = 'Authorization';
   static const String bearerPrefix = 'Bearer ';

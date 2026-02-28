@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../constants/dimensions.dart';
 
-class DividerThemes {
-  const DividerThemes._();
-
+abstract final class DividerThemes {
   static DividerThemeData build({required ColorScheme colorScheme}) {
     return DividerThemeData(
       color: colorScheme.outlineVariant,

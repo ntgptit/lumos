@@ -2,15 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../constants/dimensions.dart';
 
-class AppBarThemeConst {
-  const AppBarThemeConst._();
-
+abstract final class AppBarThemeConst {
   static const bool centerTitle = true;
 }
 
-class AppBarThemes {
-  const AppBarThemes._();
-
+abstract final class AppBarThemes {
   static AppBarTheme build({
     required ColorScheme colorScheme,
     required TextTheme textTheme,

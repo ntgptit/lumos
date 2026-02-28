@@ -6,9 +6,7 @@ import 'constants/text_styles.dart';
 export 'constants/text_styles.dart';
 export 'extensions/typography_extensions.dart';
 
-class AppTypography {
-  const AppTypography._();
-
+abstract final class AppTypography {
   static TextTheme textTheme({required ColorScheme colorScheme}) {
     return AppTextThemeBuilder.buildTextTheme(
       colorScheme: colorScheme,

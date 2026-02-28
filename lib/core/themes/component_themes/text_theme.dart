@@ -3,9 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../constants/text_styles.dart';
 
-class AppTextThemeBuilder {
-  const AppTextThemeBuilder._();
-
+abstract final class AppTextThemeBuilder {
   static TextTheme buildTextTheme({
     required ColorScheme colorScheme,
     required String fontFamily,

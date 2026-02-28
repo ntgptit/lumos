@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../../core/themes/constants/dimensions.dart';
 import '../lumos_models.dart';
 
-class LumosScreenTransitionConst {
-  const LumosScreenTransitionConst._();
+abstract final class LumosScreenTransitionConst {
+  LumosScreenTransitionConst._();
 
   static const int durationMs = 360;
   static const double slideOffsetY = 0.06;

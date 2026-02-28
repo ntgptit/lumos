@@ -5,8 +5,8 @@ import '../../../../../../l10n/app_localizations.dart';
 import '../../../../../shared/widgets/lumos_widgets.dart';
 import '../../../constants/home_contract.dart';
 
-class HomeSectionsConst {
-  const HomeSectionsConst._();
+abstract final class HomeSectionsConst {
+  HomeSectionsConst._();
 
   static const double statIconContainerSize =
       Insets.spacing32 + Insets.spacing8;

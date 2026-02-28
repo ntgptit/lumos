@@ -6,8 +6,8 @@ import '../../../shared/widgets/lumos_widgets.dart';
 import '../constants/home_contract.dart';
 import 'widgets/blocks/home_sections_block.dart';
 
-class HomeContentConst {
-  const HomeContentConst._();
+abstract final class HomeContentConst {
+  HomeContentConst._();
 
   static const double heroMinHeightMobile = 280;
   static const double heroMinHeightLarge = 250;

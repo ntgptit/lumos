@@ -3,8 +3,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'locale_provider.g.dart';
 
-class LocaleProviderConst {
-  const LocaleProviderConst._();
+abstract final class LocaleProviderConst {
+  LocaleProviderConst._();
 
   static const String englishLanguageCode = 'en';
   static const String vietnameseLanguageCode = 'vi';

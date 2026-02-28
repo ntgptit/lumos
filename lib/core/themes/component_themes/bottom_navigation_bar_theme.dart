@@ -2,16 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../constants/dimensions.dart';
 
-class BottomNavigationBarThemeConst {
-  const BottomNavigationBarThemeConst._();
-
+abstract final class BottomNavigationBarThemeConst {
   static const bool showUnselectedLabels = true;
   static const BottomNavigationBarType type = BottomNavigationBarType.fixed;
 }
 
-class BottomNavigationBarThemes {
-  const BottomNavigationBarThemes._();
-
+abstract final class BottomNavigationBarThemes {
   static BottomNavigationBarThemeData build({
     required ColorScheme colorScheme,
     required TextTheme textTheme,

@@ -14,8 +14,8 @@ import 'widgets/states/folder_empty_view.dart';
 import 'widgets/states/folder_error_banner.dart';
 import 'widgets/states/folder_mutating_overlay.dart';
 
-class FolderContentConst {
-  const FolderContentConst._();
+abstract final class FolderContentConst {
+  FolderContentConst._();
 
   static const double listBottomSpacing = Insets.spacing64;
 }

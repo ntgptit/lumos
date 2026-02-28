@@ -6,9 +6,7 @@ import 'constants/color_schemes.dart';
 import 'constants/dimensions.dart';
 import 'typography.dart';
 
-class AppThemeConst {
-  const AppThemeConst._();
-
+abstract final class AppThemeConst {
   static const String allowNoDynamicColorMarker =
       'theme-guard: allow-no-dynamic-color';
   static const TargetPlatform iosPlatform = TargetPlatform.iOS;
@@ -19,9 +17,7 @@ class AppThemeConst {
   static const TargetPlatform fuchsiaPlatform = TargetPlatform.fuchsia;
 }
 
-class AppTheme {
-  const AppTheme._();
-
+abstract final class AppTheme {
   // theme-guard: allow-no-dynamic-color
   static ThemeData lightTheme({Color? seedColor}) {
     return _buildThemeData(

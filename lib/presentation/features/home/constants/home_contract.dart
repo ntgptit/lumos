@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-class HomeScreenSemantics {
-  const HomeScreenSemantics._();
+abstract final class HomeScreenSemantics {
+  HomeScreenSemantics._();
 
   static const String heroCard = 'home-hero-card';
   static const String sectionCard = 'home-section-card';
 }
 
-class HomeScreenKeys {
-  const HomeScreenKeys._();
+abstract final class HomeScreenKeys {
+  HomeScreenKeys._();
 
   static const ValueKey<String> mobileLayout = ValueKey<String>(
     'home-layout-mobile',

@@ -3,9 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'constants/text_styles.dart';
 
-class GoogleFontsBootstrapConst {
-  const GoogleFontsBootstrapConst._();
-
+abstract final class GoogleFontsBootstrapConst {
   static const Duration pendingTimeout = Duration(seconds: 20);
   static const List<String> requiredFontFamilies = <String>[
     AppTypographyConst.kDefaultFontFamily,
@@ -35,9 +33,7 @@ class GoogleFontsBootstrapException implements Exception {
   }
 }
 
-class AppGoogleFontsBootstrap {
-  const AppGoogleFontsBootstrap._();
-
+abstract final class AppGoogleFontsBootstrap {
   static Future<void> ensureFontsReady() async {
     GoogleFonts.config.allowRuntimeFetching = true;
     _queueRequiredFonts();
@@ -64,7 +60,8 @@ class AppGoogleFontsBootstrap {
   }
 
   static void _queueRequiredFonts() {
-    for (final String family in GoogleFontsBootstrapConst.requiredFontFamilies) {
+    for (final String family
+        in GoogleFontsBootstrapConst.requiredFontFamilies) {
       GoogleFonts.getFont(
         family,
         fontWeight: AppTypographyConst.kFontWeightRegular,
@@ -78,8 +75,8 @@ class AppGoogleFontsBootstrap {
 
   static Future<bool> _hasNetworkConnection() async {
     try {
-      final List<ConnectivityResult> connectivityResults =
-          await Connectivity().checkConnectivity();
+      final List<ConnectivityResult> connectivityResults = await Connectivity()
+          .checkConnectivity();
       if (connectivityResults.isEmpty) {
         return false;
       }

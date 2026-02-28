@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../../core/themes/constants/dimensions.dart';
 import 'lumos_breadcrumb_trail_item.dart';
 
-class LumosBreadcrumbConst {
-  const LumosBreadcrumbConst._();
+abstract final class LumosBreadcrumbConst {
+  LumosBreadcrumbConst._();
 
   static const double stripHeight = Insets.spacing48;
   static const double stripHorizontalPadding = Insets.spacing4;

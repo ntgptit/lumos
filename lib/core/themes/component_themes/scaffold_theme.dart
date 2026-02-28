@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-class ScaffoldThemes {
-  const ScaffoldThemes._();
-
+abstract final class ScaffoldThemes {
   static Color backgroundColor({required ColorScheme colorScheme}) {
     return colorScheme.surface;
   }

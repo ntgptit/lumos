@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/themes/constants/dimensions.dart';
 
-class LumosIconButtonConst {
-  const LumosIconButtonConst._();
+abstract final class LumosIconButtonConst {
+  LumosIconButtonConst._();
 
   static const double defaultIconSize = IconSizes.iconMedium;
 }

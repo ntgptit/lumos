@@ -1,5 +1,5 @@
-class ApiEndpoints {
-  const ApiEndpoints._();
+abstract final class ApiEndpoints {
+  ApiEndpoints._();
 
   static const String baseUrl = 'http://localhost:8080';
   static const String apiVersion = '/v1';

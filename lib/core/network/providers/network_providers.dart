@@ -18,8 +18,8 @@ import '../interceptors/retry_interceptor.dart';
 
 part 'network_providers.g.dart';
 
-class NetworkProviderConst {
-  const NetworkProviderConst._();
+abstract final class NetworkProviderConst {
+  NetworkProviderConst._();
 
   static const String apiUrlEnvKey = 'API_URL';
   static const String legacyBaseUrlEnvKey = 'API_BASE_URL';

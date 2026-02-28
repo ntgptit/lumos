@@ -3,8 +3,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'app_logger.g.dart';
 
-class AppLoggerConst {
-  const AppLoggerConst._();
+abstract final class AppLoggerConst {
+  AppLoggerConst._();
 
   static const int methodCount = 0;
   static const int errorMethodCount = 8;

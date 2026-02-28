@@ -20,9 +20,7 @@ import 'slider_theme.dart';
 import 'snack_bar_theme.dart';
 import 'switch_theme.dart';
 
-class ComponentThemeDataBuilder {
-  const ComponentThemeDataBuilder._();
-
+abstract final class ComponentThemeDataBuilder {
   static ThemeData apply({
     required ThemeData baseTheme,
     required ColorScheme colorScheme,

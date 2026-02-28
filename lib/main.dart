@@ -9,8 +9,8 @@ import 'core/themes/google_fonts_bootstrap.dart';
 import 'core/themes/providers/theme_provider.dart';
 import 'l10n/app_localizations.dart';
 
-class AppBootstrapConst {
-  const AppBootstrapConst._();
+abstract final class AppBootstrapConst {
+  AppBootstrapConst._();
 
   static const String flavorDefineKey = 'FLAVOR';
   static const String defaultFlavor = 'dev';

@@ -5,7 +5,6 @@ export 'cards/lumos_deck_card.dart';
 export 'cards/lumos_flashcard_widgets.dart';
 export 'cards/lumos_card.dart';
 export 'cards/lumos_entity_list_item_card.dart';
-export 'cards/lumos_action_list_item_card.dart';
 export 'dialogs/lumos_dialog_widgets.dart';
 export 'feedback/lumos_empty_state.dart';
 export 'feedback/lumos_error_state.dart';

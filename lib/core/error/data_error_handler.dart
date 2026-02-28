@@ -2,8 +2,8 @@ import 'error_mapper.dart';
 import 'failures.dart';
 
 /// Utility for data layer to convert unknown errors into [Failure].
-class DataErrorHandler {
-  const DataErrorHandler._();
+abstract final class DataErrorHandler {
+  DataErrorHandler._();
 
   /// Executes [action] and throws [Failure] on error.
   static Future<T> run<T>(Future<T> Function() action) async {

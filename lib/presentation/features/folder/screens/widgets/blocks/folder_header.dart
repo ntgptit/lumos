@@ -5,8 +5,8 @@ import '../../../../../../domain/entities/folder_models.dart';
 import '../../../../../../l10n/app_localizations.dart';
 import '../../../../../shared/widgets/lumos_widgets.dart';
 
-class FolderHeaderConst {
-  const FolderHeaderConst._();
+abstract final class FolderHeaderConst {
+  FolderHeaderConst._();
 
   static const double headerBannerPadding = Insets.spacing12;
   static const double headerBannerBorderWidth = WidgetSizes.borderWidthRegular;

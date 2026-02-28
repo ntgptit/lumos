@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-class CheckboxThemes {
-  const CheckboxThemes._();
-
+abstract final class CheckboxThemes {
   static CheckboxThemeData build({required ColorScheme colorScheme}) {
     return CheckboxThemeData(
       fillColor: WidgetStateProperty.resolveWith<Color?>((

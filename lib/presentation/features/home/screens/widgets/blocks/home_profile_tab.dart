@@ -6,8 +6,8 @@ import '../../../../../../core/themes/providers/theme_provider.dart';
 import '../../../../../../l10n/app_localizations.dart';
 import '../../../../../shared/widgets/lumos_widgets.dart';
 
-class HomeProfileTabConst {
-  const HomeProfileTabConst._();
+abstract final class HomeProfileTabConst {
+  HomeProfileTabConst._();
 
   static const double maxWidth = 560;
 }
