@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/themes/constants/dimensions.dart';
 import '../../../../core/themes/extensions/theme_extensions.dart';
+import 'lumos_card_variant.dart';
+import 'lumos_card_variant_card_builder.dart';
+
+export 'lumos_card_variant.dart';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -23,17 +27,10 @@ abstract final class LumosCardConst {
 
   // Responsive border radius override for tablet/desktop.
   static const BorderRadius borderRadiusTablet = BorderRadii.large; // 12dp
+
+  // Dark mode lift to keep cards slightly brighter than deep surfaces.
+  static const double darkModeSurfaceLiftBlend = 0.35;
 }
-
-// ---------------------------------------------------------------------------
-// Variant enum
-// ---------------------------------------------------------------------------
-
-enum LumosCardVariant { elevated, filled, outlined }
-
-// ---------------------------------------------------------------------------
-// LumosCard
-// ---------------------------------------------------------------------------
 
 /// A themed card widget supporting all [LumosCardVariant] styles,
 /// selection state with animation, loading skeleton, long press,
@@ -194,51 +191,15 @@ class _LumosCardState extends State<LumosCard>
       content: themedChild,
     );
 
-    return _buildVariantCard(
+    return buildLumosVariantCard(
+      variant: widget.variant,
+      margin: widget.margin,
       theme: theme,
       elevation: elevation,
       color: color,
       shape: shape,
       child: tappableChild,
     );
-  }
-
-  Widget _buildVariantCard({
-    required ThemeData theme,
-    required double elevation,
-    required Color? color,
-    required ShapeBorder shape,
-    required Widget child,
-  }) {
-    return switch (widget.variant) {
-      LumosCardVariant.filled => Card.filled(
-        elevation: elevation,
-        color: color,
-        margin: widget.margin ?? theme.cardTheme.margin,
-        surfaceTintColor: theme.cardTheme.surfaceTintColor,
-        clipBehavior: Clip.antiAlias,
-        shape: shape,
-        child: child,
-      ),
-      LumosCardVariant.outlined => Card.outlined(
-        elevation: elevation,
-        color: color,
-        margin: widget.margin ?? theme.cardTheme.margin,
-        surfaceTintColor: theme.cardTheme.surfaceTintColor,
-        clipBehavior: Clip.antiAlias,
-        shape: shape,
-        child: child,
-      ),
-      LumosCardVariant.elevated => Card(
-        elevation: elevation,
-        color: color,
-        margin: widget.margin ?? theme.cardTheme.margin,
-        surfaceTintColor: theme.cardTheme.surfaceTintColor,
-        clipBehavior: Clip.antiAlias,
-        shape: shape,
-        child: child,
-      ),
-    };
   }
 
   // ---------------------------------------------------------------------------
@@ -300,17 +261,35 @@ class _LumosCardState extends State<LumosCard>
     required ColorScheme colorScheme,
     required double selectionProgress,
   }) {
-    final Color unselectedColor = switch (widget.variant) {
-      LumosCardVariant.elevated => colorScheme.surfaceContainerLowest,
-      LumosCardVariant.filled => colorScheme.surfaceContainerHighest,
-      LumosCardVariant.outlined => colorScheme.surfaceContainerLowest,
-    };
+    final Color unselectedColor = _resolveUnselectedColor(
+      colorScheme: colorScheme,
+    );
 
     return Color.lerp(
       unselectedColor,
       colorScheme.primaryContainer,
       selectionProgress,
     );
+  }
+
+  Color _resolveUnselectedColor({required ColorScheme colorScheme}) {
+    final Color baseUnselectedColor = switch (widget.variant) {
+      LumosCardVariant.elevated => colorScheme.surfaceContainerLowest,
+      LumosCardVariant.filled => colorScheme.surfaceContainerHighest,
+      LumosCardVariant.outlined => colorScheme.surfaceContainerLowest,
+    };
+    if (colorScheme.brightness != Brightness.dark) {
+      return baseUnselectedColor;
+    }
+    if (widget.variant == LumosCardVariant.filled) {
+      return baseUnselectedColor;
+    }
+    return Color.lerp(
+          baseUnselectedColor,
+          colorScheme.surfaceContainerLow,
+          LumosCardConst.darkModeSurfaceLiftBlend,
+        ) ??
+        colorScheme.surfaceContainerLow;
   }
 
   // ---------------------------------------------------------------------------
