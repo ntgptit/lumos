@@ -16,6 +16,7 @@ export 'exercises/lumos_exercise_widgets.dart';
 export 'gamification/lumos_gamification_widgets.dart';
 export 'inputs/lumos_form_widgets.dart';
 export 'layout/lumos_screen_frame.dart';
+export 'layout/lumos_decorative_background.dart';
 export 'learning/lumos_learning_widgets.dart';
 export 'lumos_models.dart';
 export 'misc/lumos_misc_widgets.dart';

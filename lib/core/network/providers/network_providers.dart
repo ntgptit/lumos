@@ -11,7 +11,7 @@ import '../../constants/api_endpoints.dart';
 import '../../error/error_mapper.dart';
 import '../../error/exceptions.dart';
 import '../../logging/app_logger.dart';
-import '../api_client.dart';
+import '../clients/api_client.dart';
 import '../interceptors/auth_token_interceptor.dart';
 import '../interceptors/network_error_interceptor.dart';
 import '../interceptors/retry_interceptor.dart';

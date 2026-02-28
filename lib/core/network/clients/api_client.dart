@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
-import '../constants/api_endpoints.dart';
+import '../../constants/api_endpoints.dart';
 
 part 'api_client.g.dart';
 

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/themes/constants/dimensions.dart';
-
 class LumosActionChip extends StatelessWidget {
   const LumosActionChip({
     required this.label,
@@ -16,20 +14,10 @@ class LumosActionChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final ColorScheme colorScheme = theme.colorScheme;
     return ActionChip(
       label: label,
       onPressed: onPressed,
       avatar: avatar,
-      labelStyle: theme.textTheme.labelLarge?.copyWith(
-        color: colorScheme.onSurface,
-      ),
-      side: BorderSide(
-        color: colorScheme.outlineVariant,
-        width: WidgetSizes.borderWidthRegular,
-      ),
-      shape: const StadiumBorder(),
       materialTapTargetSize: MaterialTapTargetSize.padded,
     );
   }
@@ -56,14 +44,6 @@ class LumosPopupMenuButton<T> extends StatelessWidget {
       itemBuilder: itemBuilder,
       icon: icon,
       tooltip: tooltip,
-      style: IconButton.styleFrom(
-        minimumSize: const Size(
-          WidgetSizes.minTouchTarget,
-          WidgetSizes.minTouchTarget,
-        ),
-        padding: const EdgeInsets.all(Insets.spacing8),
-        tapTargetSize: MaterialTapTargetSize.padded,
-      ),
     );
   }
 }

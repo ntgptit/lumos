@@ -21,35 +21,27 @@ class HomeContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final DeviceType deviceType = context.deviceType;
     final AppLocalizations l10n = AppLocalizations.of(context)!;
-    return Stack(
-      children: <Widget>[
-        const HomeBackground(),
-        SingleChildScrollView(
-          child: LumosScreenFrame(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                _buildAnimatedReveal(
-                  order: 0,
-                  child: HomeHeaderBlock(l10n: l10n),
-                ),
-                const SizedBox(height: Insets.gapBetweenSections),
-                _buildAnimatedReveal(
-                  order: 1,
-                  child: HomeHeroCard(deviceType: deviceType, l10n: l10n),
-                ),
-                const SizedBox(height: Insets.gapBetweenSections),
-                _buildAnimatedReveal(order: 2, child: const HomeStatGrid()),
-                const SizedBox(height: Insets.gapBetweenSections),
-                _buildAnimatedReveal(
-                  order: 3,
-                  child: HomeSplitSection(deviceType: deviceType),
-                ),
-              ],
+    return SingleChildScrollView(
+      child: LumosScreenFrame(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            _buildAnimatedReveal(order: 0, child: HomeHeaderBlock(l10n: l10n)),
+            const SizedBox(height: Insets.gapBetweenSections),
+            _buildAnimatedReveal(
+              order: 1,
+              child: HomeHeroCard(deviceType: deviceType, l10n: l10n),
             ),
-          ),
+            const SizedBox(height: Insets.gapBetweenSections),
+            _buildAnimatedReveal(order: 2, child: const HomeStatGrid()),
+            const SizedBox(height: Insets.gapBetweenSections),
+            _buildAnimatedReveal(
+              order: 3,
+              child: HomeSplitSection(deviceType: deviceType),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 
@@ -66,65 +58,6 @@ class HomeContent extends StatelessWidget {
         );
       },
       child: child,
-    );
-  }
-}
-
-class HomeBackground extends StatelessWidget {
-  const HomeBackground({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
-    return IgnorePointer(
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: <Color>[
-              colorScheme.surfaceContainerLow,
-              colorScheme.surfaceDim,
-            ],
-          ),
-        ),
-        child: Stack(
-          children: <Widget>[
-            Positioned(
-              top: -Insets.spacing64,
-              right: -Insets.spacing64,
-              child: HomeGlowBlob(
-                color: colorScheme.primaryContainer,
-                size: Insets.spacing64 * 3,
-              ),
-            ),
-            Positioned(
-              left: -Insets.spacing48,
-              top: Insets.spacing64 * 2,
-              child: HomeGlowBlob(
-                color: colorScheme.secondaryContainer,
-                size: Insets.spacing64 * 2.2,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class HomeGlowBlob extends StatelessWidget {
-  const HomeGlowBlob({required this.color, required this.size, super.key});
-
-  final Color color;
-  final double size;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(color: color, shape: BoxShape.circle),
     );
   }
 }

@@ -3,10 +3,25 @@ import 'dart:io';
 class ComponentThemeGuardConst {
   const ComponentThemeGuardConst._();
 
-  static const String sharedWidgetsRoot = 'lib/presentation/shared/widgets';
+  static const String presentationRoot = 'lib/presentation';
+  static const String sharedWidgetsRoot = 'lib/presentation/shared/widgets/';
+  static const String featurePrefix = 'lib/presentation/features/';
+  static const String featureScreensMarker = '/screens/';
+  static const String featureWidgetsMarker = '/widgets/';
+  static const String providersMarker = '/providers/';
   static const String dartExtension = '.dart';
   static const String generatedExtension = '.g.dart';
   static const String freezedExtension = '.freezed.dart';
+  static const String modelSuffix = '_model.dart';
+  static const String modelsSuffix = '_models.dart';
+  static const String importPrefix = 'import ';
+  static const String exportPrefix = 'export ';
+  static const String libraryPrefix = 'library ';
+  static const String partPrefix = 'part ';
+  static const String coreThemeImportMarker = 'core/themes/';
+  static const String widgetBuildMarker = 'Widget build(';
+  static const String showDialogMarker = 'showDialog';
+  static const String showModalBottomSheetMarker = 'showModalBottomSheet';
   static const String allowInlineOverrideMarker =
       'component-theme-guard: allow-inline-override';
 }
@@ -42,10 +57,16 @@ class _ForbiddenPropertyRule {
 final List<_ForbiddenPropertyRule>
 _forbiddenPropertyRules = <_ForbiddenPropertyRule>[
   _ForbiddenPropertyRule(
+    widgetName: 'Scaffold',
+    widgetStartPattern: RegExp(r'\bScaffold\s*\('),
+    propertyNames: <String>['backgroundColor'],
+    reason: 'Scaffold colors in UI must come from component_themes.',
+  ),
+  _ForbiddenPropertyRule(
     widgetName: 'AppBar',
     widgetStartPattern: RegExp(r'\bAppBar\s*\('),
     propertyNames: <String>['backgroundColor', 'foregroundColor'],
-    reason: 'AppBar colors in shared widgets must come from component_themes.',
+    reason: 'AppBar colors in UI files must come from component_themes.',
   ),
   _ForbiddenPropertyRule(
     widgetName: 'BottomNavigationBar',
@@ -56,60 +77,59 @@ _forbiddenPropertyRules = <_ForbiddenPropertyRule>[
       'unselectedItemColor',
     ],
     reason:
-        'BottomNavigationBar colors in shared widgets must come from component_themes.',
+        'BottomNavigationBar colors in UI files must come from component_themes.',
   ),
   _ForbiddenPropertyRule(
     widgetName: 'Card',
     widgetStartPattern: RegExp(r'\bCard\s*\('),
     propertyNames: <String>['color', 'surfaceTintColor'],
-    reason: 'Card colors in shared widgets must come from component_themes.',
+    reason: 'Card colors in UI files must come from component_themes.',
   ),
   _ForbiddenPropertyRule(
     widgetName: 'ElevatedButton',
     widgetStartPattern: RegExp(r'\bElevatedButton\s*\('),
     propertyNames: <String>['style'],
     reason:
-        'ElevatedButton in shared widgets should rely on theme style from component_themes.',
+        'ElevatedButton in UI files should rely on theme style from component_themes.',
   ),
   _ForbiddenPropertyRule(
     widgetName: 'OutlinedButton',
     widgetStartPattern: RegExp(r'\bOutlinedButton\s*\('),
     propertyNames: <String>['style'],
     reason:
-        'OutlinedButton in shared widgets should rely on theme style from component_themes.',
+        'OutlinedButton in UI files should rely on theme style from component_themes.',
   ),
   _ForbiddenPropertyRule(
     widgetName: 'TextButton',
     widgetStartPattern: RegExp(r'\bTextButton\s*\('),
     propertyNames: <String>['style'],
     reason:
-        'TextButton in shared widgets should rely on theme style from component_themes.',
+        'TextButton in UI files should rely on theme style from component_themes.',
   ),
   _ForbiddenPropertyRule(
     widgetName: 'FloatingActionButton',
     widgetStartPattern: RegExp(r'\bFloatingActionButton(?:\.extended)?\s*\('),
     propertyNames: <String>['backgroundColor', 'foregroundColor'],
     reason:
-        'FloatingActionButton colors in shared widgets must come from component_themes.',
+        'FloatingActionButton colors in UI files must come from component_themes.',
   ),
   _ForbiddenPropertyRule(
     widgetName: 'Chip',
     widgetStartPattern: RegExp(r'\b(?:Chip|FilterChip|ChoiceChip)\s*\('),
     propertyNames: <String>['backgroundColor', 'side', 'labelStyle'],
-    reason: 'Chip styles in shared widgets must come from component_themes.',
+    reason: 'Chip styles in UI files must come from component_themes.',
   ),
   _ForbiddenPropertyRule(
     widgetName: 'Divider',
     widgetStartPattern: RegExp(r'\bDivider\s*\('),
     propertyNames: <String>['color'],
-    reason: 'Divider color in shared widgets must come from component_themes.',
+    reason: 'Divider color in UI files must come from component_themes.',
   ),
   _ForbiddenPropertyRule(
     widgetName: 'ListTile',
     widgetStartPattern: RegExp(r'\bListTile\s*\('),
     propertyNames: <String>['iconColor', 'textColor', 'selectedColor'],
-    reason:
-        'ListTile colors in shared widgets must come from component_themes.',
+    reason: 'ListTile colors in UI files must come from component_themes.',
   ),
   _ForbiddenPropertyRule(
     widgetName: 'Switch',
@@ -121,26 +141,25 @@ _forbiddenPropertyRules = <_ForbiddenPropertyRule>[
       'activeTrackColor',
       'inactiveTrackColor',
     ],
-    reason: 'Switch colors in shared widgets must come from component_themes.',
+    reason: 'Switch colors in UI files must come from component_themes.',
   ),
   _ForbiddenPropertyRule(
     widgetName: 'Checkbox',
     widgetStartPattern: RegExp(r'\bCheckbox\s*\('),
     propertyNames: <String>['activeColor', 'checkColor', 'fillColor'],
-    reason:
-        'Checkbox colors in shared widgets must come from component_themes.',
+    reason: 'Checkbox colors in UI files must come from component_themes.',
   ),
   _ForbiddenPropertyRule(
     widgetName: 'Radio',
     widgetStartPattern: RegExp(r'\bRadio\s*<[^>]*>\s*\(|\bRadio\s*\('),
     propertyNames: <String>['activeColor', 'fillColor'],
-    reason: 'Radio colors in shared widgets must come from component_themes.',
+    reason: 'Radio colors in UI files must come from component_themes.',
   ),
   _ForbiddenPropertyRule(
     widgetName: 'Slider',
     widgetStartPattern: RegExp(r'\bSlider\s*\('),
     propertyNames: <String>['activeColor', 'inactiveColor'],
-    reason: 'Slider colors in shared widgets must come from component_themes.',
+    reason: 'Slider colors in UI files must come from component_themes.',
   ),
   _ForbiddenPropertyRule(
     widgetName: 'ProgressIndicator',
@@ -149,28 +168,31 @@ _forbiddenPropertyRules = <_ForbiddenPropertyRule>[
     ),
     propertyNames: <String>['color', 'backgroundColor', 'valueColor'],
     reason:
-        'ProgressIndicator colors in shared widgets must come from component_themes.',
+        'ProgressIndicator colors in UI files must come from component_themes.',
   ),
   _ForbiddenPropertyRule(
     widgetName: 'Dialog',
     widgetStartPattern: RegExp(r'\bDialog\s*\('),
     propertyNames: <String>['backgroundColor', 'surfaceTintColor'],
-    reason: 'Dialog colors in shared widgets must come from component_themes.',
+    reason: 'Dialog colors in UI files must come from component_themes.',
   ),
   _ForbiddenPropertyRule(
     widgetName: 'SnackBar',
     widgetStartPattern: RegExp(r'\bSnackBar\s*\('),
     propertyNames: <String>['backgroundColor', 'contentTextStyle'],
-    reason:
-        'SnackBar colors in shared widgets must come from component_themes.',
+    reason: 'SnackBar colors in UI files must come from component_themes.',
   ),
 ];
 
+final RegExp _widgetClassDeclarationPattern = RegExp(
+  r'\bclass\s+\w+\s+extends\s+\w*Widget\b',
+);
+
 Future<void> main() async {
-  final Directory root = Directory(ComponentThemeGuardConst.sharedWidgetsRoot);
+  final Directory root = Directory(ComponentThemeGuardConst.presentationRoot);
   if (!root.existsSync()) {
     stderr.writeln(
-      'Missing `${ComponentThemeGuardConst.sharedWidgetsRoot}` directory.',
+      'Missing `${ComponentThemeGuardConst.presentationRoot}` directory.',
     );
     exitCode = 1;
     return;
@@ -181,6 +203,9 @@ Future<void> main() async {
   for (final File file in files) {
     final String path = _normalizePath(file.path);
     final List<String> lines = await file.readAsLines();
+    if (!_isUiDesignFile(path: path, lines: lines)) {
+      continue;
+    }
     _checkFile(path: path, lines: lines, violations: violations);
   }
 
@@ -199,6 +224,36 @@ Future<void> main() async {
 }
 
 void _checkFile({
+  required String path,
+  required List<String> lines,
+  required List<ComponentThemeViolation> violations,
+}) {
+  final bool requiresThemeImport = _requiresCoreThemeImport(lines: lines);
+  if (!requiresThemeImport) {
+    _checkInlineOverrides(path: path, lines: lines, violations: violations);
+    return;
+  }
+
+  final bool hasThemeImport = _hasCoreThemeImport(lines: lines);
+  if (hasThemeImport) {
+    _checkInlineOverrides(path: path, lines: lines, violations: violations);
+    return;
+  }
+
+  violations.add(
+    ComponentThemeViolation(
+      filePath: path,
+      lineNumber: 1,
+      reason:
+          'UI file with direct Material theme usage must import from `lib/core/themes/**`.',
+      lineContent: path,
+    ),
+  );
+
+  _checkInlineOverrides(path: path, lines: lines, violations: violations);
+}
+
+void _checkInlineOverrides({
   required String path,
   required List<String> lines,
   required List<ComponentThemeViolation> violations,
@@ -249,6 +304,41 @@ void _checkFile({
       }
     }
   }
+}
+
+bool _requiresCoreThemeImport({required List<String> lines}) {
+  for (final String rawLine in lines) {
+    final String sourceLine = _stripLineCommentSmart(rawLine).trim();
+    if (sourceLine.isEmpty) {
+      continue;
+    }
+    final bool hasThemeAccess = _hasThemeAccessExpression(sourceLine);
+    if (hasThemeAccess) {
+      return true;
+    }
+    for (final _ForbiddenPropertyRule rule in _forbiddenPropertyRules) {
+      if (rule.widgetStartPattern.hasMatch(sourceLine)) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+bool _hasThemeAccessExpression(String sourceLine) {
+  if (sourceLine.contains('Theme.of(context)')) {
+    return true;
+  }
+  if (sourceLine.contains('context.theme')) {
+    return true;
+  }
+  if (sourceLine.contains('context.colorScheme')) {
+    return true;
+  }
+  if (sourceLine.contains('context.textTheme')) {
+    return true;
+  }
+  return false;
 }
 
 bool _isAllowOverrideLine({required String line, required String expression}) {
@@ -438,6 +528,113 @@ List<File> _collectSourceFiles(Directory root) {
     files.add(entity);
   }
   return files;
+}
+
+bool _isPresentationUiFile(String path) {
+  if (path.startsWith(ComponentThemeGuardConst.sharedWidgetsRoot)) {
+    return true;
+  }
+  if (!path.startsWith(ComponentThemeGuardConst.featurePrefix)) {
+    return false;
+  }
+  if (path.contains(ComponentThemeGuardConst.featureScreensMarker)) {
+    return true;
+  }
+  if (path.contains(ComponentThemeGuardConst.featureWidgetsMarker)) {
+    return true;
+  }
+  return false;
+}
+
+bool _isUiDesignFile({required String path, required List<String> lines}) {
+  if (!_isPresentationUiFile(path)) {
+    return false;
+  }
+  if (path.contains(ComponentThemeGuardConst.providersMarker)) {
+    return false;
+  }
+  if (_isLogicCompanionFile(path)) {
+    return false;
+  }
+  if (_isBarrelFile(lines: lines)) {
+    return false;
+  }
+  if (_containsUiDesignMarker(lines: lines)) {
+    return true;
+  }
+  return false;
+}
+
+bool _isLogicCompanionFile(String path) {
+  final List<String> segments = path.split('/');
+  if (segments.isEmpty) {
+    return false;
+  }
+  final String fileName = segments.last;
+  if (fileName.endsWith(ComponentThemeGuardConst.modelSuffix)) {
+    return true;
+  }
+  if (fileName.endsWith(ComponentThemeGuardConst.modelsSuffix)) {
+    return true;
+  }
+  return false;
+}
+
+bool _isBarrelFile({required List<String> lines}) {
+  bool hasDirectiveLine = false;
+  for (final String rawLine in lines) {
+    final String line = _stripLineCommentSmart(rawLine).trim();
+    if (line.isEmpty) {
+      continue;
+    }
+    final bool isDirectiveLine =
+        line.startsWith(ComponentThemeGuardConst.exportPrefix) ||
+        line.startsWith(ComponentThemeGuardConst.libraryPrefix) ||
+        line.startsWith(ComponentThemeGuardConst.partPrefix);
+    if (!isDirectiveLine) {
+      return false;
+    }
+    hasDirectiveLine = true;
+  }
+  if (hasDirectiveLine) {
+    return true;
+  }
+  return false;
+}
+
+bool _containsUiDesignMarker({required List<String> lines}) {
+  for (final String rawLine in lines) {
+    final String sourceLine = _stripLineCommentSmart(rawLine);
+    if (sourceLine.contains(ComponentThemeGuardConst.widgetBuildMarker)) {
+      return true;
+    }
+    if (sourceLine.contains(ComponentThemeGuardConst.showDialogMarker)) {
+      return true;
+    }
+    if (sourceLine.contains(
+      ComponentThemeGuardConst.showModalBottomSheetMarker,
+    )) {
+      return true;
+    }
+    if (_widgetClassDeclarationPattern.hasMatch(sourceLine)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool _hasCoreThemeImport({required List<String> lines}) {
+  for (final String rawLine in lines) {
+    final String line = _stripLineCommentSmart(rawLine).trim();
+    if (!line.startsWith(ComponentThemeGuardConst.importPrefix)) {
+      continue;
+    }
+    if (!line.contains(ComponentThemeGuardConst.coreThemeImportMarker)) {
+      continue;
+    }
+    return true;
+  }
+  return false;
 }
 
 int _countChar(String source, String char) => char.allMatches(source).length;
