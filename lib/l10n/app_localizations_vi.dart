@@ -57,6 +57,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get folderSearchClearTooltip => 'Xóa tìm kiếm';
 
   @override
+  String get folderOpenParentTooltip => 'Mở thư mục cha';
+
+  @override
   String get folderSortTitle => 'Sắp xếp thư mục';
 
   @override
@@ -79,6 +82,25 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get folderEmptySubtitle => 'Hãy tạo một thư mục để bắt đầu sắp xếp nội dung.';
+
+  @override
+  String get folderSearchEmptyTitle => 'Không có thư mục phù hợp.';
+
+  @override
+  String get folderSearchEmptySubtitle => 'Hãy thử từ khóa khác.';
+
+  @override
+  String get folderNameRequiredValidation => 'Tên thư mục là bắt buộc.';
+
+  @override
+  String folderNameMinLengthValidation(int min) {
+    return 'Tên thư mục phải có ít nhất $min ký tự.';
+  }
+
+  @override
+  String folderNameMaxLengthValidation(int max) {
+    return 'Tên thư mục tối đa $max ký tự.';
+  }
 
   @override
   String folderDeleteConfirm(Object name) {

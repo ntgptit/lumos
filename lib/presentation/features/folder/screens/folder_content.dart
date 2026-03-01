@@ -67,11 +67,14 @@ class _FolderContentState extends ConsumerState<FolderContent> {
     final List<FolderNode> visibleFolders = widget.state.visibleFolders;
     return Stack(
       children: <Widget>[
-        _buildRefreshableList(
-          context: context,
-          ref: ref,
-          controller: controller,
-          visibleFolders: visibleFolders,
+        AbsorbPointer(
+          absorbing: widget.state.isMutating,
+          child: _buildRefreshableList(
+            context: context,
+            ref: ref,
+            controller: controller,
+            visibleFolders: visibleFolders,
+          ),
         ),
         _buildCreateButton(
           context: context,
@@ -97,42 +100,62 @@ class _FolderContentState extends ConsumerState<FolderContent> {
         padding: EdgeInsets.zero,
         children: <Widget>[
           LumosScreenFrame(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                FolderHeader(
-                  currentDepth: widget.state.currentDepth,
-                  searchQuery: widget.state.searchQuery,
-                  onSearchChanged: controller.updateSearchQuery,
-                  sortBy: widget.state.sortBy,
-                  sortType: widget.state.sortType,
-                  onSortChanged:
-                      (FolderSortBy sortBy, FolderSortType sortType) {
-                        controller.updateSort(
-                          sortBy: sortBy,
-                          sortType: sortType,
-                        );
-                      },
-                  onOpenParentFolder: controller.openParentFolder,
-                ),
-                const SizedBox(height: Insets.spacing16),
-                if (widget.state.inlineErrorMessage case final String message)
-                  FolderErrorBanner(message: message),
-                if (widget.state.inlineErrorMessage != null)
-                  const SizedBox(height: Insets.spacing12),
-                ..._buildFolderTiles(
-                  context: context,
-                  ref: ref,
-                  visibleFolders: visibleFolders,
-                ),
-                if (visibleFolders.isEmpty) const FolderEmptyView(),
-                if (widget.state.isLoadingMore) _buildLoadMoreIndicator(),
-                const SizedBox(height: FolderContentConst.listBottomSpacing),
-              ],
+            child: _buildFolderListBody(
+              context: context,
+              ref: ref,
+              controller: controller,
+              visibleFolders: visibleFolders,
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildFolderListBody({
+    required BuildContext context,
+    required WidgetRef ref,
+    required FolderAsyncController controller,
+    required List<FolderNode> visibleFolders,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        _buildFolderHeader(controller: controller),
+        const SizedBox(height: Insets.spacing16),
+        if (widget.state.inlineErrorMessage case final String message)
+          FolderErrorBanner(message: message),
+        if (widget.state.inlineErrorMessage != null)
+          const SizedBox(height: Insets.spacing12),
+        ..._buildFolderTiles(
+          context: context,
+          ref: ref,
+          visibleFolders: visibleFolders,
+        ),
+        if (visibleFolders.isEmpty)
+          FolderEmptyView(isSearchResult: widget.state.searchQuery.isNotEmpty),
+        if (widget.state.isLoadingMore) _buildLoadMoreIndicator(),
+        const SizedBox(height: FolderContentConst.listBottomSpacing),
+      ],
+    );
+  }
+
+  Widget _buildFolderHeader({required FolderAsyncController controller}) {
+    return FolderHeader(
+      currentDepth: widget.state.currentDepth,
+      searchQuery: widget.state.searchQuery,
+      onSearchChanged: controller.updateSearchQuery,
+      sortBy: widget.state.sortBy,
+      sortType: widget.state.sortType,
+      onSortChanged: (FolderSortBy sortBy, FolderSortType sortType) {
+        controller.updateSort(sortBy: sortBy, sortType: sortType);
+      },
+      onOpenParentFolder: () {
+        return controller.navigate(intent: FolderNavigationIntent.parent);
+      },
+      onOpenRootFolder: () {
+        return controller.navigate(intent: FolderNavigationIntent.root);
+      },
     );
   }
 
@@ -147,9 +170,13 @@ class _FolderContentState extends ConsumerState<FolderContent> {
             padding: const EdgeInsets.only(bottom: Insets.spacing8),
             child: FolderTile(
               item: item,
-              onOpen: () => ref
-                  .read(folderAsyncControllerProvider.notifier)
-                  .openFolder(folderId: item.id, depth: item.depth),
+              onOpen: () {
+                unawaited(
+                  ref
+                      .read(folderAsyncControllerProvider.notifier)
+                      .openFolder(folder: item),
+                );
+              },
               onRename: () => showFolderNameDialog(
                 context: context,
                 titleBuilder: (AppLocalizations l10n) => l10n.folderRenameTitle,
@@ -169,8 +196,8 @@ class _FolderContentState extends ConsumerState<FolderContent> {
                 },
                 confirmLabelBuilder: (AppLocalizations l10n) =>
                     l10n.commonDelete,
-                onConfirmed: () {
-                  return ref
+                onConfirmed: () async {
+                  await ref
                       .read(folderAsyncControllerProvider.notifier)
                       .deleteFolder(item.id);
                 },

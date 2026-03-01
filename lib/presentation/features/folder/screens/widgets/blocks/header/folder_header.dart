@@ -17,6 +17,7 @@ class FolderHeader extends StatelessWidget {
     required this.sortType,
     required this.onSortChanged,
     required this.onOpenParentFolder,
+    required this.onOpenRootFolder,
     super.key,
   });
 
@@ -28,6 +29,7 @@ class FolderHeader extends StatelessWidget {
   final void Function(FolderSortBy sortBy, FolderSortType sortType)
   onSortChanged;
   final Future<void> Function() onOpenParentFolder;
+  final Future<void> Function() onOpenRootFolder;
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +50,7 @@ class FolderHeader extends StatelessWidget {
             sortType: sortType,
             onSortChanged: onSortChanged,
             onOpenParentFolder: onOpenParentFolder,
+            onOpenRootFolder: onOpenRootFolder,
           ),
         ],
       ),

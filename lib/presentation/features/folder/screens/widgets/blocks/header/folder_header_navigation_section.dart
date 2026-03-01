@@ -20,6 +20,7 @@ class FolderHeaderNavigationSection extends StatefulWidget {
     required this.sortType,
     required this.onSortChanged,
     required this.onOpenParentFolder,
+    required this.onOpenRootFolder,
     super.key,
   });
 
@@ -32,6 +33,7 @@ class FolderHeaderNavigationSection extends StatefulWidget {
   final void Function(FolderSortBy sortBy, FolderSortType sortType)
   onSortChanged;
   final Future<void> Function() onOpenParentFolder;
+  final Future<void> Function() onOpenRootFolder;
 
   @override
   State<FolderHeaderNavigationSection> createState() =>
@@ -84,9 +86,14 @@ class _FolderHeaderNavigationSectionState
         children: <Widget>[
           Row(
             children: <Widget>[
-              Expanded(
-                child: _buildCurrentNodeSummary(colorScheme: colorScheme),
-              ),
+              Expanded(child: _buildNavigationSummary()),
+              if (widget.currentDepth > FolderStateConst.rootDepth)
+                LumosIconButton(
+                  icon: Icons.keyboard_arrow_up_rounded,
+                  tooltip: widget.l10n.folderOpenParentTooltip,
+                  variant: LumosIconButtonVariant.outlined,
+                  onPressed: _onOpenParentFolder,
+                ),
               const SizedBox(width: Insets.spacing8),
               FolderHeaderMetaPill(
                 icon: Icons.account_tree_rounded,
@@ -103,59 +110,33 @@ class _FolderHeaderNavigationSectionState
     );
   }
 
-  Widget _buildCurrentNodeSummary({required ColorScheme colorScheme}) {
-    final bool canOpenParent = widget.currentDepth > FolderStateConst.rootDepth;
-    final String currentNodeLabel =
-        widget.currentDepth == FolderStateConst.rootDepth
-        ? widget.l10n.folderRoot
-        : widget.l10n.folderDepth(widget.currentDepth);
-    return Material(
-      color: colorScheme.surface,
-      borderRadius: BorderRadii.medium,
-      child: InkWell(
-        borderRadius: BorderRadii.medium,
-        onTap: canOpenParent ? _onOpenParentFolder : null,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: Insets.spacing8,
-            vertical: Insets.spacing8,
-          ),
-          child: Row(
+  Widget _buildNavigationSummary() {
+    return Row(
+      children: <Widget>[
+        LumosActionChip(
+          label: Row(
+            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Container(
-                width: Insets.spacing24,
-                height: Insets.spacing24,
-                decoration: BoxDecoration(
-                  color: colorScheme.secondaryContainer,
-                  borderRadius: BorderRadii.medium,
-                ),
-                child: IconTheme(
-                  data: IconThemeData(color: colorScheme.onSecondaryContainer),
-                  child: const LumosIcon(
-                    Icons.route_rounded,
-                    size: IconSizes.iconSmall,
-                  ),
-                ),
+              const LumosIcon(Icons.home_rounded, size: IconSizes.iconSmall),
+              const SizedBox(width: Insets.spacing4),
+              LumosInlineText(
+                widget.l10n.folderRoot,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
-              const SizedBox(width: Insets.spacing8),
-              Expanded(
-                child: LumosText(
-                  currentNodeLabel,
-                  style: LumosTextStyle.labelLarge,
-                  tone: LumosTextTone.primary,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              if (canOpenParent)
-                const LumosIcon(
-                  Icons.keyboard_arrow_up_rounded,
-                  size: IconSizes.iconSmall,
-                ),
             ],
           ),
+          onPressed: _onOpenRootFolder,
         ),
-      ),
+        const SizedBox(width: Insets.spacing8),
+        Expanded(
+          child: LumosInlineText(
+            widget.l10n.folderDepth(widget.currentDepth),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
     );
   }
 
@@ -210,6 +191,10 @@ class _FolderHeaderNavigationSectionState
 
   void _onOpenParentFolder() {
     unawaited(widget.onOpenParentFolder());
+  }
+
+  void _onOpenRootFolder() {
+    unawaited(widget.onOpenRootFolder());
   }
 
   Future<void> _openSortBottomSheet(BuildContext context) async {

@@ -16,6 +16,7 @@
   "folderManagerSubtitle": "Duyệt cây thư mục, tạo, đổi tên và xóa mềm thư mục.",
   "folderSearchHint": "Tìm thư mục",
   "folderSearchClearTooltip": "Xóa tìm kiếm",
+  "folderOpenParentTooltip": "Mở thư mục cha",
   "folderSortTitle": "Sắp xếp thư mục",
   "folderSortNameAscending": "Tên A-Z",
   "folderSortNameDescending": "Tên Z-A",
@@ -24,6 +25,25 @@
   "folderRoot": "Gốc",
   "folderEmptyTitle": "Chưa có thư mục nào.",
   "folderEmptySubtitle": "Hãy tạo một thư mục để bắt đầu sắp xếp nội dung.",
+  "folderSearchEmptyTitle": "Không có thư mục phù hợp.",
+  "folderSearchEmptySubtitle": "Hãy thử từ khóa khác.",
+  "folderNameRequiredValidation": "Tên thư mục là bắt buộc.",
+  "folderNameMinLengthValidation": "Tên thư mục phải có ít nhất {min} ký tự.",
+  "@folderNameMinLengthValidation": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "folderNameMaxLengthValidation": "Tên thư mục tối đa {max} ký tự.",
+  "@folderNameMaxLengthValidation": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "folderDeleteConfirm": "Xóa \"{name}\" và toàn bộ thư mục con?",
   "@folderDeleteConfirm": {
     "placeholders": {

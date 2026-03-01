@@ -191,6 +191,12 @@ abstract class AppLocalizations {
   /// **'Clear search'**
   String get folderSearchClearTooltip;
 
+  /// No description provided for @folderOpenParentTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Open parent folder'**
+  String get folderOpenParentTooltip;
+
   /// No description provided for @folderSortTitle.
   ///
   /// In en, this message translates to:
@@ -238,6 +244,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Create one to start organizing content.'**
   String get folderEmptySubtitle;
+
+  /// No description provided for @folderSearchEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No folders match your search.'**
+  String get folderSearchEmptyTitle;
+
+  /// No description provided for @folderSearchEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Try a different keyword.'**
+  String get folderSearchEmptySubtitle;
+
+  /// No description provided for @folderNameRequiredValidation.
+  ///
+  /// In en, this message translates to:
+  /// **'Folder name is required.'**
+  String get folderNameRequiredValidation;
+
+  /// No description provided for @folderNameMinLengthValidation.
+  ///
+  /// In en, this message translates to:
+  /// **'Folder name must be at least {min} character(s).'**
+  String folderNameMinLengthValidation(int min);
+
+  /// No description provided for @folderNameMaxLengthValidation.
+  ///
+  /// In en, this message translates to:
+  /// **'Folder name must be at most {max} character(s).'**
+  String folderNameMaxLengthValidation(int max);
 
   /// No description provided for @folderDeleteConfirm.
   ///

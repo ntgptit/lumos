@@ -4,12 +4,6 @@ import '../../../../../domain/entities/folder_models.dart';
 
 part 'folder_state.freezed.dart';
 
-enum FolderMutationType { none, creating, renaming, deleting }
-
-enum FolderSortBy { name, createdAt }
-
-enum FolderSortType { asc, desc }
-
 abstract final class FolderStateConst {
   FolderStateConst._();
 
@@ -21,7 +15,16 @@ abstract final class FolderStateConst {
   static const int rootDepth = 0;
   static const int firstPage = 0;
   static const int pageSize = 20;
+  static const int folderNameMinLength = 1;
+  static const int folderNameMaxLength = 120;
+  static const Duration searchDebounceDuration = Duration(milliseconds: 250);
 }
+
+enum FolderMutationType { none, creating, renaming, deleting }
+
+enum FolderSortBy { name, createdAt }
+
+enum FolderSortType { asc, desc }
 
 extension FolderSortByApiExtension on FolderSortBy {
   String get apiValue {

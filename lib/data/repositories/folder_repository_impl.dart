@@ -26,6 +26,16 @@ abstract final class FolderRepositoryImplConst {
   static const String parentIdField = 'parentId';
   static const String emptyValue = '';
   static const String folderNameRequiredMessage = 'Folder name is required.';
+  static const String folderNameMaxLengthMessage =
+      'Folder name must be at most 120 characters.';
+  static const String folderNameInvalidMessage = 'Folder name is invalid.';
+  static const String messageField = 'message';
+  static const String fieldErrorsField = 'fieldErrors';
+  static const String nameFieldErrorKey = 'name';
+  static const int folderNameMaxLength = 120;
+  static const int badRequestStatusCode = 400;
+  static const int conflictStatusCode = 409;
+  static const int unprocessableEntityStatusCode = 422;
 }
 
 class DioFolderRepository implements FolderRepository {
@@ -83,6 +93,13 @@ class DioFolderRepository implements FolderRepository {
         ),
       );
     }
+    if (normalizedName.length > FolderRepositoryImplConst.folderNameMaxLength) {
+      return left<Failure, Unit>(
+        const Failure.validation(
+          message: FolderRepositoryImplConst.folderNameMaxLengthMessage,
+        ),
+      );
+    }
     try {
       await _dio.post<dynamic>(
         FolderRepositoryImplConst.foldersPath,
@@ -93,7 +110,7 @@ class DioFolderRepository implements FolderRepository {
       );
       return right<Failure, Unit>(unit);
     } on Object catch (error) {
-      return left<Failure, Unit>(error.toFailure());
+      return left<Failure, Unit>(_mapMutationFailure(error));
     }
   }
 
@@ -110,6 +127,13 @@ class DioFolderRepository implements FolderRepository {
         ),
       );
     }
+    if (normalizedName.length > FolderRepositoryImplConst.folderNameMaxLength) {
+      return left<Failure, Unit>(
+        const Failure.validation(
+          message: FolderRepositoryImplConst.folderNameMaxLengthMessage,
+        ),
+      );
+    }
     try {
       await _dio.patch<dynamic>(
         '${_folderPath(folderId: folderId)}/rename',
@@ -119,7 +143,7 @@ class DioFolderRepository implements FolderRepository {
       );
       return right<Failure, Unit>(unit);
     } on Object catch (error) {
-      return left<Failure, Unit>(error.toFailure());
+      return left<Failure, Unit>(_mapMutationFailure(error));
     }
   }
 
@@ -139,6 +163,67 @@ class DioFolderRepository implements FolderRepository {
 
   String _folderPath({required int folderId}) {
     return '${FolderRepositoryImplConst.foldersPath}/$folderId';
+  }
+
+  Failure _mapMutationFailure(Object error) {
+    if (error is! DioException) {
+      return error.toFailure();
+    }
+    final int? statusCode = error.response?.statusCode;
+    if (!_isValidationStatus(statusCode)) {
+      return error.toFailure();
+    }
+    return Failure.validation(
+      message: _extractValidationMessage(error.response?.data),
+      statusCode: statusCode,
+    );
+  }
+
+  bool _isValidationStatus(int? statusCode) {
+    if (statusCode == FolderRepositoryImplConst.badRequestStatusCode) {
+      return true;
+    }
+    if (statusCode == FolderRepositoryImplConst.conflictStatusCode) {
+      return true;
+    }
+    if (statusCode == FolderRepositoryImplConst.unprocessableEntityStatusCode) {
+      return true;
+    }
+    return false;
+  }
+
+  String _extractValidationMessage(dynamic rawValue) {
+    final Map<String, dynamic> payload = _castMap(rawValue);
+    if (payload.isEmpty) {
+      return FolderRepositoryImplConst.folderNameInvalidMessage;
+    }
+    final Map<String, dynamic> fieldErrors = _castMap(
+      payload[FolderRepositoryImplConst.fieldErrorsField],
+    );
+    final String? fieldNameError = _readString(
+      fieldErrors[FolderRepositoryImplConst.nameFieldErrorKey],
+    );
+    if (fieldNameError != null) {
+      return fieldNameError;
+    }
+    final String? message = _readString(
+      payload[FolderRepositoryImplConst.messageField],
+    );
+    if (message != null) {
+      return message;
+    }
+    return FolderRepositoryImplConst.folderNameInvalidMessage;
+  }
+
+  String? _readString(dynamic rawValue) {
+    if (rawValue is! String) {
+      return null;
+    }
+    final String normalized = StringUtils.normalizeName(rawValue);
+    if (normalized == FolderRepositoryImplConst.emptyValue) {
+      return null;
+    }
+    return normalized;
   }
 
   Map<String, dynamic> _castMap(dynamic rawValue) {

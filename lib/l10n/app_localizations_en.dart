@@ -57,6 +57,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get folderSearchClearTooltip => 'Clear search';
 
   @override
+  String get folderOpenParentTooltip => 'Open parent folder';
+
+  @override
   String get folderSortTitle => 'Sort folders';
 
   @override
@@ -79,6 +82,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get folderEmptySubtitle => 'Create one to start organizing content.';
+
+  @override
+  String get folderSearchEmptyTitle => 'No folders match your search.';
+
+  @override
+  String get folderSearchEmptySubtitle => 'Try a different keyword.';
+
+  @override
+  String get folderNameRequiredValidation => 'Folder name is required.';
+
+  @override
+  String folderNameMinLengthValidation(int min) {
+    return 'Folder name must be at least $min character(s).';
+  }
+
+  @override
+  String folderNameMaxLengthValidation(int max) {
+    return 'Folder name must be at most $max character(s).';
+  }
 
   @override
   String folderDeleteConfirm(Object name) {

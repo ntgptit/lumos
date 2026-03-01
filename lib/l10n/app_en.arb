@@ -19,6 +19,7 @@
   "folderManagerSubtitle": "Browse tree, create, rename, and soft-delete folders.",
   "folderSearchHint": "Search folders",
   "folderSearchClearTooltip": "Clear search",
+  "folderOpenParentTooltip": "Open parent folder",
   "folderSortTitle": "Sort folders",
   "folderSortNameAscending": "Name A-Z",
   "folderSortNameDescending": "Name Z-A",
@@ -27,6 +28,25 @@
   "folderRoot": "Root",
   "folderEmptyTitle": "No folders here yet.",
   "folderEmptySubtitle": "Create one to start organizing content.",
+  "folderSearchEmptyTitle": "No folders match your search.",
+  "folderSearchEmptySubtitle": "Try a different keyword.",
+  "folderNameRequiredValidation": "Folder name is required.",
+  "folderNameMinLengthValidation": "Folder name must be at least {min} character(s).",
+  "@folderNameMinLengthValidation": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "folderNameMaxLengthValidation": "Folder name must be at most {max} character(s).",
+  "@folderNameMaxLengthValidation": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "folderDeleteConfirm": "Delete \"{name}\" and all subfolders?",
   "@folderDeleteConfirm": {
     "placeholders": {
