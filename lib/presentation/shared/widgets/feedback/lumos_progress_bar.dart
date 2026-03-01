@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/themes/constants/dimensions.dart';
+import '../../../../core/constants/dimensions.dart';
+import '../../../../core/themes/extensions/theme_extensions.dart';
 
 abstract final class LumosProgressBarConst {
   LumosProgressBarConst._();
@@ -22,8 +23,8 @@ class LumosProgressBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final ThemeData theme = context.theme;
+    final ColorScheme colorScheme = context.colorScheme;
     final ProgressIndicatorThemeData indicatorTheme =
         theme.progressIndicatorTheme;
     final double normalizedValue = _normalizeValue(value);

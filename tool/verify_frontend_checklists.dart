@@ -17,6 +17,8 @@ import 'guards/verify_shared_widgets_m3_coverage.dart'
     as shared_widgets_m3_coverage_guard;
 import 'guards/verify_state_management_contract.dart' as state_management_guard;
 import 'guards/verify_string_utils_contract.dart' as string_utils_guard;
+import 'guards/verify_theme_architecture_contract.dart'
+    as theme_architecture_guard;
 import 'guards/verify_ui_constants_centralization.dart'
     as ui_constants_centralization_guard;
 import 'guards/verify_ui_design_guard.dart' as ui_design_guard;
@@ -192,6 +194,11 @@ List<_GuardTask> _buildDefaultTasks() {
       id: 'ui-constants',
       fileName: 'guards/verify_ui_constants_centralization.dart',
       run: ui_constants_centralization_guard.main,
+    ),
+    _GuardTask(
+      id: 'theme-architecture',
+      fileName: 'guards/verify_theme_architecture_contract.dart',
+      run: theme_architecture_guard.main,
     ),
     _GuardTask(
       id: 'string-utils',

@@ -53,6 +53,9 @@ final RegExp _forbiddenThemeCopyWithRegExp = RegExp(
 final RegExp _forbiddenInputDecorationThemeCtorRegExp = RegExp(
   r'\bInputDecorationTheme\s*\(',
 );
+final RegExp _forbiddenThemeOfContextRegExp = RegExp(
+  r'\bTheme\.of\(\s*context\s*\)',
+);
 final RegExp _forbiddenCopyWithRegExp = RegExp(r'\.copyWith\s*\(');
 final RegExp _hardcodedColorConstructorRegExp = RegExp(
   r'\bColor\(\s*0x[0-9A-Fa-f]+\s*\)',
@@ -238,7 +241,7 @@ void _checkFile({
           lineNumber: lineNumber,
           reason:
               'Hardcoded style token declaration is not allowed in shared widgets. '
-              'Use centralized theme constants from core/themes/constants.',
+              'Use centralized theme constants from core/constants.',
           lineContent: rawLine.trim(),
         ),
       );
@@ -251,7 +254,7 @@ void _checkFile({
           lineNumber: lineNumber,
           reason:
               'Hardcoded style literal is not allowed in shared widgets. '
-              'Use centralized theme constants from core/themes/constants.',
+              'Use centralized theme constants from core/constants.',
           lineContent: rawLine.trim(),
         ),
       );
@@ -277,7 +280,7 @@ void _checkFile({
           lineNumber: lineNumber,
           reason:
               'Shared widgets must not build local Material style via `styleFrom`. '
-              'Consume centralized styles from core/themes/component_themes.',
+              'Consume centralized styles from core/themes/builders.',
           lineContent: rawLine.trim(),
         ),
       );
@@ -290,7 +293,7 @@ void _checkFile({
           lineNumber: lineNumber,
           reason:
               'Shared widgets must not instantiate `ButtonStyle` directly. '
-              'Consume centralized styles from core/themes/component_themes.',
+              'Consume centralized styles from core/themes/builders.',
           lineContent: rawLine.trim(),
         ),
       );
@@ -316,7 +319,19 @@ void _checkFile({
           lineNumber: lineNumber,
           reason:
               'Shared widgets must not instantiate `InputDecorationTheme` directly. '
-              'Use InputDecorationThemes in core/themes/component_themes.',
+              'Use centralized InputDecoration theme in core/themes/builders.',
+          lineContent: rawLine.trim(),
+        ),
+      );
+    }
+
+    if (_forbiddenThemeOfContextRegExp.hasMatch(sourceLine)) {
+      violations.add(
+        SharedWidgetsM3CoverageViolation(
+          filePath: path,
+          lineNumber: lineNumber,
+          reason:
+              'Shared widgets must use BuildContextThemeX accessors (`context.theme`, `context.colorScheme`, `context.textTheme`) instead of `Theme.of(context)`.',
           lineContent: rawLine.trim(),
         ),
       );
@@ -329,7 +344,7 @@ void _checkFile({
           lineNumber: lineNumber,
           reason:
               'Shared widgets must not use local `.copyWith(...)` theming. '
-              'Move style composition to core/themes/component_themes or extensions.',
+              'Move style composition to core/themes/builders or extensions.',
           lineContent: rawLine.trim(),
         ),
       );

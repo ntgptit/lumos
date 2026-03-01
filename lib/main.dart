@@ -5,8 +5,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'core/localization/locale_provider.dart';
 import 'core/routes/app_router.dart';
-import 'core/themes/google_fonts_bootstrap.dart';
-import 'core/themes/providers/theme_provider.dart';
+import 'core/utils/google_fonts_bootstrap.dart';
+import 'core/providers/theme_provider.dart';
 import 'l10n/app_localizations.dart';
 
 abstract final class AppBootstrapConst {

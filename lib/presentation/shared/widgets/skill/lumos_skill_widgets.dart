@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/themes/constants/dimensions.dart';
+import '../../../../core/constants/dimensions.dart';
+import '../../../../core/themes/extensions/theme_extensions.dart';
 import '../cards/lumos_card.dart';
 import '../feedback/lumos_progress_bar.dart';
 import '../lumos_models.dart';
@@ -103,7 +104,7 @@ class LumosSkillNode extends StatelessWidget {
   }
 
   Color _resolveColor(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final ColorScheme colorScheme = context.colorScheme;
     if (status == SkillNodeStatus.locked) {
       return colorScheme.onSurfaceVariant;
     }

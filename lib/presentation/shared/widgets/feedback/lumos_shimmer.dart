@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/themes/constants/dimensions.dart';
+import '../../../../core/constants/dimensions.dart';
+import '../../../../core/themes/extensions/theme_extensions.dart';
 
 class LumosShimmer extends StatelessWidget {
   const LumosShimmer({
@@ -14,7 +15,7 @@ class LumosShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final ColorScheme colorScheme = context.colorScheme;
     return TweenAnimationBuilder<double>(
       duration: duration,
       tween: Tween<double>(

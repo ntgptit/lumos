@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/themes/constants/dimensions.dart';
+import '../../../../core/constants/dimensions.dart';
 
 abstract final class LumosScreenFrameConst {
   LumosScreenFrameConst._();
@@ -50,7 +50,8 @@ class LumosScreenFrame extends StatelessWidget {
   static double resolveHorizontalInset(
     BuildContext context, {
     double maxWidth = LumosScreenFrameConst.defaultMaxWidth,
-    double baseHorizontalPadding = LumosScreenFrameConst.defaultHorizontalPadding,
+    double baseHorizontalPadding =
+        LumosScreenFrameConst.defaultHorizontalPadding,
   }) {
     final double horizontalPadding = ResponsiveDimensions.adaptive(
       context: context,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/themes/constants/dimensions.dart';
+import '../../../../core/constants/dimensions.dart';
+import '../../../../core/themes/extensions/theme_extensions.dart';
 import '../buttons/lumos_button.dart';
 import '../feedback/lumos_progress_bar.dart';
 import '../lumos_models.dart';
@@ -305,7 +306,7 @@ class LumosFlashcard extends StatelessWidget {
   }
 
   Color? _resolveStatusColor(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final ColorScheme colorScheme = context.colorScheme;
     if (status == FlashcardStatus.correct) {
       return colorScheme.tertiaryContainer.withValues(
         alpha: WidgetOpacities.stateHover,

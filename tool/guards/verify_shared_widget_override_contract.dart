@@ -149,9 +149,9 @@ void _checkFile({
 }
 
 String _extractWidgetName(String sourceLine) {
-  final RegExpMatch? match = RegExp(r'\b(Lumos[A-Z]\w*)\s*\(').firstMatch(
-    sourceLine,
-  );
+  final RegExpMatch? match = RegExp(
+    r'\b(Lumos[A-Z]\w*)\s*\(',
+  ).firstMatch(sourceLine);
   if (match == null) {
     return 'LumosWidget';
   }

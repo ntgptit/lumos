@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/themes/constants/dimensions.dart';
+import '../../../../core/constants/dimensions.dart';
 import '../../../../core/themes/extensions/theme_extensions.dart';
 import '../typography/lumos_text.dart';
 import 'lumos_card.dart';
@@ -236,7 +236,7 @@ class _LumosEntityListItemCardState extends State<LumosEntityListItemCard>
   }
 
   PopupMenuItem<void> _buildContextMenuItem(LumosContextMenuItem item) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final ColorScheme colorScheme = context.colorScheme;
     final Color labelColor = item.isDestructive
         ? colorScheme.error
         : colorScheme.onSurface;
@@ -303,7 +303,7 @@ class _LumosEntityListItemCardState extends State<LumosEntityListItemCard>
   // ---------------------------------------------------------------------------
 
   Widget _buildCard(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final ColorScheme colorScheme = context.colorScheme;
 
     return Opacity(
       // Dim entire card when disabled — communicates non-interactivity.
@@ -418,7 +418,7 @@ class _SwipeActionPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final ColorScheme colorScheme = context.colorScheme;
 
     return Row(
       mainAxisSize: MainAxisSize.min,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/themes/constants/dimensions.dart';
+import '../../../../core/constants/dimensions.dart';
+import '../../../../core/themes/extensions/theme_extensions.dart';
 import '../buttons/lumos_button.dart';
 import '../cards/lumos_card.dart';
 import '../feedback/lumos_progress_bar.dart';
@@ -134,7 +135,7 @@ class LumosSessionProgress extends StatelessWidget {
           Icon(
             Icons.favorite,
             size: IconSizes.iconSmall,
-            color: Theme.of(context).colorScheme.error,
+            color: context.colorScheme.error,
           ),
           const SizedBox(width: Insets.spacing4),
           LumosText('$heartsRemaining', style: LumosTextStyle.labelLarge),

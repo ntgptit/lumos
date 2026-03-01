@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/themes/constants/dimensions.dart';
+import '../../../../core/constants/dimensions.dart';
 import '../../../../core/themes/extensions/theme_extensions.dart';
 import '../buttons/lumos_icon_button.dart';
 import '../navigation/lumos_menu_widgets.dart';
@@ -226,7 +226,7 @@ class _ActionMenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final ThemeData theme = context.theme;
     final ColorScheme colorScheme = theme.colorScheme;
     final Color labelColor = _resolveLabelColor(colorScheme: colorScheme);
     final IconThemeData iconTheme = theme.iconTheme.withResolvedColorAndSize(
@@ -331,7 +331,7 @@ class _ActionBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final ThemeData theme = context.theme;
     final ColorScheme colorScheme = theme.colorScheme;
 
     return DecoratedBox(
@@ -414,7 +414,7 @@ class _SwipeActionWrapperState extends State<_SwipeActionWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final ColorScheme colorScheme = context.colorScheme;
 
     return ValueListenableBuilder<double>(
       valueListenable: _dragExtentNotifier,
@@ -484,7 +484,7 @@ class _SwipeActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final Color bgColor = _resolveBackground();
     final Color fgColor = _resolveForeground();
-    final TextTheme textTheme = Theme.of(context).textTheme;
+    final TextTheme textTheme = context.textTheme;
 
     return GestureDetector(
       onTap: onTap,

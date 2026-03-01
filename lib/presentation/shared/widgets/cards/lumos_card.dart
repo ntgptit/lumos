@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/themes/constants/dimensions.dart';
+import '../../../../core/constants/dimensions.dart';
 import '../../../../core/themes/extensions/theme_extensions.dart';
 import 'lumos_card_variant.dart';
 import 'lumos_card_variant_card_builder.dart';
@@ -126,7 +126,7 @@ class _LumosCardState extends State<LumosCard>
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final ThemeData theme = context.theme;
     final ColorScheme colorScheme = theme.colorScheme;
 
     if (widget.isLoading) {
@@ -416,7 +416,7 @@ class _LumosCardSkeletonState extends State<_LumosCardSkeleton>
 
   @override
   Widget build(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final ColorScheme colorScheme = context.colorScheme;
     final Color shimmerColor = colorScheme.onSurface;
     final ShapeBorder skeletonShape = _buildSkeletonShape(
       colorScheme: colorScheme,

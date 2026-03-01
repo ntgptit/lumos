@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/themes/constants/dimensions.dart';
+import '../../../../core/constants/dimensions.dart';
 import '../../../../core/themes/extensions/theme_extensions.dart';
 import '../lumos_models.dart';
 import '../typography/lumos_text.dart';
@@ -97,7 +97,7 @@ class LumosMarkdownText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SelectableText(data, style: Theme.of(context).textTheme.bodyMedium);
+    return SelectableText(data, style: context.textTheme.bodyMedium);
   }
 }
 
@@ -135,7 +135,7 @@ class LumosBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final ThemeData theme = context.theme;
     final ColorScheme colorScheme = theme.colorScheme;
     return Container(
       padding: const EdgeInsets.symmetric(
@@ -286,7 +286,7 @@ class LumosConfetti extends StatelessWidget {
     return Icon(
       type == LumosConfettiType.full ? Icons.celebration : Icons.auto_awesome,
       size: IconSizes.iconXLarge,
-      color: Theme.of(context).colorScheme.tertiary,
+      color: context.colorScheme.tertiary,
     );
   }
 }

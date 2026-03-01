@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/themes/constants/dimensions.dart';
+import '../../../../core/constants/dimensions.dart';
+import '../../../../core/themes/extensions/theme_extensions.dart';
 import '../buttons/lumos_button.dart';
 import '../lumos_models.dart';
 import '../typography/lumos_text.dart';
@@ -21,7 +22,7 @@ class LumosSnackbar extends SnackBar {
          ),
          backgroundColor: _resolveBackgroundColor(
            type: type,
-           colorScheme: Theme.of(context).colorScheme,
+           colorScheme: context.colorScheme,
          ),
        );
 
@@ -223,7 +224,7 @@ class LumosTipMessage extends StatelessWidget {
   }
 
   Color _resolveColor(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final ColorScheme colorScheme = context.colorScheme;
     if (type == LumosTipType.encouragement) {
       return colorScheme.tertiary;
     }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/themes/constants/dimensions.dart';
+import '../../../../core/constants/dimensions.dart';
+import '../../../../core/themes/extensions/theme_extensions.dart';
 import '../buttons/lumos_icon_button.dart';
 import '../feedback/lumos_progress_bar.dart';
 import '../typography/lumos_text.dart';
@@ -304,7 +305,7 @@ class _SwipeActionPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final ColorScheme colorScheme = context.colorScheme;
 
     return Row(
       mainAxisSize: MainAxisSize.min,

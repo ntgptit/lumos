@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/themes/constants/dimensions.dart';
+import '../../../../core/constants/dimensions.dart';
+import '../../../../core/themes/extensions/theme_extensions.dart';
 import '../cards/lumos_card.dart';
 import '../feedback/lumos_progress_bar.dart';
 import '../typography/lumos_text.dart';
@@ -66,7 +67,7 @@ class LumosStreakCounter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final ColorScheme colorScheme = context.colorScheme;
     final Color color = isTodayCompleted
         ? colorScheme.tertiary
         : colorScheme.onSurfaceVariant;
@@ -107,7 +108,7 @@ class LumosHeartMeter extends StatelessWidget {
           (int index) => Icon(
             index < heartsRemaining ? Icons.favorite : Icons.favorite_border,
             size: IconSizes.iconSmall,
-            color: Theme.of(context).colorScheme.error,
+            color: context.colorScheme.error,
           ),
         ),
         ..._buildRefillLabel(),
@@ -142,7 +143,7 @@ class LumosAchievementBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final ColorScheme colorScheme = context.colorScheme;
     final Color color = isUnlocked
         ? colorScheme.tertiary
         : colorScheme.onSurfaceVariant;

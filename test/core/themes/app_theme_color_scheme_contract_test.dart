@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lumos/core/themes/constants/color_schemes.dart';
+import 'package:lumos/core/constants/color_schemes.dart';
 import 'package:lumos/core/themes/extensions/theme_extensions.dart';
 
 void main() {

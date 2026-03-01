@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../../../core/themes/constants/dimensions.dart';
-import '../../../../../../core/themes/providers/theme_provider.dart';
+import '../../../../../../core/constants/dimensions.dart';
+import '../../../../../../core/providers/theme_provider.dart';
 import '../../../../../../l10n/app_localizations.dart';
 import '../../../../../shared/widgets/lumos_widgets.dart';
 

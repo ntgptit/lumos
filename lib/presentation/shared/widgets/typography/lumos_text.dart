@@ -61,7 +61,7 @@ class LumosText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final ThemeData theme = context.theme;
     final TextTheme textTheme = theme.textTheme;
     final TextStyle baseStyle = _resolveTextStyle(textTheme);
     final Color resolvedColor = _resolveColor(theme: theme);

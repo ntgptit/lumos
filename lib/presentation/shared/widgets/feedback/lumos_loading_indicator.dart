@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/themes/constants/dimensions.dart';
+import '../../../../core/constants/dimensions.dart';
 
 abstract final class LumosLoadingIndicatorConst {
   LumosLoadingIndicatorConst._();

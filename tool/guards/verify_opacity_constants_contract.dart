@@ -4,8 +4,7 @@ class OpacityContractConst {
   const OpacityContractConst._();
 
   static const String libRoot = 'lib';
-  static const String dimensionsPath =
-      'lib/core/themes/constants/dimensions.dart';
+  static const String dimensionsPath = 'lib/core/constants/dimensions.dart';
   static const String allowedSharedWidgetsPath =
       'lib/presentation/shared/widgets/';
   static const String allowedCoreThemesPath = 'lib/core/themes/';
@@ -45,9 +44,8 @@ const Map<String, String> _allowedOpacityConstants = <String, String>{
   'elevationLevel3': '0.11',
   'elevationLevel4': '0.12',
   'elevationLevel5': '0.14',
-  'lowEmphasis': 'Insets.spacing0',
-  'hint': 'Insets.spacing0',
-  'hintCustom': '0.38',
+  'lowEmphasis': '0.6',
+  'hint': '0.38',
 };
 
 final RegExp _constDoubleRegExp = RegExp(

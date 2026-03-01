@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/themes/component_themes/button_theme.dart';
-import '../../../../core/themes/constants/dimensions.dart';
+import '../../../../core/themes/builders/app_button_style_builder.dart';
+import '../../../../core/constants/dimensions.dart';
+import '../../../../core/themes/extensions/theme_extensions.dart';
 
 abstract final class LumosButtonConst {
   LumosButtonConst._();
@@ -94,44 +95,49 @@ class LumosButton extends StatelessWidget {
   }
 
   ButtonStyle _resolveButtonStyle(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final ButtonSize componentSize = _resolveComponentButtonSize();
+    final ThemeData theme = context.theme;
+    final AppButtonSize componentSize = _resolveComponentButtonSize();
+    final buttonTokens = context.appButton;
     if (type == LumosButtonType.primary) {
-      return ButtonThemes.filledStyle(
+      return AppButtonStyleBuilder.filledStyle(
         colorScheme: theme.colorScheme,
         textTheme: theme.textTheme,
         size: componentSize,
+        buttonTokens: buttonTokens,
       );
     }
     if (type == LumosButtonType.secondary) {
-      return ButtonThemes.tonalStyle(
+      return AppButtonStyleBuilder.tonalStyle(
         colorScheme: theme.colorScheme,
         textTheme: theme.textTheme,
         size: componentSize,
+        buttonTokens: buttonTokens,
       );
     }
     if (type == LumosButtonType.outline) {
-      return ButtonThemes.outlinedStyle(
+      return AppButtonStyleBuilder.outlinedStyle(
         colorScheme: theme.colorScheme,
         textTheme: theme.textTheme,
         size: componentSize,
+        buttonTokens: buttonTokens,
       );
     }
-    return ButtonThemes.textStyle(
+    return AppButtonStyleBuilder.textStyle(
       colorScheme: theme.colorScheme,
       textTheme: theme.textTheme,
       size: componentSize,
+      buttonTokens: buttonTokens,
     );
   }
 
-  ButtonSize _resolveComponentButtonSize() {
+  AppButtonSize _resolveComponentButtonSize() {
     if (size == LumosButtonSize.small) {
-      return ButtonSize.small;
+      return AppButtonSize.small;
     }
     if (size == LumosButtonSize.large) {
-      return ButtonSize.large;
+      return AppButtonSize.large;
     }
-    return ButtonSize.medium;
+    return AppButtonSize.medium;
   }
 
   Widget _buildButton({
@@ -156,7 +162,7 @@ class LumosButton extends StatelessWidget {
   }
 
   Color _resolveLoadingIndicatorColor(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final ColorScheme colorScheme = context.colorScheme;
     if (type == LumosButtonType.primary) {
       return colorScheme.onPrimary;
     }

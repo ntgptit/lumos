@@ -19,6 +19,8 @@ class ComponentThemeGuardConst {
   static const String libraryPrefix = 'library ';
   static const String partPrefix = 'part ';
   static const String coreThemeImportMarker = 'core/themes/';
+  static const String coreThemeDimensionsImportMarker =
+      'core/constants/dimensions.dart';
   static const String widgetBuildMarker = 'Widget build(';
   static const String showDialogMarker = 'showDialog';
   static const String showModalBottomSheetMarker = 'showModalBottomSheet';
@@ -60,13 +62,13 @@ _forbiddenPropertyRules = <_ForbiddenPropertyRule>[
     widgetName: 'Scaffold',
     widgetStartPattern: RegExp(r'\bScaffold\s*\('),
     propertyNames: <String>['backgroundColor'],
-    reason: 'Scaffold colors in UI must come from component_themes.',
+    reason: 'Scaffold colors in UI must come from theme builders.',
   ),
   _ForbiddenPropertyRule(
     widgetName: 'AppBar',
     widgetStartPattern: RegExp(r'\bAppBar\s*\('),
     propertyNames: <String>['backgroundColor', 'foregroundColor'],
-    reason: 'AppBar colors in UI files must come from component_themes.',
+    reason: 'AppBar colors in UI files must come from theme builders.',
   ),
   _ForbiddenPropertyRule(
     widgetName: 'BottomNavigationBar',
@@ -77,59 +79,58 @@ _forbiddenPropertyRules = <_ForbiddenPropertyRule>[
       'unselectedItemColor',
     ],
     reason:
-        'BottomNavigationBar colors in UI files must come from component_themes.',
+        'BottomNavigationBar colors in UI files must come from theme builders.',
   ),
   _ForbiddenPropertyRule(
     widgetName: 'Card',
     widgetStartPattern: RegExp(r'\bCard\s*\('),
     propertyNames: <String>['color', 'surfaceTintColor'],
-    reason: 'Card colors in UI files must come from component_themes.',
+    reason: 'Card colors in UI files must come from theme builders.',
   ),
   _ForbiddenPropertyRule(
     widgetName: 'ElevatedButton',
     widgetStartPattern: RegExp(r'\bElevatedButton\s*\('),
     propertyNames: <String>['style'],
     reason:
-        'ElevatedButton in UI files should rely on theme style from component_themes.',
+        'ElevatedButton in UI files should rely on centralized theme styles.',
   ),
   _ForbiddenPropertyRule(
     widgetName: 'OutlinedButton',
     widgetStartPattern: RegExp(r'\bOutlinedButton\s*\('),
     propertyNames: <String>['style'],
     reason:
-        'OutlinedButton in UI files should rely on theme style from component_themes.',
+        'OutlinedButton in UI files should rely on centralized theme styles.',
   ),
   _ForbiddenPropertyRule(
     widgetName: 'TextButton',
     widgetStartPattern: RegExp(r'\bTextButton\s*\('),
     propertyNames: <String>['style'],
-    reason:
-        'TextButton in UI files should rely on theme style from component_themes.',
+    reason: 'TextButton in UI files should rely on centralized theme styles.',
   ),
   _ForbiddenPropertyRule(
     widgetName: 'FloatingActionButton',
     widgetStartPattern: RegExp(r'\bFloatingActionButton(?:\.extended)?\s*\('),
     propertyNames: <String>['backgroundColor', 'foregroundColor'],
     reason:
-        'FloatingActionButton colors in UI files must come from component_themes.',
+        'FloatingActionButton colors in UI files must come from theme builders.',
   ),
   _ForbiddenPropertyRule(
     widgetName: 'Chip',
     widgetStartPattern: RegExp(r'\b(?:Chip|FilterChip|ChoiceChip)\s*\('),
     propertyNames: <String>['backgroundColor', 'side', 'labelStyle'],
-    reason: 'Chip styles in UI files must come from component_themes.',
+    reason: 'Chip styles in UI files must come from theme builders.',
   ),
   _ForbiddenPropertyRule(
     widgetName: 'Divider',
     widgetStartPattern: RegExp(r'\bDivider\s*\('),
     propertyNames: <String>['color'],
-    reason: 'Divider color in UI files must come from component_themes.',
+    reason: 'Divider color in UI files must come from theme builders.',
   ),
   _ForbiddenPropertyRule(
     widgetName: 'ListTile',
     widgetStartPattern: RegExp(r'\bListTile\s*\('),
     propertyNames: <String>['iconColor', 'textColor', 'selectedColor'],
-    reason: 'ListTile colors in UI files must come from component_themes.',
+    reason: 'ListTile colors in UI files must come from theme builders.',
   ),
   _ForbiddenPropertyRule(
     widgetName: 'Switch',
@@ -141,25 +142,25 @@ _forbiddenPropertyRules = <_ForbiddenPropertyRule>[
       'activeTrackColor',
       'inactiveTrackColor',
     ],
-    reason: 'Switch colors in UI files must come from component_themes.',
+    reason: 'Switch colors in UI files must come from theme builders.',
   ),
   _ForbiddenPropertyRule(
     widgetName: 'Checkbox',
     widgetStartPattern: RegExp(r'\bCheckbox\s*\('),
     propertyNames: <String>['activeColor', 'checkColor', 'fillColor'],
-    reason: 'Checkbox colors in UI files must come from component_themes.',
+    reason: 'Checkbox colors in UI files must come from theme builders.',
   ),
   _ForbiddenPropertyRule(
     widgetName: 'Radio',
     widgetStartPattern: RegExp(r'\bRadio\s*<[^>]*>\s*\(|\bRadio\s*\('),
     propertyNames: <String>['activeColor', 'fillColor'],
-    reason: 'Radio colors in UI files must come from component_themes.',
+    reason: 'Radio colors in UI files must come from theme builders.',
   ),
   _ForbiddenPropertyRule(
     widgetName: 'Slider',
     widgetStartPattern: RegExp(r'\bSlider\s*\('),
     propertyNames: <String>['activeColor', 'inactiveColor'],
-    reason: 'Slider colors in UI files must come from component_themes.',
+    reason: 'Slider colors in UI files must come from theme builders.',
   ),
   _ForbiddenPropertyRule(
     widgetName: 'ProgressIndicator',
@@ -168,19 +169,19 @@ _forbiddenPropertyRules = <_ForbiddenPropertyRule>[
     ),
     propertyNames: <String>['color', 'backgroundColor', 'valueColor'],
     reason:
-        'ProgressIndicator colors in UI files must come from component_themes.',
+        'ProgressIndicator colors in UI files must come from theme builders.',
   ),
   _ForbiddenPropertyRule(
     widgetName: 'Dialog',
     widgetStartPattern: RegExp(r'\bDialog\s*\('),
     propertyNames: <String>['backgroundColor', 'surfaceTintColor'],
-    reason: 'Dialog colors in UI files must come from component_themes.',
+    reason: 'Dialog colors in UI files must come from theme builders.',
   ),
   _ForbiddenPropertyRule(
     widgetName: 'SnackBar',
     widgetStartPattern: RegExp(r'\bSnackBar\s*\('),
     propertyNames: <String>['backgroundColor', 'contentTextStyle'],
-    reason: 'SnackBar colors in UI files must come from component_themes.',
+    reason: 'SnackBar colors in UI files must come from theme builders.',
   ),
 ];
 
@@ -245,7 +246,8 @@ void _checkFile({
       filePath: path,
       lineNumber: 1,
       reason:
-          'UI file with direct Material theme usage must import from `lib/core/themes/**`.',
+          'UI file with direct Material theme usage must import from `lib/core/themes/**` '
+          'or `lib/core/constants/dimensions.dart`.',
       lineContent: path,
     ),
   );
@@ -630,7 +632,11 @@ bool _hasCoreThemeImport({required List<String> lines}) {
       continue;
     }
     if (!line.contains(ComponentThemeGuardConst.coreThemeImportMarker)) {
-      continue;
+      if (!line.contains(
+        ComponentThemeGuardConst.coreThemeDimensionsImportMarker,
+      )) {
+        continue;
+      }
     }
     return true;
   }
