@@ -27,8 +27,7 @@ public class InternationalizationConfig implements WebMvcConfigurer {
     @Bean
     LocaleResolver localeResolver() {
         final var localeResolver = new SessionLocaleResolver();
-        final var defaultLocale = new Locale(
-                ConfigConstants.I18N_DEFAULT_LANGUAGE,
+        final var defaultLocale = new Locale(ConfigConstants.I18N_DEFAULT_LANGUAGE,
                 ConfigConstants.I18N_DEFAULT_COUNTRY);
         localeResolver.setDefaultLocale(defaultLocale);
 
@@ -44,6 +43,6 @@ public class InternationalizationConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(localeChangeInterceptor());
+        registry.addInterceptor(this.localeChangeInterceptor());
     }
 }

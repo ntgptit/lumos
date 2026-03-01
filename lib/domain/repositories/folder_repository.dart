@@ -7,7 +7,10 @@ abstract class FolderRepository {
   Future<Either<Failure, List<FolderNode>>> getFolders({
     required int? parentId,
     required String searchQuery,
+    required String sortBy,
     required String sortType,
+    required int page,
+    required int size,
   });
 
   Future<Either<Failure, Unit>> createFolder({

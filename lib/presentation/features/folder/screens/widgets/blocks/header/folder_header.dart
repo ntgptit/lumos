@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../core/themes/constants/dimensions.dart';
-import '../../../../../../l10n/app_localizations.dart';
-import '../../../providers/states/folder_state.dart';
-import '../../../../../shared/widgets/lumos_widgets.dart';
+import '../../../../../../../core/themes/constants/dimensions.dart';
+import '../../../../../../../l10n/app_localizations.dart';
+import '../../../../providers/states/folder_state.dart';
+import '../../../../../../shared/widgets/lumos_widgets.dart';
 
 import 'folder_header_banner.dart';
 import 'folder_header_navigation_section.dart';
@@ -13,8 +13,9 @@ class FolderHeader extends StatelessWidget {
     required this.currentDepth,
     required this.searchQuery,
     required this.onSearchChanged,
+    required this.sortBy,
     required this.sortType,
-    required this.onSortTypeChanged,
+    required this.onSortChanged,
     required this.onOpenParentFolder,
     super.key,
   });
@@ -22,8 +23,10 @@ class FolderHeader extends StatelessWidget {
   final int currentDepth;
   final String searchQuery;
   final ValueChanged<String> onSearchChanged;
+  final FolderSortBy sortBy;
   final FolderSortType sortType;
-  final ValueChanged<FolderSortType> onSortTypeChanged;
+  final void Function(FolderSortBy sortBy, FolderSortType sortType)
+  onSortChanged;
   final Future<void> Function() onOpenParentFolder;
 
   @override
@@ -41,8 +44,9 @@ class FolderHeader extends StatelessWidget {
             currentDepth: currentDepth,
             searchQuery: searchQuery,
             onSearchChanged: onSearchChanged,
+            sortBy: sortBy,
             sortType: sortType,
-            onSortTypeChanged: onSortTypeChanged,
+            onSortChanged: onSortChanged,
             onOpenParentFolder: onOpenParentFolder,
           ),
         ],

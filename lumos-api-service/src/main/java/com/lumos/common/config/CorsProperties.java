@@ -1,6 +1,7 @@
 package com.lumos.common.config;
 
 import java.util.List;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
@@ -12,6 +13,5 @@ public record CorsProperties(
         List<String> allowedHeaders,
         List<String> exposedHeaders,
         boolean allowCredentials,
-        long maxAgeSeconds
-) {
+        long maxAgeSeconds) {
 }

@@ -1,10 +1,11 @@
 package com.lumos.common.config;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor
@@ -16,11 +17,10 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping(ConfigConstants.CORS_PATH_PATTERN)
-                .allowedOrigins(corsProperties.allowedOrigins().toArray(String[]::new))
-                .allowedMethods(corsProperties.allowedMethods().toArray(String[]::new))
-                .allowedHeaders(corsProperties.allowedHeaders().toArray(String[]::new))
-                .exposedHeaders(corsProperties.exposedHeaders().toArray(String[]::new))
-                .allowCredentials(corsProperties.allowCredentials())
-                .maxAge(corsProperties.maxAgeSeconds());
+                .allowedOrigins(this.corsProperties.allowedOrigins().toArray(String[]::new))
+                .allowedMethods(this.corsProperties.allowedMethods().toArray(String[]::new))
+                .allowedHeaders(this.corsProperties.allowedHeaders().toArray(String[]::new))
+                .exposedHeaders(this.corsProperties.exposedHeaders().toArray(String[]::new))
+                .allowCredentials(this.corsProperties.allowCredentials()).maxAge(this.corsProperties.maxAgeSeconds());
     }
 }

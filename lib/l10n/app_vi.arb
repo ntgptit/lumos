@@ -19,6 +19,8 @@
   "folderSortTitle": "Sắp xếp thư mục",
   "folderSortNameAscending": "Tên A-Z",
   "folderSortNameDescending": "Tên Z-A",
+  "folderSortCreatedNewest": "Tạo gần đây nhất",
+  "folderSortCreatedOldest": "Tạo lâu nhất",
   "folderRoot": "Gốc",
   "folderEmptyTitle": "Chưa có thư mục nào.",
   "folderEmptySubtitle": "Hãy tạo một thư mục để bắt đầu sắp xếp nội dung.",

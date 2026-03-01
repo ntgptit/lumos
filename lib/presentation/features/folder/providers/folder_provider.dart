@@ -20,6 +20,7 @@ class FolderAsyncController extends _$FolderAsyncController {
       parentId: null,
       currentDepth: FolderStateConst.rootDepth,
       openedFolderPath: const <int>[],
+      page: FolderStateConst.firstPage,
       view: FolderViewState.initial(),
     );
   }
@@ -41,20 +42,25 @@ class FolderAsyncController extends _$FolderAsyncController {
         parentId: currentState.currentParentId,
         currentDepth: currentState.currentDepth,
         openedFolderPath: currentState.openedFolderPath,
+        page: FolderStateConst.firstPage,
         view: nextView,
       ),
     );
   }
 
-  void updateSortType(FolderSortType sortType) {
+  void updateSort({
+    required FolderSortBy sortBy,
+    required FolderSortType sortType,
+  }) {
     final FolderState? currentState = state.asData?.value;
     if (currentState == null) {
       return;
     }
-    if (sortType == currentState.sortType) {
+    if (sortBy == currentState.sortBy && sortType == currentState.sortType) {
       return;
     }
     final FolderViewState nextView = currentState.view.copyWith(
+      sortBy: sortBy,
       sortType: sortType,
     );
     unawaited(
@@ -62,6 +68,7 @@ class FolderAsyncController extends _$FolderAsyncController {
         parentId: currentState.currentParentId,
         currentDepth: currentState.currentDepth,
         openedFolderPath: currentState.openedFolderPath,
+        page: FolderStateConst.firstPage,
         view: nextView,
       ),
     );
@@ -74,17 +81,19 @@ class FolderAsyncController extends _$FolderAsyncController {
       parentId: currentState.currentParentId,
       currentDepth: currentState.currentDepth,
       openedFolderPath: currentState.openedFolderPath,
+      page: FolderStateConst.firstPage,
       view: currentState.view,
     );
   }
 
-  Future<void> openRoot() async {
+  Future<void> _openRoot() async {
     final FolderViewState currentView =
         state.asData?.value.view ?? FolderViewState.initial();
     await _replaceState(
       parentId: null,
       currentDepth: FolderStateConst.rootDepth,
       openedFolderPath: const <int>[],
+      page: FolderStateConst.firstPage,
       view: currentView,
     );
   }
@@ -101,6 +110,7 @@ class FolderAsyncController extends _$FolderAsyncController {
       parentId: folderId,
       currentDepth: depth,
       openedFolderPath: nextOpenedFolderPath,
+      page: FolderStateConst.firstPage,
       view: currentView,
     );
   }
@@ -114,7 +124,7 @@ class FolderAsyncController extends _$FolderAsyncController {
       return;
     }
     if (currentState.openedFolderPath.isEmpty) {
-      await openRoot();
+      await _openRoot();
       return;
     }
     final List<int> nextOpenedFolderPath = List<int>.from(
@@ -128,7 +138,18 @@ class FolderAsyncController extends _$FolderAsyncController {
       parentId: nextParentId,
       currentDepth: nextDepth,
       openedFolderPath: nextOpenedFolderPath,
+      page: FolderStateConst.firstPage,
       view: currentState.view,
+    );
+  }
+
+  Future<void> loadMore() async {
+    await _loadMore(
+      readCurrentState: () => state.asData?.value,
+      writeState: (FolderState nextState) {
+        state = AsyncData<FolderState>(nextState);
+      },
+      readRepository: () => ref.read(folderRepositoryProvider),
     );
   }
 
@@ -197,6 +218,7 @@ class FolderAsyncController extends _$FolderAsyncController {
         parentId: current.currentParentId,
         currentDepth: current.currentDepth,
         openedFolderPath: current.openedFolderPath,
+        page: FolderStateConst.firstPage,
         view: current.view,
       );
       state = AsyncData<FolderState>(nextState);
@@ -209,6 +231,7 @@ class FolderAsyncController extends _$FolderAsyncController {
     required int? parentId,
     required int currentDepth,
     required List<int> openedFolderPath,
+    required int page,
     required FolderViewState view,
   }) async {
     try {
@@ -216,6 +239,7 @@ class FolderAsyncController extends _$FolderAsyncController {
         parentId: parentId,
         currentDepth: currentDepth,
         openedFolderPath: openedFolderPath,
+        page: page,
         view: view,
       );
       state = AsyncData<FolderState>(nextState);
@@ -228,6 +252,7 @@ class FolderAsyncController extends _$FolderAsyncController {
     required int? parentId,
     required int currentDepth,
     required List<int> openedFolderPath,
+    required int page,
     required FolderViewState view,
   }) async {
     final FolderRepository repository = ref.read(folderRepositoryProvider);
@@ -235,7 +260,10 @@ class FolderAsyncController extends _$FolderAsyncController {
         .getFolders(
           parentId: parentId,
           searchQuery: view.searchQuery,
-          sortType: view.sortType.name,
+          sortBy: view.sortBy.apiValue,
+          sortType: view.sortType.apiValue,
+          page: page,
+          size: FolderStateConst.pageSize,
         );
 
     if (foldersResult.isLeft()) {
@@ -251,13 +279,156 @@ class FolderAsyncController extends _$FolderAsyncController {
     return FolderState(
       tree: FolderTreeState(
         folders: folders,
-        currentParentId: parentId,
-        currentDepth: currentDepth,
-        openedFolderPath: openedFolderPath,
+        navigation: FolderNavigationState(
+          currentParentId: parentId,
+          currentDepth: currentDepth,
+          openedFolderPath: openedFolderPath,
+        ),
+        pagination: FolderPaginationState(
+          currentPage: page,
+          hasNextPage: folders.length == FolderStateConst.pageSize,
+          isLoadingMore: false,
+        ),
       ),
       mutationType: FolderMutationType.none,
       inlineErrorMessage: null,
       view: view,
     );
   }
+}
+
+Future<void> _loadMore({
+  required FolderState? Function() readCurrentState,
+  required void Function(FolderState nextState) writeState,
+  required FolderRepository Function() readRepository,
+}) async {
+  final FolderState? currentState = _resolveLoadMoreState(readCurrentState());
+  if (currentState == null) {
+    return;
+  }
+  _setLoadingMoreState(writeState: writeState, currentState: currentState);
+
+  final int nextPage = currentState.currentPage + 1;
+  final Either<Failure, List<FolderNode>> foldersResult =
+      await _fetchFoldersPage(
+        repository: readRepository(),
+        currentState: currentState,
+        page: nextPage,
+      );
+
+  if (foldersResult.isLeft()) {
+    _applyLoadMoreFailure(
+      writeState: writeState,
+      currentState: currentState,
+      failure: foldersResult.swap().getOrElse(
+        () => const Failure.unknown(message: 'Unknown error'),
+      ),
+    );
+    return;
+  }
+
+  _applyLoadMoreSuccess(
+    writeState: writeState,
+    currentState: currentState,
+    nextPage: nextPage,
+    nextFolders: foldersResult.getOrElse(() => <FolderNode>[]),
+  );
+}
+
+FolderState? _resolveLoadMoreState(FolderState? currentState) {
+  if (currentState == null) {
+    return null;
+  }
+  if (currentState.isLoadingMore) {
+    return null;
+  }
+  if (!currentState.hasNextPage) {
+    return null;
+  }
+  return currentState;
+}
+
+void _setLoadingMoreState({
+  required void Function(FolderState nextState) writeState,
+  required FolderState currentState,
+}) {
+  final FolderPaginationState loadingPagination = currentState.tree.pagination
+      .copyWith(isLoadingMore: true);
+  final FolderTreeState loadingTree = currentState.tree.copyWith(
+    pagination: loadingPagination,
+  );
+  writeState(
+    currentState.copyWith(tree: loadingTree, inlineErrorMessage: null),
+  );
+}
+
+Future<Either<Failure, List<FolderNode>>> _fetchFoldersPage({
+  required FolderRepository repository,
+  required FolderState currentState,
+  required int page,
+}) {
+  return repository.getFolders(
+    parentId: currentState.currentParentId,
+    searchQuery: currentState.searchQuery,
+    sortBy: currentState.sortBy.apiValue,
+    sortType: currentState.sortType.apiValue,
+    page: page,
+    size: FolderStateConst.pageSize,
+  );
+}
+
+void _applyLoadMoreFailure({
+  required void Function(FolderState nextState) writeState,
+  required FolderState currentState,
+  required Failure failure,
+}) {
+  final FolderPaginationState failedPagination = currentState.tree.pagination
+      .copyWith(isLoadingMore: false);
+  final FolderTreeState failedTree = currentState.tree.copyWith(
+    pagination: failedPagination,
+  );
+  writeState(
+    currentState.copyWith(
+      tree: failedTree,
+      inlineErrorMessage: failure.message,
+    ),
+  );
+}
+
+void _applyLoadMoreSuccess({
+  required void Function(FolderState nextState) writeState,
+  required FolderState currentState,
+  required int nextPage,
+  required List<FolderNode> nextFolders,
+}) {
+  final List<FolderNode> mergedFolders = _mergePagedFolders(
+    currentFolders: currentState.folders,
+    nextFolders: nextFolders,
+  );
+  final bool hasNextPage = nextFolders.length == FolderStateConst.pageSize;
+  final FolderPaginationState nextPagination = currentState.tree.pagination
+      .copyWith(
+        currentPage: nextPage,
+        hasNextPage: hasNextPage,
+        isLoadingMore: false,
+      );
+  final FolderTreeState nextTree = currentState.tree.copyWith(
+    folders: mergedFolders,
+    pagination: nextPagination,
+  );
+  writeState(currentState.copyWith(tree: nextTree, inlineErrorMessage: null));
+}
+
+List<FolderNode> _mergePagedFolders({
+  required List<FolderNode> currentFolders,
+  required List<FolderNode> nextFolders,
+}) {
+  final Map<int, FolderNode> folderById = <int, FolderNode>{};
+  for (final FolderNode folder in currentFolders) {
+    folderById[folder.id] = folder;
+  }
+  for (final FolderNode folder in nextFolders) {
+    folderById[folder.id] = folder;
+  }
+  return folderById.values.toList(growable: false);
 }

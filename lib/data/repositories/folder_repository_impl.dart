@@ -15,14 +15,13 @@ part 'folder_repository_impl.g.dart';
 abstract final class FolderRepositoryImplConst {
   FolderRepositoryImplConst._();
 
-  static const int maxFetchSize = 500;
   static const String foldersPath = '/api/v1/folders';
   static const String pageQueryKey = 'page';
   static const String sizeQueryKey = 'size';
   static const String parentIdQueryKey = 'parentId';
   static const String searchQueryKey = 'searchQuery';
+  static const String sortByQueryKey = 'sortBy';
   static const String sortTypeQueryKey = 'sortType';
-  static const int firstPage = 0;
   static const String nameField = 'name';
   static const String parentIdField = 'parentId';
   static const String emptyValue = '';
@@ -38,14 +37,16 @@ class DioFolderRepository implements FolderRepository {
   Future<Either<Failure, List<FolderNode>>> getFolders({
     required int? parentId,
     required String searchQuery,
+    required String sortBy,
     required String sortType,
+    required int page,
+    required int size,
   }) async {
     final Map<String, dynamic> queryParameters = <String, dynamic>{
-      FolderRepositoryImplConst.pageQueryKey:
-          FolderRepositoryImplConst.firstPage,
-      FolderRepositoryImplConst.sizeQueryKey:
-          FolderRepositoryImplConst.maxFetchSize,
+      FolderRepositoryImplConst.pageQueryKey: page,
+      FolderRepositoryImplConst.sizeQueryKey: size,
       FolderRepositoryImplConst.searchQueryKey: searchQuery,
+      FolderRepositoryImplConst.sortByQueryKey: sortBy,
       FolderRepositoryImplConst.sortTypeQueryKey: sortType,
     };
     if (parentId != null) {

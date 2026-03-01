@@ -209,6 +209,18 @@ abstract class AppLocalizations {
   /// **'Name Z-A'**
   String get folderSortNameDescending;
 
+  /// No description provided for @folderSortCreatedNewest.
+  ///
+  /// In en, this message translates to:
+  /// **'Newest created'**
+  String get folderSortCreatedNewest;
+
+  /// No description provided for @folderSortCreatedOldest.
+  ///
+  /// In en, this message translates to:
+  /// **'Oldest created'**
+  String get folderSortCreatedOldest;
+
   /// No description provided for @folderRoot.
   ///
   /// In en, this message translates to:

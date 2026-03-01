@@ -66,6 +66,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get folderSortNameDescending => 'Name Z-A';
 
   @override
+  String get folderSortCreatedNewest => 'Newest created';
+
+  @override
+  String get folderSortCreatedOldest => 'Oldest created';
+
+  @override
   String get folderRoot => 'Root';
 
   @override

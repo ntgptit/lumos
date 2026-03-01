@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../core/themes/constants/dimensions.dart';
-import '../../../../../../l10n/app_localizations.dart';
-import '../../../../../shared/widgets/lumos_widgets.dart';
+import '../../../../../../../core/themes/constants/dimensions.dart';
+import '../../../../../../../l10n/app_localizations.dart';
+import '../../../../../../shared/widgets/lumos_widgets.dart';
 
 import 'folder_header_meta_pill.dart';
 

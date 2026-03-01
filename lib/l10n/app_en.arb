@@ -22,6 +22,8 @@
   "folderSortTitle": "Sort folders",
   "folderSortNameAscending": "Name A-Z",
   "folderSortNameDescending": "Name Z-A",
+  "folderSortCreatedNewest": "Newest created",
+  "folderSortCreatedOldest": "Oldest created",
   "folderRoot": "Root",
   "folderEmptyTitle": "No folders here yet.",
   "folderEmptySubtitle": "Create one to start organizing content.",

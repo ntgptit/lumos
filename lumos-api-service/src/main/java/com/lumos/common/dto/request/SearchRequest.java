@@ -1,14 +1,16 @@
 package com.lumos.common.dto.request;
 
+import com.lumos.common.enums.SortBy;
+import com.lumos.common.enums.SortType;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Size;
 
 public record SearchRequest(
         @Size(max = SearchRequestConst.SEARCH_QUERY_MAX_LENGTH)
         @Schema(description = "Search keyword") String searchQuery,
-        @Size(max = SearchRequestConst.SORT_TYPE_MAX_LENGTH)
-        @Schema(description = "Sort type token") String sortType
-) {
+        @Schema(description = "Sort by token") SortBy sortBy,
+        @Schema(description = "Sort type token") SortType sortType) {
 }
 
 final class SearchRequestConst {
@@ -17,5 +19,4 @@ final class SearchRequestConst {
     }
 
     static final int SEARCH_QUERY_MAX_LENGTH = 255;
-    static final int SORT_TYPE_MAX_LENGTH = 64;
 }

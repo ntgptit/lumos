@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -7,7 +9,7 @@ import '../../../../l10n/app_localizations.dart';
 import '../../../shared/widgets/lumos_widgets.dart';
 import '../providers/folder_provider.dart';
 import '../providers/states/folder_state.dart';
-import 'widgets/blocks/folder_header.dart';
+import 'widgets/blocks/header/folder_header.dart';
 import 'widgets/blocks/folder_tile.dart';
 import 'widgets/dialogs/folder_dialogs.dart';
 import 'widgets/states/folder_empty_view.dart';
@@ -18,15 +20,43 @@ abstract final class FolderContentConst {
   FolderContentConst._();
 
   static const double listBottomSpacing = Insets.spacing64;
+  static const double loadMoreThreshold = Insets.spacing64;
+  static const double loadMoreTopSpacing = Insets.spacing12;
+  static const double loadMoreBottomSpacing = Insets.spacing8;
 }
 
-class FolderContent extends ConsumerWidget {
+class FolderContent extends ConsumerStatefulWidget {
   const FolderContent({required this.state, super.key});
 
   final FolderState state;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<FolderContent> createState() => _FolderContentState();
+}
+
+class _FolderContentState extends ConsumerState<FolderContent> {
+  late final ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((Duration _) {
+      _requestLoadMoreIfNeeded();
+    });
+
     final AppLocalizations l10n = AppLocalizations.of(context)!;
     final double horizontalInset = LumosScreenFrame.resolveHorizontalInset(
       context,
@@ -34,7 +64,7 @@ class FolderContent extends ConsumerWidget {
     final FolderAsyncController controller = ref.read(
       folderAsyncControllerProvider.notifier,
     );
-    final List<FolderNode> visibleFolders = state.visibleFolders;
+    final List<FolderNode> visibleFolders = widget.state.visibleFolders;
     return Stack(
       children: <Widget>[
         _buildRefreshableList(
@@ -63,6 +93,7 @@ class FolderContent extends ConsumerWidget {
     return RefreshIndicator(
       onRefresh: controller.refresh,
       child: ListView(
+        controller: _scrollController,
         padding: EdgeInsets.zero,
         children: <Widget>[
           LumosScreenFrame(
@@ -70,17 +101,24 @@ class FolderContent extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 FolderHeader(
-                  currentDepth: state.currentDepth,
-                  searchQuery: state.searchQuery,
+                  currentDepth: widget.state.currentDepth,
+                  searchQuery: widget.state.searchQuery,
                   onSearchChanged: controller.updateSearchQuery,
-                  sortType: state.sortType,
-                  onSortTypeChanged: controller.updateSortType,
+                  sortBy: widget.state.sortBy,
+                  sortType: widget.state.sortType,
+                  onSortChanged:
+                      (FolderSortBy sortBy, FolderSortType sortType) {
+                        controller.updateSort(
+                          sortBy: sortBy,
+                          sortType: sortType,
+                        );
+                      },
                   onOpenParentFolder: controller.openParentFolder,
                 ),
                 const SizedBox(height: Insets.spacing16),
-                if (state.inlineErrorMessage case final String message)
+                if (widget.state.inlineErrorMessage case final String message)
                   FolderErrorBanner(message: message),
-                if (state.inlineErrorMessage != null)
+                if (widget.state.inlineErrorMessage != null)
                   const SizedBox(height: Insets.spacing12),
                 ..._buildFolderTiles(
                   context: context,
@@ -88,6 +126,7 @@ class FolderContent extends ConsumerWidget {
                   visibleFolders: visibleFolders,
                 ),
                 if (visibleFolders.isEmpty) const FolderEmptyView(),
+                if (widget.state.isLoadingMore) _buildLoadMoreIndicator(),
                 const SizedBox(height: FolderContentConst.listBottomSpacing),
               ],
             ),
@@ -142,13 +181,23 @@ class FolderContent extends ConsumerWidget {
         .toList(growable: false);
   }
 
+  Widget _buildLoadMoreIndicator() {
+    return const Padding(
+      padding: EdgeInsets.only(
+        top: FolderContentConst.loadMoreTopSpacing,
+        bottom: FolderContentConst.loadMoreBottomSpacing,
+      ),
+      child: Center(child: LumosLoadingIndicator()),
+    );
+  }
+
   Widget _buildCreateButton({
     required BuildContext context,
     required WidgetRef ref,
     required AppLocalizations l10n,
     required double horizontalInset,
   }) {
-    if (state.isMutating) {
+    if (widget.state.isMutating) {
       return const SizedBox.shrink();
     }
     return Positioned(
@@ -173,7 +222,7 @@ class FolderContent extends ConsumerWidget {
   }
 
   Widget _buildMutatingOverlay({required BuildContext context}) {
-    if (!state.isMutating) {
+    if (!widget.state.isMutating) {
       return const SizedBox.shrink();
     }
     return Positioned.fill(
@@ -184,5 +233,30 @@ class FolderContent extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  void _onScroll() {
+    _requestLoadMoreIfNeeded();
+  }
+
+  void _requestLoadMoreIfNeeded() {
+    if (!widget.state.hasNextPage) {
+      return;
+    }
+    if (widget.state.isLoadingMore) {
+      return;
+    }
+    if (!_scrollController.hasClients) {
+      return;
+    }
+    final ScrollPosition position = _scrollController.position;
+    final double remainingScroll = position.maxScrollExtent - position.pixels;
+    if (remainingScroll > FolderContentConst.loadMoreThreshold) {
+      return;
+    }
+    final FolderAsyncController controller = ref.read(
+      folderAsyncControllerProvider.notifier,
+    );
+    unawaited(controller.loadMore());
   }
 }

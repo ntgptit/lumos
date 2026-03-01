@@ -1,9 +1,10 @@
 package com.lumos.common.config;
 
-import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.info.Info;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
 
 @Configuration
 public class OpenApiConfig {
@@ -15,9 +16,10 @@ public class OpenApiConfig {
     @Bean
     OpenAPI lumosOpenApi() {
         return new OpenAPI()
-                .info(new Info()
-                        .title(API_TITLE)
-                        .description(API_DESCRIPTION)
-                        .version(API_VERSION));
+                .info(
+                        new Info()
+                                .title(API_TITLE)
+                                .description(API_DESCRIPTION)
+                                .version(API_VERSION));
     }
 }

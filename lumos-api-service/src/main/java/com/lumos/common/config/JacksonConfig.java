@@ -13,12 +13,18 @@ public class JacksonConfig {
 
     @Bean
     ObjectMapper objectMapper() {
-        final ObjectMapper objectMapper = JsonMapper.builder()
+        final ObjectMapper objectMapper = JsonMapper
+                .builder()
                 .findAndAddModules()
-                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                .disable(
+                        SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
                 .build();
-        objectMapper.setDefaultPropertyInclusion(
-                JsonInclude.Value.construct(JsonInclude.Include.NON_NULL, JsonInclude.Include.NON_NULL));
+        objectMapper
+                .setDefaultPropertyInclusion(
+                        JsonInclude.Value
+                                .construct(
+                                        JsonInclude.Include.NON_NULL,
+                                        JsonInclude.Include.NON_NULL));
         return objectMapper;
     }
 }

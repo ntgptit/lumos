@@ -66,6 +66,12 @@ class AppLocalizationsVi extends AppLocalizations {
   String get folderSortNameDescending => 'Tên Z-A';
 
   @override
+  String get folderSortCreatedNewest => 'Tạo gần đây nhất';
+
+  @override
+  String get folderSortCreatedOldest => 'Tạo lâu nhất';
+
+  @override
   String get folderRoot => 'Gốc';
 
   @override

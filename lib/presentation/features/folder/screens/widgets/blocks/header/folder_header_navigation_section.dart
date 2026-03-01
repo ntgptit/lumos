@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../../../core/themes/constants/dimensions.dart';
-import '../../../../../../l10n/app_localizations.dart';
-import '../../../providers/states/folder_state.dart';
-import '../../../../../shared/widgets/lumos_widgets.dart';
+import '../../../../../../../core/themes/constants/dimensions.dart';
+import '../../../../../../../l10n/app_localizations.dart';
+import '../../../../providers/states/folder_state.dart';
+import '../../../../../../shared/widgets/lumos_widgets.dart';
 
 import 'folder_header_meta_pill.dart';
 
@@ -16,8 +16,9 @@ class FolderHeaderNavigationSection extends StatefulWidget {
     required this.currentDepth,
     required this.searchQuery,
     required this.onSearchChanged,
+    required this.sortBy,
     required this.sortType,
-    required this.onSortTypeChanged,
+    required this.onSortChanged,
     required this.onOpenParentFolder,
     super.key,
   });
@@ -26,8 +27,10 @@ class FolderHeaderNavigationSection extends StatefulWidget {
   final int currentDepth;
   final String searchQuery;
   final ValueChanged<String> onSearchChanged;
+  final FolderSortBy sortBy;
   final FolderSortType sortType;
-  final ValueChanged<FolderSortType> onSortTypeChanged;
+  final void Function(FolderSortBy sortBy, FolderSortType sortType)
+  onSortChanged;
   final Future<void> Function() onOpenParentFolder;
 
   @override
@@ -179,9 +182,16 @@ class _FolderHeaderNavigationSectionState
 
   Widget _buildSortButton({required BuildContext context}) {
     final String currentSortLabel =
-        widget.sortType == FolderSortType.nameDescending
+        widget.sortBy == FolderSortBy.name &&
+            widget.sortType == FolderSortType.asc
+        ? widget.l10n.folderSortNameAscending
+        : widget.sortBy == FolderSortBy.name &&
+              widget.sortType == FolderSortType.desc
         ? widget.l10n.folderSortNameDescending
-        : widget.l10n.folderSortNameAscending;
+        : widget.sortBy == FolderSortBy.createdAt &&
+              widget.sortType == FolderSortType.desc
+        ? widget.l10n.folderSortCreatedNewest
+        : widget.l10n.folderSortCreatedOldest;
     return LumosIconButton(
       icon: Icons.sort_rounded,
       tooltip: currentSortLabel,
@@ -203,30 +213,37 @@ class _FolderHeaderNavigationSectionState
   }
 
   Future<void> _openSortBottomSheet(BuildContext context) async {
-    final FolderSortType? selectedSortType =
-        await showModalBottomSheet<FolderSortType>(
+    final _FolderSortSelection? selectedSort =
+        await showModalBottomSheet<_FolderSortSelection>(
           context: context,
           showDragHandle: true,
           builder: (BuildContext bottomSheetContext) {
             return _FolderSortBottomSheet(
+              sortBy: widget.sortBy,
               sortType: widget.sortType,
               l10n: AppLocalizations.of(bottomSheetContext)!,
             );
           },
         );
-    if (selectedSortType == null) {
+    if (selectedSort == null) {
       return;
     }
-    if (selectedSortType == widget.sortType) {
+    if (selectedSort.sortBy == widget.sortBy &&
+        selectedSort.sortType == widget.sortType) {
       return;
     }
-    widget.onSortTypeChanged(selectedSortType);
+    widget.onSortChanged(selectedSort.sortBy, selectedSort.sortType);
   }
 }
 
 class _FolderSortBottomSheet extends StatelessWidget {
-  const _FolderSortBottomSheet({required this.sortType, required this.l10n});
+  const _FolderSortBottomSheet({
+    required this.sortBy,
+    required this.sortType,
+    required this.l10n,
+  });
 
+  final FolderSortBy sortBy;
   final FolderSortType sortType;
   final AppLocalizations l10n;
 
@@ -248,15 +265,39 @@ class _FolderSortBottomSheet extends StatelessWidget {
             const SizedBox(height: Insets.spacing8),
             _buildSortOptionTile(
               context: context,
-              option: FolderSortType.nameAscending,
+              option: const _FolderSortSelection(
+                sortBy: FolderSortBy.name,
+                sortType: FolderSortType.asc,
+              ),
               icon: Icons.sort_by_alpha_rounded,
               label: l10n.folderSortNameAscending,
             ),
             _buildSortOptionTile(
               context: context,
-              option: FolderSortType.nameDescending,
+              option: const _FolderSortSelection(
+                sortBy: FolderSortBy.name,
+                sortType: FolderSortType.desc,
+              ),
               icon: Icons.sort_by_alpha_rounded,
               label: l10n.folderSortNameDescending,
+            ),
+            _buildSortOptionTile(
+              context: context,
+              option: const _FolderSortSelection(
+                sortBy: FolderSortBy.createdAt,
+                sortType: FolderSortType.desc,
+              ),
+              icon: Icons.schedule_rounded,
+              label: l10n.folderSortCreatedNewest,
+            ),
+            _buildSortOptionTile(
+              context: context,
+              option: const _FolderSortSelection(
+                sortBy: FolderSortBy.createdAt,
+                sortType: FolderSortType.asc,
+              ),
+              icon: Icons.history_rounded,
+              label: l10n.folderSortCreatedOldest,
             ),
           ],
         ),
@@ -266,11 +307,12 @@ class _FolderSortBottomSheet extends StatelessWidget {
 
   Widget _buildSortOptionTile({
     required BuildContext context,
-    required FolderSortType option,
+    required _FolderSortSelection option,
     required IconData icon,
     required String label,
   }) {
-    final bool isSelected = sortType == option;
+    final bool isSelected =
+        sortBy == option.sortBy && sortType == option.sortType;
     return LumosListTile(
       contentPadding: EdgeInsets.zero,
       leading: LumosIcon(icon, size: IconSizes.iconMedium),
@@ -281,4 +323,11 @@ class _FolderSortBottomSheet extends StatelessWidget {
       onTap: () => context.pop(option),
     );
   }
+}
+
+class _FolderSortSelection {
+  const _FolderSortSelection({required this.sortBy, required this.sortType});
+
+  final FolderSortBy sortBy;
+  final FolderSortType sortType;
 }
