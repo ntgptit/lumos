@@ -66,7 +66,9 @@ abstract final class AppPalette {
   static const Color neutral70 = Color(0xFF8090A0);
   static const Color neutral80 = Color(0xFFA0AEB8);
   static const Color neutral90 = Color(0xFFBCC8D4);
+  static const Color neutral92 = Color(0xFFCDD7E0);
   static const Color neutral95 = Color(0xFFD8E0E8);
+  static const Color neutral97 = Color(0xFFE8EEF2);
   static const Color neutral99 = Color(0xFFF4F6F8);
 
   // ── Primary tonal scale (anchored to Cadet Blue #6A7E84) ────────────────
