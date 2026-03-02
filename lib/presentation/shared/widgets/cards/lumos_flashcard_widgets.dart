@@ -308,7 +308,7 @@ class LumosFlashcard extends StatelessWidget {
   Color? _resolveStatusColor(BuildContext context) {
     final ColorScheme colorScheme = context.colorScheme;
     if (status == FlashcardStatus.correct) {
-      return colorScheme.tertiaryContainer.withValues(
+      return context.appColors.successContainer.withValues(
         alpha: WidgetOpacities.stateHover,
       );
     }

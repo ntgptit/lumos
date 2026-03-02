@@ -42,32 +42,58 @@ class UiDesignGuardConst {
 
   /// Spacing grid values (8pt-ish grid).
   static const List<double> spacingGridValues = <double>[
+    0,
+    2,
     4,
+    6,
     8,
+    10,
     12,
+    14,
     16,
+    20,
     24,
+    28,
     32,
+    36,
     40,
+    48,
+    56,
+    64,
   ];
 
+  /// Spacing unit (4dp) used by Material spacing systems.
+  static const double spacingGridUnit = 4;
+
   /// Recommended horizontal padding values (dp).
-  static const List<double> horizontalPaddingValues = <double>[12, 16, 20];
+  static const List<double> horizontalPaddingValues = <double>[12, 16, 20, 24];
 
   /// Button height range (dp).
   static const double buttonHeightMin = 40;
-  static const double buttonHeightMax = 48;
+  static const double buttonHeightMax = 56;
 
   /// Icon size range (dp).
-  static const double iconSizeMin = 20;
-  static const double iconSizeMax = 28;
+  static const double iconSizeMin = 18;
+  static const double iconSizeMax = 48;
 
   /// AppBar height range (dp).
-  static const double appBarHeightMin = 64;
+  static const double appBarHeightMin = 56;
   static const double appBarHeightMax = 80;
 
   /// Approved typography scale values (dp/sp).
-  static const List<double> allowedTextSizes = <double>[12, 14, 16, 20, 24, 34];
+  static const List<double> allowedTextSizes = <double>[
+    11,
+    12,
+    14,
+    16,
+    22,
+    24,
+    28,
+    32,
+    36,
+    45,
+    57,
+  ];
 
   /// Minimum touch target (dp).
   static const double touchTargetMin = 48;
@@ -319,6 +345,20 @@ Iterable<double> _extractNumbers(RegExp regExp, String sourceLine) sync* {
     }
     yield value;
   }
+}
+
+bool _isSpacingValueAllowed(double value) {
+  if (value < 0) {
+    return false;
+  }
+  if (UiDesignGuardConst.spacingGridValues.contains(value)) {
+    return true;
+  }
+  final double remainder = value % UiDesignGuardConst.spacingGridUnit;
+  if (remainder == 0) {
+    return true;
+  }
+  return false;
 }
 
 /// Check whether current line is inside a SizedBox(...) declaration window.
@@ -661,7 +701,7 @@ class _SpacingGridRule implements UiGuardRule {
     }
 
     for (final double value in values) {
-      if (UiDesignGuardConst.spacingGridValues.contains(value)) {
+      if (_isSpacingValueAllowed(value)) {
         continue;
       }
       violations.add(
@@ -669,7 +709,7 @@ class _SpacingGridRule implements UiGuardRule {
           filePath: filePath,
           lineNumber: lineNumber,
           reason:
-              'Spacing must use approved grid values (${UiDesignGuardConst.spacingGridValues.join('/')}).',
+              'Spacing should follow 4dp grid (or approved values ${UiDesignGuardConst.spacingGridValues.join('/')}).',
           lineContent: rawLine.trim(),
         ),
       );

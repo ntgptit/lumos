@@ -9,38 +9,51 @@ import '../themes/foundation/app_palette.dart';
 // ---------------------------------------------------------------------------
 @immutable
 abstract final class AppColorSchemeConst {
-  // Semantic brand palette.
-  static const Color brandPrimary = AppPalette.primary40; // Midnight Blue
-  static const Color brandSecondary = AppPalette.secondary40; // Dusty Blue
-  static const Color brandDeep = AppPalette.neutral10; // Deep Navy
-  static const Color surfaceLight = AppPalette.neutral90; // Buttercream
-  static const Color surfaceLightContainer = AppPalette.neutral95; // Ivory
+  static const Color brandPrimary = AppPalette.primary40;
+  static const Color brandPrimaryContainer = AppPalette.primary90;
+  static const Color brandSecondary = AppPalette.secondary40;
+  static const Color brandSecondaryContainer = AppPalette.secondary90;
+  static const Color brandTertiary = AppPalette.tertiary40;
+  static const Color brandTertiaryContainer = AppPalette.tertiary90;
+  static const Color darkPrimary = AppPalette.darkPrimary80;
+  static const Color darkPrimaryContainer = AppPalette.charcoal40;
+  static const Color darkSecondary = AppPalette.darkSecondary70;
+  static const Color darkSecondaryContainer = AppPalette.independence40;
+  static const Color darkTertiary = AppPalette.cadetBlue40;
+  static const Color darkTertiaryContainer = AppPalette.charcoal40;
 
-  // Backward-compatible aliases.
-  static const Color paletteCadetBlue = brandSecondary;
-  static const Color paletteIndependence = brandPrimary;
-  static const Color paletteCharcoal = brandSecondary;
-  static const Color paletteGunmetal = brandDeep;
-  static const Color paletteEigengrau = brandDeep;
-  static const Color paletteAbsoluteBlack = Colors.black;
-  static const Color paletteNeutralWhite = Colors.white;
+  static const Color lightSurface = AppPalette.neutral99;
+  static const Color lightBackground = AppPalette.neutral95;
+  static const Color lightSurfaceContainer = AppPalette.primary90;
+  static const Color lightOnPrimary = AppPalette.neutral99;
+  static const Color lightOnPrimaryContainer = AppPalette.primary40;
+  static const Color lightOnSecondary = AppPalette.neutral99;
+  static const Color lightOnSecondaryContainer = AppPalette.primary40;
+  static const Color lightOnTertiary = AppPalette.neutral99;
+  static const Color lightOnTertiaryContainer = AppPalette.primary40;
+  static const Color lightOnSurface = AppPalette.primary40;
+  static const Color lightOnSurfaceVariant = AppPalette.primary40;
+  static const Color lightOutline = AppPalette.tertiary40;
+  static const Color lightOutlineVariant = AppPalette.cadetBlue40;
+  static const Color darkSurface = AppPalette.neutral20;
+  static const Color darkBackground = AppPalette.eigengrau10;
+  static const Color darkSurfaceContainer = AppPalette.gunmetal20;
+  static const Color darkSurfaceContainerHigh = AppPalette.gunmetal20;
+  static const Color darkOutline = AppPalette.darkSecondary70;
+  static const Color darkOutlineVariant = AppPalette.cadetBlue40;
+  static const Color darkScrim = AppPalette.gunmetal20;
 
-  // Derived surface tones (light mode)
-  static const Color paletteSecondaryContainerLight = surfaceLightContainer;
-  static const Color paletteTertiaryContainerLight = surfaceLight;
-
-  // Derived surface tones (dark mode)
-  static const Color paletteTertiaryDark =
-      AppPalette.primary90; // Ivory accent for dark
-  static const Color paletteTertiaryContainerDark =
-      AppPalette.primary40; // Midnight Blue container for dark
+  static const Color lightError = AppPalette.error40;
+  static const Color lightErrorContainer = AppPalette.error90;
+  static const Color darkError = AppPalette.error90;
+  static const Color darkErrorContainer = AppPalette.error40;
 
   // Seed & contrast config
   static const Color seedColor = brandPrimary;
   static const DynamicSchemeVariant dynamicSchemeVariant =
       DynamicSchemeVariant.tonalSpot;
-  static const Color highContrastLightForeground = paletteAbsoluteBlack;
-  static const Color highContrastDarkForeground = paletteNeutralWhite;
+  static const Color highContrastLightForeground = Colors.black;
+  static const Color highContrastDarkForeground = Colors.white;
 
   static const double minimumTextContrastRatio = 4.5;
   static const double minimumUiContrastRatio = 3.0;
@@ -99,11 +112,7 @@ ColorScheme _buildColorScheme({
 
 // ---------------------------------------------------------------------------
 // Palette role assignment
-// Roles are chosen for Social / Lifestyle + Modern & Minimal:
-//   primary   → brand CTA, FAB, active nav
-//   secondary → secondary actions, icons
-//   tertiary  → accent badges, tags, subtle highlights
-//   surface   → card and scaffold backgrounds
+// Light and dark keep the same role taxonomy, only values change.
 // ---------------------------------------------------------------------------
 ColorScheme _applyPaletteRoles({
   required ColorScheme base,
@@ -117,48 +126,54 @@ ColorScheme _applyPaletteRoles({
 
 ColorScheme _applyLightRoles(ColorScheme base) {
   return base.copyWith(
-    // Primary: Midnight Blue — core CTA and active controls
-    primary: AppColorSchemeConst.paletteIndependence,
-    // primaryContainer: Dusty Blue — selected chip and softer emphasis
-    primaryContainer: AppColorSchemeConst.paletteCadetBlue,
-
-    // Secondary: Dusty Blue — secondary actions and icon tint
-    secondary: AppColorSchemeConst.paletteCharcoal,
-    // secondaryContainer: Ivory for neutral filled surfaces
-    secondaryContainer: AppColorSchemeConst.paletteSecondaryContainerLight,
-
-    // Tertiary: Deep Navy — accent badges, quiet highlights
-    tertiary: AppColorSchemeConst.paletteGunmetal,
-    // tertiaryContainer: Buttercream for subtle containers
-    tertiaryContainer: AppColorSchemeConst.paletteTertiaryContainerLight,
-
-    // Surface: Buttercream base for light mode
-    surface: AppColorSchemeConst.paletteTertiaryContainerLight,
-    surfaceTint: AppColorSchemeConst.paletteIndependence,
+    primary: AppColorSchemeConst.brandPrimary,
+    onPrimary: AppColorSchemeConst.lightOnPrimary,
+    primaryContainer: AppColorSchemeConst.brandPrimaryContainer,
+    onPrimaryContainer: AppColorSchemeConst.lightOnPrimaryContainer,
+    secondary: AppColorSchemeConst.brandSecondary,
+    onSecondary: AppColorSchemeConst.lightOnSecondary,
+    secondaryContainer: AppColorSchemeConst.brandSecondaryContainer,
+    onSecondaryContainer: AppColorSchemeConst.lightOnSecondaryContainer,
+    tertiary: AppColorSchemeConst.brandTertiary,
+    onTertiary: AppColorSchemeConst.lightOnTertiary,
+    tertiaryContainer: AppColorSchemeConst.brandTertiaryContainer,
+    onTertiaryContainer: AppColorSchemeConst.lightOnTertiaryContainer,
+    surface: AppColorSchemeConst.lightSurface,
+    onSurface: AppColorSchemeConst.lightOnSurface,
+    onSurfaceVariant: AppColorSchemeConst.lightOnSurfaceVariant,
+    surfaceContainerLowest: AppColorSchemeConst.lightBackground,
+    surfaceContainerLow: AppColorSchemeConst.lightBackground,
+    surfaceContainer: AppColorSchemeConst.lightSurfaceContainer,
+    surfaceContainerHigh: AppColorSchemeConst.lightSurfaceContainer,
+    surfaceContainerHighest: AppColorSchemeConst.lightSurfaceContainer,
+    outline: AppColorSchemeConst.lightOutline,
+    outlineVariant: AppColorSchemeConst.lightOutlineVariant,
+    error: AppColorSchemeConst.lightError,
+    errorContainer: AppColorSchemeConst.lightErrorContainer,
+    surfaceTint: AppColorSchemeConst.brandPrimary,
   );
 }
 
 ColorScheme _applyDarkRoles(ColorScheme base) {
   return base.copyWith(
-    // Primary: Dusty Blue — readable and distinct on dark surfaces
-    primary: AppColorSchemeConst.paletteCadetBlue,
-    // primaryContainer: Midnight Blue — contained controls
-    primaryContainer: AppColorSchemeConst.paletteIndependence,
-
-    // Secondary: Dusty Blue with low-chroma dark depth
-    secondary: AppColorSchemeConst.paletteCharcoal,
-    // secondaryContainer: Deep Navy for layered cards/sheets
-    secondaryContainer: AppColorSchemeConst.paletteGunmetal,
-
-    // Tertiary: Ivory accent for dark context
-    tertiary: AppColorSchemeConst.paletteTertiaryDark,
-    // tertiaryContainer: Midnight Blue accent container
-    tertiaryContainer: AppColorSchemeConst.paletteTertiaryContainerDark,
-
-    // Surface: Deep Navy for stable dark foundation
-    surface: AppColorSchemeConst.paletteEigengrau,
-
-    surfaceTint: AppColorSchemeConst.paletteCadetBlue,
+    primary: AppColorSchemeConst.darkPrimary,
+    primaryContainer: AppColorSchemeConst.darkPrimaryContainer,
+    secondary: AppColorSchemeConst.darkSecondary,
+    secondaryContainer: AppColorSchemeConst.darkSecondaryContainer,
+    tertiary: AppColorSchemeConst.darkTertiary,
+    tertiaryContainer: AppColorSchemeConst.darkTertiaryContainer,
+    surface: AppColorSchemeConst.darkSurface,
+    surfaceContainerLowest: AppColorSchemeConst.darkBackground,
+    surfaceContainerLow: AppColorSchemeConst.darkBackground,
+    surfaceContainer: AppColorSchemeConst.darkSurfaceContainer,
+    surfaceContainerHigh: AppColorSchemeConst.darkSurfaceContainerHigh,
+    surfaceContainerHighest: AppColorSchemeConst.darkSurfaceContainerHigh,
+    outline: AppColorSchemeConst.darkOutline,
+    outlineVariant: AppColorSchemeConst.darkOutlineVariant,
+    error: AppColorSchemeConst.darkError,
+    errorContainer: AppColorSchemeConst.darkErrorContainer,
+    surfaceTint: AppColorSchemeConst.darkPrimary,
+    scrim: AppColorSchemeConst.darkScrim,
   );
 }
 

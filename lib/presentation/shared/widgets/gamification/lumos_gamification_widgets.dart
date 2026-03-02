@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/constants/dimensions.dart';
 import '../../../../core/themes/extensions/theme_extensions.dart';
+import '../../../../core/themes/semantic/app_color_tokens.dart';
 import '../cards/lumos_card.dart';
 import '../feedback/lumos_progress_bar.dart';
 import '../typography/lumos_text.dart';
@@ -67,9 +68,10 @@ class LumosStreakCounter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppColorTokens appColors = context.appColors;
     final ColorScheme colorScheme = context.colorScheme;
     final Color color = isTodayCompleted
-        ? colorScheme.tertiary
+        ? appColors.warning
         : colorScheme.onSurfaceVariant;
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -143,9 +145,10 @@ class LumosAchievementBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppColorTokens appColors = context.appColors;
     final ColorScheme colorScheme = context.colorScheme;
     final Color color = isUnlocked
-        ? colorScheme.tertiary
+        ? appColors.success
         : colorScheme.onSurfaceVariant;
     return LumosCard(
       child: Column(

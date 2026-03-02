@@ -30,6 +30,9 @@ class QualityContractConst {
   static const String lineCommentPrefix = '//';
 
   static const String forbiddenMarkerPrefix = 'quality-guard:';
+
+  static const String strictModeEnvKey = 'STRICT_QUALITY_CONTRACT';
+  static const String strictModeEnabledValue = '1';
 }
 
 enum Severity {
@@ -240,6 +243,7 @@ abstract class QualityRule {
 }
 
 Future<void> main() async {
+  final bool isStrictMode = _isStrictModeEnabled();
   final QualityConfig config = QualityConfig.loadOrDefault();
 
   final Directory libDir = Directory(QualityContractConst.libDirectory);
@@ -320,10 +324,10 @@ Future<void> main() async {
     return;
   }
 
-  final List<QualityViolation> blockingViolations = _collectBlockingViolations(
-    violations: ctx.violations,
+  stderr.writeln(
+    'Code quality contract guard report '
+    '(${isStrictMode ? 'strict' : 'non-blocking'} mode).',
   );
-  stderr.writeln('Code quality contract guard report (strict mode).');
   for (final QualityViolation v in ctx.violations) {
     stderr.writeln(v.toConsoleLine());
   }
@@ -336,10 +340,23 @@ Future<void> main() async {
     ).convert(ctx.violations.map((v) => v.toJson()).toList()),
   );
 
+  if (!isStrictMode) {
+    stdout.writeln(
+      'Non-blocking quality report generated. '
+      'error count: ${_countBySeverity(ctx.violations, Severity.error)}, '
+      'warning count: ${_countBySeverity(ctx.violations, Severity.warning)}, '
+      'info count: ${_countBySeverity(ctx.violations, Severity.info)}.',
+    );
+    return;
+  }
+
+  final List<QualityViolation> blockingViolations = _collectBlockingViolations(
+    violations: ctx.violations,
+  );
   if (blockingViolations.isEmpty) {
     stdout.writeln(
       'No blocking violations in strict mode. '
-      'Error count: ${_countBySeverity(ctx.violations, Severity.error)}, '
+      'error count: ${_countBySeverity(ctx.violations, Severity.error)}, '
       'warning count: ${_countBySeverity(ctx.violations, Severity.warning)}, '
       'info count: ${_countBySeverity(ctx.violations, Severity.info)}.',
     );
@@ -351,6 +368,25 @@ Future<void> main() async {
     'Mode: strict.',
   );
   exitCode = 1;
+}
+
+bool _isStrictModeEnabled() {
+  final String rawValue =
+      Platform.environment[QualityContractConst.strictModeEnvKey] ?? '';
+  final String normalizedValue = rawValue.trim().toLowerCase();
+  if (normalizedValue.isEmpty) {
+    return false;
+  }
+  if (normalizedValue == QualityContractConst.strictModeEnabledValue) {
+    return true;
+  }
+  if (normalizedValue == 'true') {
+    return true;
+  }
+  if (normalizedValue == 'yes') {
+    return true;
+  }
+  return false;
 }
 
 List<QualityViolation> _collectBlockingViolations({

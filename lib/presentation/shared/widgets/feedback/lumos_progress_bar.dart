@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/constants/dimensions.dart';
 import '../../../../core/themes/extensions/theme_extensions.dart';
+import '../../../../core/themes/semantic/app_color_tokens.dart';
 
 abstract final class LumosProgressBarConst {
   LumosProgressBarConst._();
@@ -25,6 +26,7 @@ class LumosProgressBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = context.theme;
     final ColorScheme colorScheme = context.colorScheme;
+    final AppColorTokens appColors = context.appColors;
     final ProgressIndicatorThemeData indicatorTheme =
         theme.progressIndicatorTheme;
     final double normalizedValue = _normalizeValue(value);
@@ -33,6 +35,7 @@ class LumosProgressBar extends StatelessWidget {
         indicatorTheme.linearTrackColor ?? colorScheme.surfaceContainerHighest;
     final Color defaultProgressColor = _resolveDefaultProgressColor(
       colorScheme: colorScheme,
+      appColors: appColors,
       indicatorTheme: indicatorTheme,
     );
     return ClipRRect(
@@ -59,10 +62,11 @@ class LumosProgressBar extends StatelessWidget {
 
   Color _resolveDefaultProgressColor({
     required ColorScheme colorScheme,
+    required AppColorTokens appColors,
     required ProgressIndicatorThemeData indicatorTheme,
   }) {
     if (useTertiary) {
-      return colorScheme.tertiary;
+      return appColors.warning;
     }
     return indicatorTheme.color ?? colorScheme.primary;
   }

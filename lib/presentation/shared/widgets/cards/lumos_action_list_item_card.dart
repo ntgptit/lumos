@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/constants/dimensions.dart';
 import '../../../../core/themes/extensions/theme_extensions.dart';
+import '../../../../core/themes/semantic/app_color_tokens.dart';
 import '../buttons/lumos_icon_button.dart';
 import '../navigation/lumos_menu_widgets.dart';
 import 'lumos_entity_list_item_card.dart';
@@ -37,7 +38,7 @@ abstract final class LumosActionListItemCardConst {
 /// Visual tone for a [LumosActionListItem].
 ///
 /// - [neutral]  : Standard action — onSurface color.
-/// - [warning]  : Cautionary action — tertiary color.
+/// - [warning]  : Cautionary action — warning color role.
 /// - [critical] : Destructive action — error color.
 enum LumosActionListItemTone { neutral, warning, critical }
 
@@ -228,7 +229,11 @@ class _ActionMenuItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = context.theme;
     final ColorScheme colorScheme = theme.colorScheme;
-    final Color labelColor = _resolveLabelColor(colorScheme: colorScheme);
+    final AppColorTokens appColors = context.appColors;
+    final Color labelColor = _resolveLabelColor(
+      colorScheme: colorScheme,
+      appColors: appColors,
+    );
     final IconThemeData iconTheme = theme.iconTheme.withResolvedColorAndSize(
       color: labelColor,
       size: IconSizes.iconSmall,
@@ -308,13 +313,16 @@ class _ActionMenuItem extends StatelessWidget {
     );
   }
 
-  Color _resolveLabelColor({required ColorScheme colorScheme}) {
+  Color _resolveLabelColor({
+    required ColorScheme colorScheme,
+    required AppColorTokens appColors,
+  }) {
     if (!action.isEnabled || action.isLoading) {
       return colorScheme.onSurfaceVariant;
     }
     return switch (action.tone) {
       LumosActionListItemTone.neutral => colorScheme.onSurface,
-      LumosActionListItemTone.warning => colorScheme.tertiary,
+      LumosActionListItemTone.warning => appColors.warning,
       LumosActionListItemTone.critical => colorScheme.error,
     };
   }
@@ -336,7 +344,7 @@ class _ActionBadge extends StatelessWidget {
 
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: colorScheme.secondaryContainer,
+        color: colorScheme.surfaceContainerHigh,
         borderRadius: BorderRadii.large,
       ),
       child: Padding(
@@ -346,7 +354,7 @@ class _ActionBadge extends StatelessWidget {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: theme.textTheme.labelSmall.withResolvedColor(
-            colorScheme.onSecondaryContainer,
+            colorScheme.onSurfaceVariant,
           ),
         ),
       ),
@@ -415,6 +423,7 @@ class _SwipeActionWrapperState extends State<_SwipeActionWrapper> {
   @override
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = context.colorScheme;
+    final AppColorTokens appColors = context.appColors;
 
     return ValueListenableBuilder<double>(
       valueListenable: _dragExtentNotifier,
@@ -428,7 +437,10 @@ class _SwipeActionWrapperState extends State<_SwipeActionWrapper> {
               Positioned.fill(
                 child: Align(
                   alignment: Alignment.centerRight,
-                  child: _buildRevealActions(colorScheme: colorScheme),
+                  child: _buildRevealActions(
+                    colorScheme: colorScheme,
+                    appColors: appColors,
+                  ),
                 ),
               ),
               // Slide layer — card slides left to reveal actions.
@@ -446,7 +458,10 @@ class _SwipeActionWrapperState extends State<_SwipeActionWrapper> {
     );
   }
 
-  Widget _buildRevealActions({required ColorScheme colorScheme}) {
+  Widget _buildRevealActions({
+    required ColorScheme colorScheme,
+    required AppColorTokens appColors,
+  }) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: widget.actions
@@ -454,6 +469,7 @@ class _SwipeActionWrapperState extends State<_SwipeActionWrapper> {
             return _SwipeActionButton(
               action: action,
               colorScheme: colorScheme,
+              appColors: appColors,
               onTap: () {
                 _closeSwipe();
                 widget.onActionSelected(action.key);
@@ -473,11 +489,13 @@ class _SwipeActionButton extends StatelessWidget {
   const _SwipeActionButton({
     required this.action,
     required this.colorScheme,
+    required this.appColors,
     required this.onTap,
   });
 
   final LumosSwipeAction action;
   final ColorScheme colorScheme;
+  final AppColorTokens appColors;
   final VoidCallback onTap;
 
   @override
@@ -515,16 +533,16 @@ class _SwipeActionButton extends StatelessWidget {
 
   Color _resolveBackground() {
     return switch (action.tone) {
-      LumosActionListItemTone.neutral => colorScheme.secondaryContainer,
-      LumosActionListItemTone.warning => colorScheme.tertiaryContainer,
+      LumosActionListItemTone.neutral => colorScheme.surfaceContainerHigh,
+      LumosActionListItemTone.warning => appColors.warningContainer,
       LumosActionListItemTone.critical => colorScheme.errorContainer,
     };
   }
 
   Color _resolveForeground() {
     return switch (action.tone) {
-      LumosActionListItemTone.neutral => colorScheme.onSecondaryContainer,
-      LumosActionListItemTone.warning => colorScheme.onTertiaryContainer,
+      LumosActionListItemTone.neutral => colorScheme.onSurfaceVariant,
+      LumosActionListItemTone.warning => appColors.onWarningContainer,
       LumosActionListItemTone.critical => colorScheme.onErrorContainer,
     };
   }

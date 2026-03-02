@@ -63,10 +63,10 @@ class LumosSwipeAction {
   final String tooltip;
   final VoidCallback onPressed;
 
-  /// Defaults to [ColorScheme.secondaryContainer] if null.
+  /// Defaults to [ColorScheme.surfaceContainerHigh] if null.
   final Color? backgroundColor;
 
-  /// Defaults to [ColorScheme.onSecondaryContainer] if null.
+  /// Defaults to [ColorScheme.onSurfaceVariant] if null.
   final Color? iconColor;
 }
 
@@ -425,9 +425,8 @@ class _SwipeActionPanel extends StatelessWidget {
       children: actions
           .map((action) {
             final Color bg =
-                action.backgroundColor ?? colorScheme.secondaryContainer;
-            final Color fg =
-                action.iconColor ?? colorScheme.onSecondaryContainer;
+                action.backgroundColor ?? colorScheme.surfaceContainerHigh;
+            final Color fg = action.iconColor ?? colorScheme.onSurfaceVariant;
 
             return Tooltip(
               message: action.tooltip,

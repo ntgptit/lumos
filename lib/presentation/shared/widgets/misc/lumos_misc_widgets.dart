@@ -286,7 +286,7 @@ class LumosConfetti extends StatelessWidget {
     return Icon(
       type == LumosConfettiType.full ? Icons.celebration : Icons.auto_awesome,
       size: IconSizes.iconXLarge,
-      color: context.colorScheme.tertiary,
+      color: context.appColors.warning,
     );
   }
 }

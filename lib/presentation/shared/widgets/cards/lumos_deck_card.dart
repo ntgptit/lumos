@@ -313,8 +313,8 @@ class _SwipeActionPanel extends StatelessWidget {
         if (onEdit != null)
           _SwipeActionButton(
             icon: Icons.edit_outlined,
-            color: colorScheme.secondaryContainer,
-            iconColor: colorScheme.onSecondaryContainer,
+            color: colorScheme.surfaceContainerHigh,
+            iconColor: colorScheme.onSurfaceVariant,
             tooltip: 'Edit deck',
             onPressed: () {
               onClose();

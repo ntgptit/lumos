@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/constants/dimensions.dart';
 import '../../../../core/themes/extensions/theme_extensions.dart';
+import '../../../../core/themes/semantic/app_color_tokens.dart';
 import '../buttons/lumos_button.dart';
 import '../lumos_models.dart';
 import '../typography/lumos_text.dart';
@@ -15,31 +16,55 @@ class LumosSnackbar extends SnackBar {
     LumosSnackbarType type = LumosSnackbarType.info,
   }) : super(
          behavior: SnackBarBehavior.floating,
-         content: LumosText(
+         content: Text(
            message,
-           style: LumosTextStyle.bodyMedium,
-           containerRole: LumosTextContainerRole.inverseSurface,
+           style: context.textTheme.bodyMedium.withResolvedColor(
+             _resolveForegroundColor(
+               type: type,
+               colorScheme: context.colorScheme,
+               appColors: context.appColors,
+             ),
+           ),
          ),
          backgroundColor: _resolveBackgroundColor(
            type: type,
            colorScheme: context.colorScheme,
+           appColors: context.appColors,
          ),
        );
 
   static Color _resolveBackgroundColor({
     required LumosSnackbarType type,
     required ColorScheme colorScheme,
+    required AppColorTokens appColors,
   }) {
     if (type == LumosSnackbarType.success) {
-      return colorScheme.tertiary;
+      return appColors.success;
     }
     if (type == LumosSnackbarType.warning) {
-      return colorScheme.secondary;
+      return appColors.warning;
     }
     if (type == LumosSnackbarType.error) {
       return colorScheme.error;
     }
-    return colorScheme.inverseSurface;
+    return appColors.info;
+  }
+
+  static Color _resolveForegroundColor({
+    required LumosSnackbarType type,
+    required ColorScheme colorScheme,
+    required AppColorTokens appColors,
+  }) {
+    if (type == LumosSnackbarType.success) {
+      return appColors.onSuccess;
+    }
+    if (type == LumosSnackbarType.warning) {
+      return appColors.onWarning;
+    }
+    if (type == LumosSnackbarType.error) {
+      return colorScheme.onError;
+    }
+    return appColors.onInfo;
   }
 }
 
@@ -57,6 +82,7 @@ class LumosCelebration extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppColorTokens appColors = context.appColors;
     if (!isActive) {
       return const SizedBox.shrink();
     }
@@ -68,17 +94,26 @@ class LumosCelebration extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(Insets.spacing16),
       decoration: BoxDecoration(
-        color: Theme.of(
-          context,
-        ).colorScheme.tertiary.withValues(alpha: WidgetOpacities.stateHover),
+        color: appColors.successContainer.withValues(
+          alpha: WidgetOpacities.stateHover,
+        ),
         borderRadius: BorderRadii.large,
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Icon(_resolveIcon(), size: IconSizes.iconLarge),
+          Icon(
+            _resolveIcon(),
+            size: IconSizes.iconLarge,
+            color: appColors.onSuccessContainer,
+          ),
           const SizedBox(width: Insets.spacing8),
-          const LumosText('Great job!', style: LumosTextStyle.titleMedium),
+          Text(
+            'Great job!',
+            style: context.textTheme.titleMedium.withResolvedColor(
+              appColors.onSuccessContainer,
+            ),
+          ),
         ],
       ),
     );
@@ -188,22 +223,29 @@ class LumosTipMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Color foregroundColor = _resolveForegroundColor(context);
     return Container(
       padding: const EdgeInsets.all(Insets.spacing12),
       decoration: BoxDecoration(
-        color: _resolveColor(
+        color: _resolveBackgroundColor(
           context,
         ).withValues(alpha: WidgetOpacities.stateHover),
         borderRadius: BorderRadii.medium,
       ),
       child: Row(
         children: <Widget>[
-          Icon(_resolveIcon(), size: IconSizes.iconMedium),
+          Icon(
+            _resolveIcon(),
+            size: IconSizes.iconMedium,
+            color: foregroundColor,
+          ),
           const SizedBox(width: Insets.spacing8),
           Expanded(
-            child: LumosText(
+            child: Text(
               message,
-              style: LumosTextStyle.bodySmall,
+              style: context.textTheme.bodySmall.withResolvedColor(
+                foregroundColor,
+              ),
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
             ),
@@ -223,14 +265,25 @@ class LumosTipMessage extends StatelessWidget {
     return Icons.tips_and_updates_outlined;
   }
 
-  Color _resolveColor(BuildContext context) {
-    final ColorScheme colorScheme = context.colorScheme;
+  Color _resolveBackgroundColor(BuildContext context) {
+    final AppColorTokens appColors = context.appColors;
     if (type == LumosTipType.encouragement) {
-      return colorScheme.tertiary;
+      return appColors.success;
     }
     if (type == LumosTipType.fact) {
-      return colorScheme.secondary;
+      return appColors.info;
     }
-    return colorScheme.primary;
+    return appColors.warning;
+  }
+
+  Color _resolveForegroundColor(BuildContext context) {
+    final AppColorTokens appColors = context.appColors;
+    if (type == LumosTipType.encouragement) {
+      return appColors.onSuccess;
+    }
+    if (type == LumosTipType.fact) {
+      return appColors.onInfo;
+    }
+    return appColors.onWarning;
   }
 }
