@@ -60,4 +60,22 @@ class AppCardTokens extends ThemeExtension<AppCardTokens> {
       borderWidth: lerpDouble(borderWidth, other.borderWidth, t) ?? borderWidth,
     );
   }
+
+  @override
+  int get hashCode =>
+      Object.hash(paddingSm, paddingMd, paddingLg, radius, borderWidth);
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+
+    return other is AppCardTokens &&
+        other.paddingSm == paddingSm &&
+        other.paddingMd == paddingMd &&
+        other.paddingLg == paddingLg &&
+        other.radius == radius &&
+        other.borderWidth == borderWidth;
+  }
 }

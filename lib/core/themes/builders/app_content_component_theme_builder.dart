@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../component/app_card_tokens.dart';
 import '../../constants/dimensions.dart';
 import '../extensions/theme_extensions.dart';
+import '../foundation/app_radius.dart';
 
 abstract final class AppContentComponentThemeBuilder {
   static CardThemeData cardTheme({
@@ -31,16 +32,24 @@ abstract final class AppContentComponentThemeBuilder {
       backgroundColor: colorScheme.surfaceContainerLow,
       selectedColor: colorScheme.secondaryContainer,
       disabledColor: colorScheme.disabledContainerColor,
-      side: BorderSide(
-        color: colorScheme.outlineVariant,
-        width: WidgetSizes.borderWidthRegular,
-      ),
+      side: WidgetStateBorderSide.resolveWith((Set<WidgetState> states) {
+        if (states.isDisabled) {
+          return BorderSide(
+            color: colorScheme.disabledContainerColor,
+            width: WidgetSizes.borderWidthRegular,
+          );
+        }
+        return BorderSide(
+          color: colorScheme.outlineVariant,
+          width: WidgetSizes.borderWidthRegular,
+        );
+      }),
       labelStyle: textTheme.labelMedium?.copyWith(color: colorScheme.onSurface),
       secondaryLabelStyle: textTheme.labelMedium?.copyWith(
         color: colorScheme.onSecondaryContainer,
       ),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(Radius.radiusLarge),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
       ),
       showCheckmark: true,
     );
@@ -60,7 +69,7 @@ abstract final class AppContentComponentThemeBuilder {
       minLeadingWidth: IconSizes.iconLarge,
       minVerticalPadding: Insets.spacing8,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(Radius.radiusLarge),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
       ),
     );
   }

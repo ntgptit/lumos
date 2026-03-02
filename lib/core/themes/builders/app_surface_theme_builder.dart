@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../component/app_navigation_bar_tokens.dart';
 import '../../constants/dimensions.dart';
 import '../extensions/theme_extensions.dart';
+import '../semantic/app_elevation_tokens.dart';
 
 abstract final class AppSurfaceThemeBuilder {
   static AppBarTheme appBarTheme({
@@ -15,7 +16,9 @@ abstract final class AppSurfaceThemeBuilder {
       elevation: WidgetSizes.none,
       centerTitle: false,
       toolbarHeight: WidgetSizes.appBarHeight,
-      titleTextStyle: textTheme.titleLarge,
+      titleTextStyle: textTheme.titleLarge?.copyWith(
+        color: colorScheme.onSurface,
+      ),
     );
   }
 
@@ -55,11 +58,19 @@ abstract final class AppSurfaceThemeBuilder {
 
   static BottomNavigationBarThemeData bottomNavigationBarTheme({
     required ColorScheme colorScheme,
+    required TextTheme textTheme,
   }) {
     return BottomNavigationBarThemeData(
       backgroundColor: colorScheme.surface,
       selectedItemColor: colorScheme.primary,
       unselectedItemColor: colorScheme.onSurfaceVariant,
+      selectedLabelStyle: textTheme.labelMedium?.copyWith(
+        color: colorScheme.primary,
+        fontWeight: FontWeight.w600,
+      ),
+      unselectedLabelStyle: textTheme.labelMedium?.copyWith(
+        color: colorScheme.onSurfaceVariant,
+      ),
       elevation: WidgetSizes.none,
       type: BottomNavigationBarType.fixed,
     );
@@ -74,6 +85,11 @@ abstract final class AppSurfaceThemeBuilder {
       backgroundColor: colorScheme.surface,
       elevation: WidgetSizes.none,
       indicatorColor: colorScheme.secondaryContainer,
+      indicatorShape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(
+          navigationBarTokens.indicatorRadius,
+        ),
+      ),
       height: navigationBarTokens.height,
       iconTheme: WidgetStateProperty.resolveWith<IconThemeData>((
         Set<WidgetState> states,
@@ -111,10 +127,10 @@ abstract final class AppSurfaceThemeBuilder {
     return FloatingActionButtonThemeData(
       backgroundColor: colorScheme.primaryContainer,
       foregroundColor: colorScheme.onPrimaryContainer,
-      elevation: WidgetSizes.none,
-      focusElevation: WidgetSizes.none,
-      hoverElevation: WidgetSizes.none,
-      highlightElevation: WidgetSizes.none,
+      elevation: AppElevationTokens.level3,
+      focusElevation: AppElevationTokens.level3,
+      hoverElevation: AppElevationTokens.level4,
+      highlightElevation: AppElevationTokens.level3,
     );
   }
 }

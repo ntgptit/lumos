@@ -8,7 +8,7 @@ import '../foundation/app_palette.dart';
 //
 // Colors are resolved statically from AppPalette tonal scales, matching the
 // Ocean Depth theme convention. Light/dark selection mirrors M3 role mapping:
-//   light: color=*40, onColor=*99, container=*90, onContainer=*10
+//   light: color=*40, onColor=neutral100, container=*90, onContainer=*10
 //   dark:  color=*80, onColor=*20, container=*30, onContainer=*90
 // ---------------------------------------------------------------------------
 @immutable
@@ -46,15 +46,15 @@ class AppColorTokens extends ThemeExtension<AppColorTokens> {
   // ── Static singletons ──────────────────────────────────────────────────
   static const AppColorTokens light = AppColorTokens(
     success: AppPalette.success40,
-    onSuccess: AppPalette.success99,
+    onSuccess: AppPalette.neutral100,
     successContainer: AppPalette.success90,
     onSuccessContainer: AppPalette.success10,
     warning: AppPalette.warning40,
-    onWarning: AppPalette.warning99,
+    onWarning: AppPalette.neutral100,
     warningContainer: AppPalette.warning90,
     onWarningContainer: AppPalette.warning10,
     info: AppPalette.info40,
-    onInfo: AppPalette.info99,
+    onInfo: AppPalette.neutral100,
     infoContainer: AppPalette.info90,
     onInfoContainer: AppPalette.info10,
   );
@@ -139,5 +139,42 @@ class AppColorTokens extends ThemeExtension<AppColorTokens> {
           Color.lerp(onInfoContainer, other.onInfoContainer, t) ??
           onInfoContainer,
     );
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    success,
+    onSuccess,
+    successContainer,
+    onSuccessContainer,
+    warning,
+    onWarning,
+    warningContainer,
+    onWarningContainer,
+    info,
+    onInfo,
+    infoContainer,
+    onInfoContainer,
+  );
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+
+    return other is AppColorTokens &&
+        other.success == success &&
+        other.onSuccess == onSuccess &&
+        other.successContainer == successContainer &&
+        other.onSuccessContainer == onSuccessContainer &&
+        other.warning == warning &&
+        other.onWarning == onWarning &&
+        other.warningContainer == warningContainer &&
+        other.onWarningContainer == onWarningContainer &&
+        other.info == info &&
+        other.onInfo == onInfo &&
+        other.infoContainer == infoContainer &&
+        other.onInfoContainer == onInfoContainer;
   }
 }

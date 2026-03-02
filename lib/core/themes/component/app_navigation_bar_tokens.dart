@@ -20,12 +20,12 @@ class AppNavigationBarTokens extends ThemeExtension<AppNavigationBarTokens> {
   final EdgeInsets labelPadding;
 
   static const AppNavigationBarTokens defaults = AppNavigationBarTokens(
-    height: 80.0,
-    iconSize: 24.0,
+    height: AppSpacing.xxxl + AppSpacing.xxl + AppSpacing.xxl,
+    iconSize: AppSpacing.xxl,
     indicatorRadius: AppRadius.xl,
     labelPadding: EdgeInsets.symmetric(
       horizontal: AppSpacing.sm,
-      vertical: AppSpacing.xs,
+      vertical: AppSpacing.xxs,
     ),
   );
 
@@ -61,5 +61,22 @@ class AppNavigationBarTokens extends ThemeExtension<AppNavigationBarTokens> {
       labelPadding:
           EdgeInsets.lerp(labelPadding, other.labelPadding, t) ?? labelPadding,
     );
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(height, iconSize, indicatorRadius, labelPadding);
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+
+    return other is AppNavigationBarTokens &&
+        other.height == height &&
+        other.iconSize == iconSize &&
+        other.indicatorRadius == indicatorRadius &&
+        other.labelPadding == labelPadding;
   }
 }

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 // ---------------------------------------------------------------------------
 // AppPalette — Raw brand color tokens (Ocean Depth)
 // Source palette: Cadet Blue → Independence → Charcoal → Gunmetal → Eigengrau
-// All tonal values derived from the 5 seed colors using M3 tonal convention:
+// All tonal values follow the same M3 scale per family:
 //   10 = very dark, 20 = dark, 30, 40 = base, 70, 80 = light, 90 = container, 95, 99 = near-white
 // ---------------------------------------------------------------------------
 @immutable
@@ -12,7 +12,7 @@ abstract final class AppPalette {
   static const Color cadetBlue10 = Color(0xFF0D1E22);
   static const Color cadetBlue20 = Color(0xFF1E3840);
   static const Color cadetBlue30 = Color(0xFF2E525C);
-  static const Color cadetBlue40 = Color(0xFF4A6870); // adjusted base
+  static const Color cadetBlue40 = Color(0xFF6A7E84); // base
   static const Color cadetBlue70 = Color(0xFF94AEB4);
   static const Color cadetBlue80 = Color(0xFFB0C6CC);
   static const Color cadetBlue90 = Color(0xFFC8D8DC);
@@ -66,18 +66,16 @@ abstract final class AppPalette {
   static const Color neutral70 = Color(0xFF8090A0);
   static const Color neutral80 = Color(0xFFA0AEB8);
   static const Color neutral90 = Color(0xFFBCC8D4);
-  static const Color neutral92 = Color(0xFFCDD7E0);
   static const Color neutral95 = Color(0xFFD8E0E8);
-  static const Color neutral97 = Color(0xFFE8EEF2);
   static const Color neutral99 = Color(0xFFF4F6F8);
+  // Centralized white token for semantic on-colors (success/warning/info).
+  static const Color neutral100 = Color(0xFFFFFFFF);
 
   // ── Primary tonal scale (anchored to Cadet Blue #6A7E84) ────────────────
   static const Color primary10 = Color(0xFF0A1A20);
   static const Color primary20 = Color(0xFF1A3040);
   static const Color primary30 = Color(0xFF2A4858);
-  static const Color primary40 = Color(
-    0xFF6A7E84,
-  ); // = Cadet Blue (brand primary)
+  static const Color primary40 = cadetBlue40;
   static const Color primary70 = Color(0xFF94AEB4);
   static const Color primary80 = Color(0xFFB0C6CC);
   static const Color primary90 = Color(0xFFC8D8DC); // primaryContainer light
@@ -94,7 +92,7 @@ abstract final class AppPalette {
   static const Color secondary70 = Color(0xFF8090A0);
   static const Color secondary80 = Color(0xFF9AAAB8);
   static const Color secondary90 = Color(
-    0xFFBCC8D4,
+    0xFFB9C6D2,
   ); // secondaryContainer light
   static const Color secondary95 = Color(0xFFD6DFE8);
   static const Color secondary99 = Color(0xFFF2F5F8);
@@ -113,14 +111,14 @@ abstract final class AppPalette {
   static const Color tertiary99 = Color(0xFFEFF4F6);
 
   // ── Dark theme specifics ─────────────────────────────────────────────────
-  // Elevated primary/secondary for dark surfaces (must contrast on dark bg)
-  static const Color darkPrimary80 = Color(0xFFB0C6CC); // light cadet blue tone
-  static const Color darkSecondary70 = Color(
-    0xFF8090A0,
-  ); // light independence tone
+  // Dark roles should consume existing tonal scales (primary80/secondary70).
 
   // ── Error scale ──────────────────────────────────────────────────────────
+  static const Color error10 = Color(0xFF410002);
+  static const Color error20 = Color(0xFF690005);
+  static const Color error30 = Color(0xFF93000A);
   static const Color error40 = Color(0xFFBA1A1A);
+  static const Color error80 = Color(0xFFFFB4AB);
   static const Color error90 = Color(0xFFFFDAD6);
 
   // ── Success — Teal Green (harmonized with Ocean Depth cool tones) ─────────

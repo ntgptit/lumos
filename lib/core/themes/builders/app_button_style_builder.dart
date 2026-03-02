@@ -116,7 +116,9 @@ abstract final class AppButtonStyleBuilder {
       shape: _shape(size: size, buttonTokens: buttonTokens),
     );
     return baseStyle.copyWith(
-      overlayColor: colorScheme.onPrimary.asInteractiveOverlayProperty(),
+      overlayColor: _resolveFilledOverlayBase(
+        colorScheme,
+      ).asInteractiveOverlayProperty(),
     );
   }
 
@@ -237,16 +239,68 @@ double _resolveElevation(Set<WidgetState> states) {
   if (states.isDisabled) {
     return AppElevationTokens.level0;
   }
+  // M3: hovered elevated button lifts to level2.
   if (states.isHovered) {
     return AppElevationTokens.level2;
   }
-  if (states.isFocused) {
-    return AppElevationTokens.level1;
-  }
+  // M3: pressed elevated button stays at level1.
   if (states.isPressed) {
     return AppElevationTokens.level1;
   }
+  // M3: focused elevated button stays at level1.
+  if (states.isFocused) {
+    return AppElevationTokens.level1;
+  }
+  // M3: default elevated button uses level1.
   return AppElevationTokens.level1;
+}
+
+Color _resolveFilledOverlayBase(ColorScheme colorScheme) {
+  const double minimumVisibleContrast = 1.01;
+  final Color background = colorScheme.primary;
+  final List<Color> candidates = <Color>[
+    colorScheme.onPrimary,
+    colorScheme.onSurface,
+    colorScheme.inversePrimary,
+  ];
+  final Color resolved = _pickHighestContrastColor(
+    background: background,
+    candidates: candidates,
+  );
+  if (_contrastRatio(resolved, background) >= minimumVisibleContrast) {
+    return resolved;
+  }
+  return colorScheme.onPrimary;
+}
+
+Color _pickHighestContrastColor({
+  required Color background,
+  required List<Color> candidates,
+}) {
+  Color best = candidates.first;
+  double bestContrast = _contrastRatio(best, background);
+
+  for (final Color candidate in candidates.skip(1)) {
+    final double contrast = _contrastRatio(candidate, background);
+    if (contrast > bestContrast) {
+      best = candidate;
+      bestContrast = contrast;
+    }
+  }
+
+  return best;
+}
+
+double _contrastRatio(Color foreground, Color background) {
+  final double foregroundLuminance = foreground.computeLuminance();
+  final double backgroundLuminance = background.computeLuminance();
+  final double lighter = foregroundLuminance >= backgroundLuminance
+      ? foregroundLuminance
+      : backgroundLuminance;
+  final double darker = foregroundLuminance < backgroundLuminance
+      ? foregroundLuminance
+      : backgroundLuminance;
+  return (lighter + 0.05) / (darker + 0.05);
 }
 
 TextStyle? _textStyle({

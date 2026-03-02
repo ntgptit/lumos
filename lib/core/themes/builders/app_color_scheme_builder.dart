@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../constants/color_schemes.dart';
 
-final class AppColorSchemeBuilder {
+abstract final class AppColorSchemeBuilder {
   static ColorScheme light({Color? seedColor}) {
     return buildLightColorScheme(seedColor: seedColor);
   }

@@ -45,10 +45,18 @@ abstract final class AppControlThemeBuilder {
         return colorScheme.transparentSurfaceColor;
       }),
       checkColor: WidgetStatePropertyAll<Color>(colorScheme.onPrimary),
-      side: BorderSide(
-        color: colorScheme.outline,
-        width: WidgetSizes.borderWidthRegular,
-      ),
+      side: WidgetStateBorderSide.resolveWith((Set<WidgetState> states) {
+        if (states.isDisabled) {
+          return BorderSide(
+            color: colorScheme.disabledContainerColor,
+            width: WidgetSizes.borderWidthRegular,
+          );
+        }
+        return BorderSide(
+          color: colorScheme.outline,
+          width: WidgetSizes.borderWidthRegular,
+        );
+      }),
     );
   }
 

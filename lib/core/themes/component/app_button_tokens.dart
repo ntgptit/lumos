@@ -42,12 +42,12 @@ class AppButtonTokens extends ThemeExtension<AppButtonTokens> {
   final double disabledOpacity;
 
   static const AppButtonTokens defaults = AppButtonTokens(
-    heightSm: 40.0,
-    heightMd: 40.0,
-    heightLg: 48.0,
+    heightSm: AppSpacing.xxxl + AppSpacing.sm,
+    heightMd: AppSpacing.xxxl + AppSpacing.md,
+    heightLg: AppSpacing.xxxl + AppSpacing.lg,
     paddingSm: EdgeInsets.symmetric(
       horizontal: AppSpacing.md,
-      vertical: AppSpacing.xs,
+      vertical: AppSpacing.xxs,
     ),
     paddingMd: EdgeInsets.symmetric(
       horizontal: AppSpacing.xxl,
@@ -57,12 +57,12 @@ class AppButtonTokens extends ThemeExtension<AppButtonTokens> {
       horizontal: AppSpacing.xxl,
       vertical: AppSpacing.md,
     ),
-    radiusSm: AppRadius.xl,
-    radiusMd: AppRadius.xl,
+    radiusSm: AppRadius.md,
+    radiusMd: AppRadius.lg,
     radiusLg: AppRadius.xl,
-    iconSizeSm: 16.0,
-    iconSizeMd: 24.0,
-    iconSizeLg: 32.0,
+    iconSizeSm: AppSpacing.lg,
+    iconSizeMd: AppSpacing.xxl,
+    iconSizeLg: AppSpacing.xxxl,
     disabledOpacity: AppOpacity.disabled,
   );
 
@@ -121,5 +121,44 @@ class AppButtonTokens extends ThemeExtension<AppButtonTokens> {
           lerpDouble(disabledOpacity, other.disabledOpacity, t) ??
           disabledOpacity,
     );
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    heightSm,
+    heightMd,
+    heightLg,
+    paddingSm,
+    paddingMd,
+    paddingLg,
+    radiusSm,
+    radiusMd,
+    radiusLg,
+    iconSizeSm,
+    iconSizeMd,
+    iconSizeLg,
+    disabledOpacity,
+  );
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+
+    return other is AppButtonTokens &&
+        other.heightSm == heightSm &&
+        other.heightMd == heightMd &&
+        other.heightLg == heightLg &&
+        other.paddingSm == paddingSm &&
+        other.paddingMd == paddingMd &&
+        other.paddingLg == paddingLg &&
+        other.radiusSm == radiusSm &&
+        other.radiusMd == radiusMd &&
+        other.radiusLg == radiusLg &&
+        other.iconSizeSm == iconSizeSm &&
+        other.iconSizeMd == iconSizeMd &&
+        other.iconSizeLg == iconSizeLg &&
+        other.disabledOpacity == disabledOpacity;
   }
 }

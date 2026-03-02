@@ -14,7 +14,7 @@ abstract final class AppInputThemeBuilder {
     );
     return InputDecorationTheme(
       filled: true,
-      fillColor: colorScheme.surfaceContainerHighest,
+      fillColor: colorScheme.surfaceContainerLow,
       isDense: false,
       contentPadding: inputTokens.contentPadding,
       hintStyle: textTheme.bodyMedium?.copyWith(
@@ -55,15 +55,15 @@ abstract final class AppInputThemeBuilder {
       ),
     );
   }
-}
 
-OutlineInputBorder _outlineBorder({
-  required BorderRadius borderRadius,
-  required Color color,
-  required double width,
-}) {
-  return OutlineInputBorder(
-    borderRadius: borderRadius,
-    borderSide: BorderSide(color: color, width: width),
-  );
+  static OutlineInputBorder _outlineBorder({
+    required BorderRadius borderRadius,
+    required Color color,
+    required double width,
+  }) {
+    return OutlineInputBorder(
+      borderRadius: borderRadius,
+      borderSide: BorderSide(color: color, width: width),
+    );
+  }
 }

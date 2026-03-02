@@ -62,4 +62,20 @@ class AppTextTokens extends ThemeExtension<AppTextTokens> {
           labelMediumLink,
     );
   }
+
+  @override
+  int get hashCode =>
+      Object.hash(bodyMediumStrong, bodySmallMuted, labelMediumLink);
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+
+    return other is AppTextTokens &&
+        other.bodyMediumStrong == bodyMediumStrong &&
+        other.bodySmallMuted == bodySmallMuted &&
+        other.labelMediumLink == labelMediumLink;
+  }
 }

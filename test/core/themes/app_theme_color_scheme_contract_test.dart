@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lumos/core/constants/color_schemes.dart';
-import 'package:lumos/core/themes/extensions/theme_extensions.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -75,7 +74,7 @@ List<Color> _collectRequiredColors(ColorScheme colorScheme) {
     // IV. Inverse Colors
     colorScheme.inversePrimary,
     colorScheme.inverseSurface,
-    colorScheme.inverseOnSurface,
+    colorScheme.onInverseSurface,
 
     // V. Scrim / Shadow
     colorScheme.shadow,

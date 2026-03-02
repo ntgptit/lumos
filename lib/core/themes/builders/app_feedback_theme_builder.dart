@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../constants/dimensions.dart';
-import '../extensions/theme_extensions.dart';
+import '../semantic/app_elevation_tokens.dart';
+import '../foundation/app_radius.dart';
 
 abstract final class AppFeedbackThemeBuilder {
   static ProgressIndicatorThemeData progressIndicatorTheme({
@@ -21,18 +22,19 @@ abstract final class AppFeedbackThemeBuilder {
   }) {
     return SnackBarThemeData(
       behavior: SnackBarBehavior.floating,
+      elevation: AppElevationTokens.level3,
       backgroundColor: colorScheme.inverseSurface,
       contentTextStyle: textTheme.bodyMedium?.copyWith(
-        color: colorScheme.inverseOnSurface,
+        color: colorScheme.onInverseSurface,
       ),
       actionTextColor: colorScheme.inversePrimary,
-      closeIconColor: colorScheme.inverseOnSurface,
+      closeIconColor: colorScheme.onInverseSurface,
       insetPadding: const EdgeInsets.symmetric(
         horizontal: Insets.spacing16,
         vertical: Insets.spacing8,
       ),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(Radius.radiusSmall),
+        borderRadius: BorderRadius.circular(AppRadius.sm),
       ),
     );
   }

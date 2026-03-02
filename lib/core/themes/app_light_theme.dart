@@ -21,7 +21,10 @@ final class AppLightTheme {
         horizontal: WidgetSizes.none,
         vertical: WidgetSizes.none,
       ),
-      extensions: AppThemeExtensionsBuilder.light(colorScheme, textTheme),
+      extensions: AppThemeExtensionsBuilder.light(
+        colorScheme,
+        textTheme,
+      ).toThemeExtensions(),
     );
     return AppComponentThemeBuilder.apply(
       baseTheme: baseTheme,

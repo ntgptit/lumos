@@ -12,7 +12,7 @@ extension ColorSchemeStateColorsExtension on ColorScheme {
   }
 
   Color get transparentSurfaceColor {
-    return surface.withValues(alpha: WidgetOpacities.transparent);
+    return surface.withValues(alpha: WidgetOpacities.stateHover);
   }
 
   Color get transparentScrimColor {

@@ -141,6 +141,7 @@ final class AppComponentThemeBuilder {
     return baseTheme.copyWith(
       bottomNavigationBarTheme: AppSurfaceThemeBuilder.bottomNavigationBarTheme(
         colorScheme: colorScheme,
+        textTheme: textTheme,
       ),
       navigationBarTheme: AppSurfaceThemeBuilder.navigationBarTheme(
         colorScheme: colorScheme,

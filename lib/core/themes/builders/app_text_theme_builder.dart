@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../constants/text_styles.dart';
 
-final class AppTextThemeBuilder {
+abstract final class AppTextThemeBuilder {
   static TextTheme light(ColorScheme colorScheme) {
     return buildTextTheme(
       colorScheme: colorScheme,
@@ -230,6 +230,10 @@ final class AppTextThemeBuilder {
     if (fontFamily == AppTypographyConst.kGoogleFontPoppins) {
       return GoogleFonts.poppins(textStyle: textStyle);
     }
-    return textStyle;
+    throw ArgumentError.value(
+      fontFamily,
+      'fontFamily',
+      AppTypographyConst.kUnsupportedFontFamilyErrorMessage,
+    );
   }
 }

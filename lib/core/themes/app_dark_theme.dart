@@ -21,7 +21,10 @@ final class AppDarkTheme {
         horizontal: WidgetSizes.none,
         vertical: WidgetSizes.none,
       ),
-      extensions: AppThemeExtensionsBuilder.dark(colorScheme, textTheme),
+      extensions: AppThemeExtensionsBuilder.dark(
+        colorScheme,
+        textTheme,
+      ).toThemeExtensions(),
     );
     return AppComponentThemeBuilder.apply(
       baseTheme: baseTheme,

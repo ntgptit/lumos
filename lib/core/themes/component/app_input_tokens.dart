@@ -27,7 +27,7 @@ class AppInputTokens extends ThemeExtension<AppInputTokens> {
   final double labelGap;
 
   static const AppInputTokens defaults = AppInputTokens(
-    minHeight: 48.0,
+    minHeight: AppSpacing.xxxl + AppSpacing.lg,
     contentPadding: EdgeInsets.symmetric(
       horizontal: AppSpacing.lg,
       vertical: AppSpacing.md,
@@ -35,7 +35,7 @@ class AppInputTokens extends ThemeExtension<AppInputTokens> {
     borderRadius: AppRadius.md,
     borderWidth: AppStroke.thin,
     focusedBorderWidth: AppStroke.medium,
-    iconSize: 20.0,
+    iconSize: AppSpacing.xl,
     labelGap: AppSpacing.xs,
   );
 
@@ -79,5 +79,32 @@ class AppInputTokens extends ThemeExtension<AppInputTokens> {
       iconSize: lerpDouble(iconSize, other.iconSize, t) ?? iconSize,
       labelGap: lerpDouble(labelGap, other.labelGap, t) ?? labelGap,
     );
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    minHeight,
+    contentPadding,
+    borderRadius,
+    borderWidth,
+    focusedBorderWidth,
+    iconSize,
+    labelGap,
+  );
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+
+    return other is AppInputTokens &&
+        other.minHeight == minHeight &&
+        other.contentPadding == contentPadding &&
+        other.borderRadius == borderRadius &&
+        other.borderWidth == borderWidth &&
+        other.focusedBorderWidth == focusedBorderWidth &&
+        other.iconSize == iconSize &&
+        other.labelGap == labelGap;
   }
 }

@@ -5,6 +5,14 @@ import 'package:flutter/material.dart';
 import '../foundation/app_radius.dart';
 import '../foundation/app_spacing.dart';
 
+abstract final class AppDialogTokensConst {
+  static const double tabletInsetHorizontalScale = 3.0;
+  static const double desktopInsetHorizontalScale = 6.0;
+  static const double tabletMaxWidthScale = 15.0;
+  static const double desktopMaxWidthScale = 16.0;
+  static const double desktopMaxWidthOffset = AppSpacing.xxl * 2;
+}
+
 @immutable
 class AppDialogTokens extends ThemeExtension<AppDialogTokens> {
   const AppDialogTokens({
@@ -29,15 +37,19 @@ class AppDialogTokens extends ThemeExtension<AppDialogTokens> {
       vertical: AppSpacing.xxl,
     ),
     insetPaddingTablet: EdgeInsets.symmetric(
-      horizontal: AppSpacing.xxxl * 3,
+      horizontal:
+          AppSpacing.xxxl * AppDialogTokensConst.tabletInsetHorizontalScale,
       vertical: AppSpacing.xxl,
     ),
     insetPaddingDesktop: EdgeInsets.symmetric(
-      horizontal: AppSpacing.xxxl * 6,
+      horizontal:
+          AppSpacing.xxxl * AppDialogTokensConst.desktopInsetHorizontalScale,
       vertical: AppSpacing.xxl,
     ),
-    maxWidthTablet: 480.0,
-    maxWidthDesktop: 560.0,
+    maxWidthTablet: AppSpacing.xxxl * AppDialogTokensConst.tabletMaxWidthScale,
+    maxWidthDesktop:
+        AppSpacing.xxxl * AppDialogTokensConst.desktopMaxWidthScale +
+        AppDialogTokensConst.desktopMaxWidthOffset,
     radius: AppRadius.lg,
   );
 
@@ -82,5 +94,30 @@ class AppDialogTokens extends ThemeExtension<AppDialogTokens> {
           maxWidthDesktop,
       radius: lerpDouble(radius, other.radius, t) ?? radius,
     );
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    insetPaddingMobile,
+    insetPaddingTablet,
+    insetPaddingDesktop,
+    maxWidthTablet,
+    maxWidthDesktop,
+    radius,
+  );
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+
+    return other is AppDialogTokens &&
+        other.insetPaddingMobile == insetPaddingMobile &&
+        other.insetPaddingTablet == insetPaddingTablet &&
+        other.insetPaddingDesktop == insetPaddingDesktop &&
+        other.maxWidthTablet == maxWidthTablet &&
+        other.maxWidthDesktop == maxWidthDesktop &&
+        other.radius == radius;
   }
 }
