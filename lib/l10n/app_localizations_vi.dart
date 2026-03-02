@@ -45,16 +45,37 @@ class AppLocalizationsVi extends AppLocalizations {
   String get folderNameLabel => 'Tên thư mục';
 
   @override
+  String get folderDescriptionLabel => 'Mô tả';
+
+  @override
+  String get folderDescriptionHint => 'Nhập mô tả thư mục';
+
+  @override
+  String get folderColorLabel => 'Màu sắc';
+
+  @override
   String get folderManagerTitle => 'Quản lý thư mục';
 
   @override
   String get folderManagerSubtitle => 'Duyệt cây thư mục, tạo, đổi tên và xóa mềm thư mục.';
 
   @override
+  String get deckManagerTitle => 'Quản lý deck';
+
+  @override
+  String get deckManagerSubtitle => 'Quản lý các deck trong thư mục hiện tại.';
+
+  @override
   String get folderSearchHint => 'Tìm thư mục';
 
   @override
   String get folderSearchClearTooltip => 'Xóa tìm kiếm';
+
+  @override
+  String get deckSearchHint => 'Tìm deck';
+
+  @override
+  String get deckSearchClearTooltip => 'Xóa tìm kiếm deck';
 
   @override
   String get folderOpenParentTooltip => 'Mở thư mục cha';
@@ -103,6 +124,14 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
+  String folderDescriptionMaxLengthValidation(int max) {
+    return 'Mô tả tối đa $max ký tự.';
+  }
+
+  @override
+  String get folderColorInvalidValidation => 'Màu thư mục không hợp lệ.';
+
+  @override
   String folderDeleteConfirm(Object name) {
     return 'Xóa \"$name\" và toàn bộ thư mục con?';
   }
@@ -110,6 +139,72 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String folderDepth(int depth) {
     return 'Độ sâu $depth';
+  }
+
+  @override
+  String get deckNewDeck => 'Deck mới';
+
+  @override
+  String get deckCreateTitle => 'Tạo deck';
+
+  @override
+  String get deckRenameTitle => 'Đổi tên deck';
+
+  @override
+  String get deckDeleteTitle => 'Xóa deck';
+
+  @override
+  String get deckNameLabel => 'Tên deck';
+
+  @override
+  String get deckDescriptionLabel => 'Mô tả';
+
+  @override
+  String get deckDescriptionHint => 'Nhập mô tả deck';
+
+  @override
+  String get deckEmptyTitle => 'Chưa có deck nào.';
+
+  @override
+  String get deckEmptySubtitle => 'Hãy tạo deck để bắt đầu sắp xếp thẻ.';
+
+  @override
+  String get deckSearchEmptyTitle => 'Không có deck phù hợp.';
+
+  @override
+  String get deckSearchEmptySubtitle => 'Hãy thử từ khóa khác.';
+
+  @override
+  String get deckNameRequiredValidation => 'Tên deck là bắt buộc.';
+
+  @override
+  String deckNameMinLengthValidation(int min) {
+    return 'Tên deck phải có ít nhất $min ký tự.';
+  }
+
+  @override
+  String deckNameMaxLengthValidation(int max) {
+    return 'Tên deck tối đa $max ký tự.';
+  }
+
+  @override
+  String deckDescriptionMaxLengthValidation(int max) {
+    return 'Mô tả tối đa $max ký tự.';
+  }
+
+  @override
+  String deckDeleteConfirm(Object name) {
+    return 'Xóa deck \"$name\"?';
+  }
+
+  @override
+  String deckFlashcardCount(int count) {
+    return '$count thẻ';
+  }
+
+  @override
+  String deckCount(int count) {
+    return '$count deck';
   }
 
   @override

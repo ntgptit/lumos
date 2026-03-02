@@ -19,6 +19,8 @@ public interface FolderRepository extends JpaRepository<Folder, Long>, JpaSpecif
 
     List<Folder> findAllByParentIdAndDeletedAtIsNull(Long parentId);
 
+    boolean existsByParentIdAndDeletedAtIsNull(Long parentId);
+
     @Query(nativeQuery = true, value = """
             SELECT f.parent_id AS parentId, COUNT(f.id) AS childFolderCount
             FROM folders f

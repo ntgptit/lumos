@@ -1,8 +1,12 @@
 // feature-architecture-guard: allow_ui_di
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../../core/constants/dimensions.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../folder/providers/folder_ui_signal_provider.dart';
 import '../../folder/screens/folder_screen.dart';
 import '../screens/home_content.dart';
 import '../screens/widgets/blocks/home_profile_tab.dart';
@@ -11,10 +15,22 @@ import 'states/home_state.dart';
 
 part 'home_provider.g.dart';
 
+abstract final class HomeProviderConst {
+  HomeProviderConst._();
+
+  static const Duration tabSwitchLoadingDuration = AppDurations.medium;
+}
+
 @Riverpod(keepAlive: true)
 class HomeController extends _$HomeController {
+  Timer? _tabSwitchLoadingTimer;
+
   @override
   HomeState build() {
+    ref.onDispose(() {
+      _tabSwitchLoadingTimer?.cancel();
+      _tabSwitchLoadingTimer = null;
+    });
     return HomeState.initial();
   }
 
@@ -23,10 +39,65 @@ class HomeController extends _$HomeController {
     if (current.selectedIndex == newIndex) {
       return;
     }
+    final List<int> nextVisitedTabIndices = _addVisitedIndex(
+      currentIndices: current.visitedTabIndices,
+      nextIndex: newIndex,
+    );
+    _tabSwitchLoadingTimer?.cancel();
     state = HomeState(
       selectedIndex: newIndex,
       previousIndex: current.selectedIndex,
+      visitedTabIndices: nextVisitedTabIndices,
+      isSwitchLoading: true,
     );
+    _tabSwitchLoadingTimer = Timer(
+      HomeProviderConst.tabSwitchLoadingDuration,
+      _finishTabLoadingMask,
+    );
+  }
+
+  void onTabDestinationSelected({
+    required int newIndex,
+    required HomeTabId tabId,
+  }) {
+    final HomeState current = state;
+    if (current.selectedIndex != newIndex) {
+      selectTab(newIndex);
+      return;
+    }
+    _handleTabReselection(tabId: tabId);
+  }
+
+  bool _containsIndex({required List<int> indices, required int index}) {
+    return indices.contains(index);
+  }
+
+  List<int> _addVisitedIndex({
+    required List<int> currentIndices,
+    required int nextIndex,
+  }) {
+    if (_containsIndex(indices: currentIndices, index: nextIndex)) {
+      return currentIndices;
+    }
+    return <int>[...currentIndices, nextIndex];
+  }
+
+  void _finishTabLoadingMask() {
+    if (!ref.mounted) {
+      return;
+    }
+    final HomeState current = state;
+    if (!current.isSwitchLoading) {
+      return;
+    }
+    state = current.copyWith(isSwitchLoading: false);
+  }
+
+  void _handleTabReselection({required HomeTabId tabId}) {
+    if (tabId != HomeTabId.folders) {
+      return;
+    }
+    ref.read(folderUiSignalControllerProvider.notifier).requestScrollToTop();
   }
 }
 
@@ -71,6 +142,18 @@ int homeSelectedIndex(Ref ref) {
 int homePreviousIndex(Ref ref) {
   final HomeState state = ref.watch(homeControllerProvider);
   return state.previousIndex;
+}
+
+@Riverpod(keepAlive: true)
+List<int> homeVisitedTabIndices(Ref ref) {
+  final HomeState state = ref.watch(homeControllerProvider);
+  return state.visitedTabIndices;
+}
+
+@Riverpod(keepAlive: true)
+bool homeIsSwitchLoading(Ref ref) {
+  final HomeState state = ref.watch(homeControllerProvider);
+  return state.isSwitchLoading;
 }
 
 @Riverpod(keepAlive: true)

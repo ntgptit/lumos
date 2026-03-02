@@ -15,8 +15,11 @@ abstract final class FolderStateConst {
   static const int rootDepth = 0;
   static const int firstPage = 0;
   static const int pageSize = 20;
-  static const int folderNameMinLength = 1;
-  static const int folderNameMaxLength = 120;
+  static const int folderNameMinLength = FolderDomainConst.nameMinLength;
+  static const int folderNameMaxLength = FolderDomainConst.nameMaxLength;
+  static const int folderDescriptionMaxLength =
+      FolderDomainConst.descriptionMaxLength;
+  static const String folderDefaultColorHex = FolderDomainConst.defaultColorHex;
   static const Duration searchDebounceDuration = Duration(milliseconds: 250);
 }
 
@@ -78,6 +81,7 @@ abstract class FolderState with _$FolderState {
       inlineErrorMessage: null,
       view: FolderViewState(
         searchQuery: FolderStateConst.emptySearchQuery,
+        deckSearchQuery: FolderStateConst.emptySearchQuery,
         sortBy: FolderSortBy.name,
         sortType: FolderSortType.asc,
       ),
@@ -92,6 +96,7 @@ abstract class FolderState with _$FolderState {
   bool get hasNextPage => tree.pagination.hasNextPage;
   bool get isLoadingMore => tree.pagination.isLoadingMore;
   String get searchQuery => view.searchQuery;
+  String get deckSearchQuery => view.deckSearchQuery;
   FolderSortBy get sortBy => view.sortBy;
   FolderSortType get sortType => view.sortType;
 
@@ -147,6 +152,7 @@ abstract class FolderPaginationState with _$FolderPaginationState {
 abstract class FolderViewState with _$FolderViewState {
   const factory FolderViewState({
     required String searchQuery,
+    required String deckSearchQuery,
     required FolderSortBy sortBy,
     required FolderSortType sortType,
   }) = _FolderViewState;
@@ -154,6 +160,7 @@ abstract class FolderViewState with _$FolderViewState {
   factory FolderViewState.initial() {
     return const FolderViewState(
       searchQuery: FolderStateConst.emptySearchQuery,
+      deckSearchQuery: FolderStateConst.emptySearchQuery,
       sortBy: FolderSortBy.name,
       sortType: FolderSortType.asc,
     );

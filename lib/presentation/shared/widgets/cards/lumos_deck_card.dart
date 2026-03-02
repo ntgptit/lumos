@@ -97,28 +97,28 @@ class LumosDeckCard extends StatefulWidget {
 
 class _LumosDeckCardState extends State<LumosDeckCard>
     with SingleTickerProviderStateMixin {
-  late final AnimationController _swipeController;
-  late final Animation<Offset> _swipeAnimation;
+  AnimationController? _swipeController;
+  Animation<Offset>? _swipeAnimation;
 
   @override
   void initState() {
     super.initState();
-    _swipeController = AnimationController(
-      vsync: this,
-      duration: LumosDeckCardConst.swipeAnimationDuration,
-    );
-    _swipeAnimation =
-        Tween<Offset>(
-          begin: Offset.zero,
-          end: const Offset(-LumosDeckCardConst.swipeExtentRatio, 0),
-        ).animate(
-          CurvedAnimation(parent: _swipeController, curve: Curves.easeInOut),
-        );
+    _ensureSwipeControllerIfNeeded();
+  }
+
+  @override
+  void didUpdateWidget(covariant LumosDeckCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _ensureSwipeControllerIfNeeded();
+    if (_hasSwipeActions) {
+      return;
+    }
+    _swipeController?.value = WidgetRatios.none;
   }
 
   @override
   void dispose() {
-    _swipeController.dispose();
+    _swipeController?.dispose();
     super.dispose();
   }
 
@@ -131,23 +131,33 @@ class _LumosDeckCardState extends State<LumosDeckCard>
       widget.deviceType != DeviceType.mobile;
 
   void _handleSwipeUpdate(DragUpdateDetails details) {
+    final AnimationController? swipeController = _swipeController;
+    if (swipeController == null) {
+      return;
+    }
     // Only allow left swipe (negative dx).
     if (details.primaryDelta == null || details.primaryDelta! > 0) return;
-    _swipeController.value -=
+    swipeController.value -=
         details.primaryDelta! /
         (MediaQuery.sizeOf(context).width *
             LumosDeckCardConst.swipeExtentRatio);
   }
 
   void _handleSwipeEnd(DragEndDetails details) {
-    if (_swipeController.value > 0.5) {
-      _swipeController.forward();
-    } else {
-      _swipeController.reverse();
+    final AnimationController? swipeController = _swipeController;
+    if (swipeController == null) {
+      return;
     }
+    if (swipeController.value > 0.5) {
+      swipeController.forward();
+      return;
+    }
+    swipeController.reverse();
   }
 
-  void _closeSwipe() => _swipeController.reverse();
+  void _closeSwipe() {
+    _swipeController?.reverse();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -191,6 +201,10 @@ class _LumosDeckCardState extends State<LumosDeckCard>
   // ---------------------------------------------------------------------------
 
   Widget _buildSwipeable(BuildContext context) {
+    final Animation<Offset>? swipeAnimation = _swipeAnimation;
+    if (swipeAnimation == null) {
+      return _buildCard(context);
+    }
     return Stack(
       children: [
         // Action panel revealed behind card on swipe left.
@@ -209,12 +223,30 @@ class _LumosDeckCardState extends State<LumosDeckCard>
           onHorizontalDragUpdate: _handleSwipeUpdate,
           onHorizontalDragEnd: _handleSwipeEnd,
           child: SlideTransition(
-            position: _swipeAnimation,
+            position: swipeAnimation,
             child: _buildCard(context),
           ),
         ),
       ],
     );
+  }
+
+  void _ensureSwipeControllerIfNeeded() {
+    if (!_hasSwipeActions && _swipeController == null) {
+      return;
+    }
+    if (_swipeController != null) {
+      return;
+    }
+    final AnimationController controller = AnimationController(
+      vsync: this,
+      duration: LumosDeckCardConst.swipeAnimationDuration,
+    );
+    _swipeController = controller;
+    _swipeAnimation = Tween<Offset>(
+      begin: Offset.zero,
+      end: const Offset(-LumosDeckCardConst.swipeExtentRatio, 0),
+    ).animate(CurvedAnimation(parent: controller, curve: Curves.easeInOut));
   }
 
   // ---------------------------------------------------------------------------

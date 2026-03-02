@@ -4,4 +4,9 @@ abstract final class StringUtils {
   static String normalizeName(String rawValue) {
     return rawValue.replaceAll(RegExp(r'^\s+|\s+$'), '');
   }
+
+  static String normalizeUpper(String rawValue) {
+    final String normalized = normalizeName(rawValue);
+    return normalized.toUpperCase();
+  }
 }

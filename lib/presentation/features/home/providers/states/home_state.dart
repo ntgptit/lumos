@@ -10,9 +10,16 @@ abstract class HomeState with _$HomeState {
   const factory HomeState({
     required int selectedIndex,
     required int previousIndex,
+    required List<int> visitedTabIndices,
+    required bool isSwitchLoading,
   }) = _HomeState;
 
   factory HomeState.initial() {
-    return const HomeState(selectedIndex: 0, previousIndex: 0);
+    return const HomeState(
+      selectedIndex: 0,
+      previousIndex: 0,
+      visitedTabIndices: <int>[0],
+      isSwitchLoading: false,
+    );
   }
 }

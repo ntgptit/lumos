@@ -65,14 +65,11 @@ public class FolderSpecifications {
     private static Specification<Folder> nameContains(String searchQuery) {
         return (root, query, builder) -> {
             // Skip keyword filter when searchQuery is blank.
-            if (StringUtils
-                    .isBlank(searchQuery)) {
+            if (StringUtils.isBlank(searchQuery)) {
                 return builder
                         .conjunction();
             }
-            final var normalizedKeyword = StringUtils
-                    .lowerCase(StringUtils
-                            .trim(searchQuery));
+            final var normalizedKeyword = StringUtils.lowerCase(StringUtils.trim(searchQuery));
             final var likePattern = String
                     .format(LIKE_PATTERN_TEMPLATE, normalizedKeyword);
             return builder

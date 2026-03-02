@@ -45,16 +45,37 @@ class AppLocalizationsEn extends AppLocalizations {
   String get folderNameLabel => 'Folder name';
 
   @override
+  String get folderDescriptionLabel => 'Description';
+
+  @override
+  String get folderDescriptionHint => 'Enter folder description';
+
+  @override
+  String get folderColorLabel => 'Color';
+
+  @override
   String get folderManagerTitle => 'Folder Manager';
 
   @override
   String get folderManagerSubtitle => 'Browse tree, create, rename, and soft-delete folders.';
 
   @override
+  String get deckManagerTitle => 'Deck Manager';
+
+  @override
+  String get deckManagerSubtitle => 'Manage decks in this folder.';
+
+  @override
   String get folderSearchHint => 'Search folders';
 
   @override
   String get folderSearchClearTooltip => 'Clear search';
+
+  @override
+  String get deckSearchHint => 'Search decks';
+
+  @override
+  String get deckSearchClearTooltip => 'Clear deck search';
 
   @override
   String get folderOpenParentTooltip => 'Open parent folder';
@@ -103,6 +124,14 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String folderDescriptionMaxLengthValidation(int max) {
+    return 'Description must be at most $max character(s).';
+  }
+
+  @override
+  String get folderColorInvalidValidation => 'Folder color is invalid.';
+
+  @override
   String folderDeleteConfirm(Object name) {
     return 'Delete \"$name\" and all subfolders?';
   }
@@ -110,6 +139,72 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String folderDepth(int depth) {
     return 'Depth $depth';
+  }
+
+  @override
+  String get deckNewDeck => 'New Deck';
+
+  @override
+  String get deckCreateTitle => 'Create deck';
+
+  @override
+  String get deckRenameTitle => 'Rename deck';
+
+  @override
+  String get deckDeleteTitle => 'Delete deck';
+
+  @override
+  String get deckNameLabel => 'Deck name';
+
+  @override
+  String get deckDescriptionLabel => 'Description';
+
+  @override
+  String get deckDescriptionHint => 'Enter deck description';
+
+  @override
+  String get deckEmptyTitle => 'No decks here yet.';
+
+  @override
+  String get deckEmptySubtitle => 'Create a deck to start organizing cards.';
+
+  @override
+  String get deckSearchEmptyTitle => 'No decks match your search.';
+
+  @override
+  String get deckSearchEmptySubtitle => 'Try a different keyword.';
+
+  @override
+  String get deckNameRequiredValidation => 'Deck name is required.';
+
+  @override
+  String deckNameMinLengthValidation(int min) {
+    return 'Deck name must be at least $min character(s).';
+  }
+
+  @override
+  String deckNameMaxLengthValidation(int max) {
+    return 'Deck name must be at most $max character(s).';
+  }
+
+  @override
+  String deckDescriptionMaxLengthValidation(int max) {
+    return 'Description must be at most $max character(s).';
+  }
+
+  @override
+  String deckDeleteConfirm(Object name) {
+    return 'Delete deck \"$name\"?';
+  }
+
+  @override
+  String deckFlashcardCount(int count) {
+    return '$count cards';
+  }
+
+  @override
+  String deckCount(int count) {
+    return '$count deck(s)';
   }
 
   @override

@@ -23,6 +23,7 @@ class FolderHeaderNavigationSection extends StatefulWidget {
   const FolderHeaderNavigationSection({
     required this.l10n,
     required this.currentDepth,
+    required this.isDeckManager,
     required this.isNavigatingParent,
     required this.isNavigatingRoot,
     required this.searchQuery,
@@ -37,6 +38,7 @@ class FolderHeaderNavigationSection extends StatefulWidget {
 
   final AppLocalizations l10n;
   final int currentDepth;
+  final bool isDeckManager;
   final bool isNavigatingParent;
   final bool isNavigatingRoot;
   final String searchQuery;
@@ -111,7 +113,7 @@ class _FolderHeaderNavigationSectionState
         ? Icons.schedule_rounded
         : Icons.sort_by_alpha_rounded;
     final String contextMetaLabel = widget.searchQuery.isNotEmpty
-        ? widget.l10n.folderSearchHint
+        ? _buildSearchHint()
         : currentSortLabel;
     return Container(
       padding: const EdgeInsets.all(Insets.spacing8),
@@ -206,11 +208,25 @@ class _FolderHeaderNavigationSectionState
     final bool canClearSearch = widget.searchQuery.isNotEmpty;
     return LumosSearchBar(
       controller: _searchController,
-      hint: widget.l10n.folderSearchHint,
+      hint: _buildSearchHint(),
       onSearch: widget.onSearchChanged,
       onClear: canClearSearch ? _clearSearch : null,
-      clearTooltip: widget.l10n.folderSearchClearTooltip,
+      clearTooltip: _buildSearchClearTooltip(),
     );
+  }
+
+  String _buildSearchHint() {
+    if (widget.isDeckManager) {
+      return widget.l10n.deckSearchHint;
+    }
+    return widget.l10n.folderSearchHint;
+  }
+
+  String _buildSearchClearTooltip() {
+    if (widget.isDeckManager) {
+      return widget.l10n.deckSearchClearTooltip;
+    }
+    return widget.l10n.folderSearchClearTooltip;
   }
 
   Widget _buildSortButton({required BuildContext context}) {

@@ -12,10 +12,17 @@
   "folderRenameTitle": "Đổi tên thư mục",
   "folderDeleteTitle": "Xóa thư mục",
   "folderNameLabel": "Tên thư mục",
+  "folderDescriptionLabel": "Mô tả",
+  "folderDescriptionHint": "Nhập mô tả thư mục",
+  "folderColorLabel": "Màu sắc",
   "folderManagerTitle": "Quản lý thư mục",
   "folderManagerSubtitle": "Duyệt cây thư mục, tạo, đổi tên và xóa mềm thư mục.",
+  "deckManagerTitle": "Quản lý deck",
+  "deckManagerSubtitle": "Quản lý các deck trong thư mục hiện tại.",
   "folderSearchHint": "Tìm thư mục",
   "folderSearchClearTooltip": "Xóa tìm kiếm",
+  "deckSearchHint": "Tìm deck",
+  "deckSearchClearTooltip": "Xóa tìm kiếm deck",
   "folderOpenParentTooltip": "Mở thư mục cha",
   "folderSortTitle": "Sắp xếp thư mục",
   "folderSortNameAscending": "Tên A-Z",
@@ -44,6 +51,15 @@
       }
     }
   },
+  "folderDescriptionMaxLengthValidation": "Mô tả tối đa {max} ký tự.",
+  "@folderDescriptionMaxLengthValidation": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "folderColorInvalidValidation": "Màu thư mục không hợp lệ.",
   "folderDeleteConfirm": "Xóa \"{name}\" và toàn bộ thư mục con?",
   "@folderDeleteConfirm": {
     "placeholders": {
@@ -54,6 +70,64 @@
   "@folderDepth": {
     "placeholders": {
       "depth": {
+        "type": "int"
+      }
+    }
+  },
+  "deckNewDeck": "Deck mới",
+  "deckCreateTitle": "Tạo deck",
+  "deckRenameTitle": "Đổi tên deck",
+  "deckDeleteTitle": "Xóa deck",
+  "deckNameLabel": "Tên deck",
+  "deckDescriptionLabel": "Mô tả",
+  "deckDescriptionHint": "Nhập mô tả deck",
+  "deckEmptyTitle": "Chưa có deck nào.",
+  "deckEmptySubtitle": "Hãy tạo deck để bắt đầu sắp xếp thẻ.",
+  "deckSearchEmptyTitle": "Không có deck phù hợp.",
+  "deckSearchEmptySubtitle": "Hãy thử từ khóa khác.",
+  "deckNameRequiredValidation": "Tên deck là bắt buộc.",
+  "deckNameMinLengthValidation": "Tên deck phải có ít nhất {min} ký tự.",
+  "@deckNameMinLengthValidation": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "deckNameMaxLengthValidation": "Tên deck tối đa {max} ký tự.",
+  "@deckNameMaxLengthValidation": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "deckDescriptionMaxLengthValidation": "Mô tả tối đa {max} ký tự.",
+  "@deckDescriptionMaxLengthValidation": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "deckDeleteConfirm": "Xóa deck \"{name}\"?",
+  "@deckDeleteConfirm": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "deckFlashcardCount": "{count} thẻ",
+  "@deckFlashcardCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "deckCount": "{count} deck",
+  "@deckCount": {
+    "placeholders": {
+      "count": {
         "type": "int"
       }
     }

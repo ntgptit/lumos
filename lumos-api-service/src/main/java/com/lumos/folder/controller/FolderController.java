@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lumos.common.dto.request.SearchRequest;
 import com.lumos.folder.dto.request.CreateFolderRequest;
 import com.lumos.folder.dto.request.RenameFolderRequest;
+import com.lumos.folder.dto.request.UpdateFolderRequest;
 import com.lumos.folder.dto.response.FolderResponse;
 import com.lumos.folder.service.FolderService;
 
@@ -57,6 +59,17 @@ public class FolderController {
 	public ResponseEntity<FolderResponse> renameFolder(@PathVariable Long folderId,
 			@Valid @RequestBody RenameFolderRequest request) {
 		final var folder = this.folderService.renameFolder(folderId, request);
+		return ResponseEntity.ok(folder);
+	}
+
+	/**
+	 * Update an existing folder metadata.
+	 */
+	@Operation(summary = "Update folder")
+	@PutMapping("/{folderId}")
+	public ResponseEntity<FolderResponse> updateFolder(@PathVariable Long folderId,
+			@Valid @RequestBody UpdateFolderRequest request) {
+		final var folder = this.folderService.updateFolder(folderId, request);
 		return ResponseEntity.ok(folder);
 	}
 

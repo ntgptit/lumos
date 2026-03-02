@@ -23,16 +23,18 @@ abstract final class FolderRepositoryImplConst {
   static const String sortByQueryKey = 'sortBy';
   static const String sortTypeQueryKey = 'sortType';
   static const String nameField = 'name';
+  static const String descriptionField = 'description';
   static const String parentIdField = 'parentId';
   static const String emptyValue = '';
   static const String folderNameRequiredMessage = 'Folder name is required.';
   static const String folderNameMaxLengthMessage =
-      'Folder name must be at most 120 characters.';
+      'Folder name must be at most ${FolderDomainConst.nameMaxLength} characters.';
+  static const String folderDescriptionMaxLengthMessage =
+      'Folder description must be at most ${FolderDomainConst.descriptionMaxLength} characters.';
   static const String folderNameInvalidMessage = 'Folder name is invalid.';
   static const String messageField = 'message';
   static const String fieldErrorsField = 'fieldErrors';
   static const String nameFieldErrorKey = 'name';
-  static const int folderNameMaxLength = 120;
   static const int badRequestStatusCode = 400;
   static const int conflictStatusCode = 409;
   static const int unprocessableEntityStatusCode = 422;
@@ -82,31 +84,17 @@ class DioFolderRepository implements FolderRepository {
 
   @override
   Future<Either<Failure, Unit>> createFolder({
-    required String name,
-    required int? parentId,
+    required FolderUpsertInput input,
   }) async {
-    final String normalizedName = _normalizeName(name);
-    if (normalizedName == FolderRepositoryImplConst.emptyValue) {
-      return left<Failure, Unit>(
-        const Failure.validation(
-          message: FolderRepositoryImplConst.folderNameRequiredMessage,
-        ),
-      );
-    }
-    if (normalizedName.length > FolderRepositoryImplConst.folderNameMaxLength) {
-      return left<Failure, Unit>(
-        const Failure.validation(
-          message: FolderRepositoryImplConst.folderNameMaxLengthMessage,
-        ),
-      );
+    final FolderUpsertInput normalizedInput = _normalizeInput(input);
+    final Failure? validationFailure = _validateInput(normalizedInput);
+    if (validationFailure != null) {
+      return left<Failure, Unit>(validationFailure);
     }
     try {
       await _dio.post<dynamic>(
         FolderRepositoryImplConst.foldersPath,
-        data: <String, dynamic>{
-          FolderRepositoryImplConst.nameField: normalizedName,
-          FolderRepositoryImplConst.parentIdField: parentId,
-        },
+        data: _toPayload(normalizedInput),
       );
       return right<Failure, Unit>(unit);
     } on Object catch (error) {
@@ -115,31 +103,19 @@ class DioFolderRepository implements FolderRepository {
   }
 
   @override
-  Future<Either<Failure, Unit>> renameFolder({
+  Future<Either<Failure, Unit>> updateFolder({
     required int folderId,
-    required String name,
+    required FolderUpsertInput input,
   }) async {
-    final String normalizedName = _normalizeName(name);
-    if (normalizedName == FolderRepositoryImplConst.emptyValue) {
-      return left<Failure, Unit>(
-        const Failure.validation(
-          message: FolderRepositoryImplConst.folderNameRequiredMessage,
-        ),
-      );
-    }
-    if (normalizedName.length > FolderRepositoryImplConst.folderNameMaxLength) {
-      return left<Failure, Unit>(
-        const Failure.validation(
-          message: FolderRepositoryImplConst.folderNameMaxLengthMessage,
-        ),
-      );
+    final FolderUpsertInput normalizedInput = _normalizeInput(input);
+    final Failure? validationFailure = _validateInput(normalizedInput);
+    if (validationFailure != null) {
+      return left<Failure, Unit>(validationFailure);
     }
     try {
-      await _dio.patch<dynamic>(
-        '${_folderPath(folderId: folderId)}/rename',
-        data: <String, dynamic>{
-          FolderRepositoryImplConst.nameField: normalizedName,
-        },
+      await _dio.put<dynamic>(
+        _folderPath(folderId: folderId),
+        data: _toPayload(normalizedInput),
       );
       return right<Failure, Unit>(unit);
     } on Object catch (error) {
@@ -157,8 +133,39 @@ class DioFolderRepository implements FolderRepository {
     }
   }
 
-  String _normalizeName(String rawValue) {
-    return StringUtils.normalizeName(rawValue);
+  FolderUpsertInput _normalizeInput(FolderUpsertInput input) {
+    return FolderUpsertInput(
+      name: StringUtils.normalizeName(input.name),
+      description: StringUtils.normalizeName(input.description),
+      parentId: input.parentId,
+    );
+  }
+
+  Failure? _validateInput(FolderUpsertInput input) {
+    if (input.name == FolderRepositoryImplConst.emptyValue) {
+      return const Failure.validation(
+        message: FolderRepositoryImplConst.folderNameRequiredMessage,
+      );
+    }
+    if (input.name.length > FolderDomainConst.nameMaxLength) {
+      return const Failure.validation(
+        message: FolderRepositoryImplConst.folderNameMaxLengthMessage,
+      );
+    }
+    if (input.description.length > FolderDomainConst.descriptionMaxLength) {
+      return const Failure.validation(
+        message: FolderRepositoryImplConst.folderDescriptionMaxLengthMessage,
+      );
+    }
+    return null;
+  }
+
+  Map<String, dynamic> _toPayload(FolderUpsertInput input) {
+    return <String, dynamic>{
+      FolderRepositoryImplConst.nameField: input.name,
+      FolderRepositoryImplConst.descriptionField: input.description,
+      FolderRepositoryImplConst.parentIdField: input.parentId,
+    };
   }
 
   String _folderPath({required int folderId}) {

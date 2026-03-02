@@ -11,11 +11,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.lumos.common.dto.request.SearchRequest;
+import com.lumos.deck.repository.DeckRepository;
 import com.lumos.folder.constant.FolderConstants;
 import com.lumos.folder.dto.request.CreateFolderRequest;
 import com.lumos.folder.dto.request.RenameFolderRequest;
+import com.lumos.folder.dto.request.UpdateFolderRequest;
 import com.lumos.folder.dto.response.FolderResponse;
 import com.lumos.folder.entity.Folder;
+import com.lumos.folder.exception.FolderHasDecksConflictException;
 import com.lumos.folder.exception.FolderNameConflictException;
 import com.lumos.folder.exception.FolderNotFoundException;
 import com.lumos.folder.mapper.FolderMapper;
@@ -31,6 +34,7 @@ import lombok.RequiredArgsConstructor;
 public class FolderServiceImpl implements FolderService {
 
     private final FolderRepository folderRepository;
+    private final DeckRepository deckRepository;
     private final FolderMapper folderMapper;
 
     /**
@@ -44,12 +48,19 @@ public class FolderServiceImpl implements FolderService {
     public FolderResponse createFolder(CreateFolderRequest request) {
 
         final var normalizedName = StringUtils.trim(request.name());
+        final var normalizedDescription = this.normalizeDescription(request.description());
         final var parent = this.resolveParent(request.parentId());
         final var depth = this.resolveDepth(parent);
+        this.validateParentHasNoDecks(parent);
 
         this.validateSiblingName(parent, normalizedName, null);
 
-        final var folder = this.folderMapper.toFolderEntity(normalizedName, parent, depth);
+        final var folder = this.folderMapper.toFolderEntity(
+                normalizedName,
+                normalizedDescription,
+                FolderConstants.DEFAULT_COLOR_HEX,
+                parent,
+                depth);
         final var savedFolder = this.folderRepository.save(folder);
         return this.folderMapper.toFolderResponse(savedFolder);
     }
@@ -75,6 +86,28 @@ public class FolderServiceImpl implements FolderService {
     }
 
     /**
+     * Update folder metadata.
+     *
+     * @param folderId folder identifier
+     * @param request  update folder payload
+     * @return updated folder response
+     */
+    @Override
+    @Transactional
+    public FolderResponse updateFolder(Long folderId, UpdateFolderRequest request) {
+
+        final var folder = this.findActiveFolder(folderId);
+        final var normalizedName = StringUtils.trim(request.name());
+        final var normalizedDescription = this.normalizeDescription(request.description());
+
+        this.validateSiblingName(folder.getParent(), normalizedName, folder.getId());
+        folder.setName(normalizedName);
+        folder.setDescription(normalizedDescription);
+
+        return this.folderMapper.toFolderResponse(folder);
+    }
+
+    /**
      * Soft delete folder and its subtree.
      *
      * @param folderId folder identifier
@@ -86,6 +119,7 @@ public class FolderServiceImpl implements FolderService {
         this.findActiveFolder(folderId);
         final var deletedAt = Instant.now();
 
+        this.deckRepository.softDeleteByFolderTree(folderId, deletedAt);
         this.folderRepository.softDeleteFolderTree(folderId, deletedAt);
     }
 
@@ -145,6 +179,27 @@ public class FolderServiceImpl implements FolderService {
         if (exists) {
             throw new FolderNameConflictException(name);
         }
+    }
+
+    private void validateParentHasNoDecks(Folder parent) {
+        // Root-level folder creation has no parent constraint.
+        if (parent == null) {
+            return;
+        }
+        final var hasDecks = this.deckRepository.existsByFolderIdAndDeletedAtIsNull(parent.getId());
+        // Allow subfolder creation only when parent folder has no decks.
+        if (!hasDecks) {
+            return;
+        }
+        throw new FolderHasDecksConflictException(parent.getId());
+    }
+
+    private String normalizeDescription(String description) {
+        // Fallback to empty description when value is absent.
+        if (description == null) {
+            return FolderConstants.EMPTY_DESCRIPTION;
+        }
+        return StringUtils.trim(description);
     }
 
     private Map<Long, Integer> resolveChildCountByParentId(List<Folder> folders) {

@@ -18,6 +18,8 @@ public class FolderMapperSpringAdapter implements FolderMapper {
         return new FolderResponse(
                 folder.getId(),
                 folder.getName(),
+                folder.getDescription(),
+                folder.getColorHex(),
                 parentId,
                 folder.getDepth(),
                 FolderConstants.DEFAULT_CHILD_FOLDER_COUNT,
@@ -26,9 +28,11 @@ public class FolderMapperSpringAdapter implements FolderMapper {
     }
 
     @Override
-    public Folder toFolderEntity(String name, Folder parent, Integer depth) {
+    public Folder toFolderEntity(String name, String description, String colorHex, Folder parent, Integer depth) {
         final var folder = new Folder();
         folder.setName(name);
+        folder.setDescription(description);
+        folder.setColorHex(colorHex);
         folder.setParent(parent);
         folder.setDepth(depth);
         return folder;

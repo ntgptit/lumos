@@ -167,6 +167,24 @@ abstract class AppLocalizations {
   /// **'Folder name'**
   String get folderNameLabel;
 
+  /// No description provided for @folderDescriptionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get folderDescriptionLabel;
+
+  /// No description provided for @folderDescriptionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter folder description'**
+  String get folderDescriptionHint;
+
+  /// No description provided for @folderColorLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Color'**
+  String get folderColorLabel;
+
   /// No description provided for @folderManagerTitle.
   ///
   /// In en, this message translates to:
@@ -179,6 +197,18 @@ abstract class AppLocalizations {
   /// **'Browse tree, create, rename, and soft-delete folders.'**
   String get folderManagerSubtitle;
 
+  /// No description provided for @deckManagerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Deck Manager'**
+  String get deckManagerTitle;
+
+  /// No description provided for @deckManagerSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage decks in this folder.'**
+  String get deckManagerSubtitle;
+
   /// No description provided for @folderSearchHint.
   ///
   /// In en, this message translates to:
@@ -190,6 +220,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Clear search'**
   String get folderSearchClearTooltip;
+
+  /// No description provided for @deckSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search decks'**
+  String get deckSearchHint;
+
+  /// No description provided for @deckSearchClearTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear deck search'**
+  String get deckSearchClearTooltip;
 
   /// No description provided for @folderOpenParentTooltip.
   ///
@@ -275,6 +317,18 @@ abstract class AppLocalizations {
   /// **'Folder name must be at most {max} character(s).'**
   String folderNameMaxLengthValidation(int max);
 
+  /// No description provided for @folderDescriptionMaxLengthValidation.
+  ///
+  /// In en, this message translates to:
+  /// **'Description must be at most {max} character(s).'**
+  String folderDescriptionMaxLengthValidation(int max);
+
+  /// No description provided for @folderColorInvalidValidation.
+  ///
+  /// In en, this message translates to:
+  /// **'Folder color is invalid.'**
+  String get folderColorInvalidValidation;
+
   /// No description provided for @folderDeleteConfirm.
   ///
   /// In en, this message translates to:
@@ -286,6 +340,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Depth {depth}'**
   String folderDepth(int depth);
+
+  /// No description provided for @deckNewDeck.
+  ///
+  /// In en, this message translates to:
+  /// **'New Deck'**
+  String get deckNewDeck;
+
+  /// No description provided for @deckCreateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create deck'**
+  String get deckCreateTitle;
+
+  /// No description provided for @deckRenameTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename deck'**
+  String get deckRenameTitle;
+
+  /// No description provided for @deckDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete deck'**
+  String get deckDeleteTitle;
+
+  /// No description provided for @deckNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Deck name'**
+  String get deckNameLabel;
+
+  /// No description provided for @deckDescriptionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get deckDescriptionLabel;
+
+  /// No description provided for @deckDescriptionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter deck description'**
+  String get deckDescriptionHint;
+
+  /// No description provided for @deckEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No decks here yet.'**
+  String get deckEmptyTitle;
+
+  /// No description provided for @deckEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a deck to start organizing cards.'**
+  String get deckEmptySubtitle;
+
+  /// No description provided for @deckSearchEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No decks match your search.'**
+  String get deckSearchEmptyTitle;
+
+  /// No description provided for @deckSearchEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Try a different keyword.'**
+  String get deckSearchEmptySubtitle;
+
+  /// No description provided for @deckNameRequiredValidation.
+  ///
+  /// In en, this message translates to:
+  /// **'Deck name is required.'**
+  String get deckNameRequiredValidation;
+
+  /// No description provided for @deckNameMinLengthValidation.
+  ///
+  /// In en, this message translates to:
+  /// **'Deck name must be at least {min} character(s).'**
+  String deckNameMinLengthValidation(int min);
+
+  /// No description provided for @deckNameMaxLengthValidation.
+  ///
+  /// In en, this message translates to:
+  /// **'Deck name must be at most {max} character(s).'**
+  String deckNameMaxLengthValidation(int max);
+
+  /// No description provided for @deckDescriptionMaxLengthValidation.
+  ///
+  /// In en, this message translates to:
+  /// **'Description must be at most {max} character(s).'**
+  String deckDescriptionMaxLengthValidation(int max);
+
+  /// No description provided for @deckDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete deck \"{name}\"?'**
+  String deckDeleteConfirm(Object name);
+
+  /// No description provided for @deckFlashcardCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} cards'**
+  String deckFlashcardCount(int count);
+
+  /// No description provided for @deckCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} deck(s)'**
+  String deckCount(int count);
 
   /// No description provided for @homeGreeting.
   ///

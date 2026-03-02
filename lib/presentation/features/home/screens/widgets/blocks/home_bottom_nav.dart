@@ -20,7 +20,13 @@ class HomeBottomNav extends ConsumerWidget {
     return NavigationBar(
       selectedIndex: selectedIndex,
       onDestinationSelected: (int newIndex) {
-        ref.read(homeControllerProvider.notifier).selectTab(newIndex);
+        final HomeNavigationItem selectedItem = items[newIndex];
+        ref
+            .read(homeControllerProvider.notifier)
+            .onTabDestinationSelected(
+              newIndex: newIndex,
+              tabId: selectedItem.tabId,
+            );
       },
       destinations: items
           .map(

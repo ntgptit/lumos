@@ -26,6 +26,10 @@ class ComponentThemeGuardConst {
   static const String showModalBottomSheetMarker = 'showModalBottomSheet';
   static const String allowInlineOverrideMarker =
       'component-theme-guard: allow-inline-override';
+  static const String loadingWidgetName = 'LumosLoadingIndicator';
+  static const String directProgressIndicatorReason =
+      'Direct ProgressIndicator usage in feature UI should be wrapped by shared loading widgets '
+      '(for example `LumosLoadingIndicator`) to keep app-wide behavior and theming consistent.';
 }
 
 class ComponentThemeViolation {
@@ -169,7 +173,8 @@ _forbiddenPropertyRules = <_ForbiddenPropertyRule>[
     ),
     propertyNames: <String>['color', 'backgroundColor', 'valueColor'],
     reason:
-        'ProgressIndicator colors in UI files must come from theme builders.',
+        'ProgressIndicator colors in UI files should come from `ProgressIndicatorThemeData` '
+        'or shared loading widgets (for example `LumosLoadingIndicator`) to keep app-wide consistency.',
   ),
   _ForbiddenPropertyRule(
     widgetName: 'Dialog',
@@ -187,6 +192,10 @@ _forbiddenPropertyRules = <_ForbiddenPropertyRule>[
 
 final RegExp _widgetClassDeclarationPattern = RegExp(
   r'\bclass\s+\w+\s+extends\s+\w*Widget\b',
+);
+
+final RegExp _directProgressIndicatorPattern = RegExp(
+  r'\b(?:LinearProgressIndicator|CircularProgressIndicator)\s*\(',
 );
 
 Future<void> main() async {
@@ -232,12 +241,22 @@ void _checkFile({
   final bool requiresThemeImport = _requiresCoreThemeImport(lines: lines);
   if (!requiresThemeImport) {
     _checkInlineOverrides(path: path, lines: lines, violations: violations);
+    _checkDirectProgressIndicatorUsage(
+      path: path,
+      lines: lines,
+      violations: violations,
+    );
     return;
   }
 
   final bool hasThemeImport = _hasCoreThemeImport(lines: lines);
   if (hasThemeImport) {
     _checkInlineOverrides(path: path, lines: lines, violations: violations);
+    _checkDirectProgressIndicatorUsage(
+      path: path,
+      lines: lines,
+      violations: violations,
+    );
     return;
   }
 
@@ -253,6 +272,11 @@ void _checkFile({
   );
 
   _checkInlineOverrides(path: path, lines: lines, violations: violations);
+  _checkDirectProgressIndicatorUsage(
+    path: path,
+    lines: lines,
+    violations: violations,
+  );
 }
 
 void _checkInlineOverrides({
@@ -305,6 +329,39 @@ void _checkInlineOverrides({
         }
       }
     }
+  }
+}
+
+void _checkDirectProgressIndicatorUsage({
+  required String path,
+  required List<String> lines,
+  required List<ComponentThemeViolation> violations,
+}) {
+  if (!_isFeatureUiFile(path)) {
+    return;
+  }
+  for (int index = 0; index < lines.length; index++) {
+    final String rawLine = lines[index];
+    final String sourceLine = _stripLineCommentSmart(rawLine).trim();
+    if (sourceLine.isEmpty) {
+      continue;
+    }
+    if (!_directProgressIndicatorPattern.hasMatch(sourceLine)) {
+      continue;
+    }
+    if (sourceLine.contains(
+      ComponentThemeGuardConst.allowInlineOverrideMarker,
+    )) {
+      continue;
+    }
+    violations.add(
+      ComponentThemeViolation(
+        filePath: path,
+        lineNumber: index + 1,
+        reason: ComponentThemeGuardConst.directProgressIndicatorReason,
+        lineContent: rawLine.trim(),
+      ),
+    );
   }
 }
 
@@ -536,6 +593,19 @@ bool _isPresentationUiFile(String path) {
   if (path.startsWith(ComponentThemeGuardConst.sharedWidgetsRoot)) {
     return true;
   }
+  if (!path.startsWith(ComponentThemeGuardConst.featurePrefix)) {
+    return false;
+  }
+  if (path.contains(ComponentThemeGuardConst.featureScreensMarker)) {
+    return true;
+  }
+  if (path.contains(ComponentThemeGuardConst.featureWidgetsMarker)) {
+    return true;
+  }
+  return false;
+}
+
+bool _isFeatureUiFile(String path) {
   if (!path.startsWith(ComponentThemeGuardConst.featurePrefix)) {
     return false;
   }

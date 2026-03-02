@@ -18,6 +18,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.lumos.deck.exception.DeckNameConflictException;
+import com.lumos.deck.exception.DeckNotFoundException;
+import com.lumos.deck.exception.DeckParentHasSubfoldersException;
+import com.lumos.folder.exception.FolderHasDecksConflictException;
 import com.lumos.folder.exception.FolderNameConflictException;
 import com.lumos.folder.exception.FolderNotFoundException;
 
@@ -47,6 +51,50 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(FolderNameConflictException.class)
     public ResponseEntity<ApiErrorResponse> handleFolderNameConflict(
             FolderNameConflictException exception,
+            HttpServletRequest request) {
+        return buildErrorResponse(
+                HttpStatus.CONFLICT,
+                resolveMessage(exception.getMessageKey(), exception.getMessageArgs()),
+                request.getRequestURI(),
+                Map.of());
+    }
+
+    @ExceptionHandler(FolderHasDecksConflictException.class)
+    public ResponseEntity<ApiErrorResponse> handleFolderHasDecksConflict(
+            FolderHasDecksConflictException exception,
+            HttpServletRequest request) {
+        return buildErrorResponse(
+                HttpStatus.CONFLICT,
+                resolveMessage(exception.getMessageKey(), exception.getMessageArgs()),
+                request.getRequestURI(),
+                Map.of());
+    }
+
+    @ExceptionHandler(DeckNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleDeckNotFound(
+            DeckNotFoundException exception,
+            HttpServletRequest request) {
+        return buildErrorResponse(
+                HttpStatus.NOT_FOUND,
+                resolveMessage(exception.getMessageKey(), exception.getMessageArgs()),
+                request.getRequestURI(),
+                Map.of());
+    }
+
+    @ExceptionHandler(DeckNameConflictException.class)
+    public ResponseEntity<ApiErrorResponse> handleDeckNameConflict(
+            DeckNameConflictException exception,
+            HttpServletRequest request) {
+        return buildErrorResponse(
+                HttpStatus.CONFLICT,
+                resolveMessage(exception.getMessageKey(), exception.getMessageArgs()),
+                request.getRequestURI(),
+                Map.of());
+    }
+
+    @ExceptionHandler(DeckParentHasSubfoldersException.class)
+    public ResponseEntity<ApiErrorResponse> handleDeckParentHasSubfolders(
+            DeckParentHasSubfoldersException exception,
             HttpServletRequest request) {
         return buildErrorResponse(
                 HttpStatus.CONFLICT,

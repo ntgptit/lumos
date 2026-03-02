@@ -7,4 +7,5 @@ public class ValidationMessageKeys {
 
     public static final String FOLDER_NAME_REQUIRED = "{folder.name.required}";
     public static final String FOLDER_NAME_MAX_LENGTH = "{folder.name.max-length}";
+    public static final String FOLDER_DESCRIPTION_MAX_LENGTH = "{folder.description.max-length}";
 }

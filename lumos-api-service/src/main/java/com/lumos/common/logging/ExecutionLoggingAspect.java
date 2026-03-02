@@ -12,6 +12,7 @@ import org.slf4j.MDC;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+import java.util.concurrent.TimeUnit;
 
 @Aspect
 @Component
@@ -19,9 +20,30 @@ import org.springframework.stereotype.Component;
 public class ExecutionLoggingAspect {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExecutionLoggingAspect.class);
+
+    private static final String LOG_EVENT_START = "START";
+    private static final String LOG_EVENT_END = "END";
+    private static final String LOG_STATUS_SUCCESS = "SUCCESS";
+    private static final String LOG_STATUS_ERROR = "ERROR";
+    private static final String LOG_LATENCY_NORMAL = "NORMAL";
+    private static final String LOG_LATENCY_SLOW = "SLOW";
+    private static final String LOG_LAYER_SERVICE = "SERVICE";
+    private static final String LOG_LAYER_CONTROLLER = "CONTROLLER";
+    private static final String LOG_LAYER_APPLICATION = "APPLICATION";
+
+    private static final String LOG_START_TEMPLATE =
+            "EXEC event={} layer={} method={} argCount={} traceId={}";
+    private static final String LOG_SUCCESS_TEMPLATE =
+            "EXEC event={} layer={} method={} argCount={} status={} latency={} durationMs={} traceId={}";
+    private static final String LOG_ERROR_TEMPLATE =
+            "EXEC event={} layer={} method={} argCount={} status={} durationMs={} errorType={} errorMessage={} traceId={}";
+
     private static final String TRACE_ID_KEY = "traceId";
     private static final String TRACE_ID_B3_KEY = "X-B3-TraceId";
     private static final String TRACE_ID_FALLBACK = "N/A";
+    private static final String ERROR_MESSAGE_FALLBACK = "N/A";
+    private static final int MAX_ERROR_MESSAGE_LENGTH = 240;
+    private static final long SLOW_EXECUTION_THRESHOLD_MS = 300L;
 
     @Pointcut("within(@org.springframework.stereotype.Service *) || within(@org.springframework.web.bind.annotation.RestController *)")
     public void applicationLayerBean() {
@@ -33,24 +55,67 @@ public class ExecutionLoggingAspect {
 
     @Around("execution(public * *(..)) && applicationLayerBean() && !skipTraceLogging()")
     public Object logMethodExecution(ProceedingJoinPoint joinPoint) throws Throwable {
-        String methodName = resolveMethodName(joinPoint);
-        String traceId = resolveTraceId();
-        int argCount = joinPoint.getArgs().length;
-        long startNanoTime = System.nanoTime();
+        final String methodName = resolveMethodName(joinPoint);
+        final String layerName = resolveLayerName(methodName);
+        final String traceId = resolveTraceId();
+        final int argCount = joinPoint.getArgs().length;
+        final long startNanoTime = System.nanoTime();
 
-        LOGGER.info("AOP_START method={} argCount={} traceId={}", methodName, argCount, traceId);
+        // Emit start log only at debug level to reduce production noise.
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(
+                    LOG_START_TEMPLATE,
+                    LOG_EVENT_START,
+                    layerName,
+                    methodName,
+                    argCount,
+                    traceId
+            );
+        }
         try {
-            Object result = joinPoint.proceed();
-            long durationMs = toMillis(startNanoTime);
-            LOGGER.info("AOP_END method={} status=SUCCESS durationMs={} traceId={}", methodName, durationMs, traceId);
+            final Object result = joinPoint.proceed();
+            final long durationMs = toMillis(startNanoTime);
+            final String latencyClass = resolveLatencyClass(durationMs);
+
+            // Escalate slow successful executions to WARN for production observability.
+            if (isSlowExecution(durationMs)) {
+                LOGGER.warn(
+                        LOG_SUCCESS_TEMPLATE,
+                        LOG_EVENT_END,
+                        layerName,
+                        methodName,
+                        argCount,
+                        LOG_STATUS_SUCCESS,
+                        latencyClass,
+                        durationMs,
+                        traceId
+                );
+                return result;
+            }
+
+            LOGGER.info(
+                    LOG_SUCCESS_TEMPLATE,
+                    LOG_EVENT_END,
+                    layerName,
+                    methodName,
+                    argCount,
+                    LOG_STATUS_SUCCESS,
+                    latencyClass,
+                    durationMs,
+                    traceId
+            );
             return result;
         } catch (Throwable throwable) {
-            long durationMs = toMillis(startNanoTime);
-            String errorType = throwable.getClass().getSimpleName();
-            String errorMessage = throwable.getMessage();
+            final long durationMs = toMillis(startNanoTime);
+            final String errorType = throwable.getClass().getSimpleName();
+            final String errorMessage = resolveErrorMessage(throwable);
             LOGGER.error(
-                    "AOP_END method={} status=ERROR durationMs={} errorType={} errorMessage={} traceId={}",
+                    LOG_ERROR_TEMPLATE,
+                    LOG_EVENT_END,
+                    layerName,
                     methodName,
+                    argCount,
+                    LOG_STATUS_ERROR,
                     durationMs,
                     errorType,
                     errorMessage,
@@ -61,20 +126,32 @@ public class ExecutionLoggingAspect {
     }
 
     private String resolveMethodName(ProceedingJoinPoint joinPoint) {
-        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-        String declaringType = signature.getDeclaringTypeName();
-        String method = signature.getName();
+        final MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        final String declaringType = signature.getDeclaringTypeName();
+        final String method = signature.getName();
         return declaringType + "." + method;
     }
 
+    private String resolveLayerName(String methodName) {
+        // Service layer path marker takes precedence when method belongs to service package.
+        if (StringUtils.contains(methodName, ".service.")) {
+            return LOG_LAYER_SERVICE;
+        }
+        // Controller layer path marker is used for REST endpoint executions.
+        if (StringUtils.contains(methodName, ".controller.")) {
+            return LOG_LAYER_CONTROLLER;
+        }
+        return LOG_LAYER_APPLICATION;
+    }
+
     private String resolveTraceId() {
-        String traceId = MDC.get(TRACE_ID_KEY);
+        final String traceId = MDC.get(TRACE_ID_KEY);
         // Prefer traceId set by application logging context.
         if (hasText(traceId)) {
             return traceId;
         }
 
-        String b3TraceId = MDC.get(TRACE_ID_B3_KEY);
+        final String b3TraceId = MDC.get(TRACE_ID_B3_KEY);
         // Fallback to B3 propagation key if application traceId is absent.
         if (hasText(b3TraceId)) {
             return b3TraceId;
@@ -87,8 +164,34 @@ public class ExecutionLoggingAspect {
         return StringUtils.isNotBlank(value);
     }
 
+    private String resolveLatencyClass(long durationMs) {
+        // Mark requests slower than threshold for warning-level observability.
+        if (isSlowExecution(durationMs)) {
+            return LOG_LATENCY_SLOW;
+        }
+        return LOG_LATENCY_NORMAL;
+    }
+
+    private boolean isSlowExecution(long durationMs) {
+        return durationMs >= SLOW_EXECUTION_THRESHOLD_MS;
+    }
+
+    private String resolveErrorMessage(Throwable throwable) {
+        final String message = throwable.getMessage();
+        // Keep a stable fallback when exception message is blank.
+        if (!hasText(message)) {
+            return ERROR_MESSAGE_FALLBACK;
+        }
+        final String normalizedMessage = StringUtils.normalizeSpace(message);
+        // Return as-is when message already fits the log payload size.
+        if (normalizedMessage.length() <= MAX_ERROR_MESSAGE_LENGTH) {
+            return normalizedMessage;
+        }
+        return normalizedMessage.substring(0, MAX_ERROR_MESSAGE_LENGTH) + "...";
+    }
+
     private long toMillis(long startNanoTime) {
-        long elapsedNano = System.nanoTime() - startNanoTime;
-        return elapsedNano / 1_000_000L;
+        final long elapsedNano = System.nanoTime() - startNanoTime;
+        return TimeUnit.NANOSECONDS.toMillis(elapsedNano);
     }
 }

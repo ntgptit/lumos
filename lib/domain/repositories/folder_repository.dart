@@ -14,13 +14,12 @@ abstract class FolderRepository {
   });
 
   Future<Either<Failure, Unit>> createFolder({
-    required String name,
-    required int? parentId,
+    required FolderUpsertInput input,
   });
 
-  Future<Either<Failure, Unit>> renameFolder({
+  Future<Either<Failure, Unit>> updateFolder({
     required int folderId,
-    required String name,
+    required FolderUpsertInput input,
   });
 
   Future<Either<Failure, Unit>> deleteFolder({required int folderId});

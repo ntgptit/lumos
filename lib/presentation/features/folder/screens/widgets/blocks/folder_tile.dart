@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../../core/constants/dimensions.dart';
+import '../../../../../../core/utils/string_utils.dart';
 import '../../../../../../domain/entities/folder_models.dart';
 import '../../../../../../l10n/app_localizations.dart';
 import '../../../../../shared/widgets/cards/lumos_action_list_item_card.dart';
@@ -53,6 +54,7 @@ class FolderTile extends StatelessWidget {
       leading: _FolderTileLeading(
         depth: item.depth,
         childFolderCount: item.childFolderCount,
+        colorHex: item.colorHex,
       ),
       actions: _buildActions(l10n: l10n),
       onActionSelected: (String actionKey) {
@@ -95,10 +97,12 @@ class _FolderTileLeading extends StatelessWidget {
   const _FolderTileLeading({
     required this.depth,
     required this.childFolderCount,
+    required this.colorHex,
   });
 
   final int depth;
   final int childFolderCount;
+  final String colorHex;
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +115,7 @@ class _FolderTileLeading extends StatelessWidget {
     );
     final Color foregroundColor = _resolveForegroundColor(
       colorScheme: colorScheme,
-      isRoot: isRoot,
+      colorHex: colorHex,
     );
     final Color borderColor = _resolveBorderColor(colorScheme: colorScheme);
 
@@ -165,12 +169,15 @@ class _FolderTileLeading extends StatelessWidget {
 
   Color _resolveForegroundColor({
     required ColorScheme colorScheme,
-    required bool isRoot,
+    required String colorHex,
   }) {
-    if (isRoot) {
-      return colorScheme.onSecondaryContainer;
+    final String normalizedHex = StringUtils.normalizeUpper(colorHex);
+    if (!FolderDomainConst.colorHexPattern.hasMatch(normalizedHex)) {
+      return colorScheme.primary;
     }
-    return colorScheme.onPrimaryContainer;
+    final String hex = normalizedHex.replaceFirst('#', '');
+    final String argbHex = hex.length == 6 ? 'FF$hex' : hex;
+    return Color(int.parse(argbHex, radix: 16));
   }
 
   Color _resolveBorderColor({required ColorScheme colorScheme}) {

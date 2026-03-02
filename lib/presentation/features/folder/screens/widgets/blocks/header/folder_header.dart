@@ -12,6 +12,8 @@ import 'folder_header_navigation_section.dart';
 class FolderHeader extends StatelessWidget {
   const FolderHeader({
     required this.currentDepth,
+    required this.isDeckManager,
+    required this.deckCount,
     required this.isNavigatingParent,
     required this.isNavigatingRoot,
     required this.searchQuery,
@@ -25,6 +27,8 @@ class FolderHeader extends StatelessWidget {
   });
 
   final int currentDepth;
+  final bool isDeckManager;
+  final int deckCount;
   final bool isNavigatingParent;
   final bool isNavigatingRoot;
   final String searchQuery;
@@ -45,11 +49,17 @@ class FolderHeader extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          FolderHeaderBanner(l10n: l10n, currentDepth: currentDepth),
+          FolderHeaderBanner(
+            l10n: l10n,
+            currentDepth: currentDepth,
+            isDeckManager: isDeckManager,
+            deckCount: deckCount,
+          ),
           const SizedBox(height: Insets.spacing12),
           FolderHeaderNavigationSection(
             l10n: l10n,
             currentDepth: currentDepth,
+            isDeckManager: isDeckManager,
             isNavigatingParent: isNavigatingParent,
             isNavigatingRoot: isNavigatingRoot,
             searchQuery: searchQuery,

@@ -10,11 +10,15 @@ class FolderHeaderBanner extends StatelessWidget {
   const FolderHeaderBanner({
     required this.l10n,
     required this.currentDepth,
+    required this.isDeckManager,
+    required this.deckCount,
     super.key,
   });
 
   final AppLocalizations l10n;
   final int currentDepth;
+  final bool isDeckManager;
+  final int deckCount;
 
   @override
   Widget build(BuildContext context) {
@@ -84,12 +88,12 @@ class FolderHeaderBanner extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 LumosText(
-                  l10n.folderManagerTitle,
+                  _buildManagerTitle(),
                   style: LumosTextStyle.titleLarge,
                 ),
                 const SizedBox(height: Insets.spacing8),
                 LumosText(
-                  l10n.folderManagerSubtitle,
+                  _buildManagerSubtitle(),
                   style: LumosTextStyle.bodySmall,
                 ),
                 const SizedBox(height: Insets.spacing8),
@@ -104,10 +108,14 @@ class FolderHeaderBanner extends StatelessWidget {
                       foregroundColor: colorScheme.onSecondaryContainer,
                     ),
                     FolderHeaderMetaPill(
-                      icon: Icons.account_tree_rounded,
-                      label: l10n.folderDepth(currentDepth),
-                      backgroundColor: colorScheme.tertiaryContainer,
-                      foregroundColor: colorScheme.onTertiaryContainer,
+                      icon: _buildSecondaryPillIcon(),
+                      label: _buildSecondaryPillLabel(),
+                      backgroundColor: _buildSecondaryPillBackgroundColor(
+                        colorScheme: colorScheme,
+                      ),
+                      foregroundColor: _buildSecondaryPillForegroundColor(
+                        colorScheme: colorScheme,
+                      ),
                     ),
                   ],
                 ),
@@ -132,12 +140,65 @@ class FolderHeaderBanner extends StatelessWidget {
         ),
       ),
       child: IconTheme(
-        data: IconThemeData(color: colorScheme.primary),
-        child: const LumosIcon(
-          Icons.folder_copy_rounded,
-          size: IconSizes.iconMedium,
-        ),
+        data: IconThemeData(color: _buildLeadingIconColor(colorScheme)),
+        child: LumosIcon(_buildLeadingIcon(), size: IconSizes.iconMedium),
       ),
     );
+  }
+
+  String _buildManagerTitle() {
+    if (isDeckManager) {
+      return l10n.deckManagerTitle;
+    }
+    return l10n.folderManagerTitle;
+  }
+
+  String _buildManagerSubtitle() {
+    if (isDeckManager) {
+      return l10n.deckManagerSubtitle;
+    }
+    return l10n.folderManagerSubtitle;
+  }
+
+  IconData _buildLeadingIcon() {
+    if (isDeckManager) {
+      return Icons.style_rounded;
+    }
+    return Icons.folder_copy_rounded;
+  }
+
+  Color _buildLeadingIconColor(ColorScheme colorScheme) {
+    if (isDeckManager) {
+      return colorScheme.tertiary;
+    }
+    return colorScheme.primary;
+  }
+
+  IconData _buildSecondaryPillIcon() {
+    if (isDeckManager) {
+      return Icons.style_outlined;
+    }
+    return Icons.account_tree_rounded;
+  }
+
+  String _buildSecondaryPillLabel() {
+    if (isDeckManager) {
+      return l10n.deckCount(deckCount);
+    }
+    return l10n.folderDepth(currentDepth);
+  }
+
+  Color _buildSecondaryPillBackgroundColor({required ColorScheme colorScheme}) {
+    if (isDeckManager) {
+      return colorScheme.tertiaryContainer;
+    }
+    return colorScheme.tertiaryContainer;
+  }
+
+  Color _buildSecondaryPillForegroundColor({required ColorScheme colorScheme}) {
+    if (isDeckManager) {
+      return colorScheme.onTertiaryContainer;
+    }
+    return colorScheme.onTertiaryContainer;
   }
 }

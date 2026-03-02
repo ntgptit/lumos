@@ -7,6 +7,8 @@ part 'folder_model.g.dart';
 
 const int folderDataDefaultId = 0;
 const String folderDataDefaultName = '';
+const String folderDataDefaultDescription = '';
+const String folderDataDefaultColorHex = FolderDomainConst.defaultColorHex;
 const int folderDataDefaultDepth = 0;
 const int folderDataDefaultChildFolderCount = 0;
 
@@ -15,6 +17,8 @@ abstract class FolderModel with _$FolderModel {
   const factory FolderModel({
     @Default(folderDataDefaultId) int id,
     @Default(folderDataDefaultName) String name,
+    @Default(folderDataDefaultDescription) String description,
+    @Default(folderDataDefaultColorHex) String colorHex,
     int? parentId,
     @Default(folderDataDefaultDepth) int depth,
     @Default(folderDataDefaultChildFolderCount) int childFolderCount,
@@ -29,6 +33,8 @@ extension FolderModelMapper on FolderModel {
     return FolderNode(
       id: id,
       name: name,
+      description: description,
+      colorHex: colorHex,
       parentId: parentId,
       depth: depth,
       childFolderCount: childFolderCount,

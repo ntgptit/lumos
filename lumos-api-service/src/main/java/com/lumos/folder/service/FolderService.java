@@ -6,6 +6,7 @@ import java.util.List;
 import com.lumos.common.dto.request.SearchRequest;
 import com.lumos.folder.dto.request.CreateFolderRequest;
 import com.lumos.folder.dto.request.RenameFolderRequest;
+import com.lumos.folder.dto.request.UpdateFolderRequest;
 import com.lumos.folder.dto.response.FolderResponse;
 
 public interface FolderService {
@@ -26,6 +27,15 @@ public interface FolderService {
      * @return updated folder response
      */
     FolderResponse renameFolder(Long folderId, RenameFolderRequest request);
+
+    /**
+     * Update folder metadata.
+     *
+     * @param folderId folder identifier
+     * @param request  update folder payload
+     * @return updated folder response
+     */
+    FolderResponse updateFolder(Long folderId, UpdateFolderRequest request);
 
     /**
      * Soft delete folder and all descendants.

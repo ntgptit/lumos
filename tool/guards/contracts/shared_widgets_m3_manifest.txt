@@ -20,6 +20,7 @@ lib/presentation/shared/widgets/gamification/lumos_gamification_widgets.dart
 lib/presentation/shared/widgets/inputs/lumos_form_widgets.dart
 lib/presentation/shared/widgets/layout/lumos_screen_frame.dart
 lib/presentation/shared/widgets/layout/lumos_decorative_background.dart
+lib/presentation/shared/widgets/layout/lumos_paged_sliver_list.dart
 lib/presentation/shared/widgets/learning/lumos_learning_widgets.dart
 lib/presentation/shared/widgets/lumos_models.dart
 lib/presentation/shared/widgets/lumos_widgets.dart

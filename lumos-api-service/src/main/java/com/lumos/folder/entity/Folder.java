@@ -1,6 +1,7 @@
 package com.lumos.folder.entity;
 
 import com.lumos.common.entity.AuditEntity;
+import com.lumos.folder.constant.FolderConstants;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -24,8 +25,14 @@ public class Folder extends AuditEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", nullable = false, length = 150)
+    @Column(name = "name", nullable = false, length = FolderConstants.NAME_MAX_LENGTH)
     private String name;
+
+    @Column(name = "description", nullable = false, length = FolderConstants.DESCRIPTION_MAX_LENGTH)
+    private String description;
+
+    @Column(name = "color_hex", nullable = false, length = FolderConstants.COLOR_HEX_MAX_LENGTH)
+    private String colorHex;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")

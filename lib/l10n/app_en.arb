@@ -15,10 +15,17 @@
   "folderRenameTitle": "Rename folder",
   "folderDeleteTitle": "Delete folder",
   "folderNameLabel": "Folder name",
+  "folderDescriptionLabel": "Description",
+  "folderDescriptionHint": "Enter folder description",
+  "folderColorLabel": "Color",
   "folderManagerTitle": "Folder Manager",
   "folderManagerSubtitle": "Browse tree, create, rename, and soft-delete folders.",
+  "deckManagerTitle": "Deck Manager",
+  "deckManagerSubtitle": "Manage decks in this folder.",
   "folderSearchHint": "Search folders",
   "folderSearchClearTooltip": "Clear search",
+  "deckSearchHint": "Search decks",
+  "deckSearchClearTooltip": "Clear deck search",
   "folderOpenParentTooltip": "Open parent folder",
   "folderSortTitle": "Sort folders",
   "folderSortNameAscending": "Name A-Z",
@@ -47,6 +54,15 @@
       }
     }
   },
+  "folderDescriptionMaxLengthValidation": "Description must be at most {max} character(s).",
+  "@folderDescriptionMaxLengthValidation": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "folderColorInvalidValidation": "Folder color is invalid.",
   "folderDeleteConfirm": "Delete \"{name}\" and all subfolders?",
   "@folderDeleteConfirm": {
     "placeholders": {
@@ -57,6 +73,64 @@
   "@folderDepth": {
     "placeholders": {
       "depth": {
+        "type": "int"
+      }
+    }
+  },
+  "deckNewDeck": "New Deck",
+  "deckCreateTitle": "Create deck",
+  "deckRenameTitle": "Rename deck",
+  "deckDeleteTitle": "Delete deck",
+  "deckNameLabel": "Deck name",
+  "deckDescriptionLabel": "Description",
+  "deckDescriptionHint": "Enter deck description",
+  "deckEmptyTitle": "No decks here yet.",
+  "deckEmptySubtitle": "Create a deck to start organizing cards.",
+  "deckSearchEmptyTitle": "No decks match your search.",
+  "deckSearchEmptySubtitle": "Try a different keyword.",
+  "deckNameRequiredValidation": "Deck name is required.",
+  "deckNameMinLengthValidation": "Deck name must be at least {min} character(s).",
+  "@deckNameMinLengthValidation": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "deckNameMaxLengthValidation": "Deck name must be at most {max} character(s).",
+  "@deckNameMaxLengthValidation": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "deckDescriptionMaxLengthValidation": "Description must be at most {max} character(s).",
+  "@deckDescriptionMaxLengthValidation": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "deckDeleteConfirm": "Delete deck \"{name}\"?",
+  "@deckDeleteConfirm": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "deckFlashcardCount": "{count} cards",
+  "@deckFlashcardCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "deckCount": "{count} deck(s)",
+  "@deckCount": {
+    "placeholders": {
+      "count": {
         "type": "int"
       }
     }

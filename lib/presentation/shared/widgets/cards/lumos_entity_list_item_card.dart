@@ -168,28 +168,28 @@ class LumosEntityListItemCard extends StatefulWidget {
 
 class _LumosEntityListItemCardState extends State<LumosEntityListItemCard>
     with SingleTickerProviderStateMixin {
-  late final AnimationController _swipeController;
-  late final Animation<Offset> _swipeAnimation;
+  AnimationController? _swipeController;
+  Animation<Offset>? _swipeAnimation;
 
   @override
   void initState() {
     super.initState();
-    _swipeController = AnimationController(
-      vsync: this,
-      duration: LumosEntityListItemCardConst.swipeAnimationDuration,
-    );
-    _swipeAnimation =
-        Tween<Offset>(
-          begin: Offset.zero,
-          end: const Offset(-LumosEntityListItemCardConst.swipeExtentRatio, 0),
-        ).animate(
-          CurvedAnimation(parent: _swipeController, curve: Curves.easeInOut),
-        );
+    _ensureSwipeControllerIfNeeded();
+  }
+
+  @override
+  void didUpdateWidget(covariant LumosEntityListItemCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _ensureSwipeControllerIfNeeded();
+    if (_hasSwipeActions) {
+      return;
+    }
+    _swipeController?.value = WidgetRatios.none;
   }
 
   @override
   void dispose() {
-    _swipeController.dispose();
+    _swipeController?.dispose();
     super.dispose();
   }
 
@@ -202,20 +202,32 @@ class _LumosEntityListItemCardState extends State<LumosEntityListItemCard>
       widget.contextMenuItems.isNotEmpty && widget.isEnabled;
 
   void _handleSwipeUpdate(DragUpdateDetails details) {
+    final AnimationController? swipeController = _swipeController;
+    if (swipeController == null) {
+      return;
+    }
     if (details.primaryDelta == null || details.primaryDelta! > 0) return;
-    _swipeController.value -=
+    swipeController.value -=
         details.primaryDelta! /
         (MediaQuery.sizeOf(context).width *
             LumosEntityListItemCardConst.swipeExtentRatio);
   }
 
   void _handleSwipeEnd(DragEndDetails details) {
-    _swipeController.value > 0.5
-        ? _swipeController.forward()
-        : _swipeController.reverse();
+    final AnimationController? swipeController = _swipeController;
+    if (swipeController == null) {
+      return;
+    }
+    if (swipeController.value > 0.5) {
+      swipeController.forward();
+      return;
+    }
+    swipeController.reverse();
   }
 
-  void _closeSwipe() => _swipeController.reverse();
+  void _closeSwipe() {
+    _swipeController?.reverse();
+  }
 
   void _showContextMenu() {
     if (!_hasContextMenu) return;
@@ -278,6 +290,11 @@ class _LumosEntityListItemCardState extends State<LumosEntityListItemCard>
 
     if (!_hasSwipeActions) return card;
 
+    final Animation<Offset>? swipeAnimation = _swipeAnimation;
+    if (swipeAnimation == null) {
+      return card;
+    }
+
     return Stack(
       children: [
         Positioned.fill(
@@ -292,10 +309,28 @@ class _LumosEntityListItemCardState extends State<LumosEntityListItemCard>
         GestureDetector(
           onHorizontalDragUpdate: _handleSwipeUpdate,
           onHorizontalDragEnd: _handleSwipeEnd,
-          child: SlideTransition(position: _swipeAnimation, child: card),
+          child: SlideTransition(position: swipeAnimation, child: card),
         ),
       ],
     );
+  }
+
+  void _ensureSwipeControllerIfNeeded() {
+    if (!_hasSwipeActions && _swipeController == null) {
+      return;
+    }
+    if (_swipeController != null) {
+      return;
+    }
+    final AnimationController controller = AnimationController(
+      vsync: this,
+      duration: LumosEntityListItemCardConst.swipeAnimationDuration,
+    );
+    _swipeController = controller;
+    _swipeAnimation = Tween<Offset>(
+      begin: Offset.zero,
+      end: const Offset(-LumosEntityListItemCardConst.swipeExtentRatio, 0),
+    ).animate(CurvedAnimation(parent: controller, curve: Curves.easeInOut));
   }
 
   // ---------------------------------------------------------------------------

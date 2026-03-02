@@ -20,15 +20,19 @@ public interface FolderMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "version", ignore = true)
     @Mapping(target = "name", source = "name")
+    @Mapping(target = "description", source = "description")
+    @Mapping(target = "colorHex", source = "colorHex")
     @Mapping(target = "parent", source = "parent")
     @Mapping(target = "depth", source = "depth")
-    Folder toFolderEntity(String name, Folder parent, Integer depth);
+    Folder toFolderEntity(String name, String description, String colorHex, Folder parent, Integer depth);
 
     default FolderResponse toFolderResponse(Folder folder, Integer childFolderCount) {
         final var response = toFolderResponse(folder);
         return new FolderResponse(
                 response.id(),
                 response.name(),
+                response.description(),
+                response.colorHex(),
                 response.parentId(),
                 response.depth(),
                 childFolderCount,

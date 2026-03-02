@@ -24,6 +24,7 @@ abstract final class LumosDialogSizingConst {
   static const EdgeInsetsGeometry dialogActionButtonPadding = EdgeInsets.only(
     left: Insets.spacing8,
   );
+  static const double promptContentSpacing = Insets.spacing12;
 }
 
 class LumosDialog extends StatelessWidget {
@@ -111,6 +112,12 @@ class LumosPromptDialog extends StatelessWidget {
     required this.onConfirm,
     super.key,
     this.initialValue = '',
+    this.hint,
+    this.maxLines = 1,
+    this.controller,
+    this.additionalContent,
+    this.isCancelEnabled = true,
+    this.isConfirmEnabled = true,
     this.constraints,
     this.insetPadding,
   });
@@ -122,14 +129,19 @@ class LumosPromptDialog extends StatelessWidget {
   final VoidCallback onCancel;
   final ValueChanged<String> onConfirm;
   final String initialValue;
+  final String? hint;
+  final int? maxLines;
+  final TextEditingController? controller;
+  final Widget? additionalContent;
+  final bool isCancelEnabled;
+  final bool isConfirmEnabled;
   final BoxConstraints? constraints;
   final EdgeInsets? insetPadding;
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController controller = TextEditingController(
-      text: initialValue,
-    );
+    final TextEditingController resolvedController =
+        controller ?? TextEditingController(text: initialValue);
     final BoxConstraints resolvedConstraints =
         constraints ?? _resolveDialogConstraints(context: context);
     final EdgeInsets resolvedInsetPadding =
@@ -145,22 +157,45 @@ class LumosPromptDialog extends StatelessWidget {
       actionsPadding: LumosDialogSizingConst.dialogActionsPadding,
       buttonPadding: LumosDialogSizingConst.dialogActionButtonPadding,
       title: Text(title, overflow: TextOverflow.ellipsis),
-      content: LumosTextField(controller: controller, label: label),
+      content: _buildContent(controller: resolvedController),
       actions: <Widget>[
         LumosButton(
           label: cancelText,
-          onPressed: onCancel,
+          onPressed: isCancelEnabled ? onCancel : null,
           type: LumosButtonType.text,
           size: LumosButtonSize.small,
         ),
         LumosButton(
           label: confirmText,
-          onPressed: () {
-            onConfirm(controller.text);
-          },
+          onPressed: isConfirmEnabled
+              ? () {
+                  onConfirm(resolvedController.text);
+                }
+              : null,
           type: LumosButtonType.primary,
           size: LumosButtonSize.small,
         ),
+      ],
+    );
+  }
+
+  Widget _buildContent({required TextEditingController controller}) {
+    final Widget textField = LumosTextField(
+      controller: controller,
+      label: label,
+      hint: hint,
+      maxLines: maxLines,
+    );
+    if (additionalContent == null) {
+      return textField;
+    }
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        textField,
+        const SizedBox(height: LumosDialogSizingConst.promptContentSpacing),
+        additionalContent!,
       ],
     );
   }

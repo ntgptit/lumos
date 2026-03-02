@@ -92,35 +92,32 @@ class LumosCard extends StatefulWidget {
 
 class _LumosCardState extends State<LumosCard>
     with SingleTickerProviderStateMixin {
-  late final AnimationController _selectionController;
-  late final Animation<double> _selectionAnimation;
+  AnimationController? _selectionController;
+  Animation<double>? _selectionAnimation;
 
   @override
   void initState() {
     super.initState();
-    _selectionController = AnimationController(
-      vsync: this,
-      duration: LumosCardConst.selectionAnimationDuration,
-      value: widget.isSelected ? 1.0 : 0.0,
-    );
-    _selectionAnimation = CurvedAnimation(
-      parent: _selectionController,
-      curve: Curves.easeInOut,
-    );
+    _ensureSelectionAnimationControllerIfNeeded();
   }
 
   @override
   void didUpdateWidget(LumosCard oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.isSelected == widget.isSelected) return;
-    widget.isSelected
-        ? _selectionController.forward()
-        : _selectionController.reverse();
+    if (oldWidget.isSelected == widget.isSelected) {
+      return;
+    }
+    if (widget.isSelected) {
+      _ensureSelectionAnimationControllerIfNeeded();
+      _selectionController?.forward();
+      return;
+    }
+    _selectionController?.reverse();
   }
 
   @override
   void dispose() {
-    _selectionController.dispose();
+    _selectionController?.dispose();
     super.dispose();
   }
 
@@ -142,15 +139,51 @@ class _LumosCardState extends State<LumosCard>
       );
     }
 
+    final Animation<double>? selectionAnimation = _selectionAnimation;
+    if (selectionAnimation == null) {
+      return _buildCard(
+        theme: theme,
+        colorScheme: colorScheme,
+        selectionProgress: _selectionProgressWithoutAnimation(),
+        child: widget.child,
+      );
+    }
+
     return AnimatedBuilder(
-      animation: _selectionAnimation,
+      animation: selectionAnimation,
       builder: (context, child) => _buildCard(
         theme: theme,
         colorScheme: colorScheme,
-        selectionProgress: _selectionAnimation.value,
+        selectionProgress: selectionAnimation.value,
         child: child!,
       ),
       child: widget.child,
+    );
+  }
+
+  double _selectionProgressWithoutAnimation() {
+    if (widget.isSelected) {
+      return WidgetRatios.full;
+    }
+    return WidgetRatios.none;
+  }
+
+  void _ensureSelectionAnimationControllerIfNeeded() {
+    if (!widget.isSelected && _selectionController == null) {
+      return;
+    }
+    if (_selectionController != null) {
+      return;
+    }
+    final AnimationController controller = AnimationController(
+      vsync: this,
+      duration: LumosCardConst.selectionAnimationDuration,
+      value: widget.isSelected ? WidgetRatios.full : WidgetRatios.none,
+    );
+    _selectionController = controller;
+    _selectionAnimation = CurvedAnimation(
+      parent: controller,
+      curve: Curves.easeInOut,
     );
   }
 
