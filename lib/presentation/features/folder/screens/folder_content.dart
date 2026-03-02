@@ -143,6 +143,8 @@ class _FolderContentState extends ConsumerState<FolderContent> {
   Widget _buildFolderHeader({required FolderAsyncController controller}) {
     return FolderHeader(
       currentDepth: widget.state.currentDepth,
+      isNavigatingParent: widget.state.isNavigatingParent,
+      isNavigatingRoot: widget.state.isNavigatingRoot,
       searchQuery: widget.state.searchQuery,
       onSearchChanged: controller.updateSearchQuery,
       sortBy: widget.state.sortBy,

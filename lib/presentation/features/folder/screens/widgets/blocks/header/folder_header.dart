@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../../../core/constants/dimensions.dart';
+import '../../../../../../../core/themes/semantic/app_elevation_tokens.dart';
 import '../../../../../../../l10n/app_localizations.dart';
 import '../../../../providers/states/folder_state.dart';
 import '../../../../../../shared/widgets/lumos_widgets.dart';
@@ -11,6 +12,8 @@ import 'folder_header_navigation_section.dart';
 class FolderHeader extends StatelessWidget {
   const FolderHeader({
     required this.currentDepth,
+    required this.isNavigatingParent,
+    required this.isNavigatingRoot,
     required this.searchQuery,
     required this.onSearchChanged,
     required this.sortBy,
@@ -22,6 +25,8 @@ class FolderHeader extends StatelessWidget {
   });
 
   final int currentDepth;
+  final bool isNavigatingParent;
+  final bool isNavigatingRoot;
   final String searchQuery;
   final ValueChanged<String> onSearchChanged;
   final FolderSortBy sortBy;
@@ -36,6 +41,7 @@ class FolderHeader extends StatelessWidget {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
     return LumosCard(
       variant: LumosCardVariant.filled,
+      elevation: AppElevationTokens.level1,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
@@ -44,6 +50,8 @@ class FolderHeader extends StatelessWidget {
           FolderHeaderNavigationSection(
             l10n: l10n,
             currentDepth: currentDepth,
+            isNavigatingParent: isNavigatingParent,
+            isNavigatingRoot: isNavigatingRoot,
             searchQuery: searchQuery,
             onSearchChanged: onSearchChanged,
             sortBy: sortBy,

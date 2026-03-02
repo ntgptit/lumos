@@ -9,6 +9,7 @@ class FolderHeaderMetaPill extends StatelessWidget {
     required this.label,
     required this.backgroundColor,
     required this.foregroundColor,
+    this.expandLabel = false,
     super.key,
   });
 
@@ -16,6 +17,7 @@ class FolderHeaderMetaPill extends StatelessWidget {
   final String label;
   final Color backgroundColor;
   final Color foregroundColor;
+  final bool expandLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -30,19 +32,29 @@ class FolderHeaderMetaPill extends StatelessWidget {
         borderRadius: BorderRadii.medium,
       ),
       child: Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: expandLabel ? MainAxisSize.max : MainAxisSize.min,
         children: <Widget>[
           IconTheme(
             data: IconThemeData(color: foregroundColor),
             child: LumosIcon(icon, size: IconSizes.iconSmall),
           ),
           const SizedBox(width: Insets.spacing4),
-          LumosInlineText(
-            label,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: textTheme.labelMedium?.copyWith(color: foregroundColor),
-          ),
+          if (expandLabel)
+            Expanded(
+              child: LumosInlineText(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: textTheme.labelMedium?.copyWith(color: foregroundColor),
+              ),
+            ),
+          if (!expandLabel)
+            LumosInlineText(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: textTheme.labelMedium?.copyWith(color: foregroundColor),
+            ),
         ],
       ),
     );

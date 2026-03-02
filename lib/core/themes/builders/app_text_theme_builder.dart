@@ -230,7 +230,7 @@ abstract final class AppTextThemeBuilder {
     required String fontFamily,
     required TextStyle textStyle,
   }) {
-    if (fontFamily == AppTypographyConst.kDefaultFontFamily) {
+    if (fontFamily == AppTypographyConst.kGoogleFontRoboto) {
       return GoogleFonts.roboto(textStyle: textStyle);
     }
     if (fontFamily == AppTypographyConst.kGoogleFontInter) {

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../../core/constants/dimensions.dart';
+import '../../../../../../core/themes/foundation/app_stroke.dart';
+import '../../../../../../core/themes/semantic/app_elevation_tokens.dart';
 import '../../../../../shared/widgets/lumos_widgets.dart';
 
 class HomePlaceholderTab extends StatelessWidget {
@@ -15,6 +17,8 @@ class HomePlaceholderTab extends StatelessWidget {
   final String subtitle;
   final IconData icon;
 
+  static const double emphasizedBorderWidth = AppStroke.thin;
+
   @override
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
@@ -25,14 +29,18 @@ class HomePlaceholderTab extends StatelessWidget {
           padding: const EdgeInsets.all(Insets.spacing16),
           child: LumosCard(
             margin: EdgeInsets.zero,
+            elevation: AppElevationTokens.level1,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Container(
                   padding: const EdgeInsets.all(Insets.spacing16),
                   decoration: BoxDecoration(
-                    border: Border.all(color: colorScheme.outlineVariant),
-                    color: colorScheme.surfaceContainerHighest,
+                    border: Border.all(
+                      color: colorScheme.outlineVariant,
+                      width: emphasizedBorderWidth,
+                    ),
+                    color: colorScheme.surfaceContainer,
                     borderRadius: BorderRadii.large,
                   ),
                   child: IconTheme(

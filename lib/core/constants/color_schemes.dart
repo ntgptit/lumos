@@ -34,10 +34,10 @@ abstract final class AppColorSchemeConst {
   static const Color darkOnTertiaryContainer = AppPalette.charcoal90;
 
   // ── Light surface roles ──────────────────────────────────────────────────
-  static const Color lightSurface = AppPalette.neutral99; // #F4F6F8
-  static const Color lightBackground = AppPalette.neutral95; // #D8E0E8
+  static const Color lightSurface = AppPalette.neutral99; // #E8EDF1
+  static const Color lightBackground = AppPalette.neutral95; // #C6D1DB
   static const Color lightSurfaceContainer =
-      AppPalette.neutral90; // #BCC8D4 — card surface, visible depth
+      AppPalette.neutral90; // #B0BCC8 — card surface, visible depth
   static const Color lightSurfaceContainerHigh = AppPalette.neutral95;
   static const Color lightSurfaceContainerHighest = AppPalette.neutral99;
   static const Color lightOnPrimary =

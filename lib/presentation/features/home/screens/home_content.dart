@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/dimensions.dart';
+import '../../../../core/themes/foundation/app_stroke.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../shared/widgets/lumos_widgets.dart';
 import '../constants/home_contract.dart';
@@ -12,6 +13,7 @@ abstract final class HomeContentConst {
   static const double heroMinHeightMobile = 280;
   static const double heroMinHeightLarge = 250;
   static const double avatarRadius = Insets.spacing16;
+  static const double emphasizedBorderWidth = AppStroke.thin;
 }
 
 class HomeContent extends StatelessWidget {
@@ -94,7 +96,10 @@ class HomeHeaderBlock extends StatelessWidget {
           padding: const EdgeInsets.all(Insets.spacing4),
           decoration: BoxDecoration(
             borderRadius: BorderRadii.large,
-            border: Border.all(color: colorScheme.outlineVariant),
+            border: Border.all(
+              color: colorScheme.outlineVariant,
+              width: HomeContentConst.emphasizedBorderWidth,
+            ),
           ),
           child: CircleAvatar(
             radius: HomeContentConst.avatarRadius,
@@ -183,7 +188,10 @@ class HomeHeroCard extends StatelessWidget {
           colorScheme.tertiaryContainer,
         ],
       ),
-      border: Border.all(color: colorScheme.outlineVariant),
+      border: Border.all(
+        color: colorScheme.outlineVariant,
+        width: HomeContentConst.emphasizedBorderWidth,
+      ),
       boxShadow: <BoxShadow>[
         BoxShadow(
           color: colorScheme.shadow,
@@ -211,7 +219,7 @@ class HomeHeroCard extends StatelessWidget {
             vertical: Insets.spacing4,
           ),
           decoration: BoxDecoration(
-            color: colorScheme.surfaceContainerHighest,
+            color: colorScheme.surfaceContainer,
             borderRadius: BorderRadii.medium,
           ),
           child: LumosText(

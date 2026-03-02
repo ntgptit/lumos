@@ -22,6 +22,8 @@ abstract final class FolderStateConst {
 
 enum FolderMutationType { none, creating, renaming, deleting }
 
+enum FolderNavigationType { none, toParent, toRoot }
+
 enum FolderSortBy { name, createdAt }
 
 enum FolderSortType { asc, desc }
@@ -51,6 +53,7 @@ abstract class FolderState with _$FolderState {
   const factory FolderState({
     required FolderTreeState tree,
     required FolderMutationType mutationType,
+    required FolderNavigationType navigationType,
     required String? inlineErrorMessage,
     required FolderViewState view,
   }) = _FolderState;
@@ -71,6 +74,7 @@ abstract class FolderState with _$FolderState {
         ),
       ),
       mutationType: FolderMutationType.none,
+      navigationType: FolderNavigationType.none,
       inlineErrorMessage: null,
       view: FolderViewState(
         searchQuery: FolderStateConst.emptySearchQuery,
@@ -97,6 +101,18 @@ abstract class FolderState with _$FolderState {
 
   bool get isMutating {
     return mutationType != FolderMutationType.none;
+  }
+
+  bool get isNavigating {
+    return navigationType != FolderNavigationType.none;
+  }
+
+  bool get isNavigatingParent {
+    return navigationType == FolderNavigationType.toParent;
+  }
+
+  bool get isNavigatingRoot {
+    return navigationType == FolderNavigationType.toRoot;
   }
 }
 

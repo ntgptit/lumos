@@ -10,10 +10,21 @@ import '../../../../../../shared/widgets/lumos_widgets.dart';
 
 import 'folder_header_meta_pill.dart';
 
+enum _FolderNavigationAction { root, parent }
+
+abstract final class FolderHeaderNavigationSectionLayout {
+  FolderHeaderNavigationSectionLayout._();
+
+  static const double contextMetaPillWidth =
+      Insets.spacing64 + Insets.spacing64 + Insets.spacing16;
+}
+
 class FolderHeaderNavigationSection extends StatefulWidget {
   const FolderHeaderNavigationSection({
     required this.l10n,
     required this.currentDepth,
+    required this.isNavigatingParent,
+    required this.isNavigatingRoot,
     required this.searchQuery,
     required this.onSearchChanged,
     required this.sortBy,
@@ -26,6 +37,8 @@ class FolderHeaderNavigationSection extends StatefulWidget {
 
   final AppLocalizations l10n;
   final int currentDepth;
+  final bool isNavigatingParent;
+  final bool isNavigatingRoot;
   final String searchQuery;
   final ValueChanged<String> onSearchChanged;
   final FolderSortBy sortBy;
@@ -43,6 +56,16 @@ class FolderHeaderNavigationSection extends StatefulWidget {
 class _FolderHeaderNavigationSectionState
     extends State<FolderHeaderNavigationSection> {
   late final TextEditingController _searchController;
+
+  bool get _isNavigating {
+    if (widget.isNavigatingParent) {
+      return true;
+    }
+    if (widget.isNavigatingRoot) {
+      return true;
+    }
+    return false;
+  }
 
   @override
   void initState() {
@@ -71,6 +94,25 @@ class _FolderHeaderNavigationSectionState
   @override
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final String currentSortLabel =
+        widget.sortBy == FolderSortBy.name &&
+            widget.sortType == FolderSortType.asc
+        ? widget.l10n.folderSortNameAscending
+        : widget.sortBy == FolderSortBy.name &&
+              widget.sortType == FolderSortType.desc
+        ? widget.l10n.folderSortNameDescending
+        : widget.sortBy == FolderSortBy.createdAt &&
+              widget.sortType == FolderSortType.desc
+        ? widget.l10n.folderSortCreatedNewest
+        : widget.l10n.folderSortCreatedOldest;
+    final IconData contextMetaIcon = widget.searchQuery.isNotEmpty
+        ? Icons.search_rounded
+        : widget.sortBy == FolderSortBy.createdAt
+        ? Icons.schedule_rounded
+        : Icons.sort_by_alpha_rounded;
+    final String contextMetaLabel = widget.searchQuery.isNotEmpty
+        ? widget.l10n.folderSearchHint
+        : currentSortLabel;
     return Container(
       padding: const EdgeInsets.all(Insets.spacing8),
       decoration: BoxDecoration(
@@ -86,20 +128,18 @@ class _FolderHeaderNavigationSectionState
         children: <Widget>[
           Row(
             children: <Widget>[
-              Expanded(child: _buildNavigationSummary()),
-              if (widget.currentDepth > FolderStateConst.rootDepth)
-                LumosIconButton(
-                  icon: Icons.keyboard_arrow_up_rounded,
-                  tooltip: widget.l10n.folderOpenParentTooltip,
-                  variant: LumosIconButtonVariant.outlined,
-                  onPressed: _onOpenParentFolder,
-                ),
+              _buildNavigationSummary(),
+              const Spacer(),
               const SizedBox(width: Insets.spacing8),
-              FolderHeaderMetaPill(
-                icon: Icons.account_tree_rounded,
-                label: widget.l10n.folderDepth(widget.currentDepth),
-                backgroundColor: colorScheme.tertiaryContainer,
-                foregroundColor: colorScheme.onTertiaryContainer,
+              SizedBox(
+                width: FolderHeaderNavigationSectionLayout.contextMetaPillWidth,
+                child: FolderHeaderMetaPill(
+                  icon: contextMetaIcon,
+                  label: contextMetaLabel,
+                  backgroundColor: colorScheme.secondaryContainer,
+                  foregroundColor: colorScheme.onSecondaryContainer,
+                  expandLabel: true,
+                ),
               ),
             ],
           ),
@@ -111,32 +151,44 @@ class _FolderHeaderNavigationSectionState
   }
 
   Widget _buildNavigationSummary() {
-    return Row(
-      children: <Widget>[
-        LumosActionChip(
-          label: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              const LumosIcon(Icons.home_rounded, size: IconSizes.iconSmall),
-              const SizedBox(width: Insets.spacing4),
-              LumosInlineText(
-                widget.l10n.folderRoot,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
-          onPressed: _onOpenRootFolder,
+    final bool isAtRoot = widget.currentDepth == FolderStateConst.rootDepth;
+    final bool canNavigate = !_isNavigating;
+    final bool canOpenRoot = !isAtRoot && canNavigate;
+    final bool canOpenParent = !isAtRoot && canNavigate;
+    final Widget rootLabel = widget.isNavigatingRoot
+        ? const LumosLoadingIndicator(size: IconSizes.iconSmall)
+        : const LumosIcon(Icons.home_rounded, size: IconSizes.iconSmall);
+    final Widget parentLabel = widget.isNavigatingParent
+        ? const LumosLoadingIndicator(size: IconSizes.iconSmall)
+        : const LumosIcon(
+            Icons.keyboard_arrow_up_rounded,
+            size: IconSizes.iconSmall,
+          );
+
+    return SegmentedButton<_FolderNavigationAction>(
+      showSelectedIcon: false,
+      selected: const <_FolderNavigationAction>{},
+      emptySelectionAllowed: true,
+      style: const ButtonStyle(
+        visualDensity: VisualDensity.compact,
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      ),
+      segments: <ButtonSegment<_FolderNavigationAction>>[
+        ButtonSegment<_FolderNavigationAction>(
+          value: _FolderNavigationAction.root,
+          enabled: canOpenRoot,
+          label: Tooltip(message: widget.l10n.folderRoot, child: rootLabel),
         ),
-        const SizedBox(width: Insets.spacing8),
-        Expanded(
-          child: LumosInlineText(
-            widget.l10n.folderDepth(widget.currentDepth),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+        ButtonSegment<_FolderNavigationAction>(
+          value: _FolderNavigationAction.parent,
+          enabled: canOpenParent,
+          label: Tooltip(
+            message: widget.l10n.folderOpenParentTooltip,
+            child: parentLabel,
           ),
         ),
       ],
+      onSelectionChanged: _onNavigationGroupChanged,
     );
   }
 
@@ -189,11 +241,25 @@ class _FolderHeaderNavigationSectionState
     unawaited(_openSortBottomSheet(context));
   }
 
+  void _onNavigationGroupChanged(Set<_FolderNavigationAction> selection) {
+    if (selection.isEmpty) {
+      return;
+    }
+    final _FolderNavigationAction action = selection.first;
+    if (action == _FolderNavigationAction.root) {
+      _onOpenRootFolder();
+      return;
+    }
+    _onOpenParentFolder();
+  }
+
   void _onOpenParentFolder() {
+    Feedback.forTap(context);
     unawaited(widget.onOpenParentFolder());
   }
 
   void _onOpenRootFolder() {
+    Feedback.forTap(context);
     unawaited(widget.onOpenRootFolder());
   }
 

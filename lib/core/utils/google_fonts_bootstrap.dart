@@ -6,9 +6,9 @@ import '../constants/text_styles.dart';
 abstract final class GoogleFontsBootstrapConst {
   static const Duration pendingTimeout = Duration(seconds: 20);
   static const List<String> requiredFontFamilies = <String>[
-    AppTypographyConst.kDefaultFontFamily,
     AppTypographyConst.kGoogleFontInter,
     AppTypographyConst.kGoogleFontPoppins,
+    AppTypographyConst.kGoogleFontRoboto,
   ];
   static const String offlineMissingFontsMessage =
       'Google Fonts cache not found while device is offline. '

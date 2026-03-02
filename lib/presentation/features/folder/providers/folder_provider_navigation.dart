@@ -4,6 +4,13 @@ part of 'folder_provider.dart';
 
 extension FolderAsyncControllerNavigationX on FolderAsyncController {
   Future<void> navigate({required FolderNavigationIntent intent}) async {
+    final FolderState? currentState = state.asData?.value;
+    if (currentState == null) {
+      return;
+    }
+    if (currentState.isNavigating) {
+      return;
+    }
     if (intent == FolderNavigationIntent.root) {
       await _openRootFolder();
       return;
@@ -31,14 +38,28 @@ extension FolderAsyncControllerNavigationX on FolderAsyncController {
   }
 
   Future<void> _openRootFolder() async {
-    final FolderViewState currentView =
-        state.asData?.value.view ?? FolderViewState.initial();
+    final FolderState? currentState = state.asData?.value;
+    if (currentState == null) {
+      return;
+    }
+    if (currentState.isNavigating) {
+      return;
+    }
+    if (currentState.currentDepth == FolderStateConst.rootDepth) {
+      return;
+    }
+    state = AsyncData<FolderState>(
+      currentState.copyWith(
+        navigationType: FolderNavigationType.toRoot,
+        inlineErrorMessage: null,
+      ),
+    );
     await _replaceState(
       parentId: null,
       currentDepth: FolderStateConst.rootDepth,
       openedFolderPath: const <int>[],
       page: FolderStateConst.firstPage,
-      view: currentView,
+      view: currentState.view,
     );
   }
 
@@ -47,14 +68,29 @@ extension FolderAsyncControllerNavigationX on FolderAsyncController {
     if (currentState == null) {
       return;
     }
+    if (currentState.isNavigating) {
+      return;
+    }
     final _FolderNavigationSnapshot? snapshot = _resolveParentSnapshot(
       currentState: currentState,
     );
     if (snapshot == null) {
       return;
     }
+    state = AsyncData<FolderState>(
+      currentState.copyWith(
+        navigationType: FolderNavigationType.toParent,
+        inlineErrorMessage: null,
+      ),
+    );
     if (snapshot.openRoot) {
-      await _openRootFolder();
+      await _replaceState(
+        parentId: null,
+        currentDepth: FolderStateConst.rootDepth,
+        openedFolderPath: const <int>[],
+        page: FolderStateConst.firstPage,
+        view: currentState.view,
+      );
       return;
     }
     await _replaceState(

@@ -63,9 +63,10 @@ abstract final class Material3TypeScaleConst {
 }
 
 abstract final class AppTypographyConst {
-  static const String kDefaultFontFamily = 'Roboto';
+  static const String kGoogleFontRoboto = 'Roboto';
   static const String kGoogleFontInter = 'Inter';
   static const String kGoogleFontPoppins = 'Poppins';
+  static const String kDefaultFontFamily = kGoogleFontInter;
   static const String kUnsupportedFontFamilyErrorMessage =
       'Unsupported fontFamily for AppTextThemeBuilder.';
   static const List<String> kFallbackFonts = <String>[

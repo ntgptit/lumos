@@ -108,6 +108,7 @@ Future<FolderState> _loadFolderState({
       ),
     ),
     mutationType: FolderMutationType.none,
+    navigationType: FolderNavigationType.none,
     inlineErrorMessage: null,
     view: view,
   );

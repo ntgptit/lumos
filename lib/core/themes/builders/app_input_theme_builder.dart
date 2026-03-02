@@ -14,7 +14,7 @@ abstract final class AppInputThemeBuilder {
     );
     return InputDecorationTheme(
       filled: true,
-      fillColor: colorScheme.surfaceContainerLow,
+      fillColor: colorScheme.transparentSurfaceColor,
       isDense: false,
       contentPadding: inputTokens.contentPadding,
       hintStyle: textTheme.bodyMedium?.copyWith(

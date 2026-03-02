@@ -113,10 +113,7 @@ class _FolderTileLeading extends StatelessWidget {
       colorScheme: colorScheme,
       isRoot: isRoot,
     );
-    final Color borderColor = _resolveBorderColor(
-      colorScheme: colorScheme,
-      isRoot: isRoot,
-    );
+    final Color borderColor = _resolveBorderColor(colorScheme: colorScheme);
 
     return SizedBox(
       width: FolderTileConst.leadingSize,
@@ -176,14 +173,8 @@ class _FolderTileLeading extends StatelessWidget {
     return colorScheme.onPrimaryContainer;
   }
 
-  Color _resolveBorderColor({
-    required ColorScheme colorScheme,
-    required bool isRoot,
-  }) {
-    if (isRoot) {
-      return colorScheme.tertiary;
-    }
-    return colorScheme.tertiaryContainer;
+  Color _resolveBorderColor({required ColorScheme colorScheme}) {
+    return colorScheme.outlineVariant;
   }
 }
 

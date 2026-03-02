@@ -127,7 +127,7 @@ class FolderHeaderBanner extends StatelessWidget {
         color: colorScheme.primaryContainer,
         borderRadius: BorderRadii.medium,
         border: Border.all(
-          color: colorScheme.primary,
+          color: colorScheme.outlineVariant,
           width: WidgetSizes.borderWidthRegular,
         ),
       ),

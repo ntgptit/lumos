@@ -65,9 +65,9 @@ abstract final class AppPalette {
   static const Color neutral40 = Color(0xFF3C4850);
   static const Color neutral70 = Color(0xFF8090A0);
   static const Color neutral80 = Color(0xFFA0AEB8);
-  static const Color neutral90 = Color(0xFFBCC8D4);
-  static const Color neutral95 = Color(0xFFD8E0E8);
-  static const Color neutral99 = Color(0xFFF4F6F8);
+  static const Color neutral90 = Color(0xFFB0BCC8);
+  static const Color neutral95 = Color(0xFFC6D1DB);
+  static const Color neutral99 = Color(0xFFE8EDF1);
   // Centralized white token for semantic on-colors (success/warning/info).
   static const Color neutral100 = Color(0xFFFFFFFF);
 

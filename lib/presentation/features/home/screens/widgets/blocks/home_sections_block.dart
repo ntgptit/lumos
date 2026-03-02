@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../../core/constants/dimensions.dart';
+import '../../../../../../core/themes/foundation/app_stroke.dart';
+import '../../../../../../core/themes/semantic/app_elevation_tokens.dart';
 import '../../../../../../l10n/app_localizations.dart';
 import '../../../../../shared/widgets/lumos_widgets.dart';
 import '../../../constants/home_contract.dart';
@@ -12,6 +14,8 @@ abstract final class HomeSectionsConst {
       Insets.spacing32 + Insets.spacing8;
   static const double activityAccentBarHeight = Insets.spacing32;
   static const double activityAccentBarWidth = Insets.spacing8;
+  static const double cardElevation = AppElevationTokens.level1;
+  static const double emphasizedBorderWidth = AppStroke.thin;
 }
 
 class HomeStatItem {
@@ -95,6 +99,7 @@ class HomeStatTile extends StatelessWidget {
     return LumosCard(
       padding: const EdgeInsets.all(Insets.spacing16),
       margin: EdgeInsets.zero,
+      elevation: HomeSectionsConst.cardElevation,
       child: Row(
         children: <Widget>[
           Container(
@@ -102,8 +107,11 @@ class HomeStatTile extends StatelessWidget {
             height: HomeSectionsConst.statIconContainerSize,
             decoration: BoxDecoration(
               borderRadius: BorderRadii.medium,
-              border: Border.all(color: colorScheme.outlineVariant),
-              color: colorScheme.surfaceContainerHighest,
+              border: Border.all(
+                color: colorScheme.outlineVariant,
+                width: HomeSectionsConst.emphasizedBorderWidth,
+              ),
+              color: colorScheme.surfaceContainer,
             ),
             child: IconTheme(
               data: IconThemeData(color: colorScheme.primary),
@@ -188,6 +196,7 @@ class HomeFocusCard extends StatelessWidget {
       excludeSemantics: true,
       child: LumosCard(
         margin: EdgeInsets.zero,
+        elevation: HomeSectionsConst.cardElevation,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -268,6 +277,7 @@ class HomeRecentActivityCard extends StatelessWidget {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return LumosCard(
       margin: EdgeInsets.zero,
+      elevation: HomeSectionsConst.cardElevation,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -320,8 +330,11 @@ class HomeActivityItem extends StatelessWidget {
       padding: const EdgeInsets.all(Insets.spacing12),
       decoration: BoxDecoration(
         borderRadius: BorderRadii.medium,
-        border: Border.all(color: colorScheme.outlineVariant),
-        color: colorScheme.surfaceContainerHigh,
+        border: Border.all(
+          color: colorScheme.outlineVariant,
+          width: HomeSectionsConst.emphasizedBorderWidth,
+        ),
+        color: colorScheme.surfaceContainer,
       ),
       child: Row(
         children: <Widget>[

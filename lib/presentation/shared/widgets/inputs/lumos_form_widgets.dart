@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/constants/dimensions.dart';
 import '../buttons/lumos_button.dart';
-import '../buttons/lumos_icon_button.dart';
 import '../lumos_models.dart';
 
 class LumosTextField extends StatelessWidget {
@@ -18,6 +17,9 @@ class LumosTextField extends StatelessWidget {
     this.keyboardType,
     this.maxLines = 1,
     this.enabled = true,
+    this.autofocus = false,
+    this.onSubmitted,
+    this.textInputAction,
     this.prefixIcon,
     this.suffixIcon,
   });
@@ -32,6 +34,9 @@ class LumosTextField extends StatelessWidget {
   final TextInputType? keyboardType;
   final int? maxLines;
   final bool enabled;
+  final bool autofocus;
+  final ValueChanged<String>? onSubmitted;
+  final TextInputAction? textInputAction;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
 
@@ -53,6 +58,9 @@ class LumosTextField extends StatelessWidget {
       keyboardType: keyboardType,
       maxLines: maxLines,
       enabled: enabled,
+      autofocus: autofocus,
+      onFieldSubmitted: onSubmitted,
+      textInputAction: textInputAction,
       decoration: decoration,
     );
   }
@@ -78,33 +86,27 @@ class LumosSearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const WidgetStateProperty<OutlinedBorder> searchBarShape =
-        WidgetStatePropertyAll<OutlinedBorder>(
-          RoundedRectangleBorder(borderRadius: BorderRadii.large),
-        );
-    return SearchBar(
+    return LumosTextField(
       controller: controller,
-      hintText: hint,
+      hint: hint,
       onChanged: onSearch,
       onSubmitted: onSearch,
-      autoFocus: autoFocus,
-      shape: searchBarShape,
-      leading: const Icon(Icons.search),
-      trailing: _buildTrailingActions(),
+      autofocus: autoFocus,
+      textInputAction: TextInputAction.search,
+      prefixIcon: const Icon(Icons.search_rounded),
+      suffixIcon: _buildClearAction(),
     );
   }
 
-  List<Widget>? _buildTrailingActions() {
+  Widget? _buildClearAction() {
     if (onClear == null) {
       return null;
     }
-    return <Widget>[
-      LumosIconButton(
-        icon: Icons.close_rounded,
-        tooltip: _resolveClearTooltip(),
-        onPressed: onClear,
-      ),
-    ];
+    return IconButton(
+      icon: const Icon(Icons.close_rounded, size: IconSizes.iconSmall),
+      tooltip: _resolveClearTooltip(),
+      onPressed: onClear,
+    );
   }
 
   String? _resolveClearTooltip() {
