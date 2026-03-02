@@ -5,12 +5,14 @@ import '../component/app_card_tokens.dart';
 import '../component/app_dialog_tokens.dart';
 import '../component/app_input_tokens.dart';
 import '../component/app_navigation_bar_tokens.dart';
+import '../component/app_theme_contract_tokens.dart';
 import '../semantic/app_color_tokens.dart';
 import '../semantic/app_text_tokens.dart';
 
 @immutable
 final class AppThemeExtensionsBundle {
   const AppThemeExtensionsBundle({
+    required this.contractTokens,
     required this.colorTokens,
     required this.textTokens,
     required this.buttonTokens,
@@ -20,6 +22,7 @@ final class AppThemeExtensionsBundle {
     required this.navigationBarTokens,
   });
 
+  final AppThemeContractTokens contractTokens;
   final AppColorTokens colorTokens;
   final AppTextTokens textTokens;
   final AppButtonTokens buttonTokens;
@@ -30,6 +33,7 @@ final class AppThemeExtensionsBundle {
 
   List<ThemeExtension<dynamic>> toThemeExtensions() {
     final List<ThemeExtension<dynamic>> extensions = <ThemeExtension<dynamic>>[
+      contractTokens,
       colorTokens,
       textTokens,
       buttonTokens,
@@ -77,6 +81,7 @@ abstract final class AppThemeExtensionsBuilder {
     required TextTheme textTheme,
   }) {
     return AppThemeExtensionsBundle(
+      contractTokens: AppThemeContractTokens.defaults,
       colorTokens: AppColorTokens.fromColorScheme(colorScheme: colorScheme),
       textTokens: AppTextTokens.fromTheme(
         colorScheme: colorScheme,

@@ -39,7 +39,7 @@ abstract final class AppSurfaceThemeBuilder {
         ),
       ),
       backgroundColor: WidgetStatePropertyAll<Color>(
-        colorScheme.surface.withValues(alpha: WidgetOpacities.transparent),
+        colorScheme.surfaceContainerHigh,
       ),
       textStyle: WidgetStatePropertyAll<TextStyle?>(textTheme.bodyMedium),
       hintStyle: WidgetStatePropertyAll<TextStyle?>(

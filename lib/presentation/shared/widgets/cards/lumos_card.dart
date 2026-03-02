@@ -130,11 +130,15 @@ class _LumosCardState extends State<LumosCard>
     final ColorScheme colorScheme = theme.colorScheme;
 
     if (widget.isLoading) {
+      final Color skeletonBackgroundColor = _resolveUnselectedColor(
+        colorScheme: colorScheme,
+      );
       return _LumosCardSkeleton(
         variant: widget.variant,
         borderRadius: _resolvedBorderRadius,
         margin: widget.margin ?? theme.cardTheme.margin,
         padding: widget.padding,
+        backgroundColor: skeletonBackgroundColor,
       );
     }
 
@@ -374,6 +378,7 @@ class _LumosCardSkeleton extends StatefulWidget {
     required this.variant,
     required this.borderRadius,
     required this.padding,
+    required this.backgroundColor,
     this.margin,
   });
 
@@ -381,6 +386,7 @@ class _LumosCardSkeleton extends StatefulWidget {
   final BorderRadius borderRadius;
   final EdgeInsetsGeometry? margin;
   final EdgeInsetsGeometry padding;
+  final Color backgroundColor;
 
   @override
   State<_LumosCardSkeleton> createState() => _LumosCardSkeletonState();
@@ -428,6 +434,7 @@ class _LumosCardSkeletonState extends State<_LumosCardSkeleton>
         return Card(
           elevation: WidgetSizes.none,
           margin: widget.margin,
+          color: widget.backgroundColor,
           clipBehavior: Clip.antiAlias,
           shape: skeletonShape,
           child: Padding(

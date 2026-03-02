@@ -45,9 +45,9 @@ abstract final class AppColorSchemeConst {
   static const Color lightOnPrimaryContainer =
       AppPalette.primary10; // accessible on primary container
   static const Color lightOnSecondary = AppPalette.neutral99;
-  static const Color lightOnSecondaryContainer = AppPalette.primary10;
+  static const Color lightOnSecondaryContainer = AppPalette.secondary10;
   static const Color lightOnTertiary = AppPalette.neutral99;
-  static const Color lightOnTertiaryContainer = AppPalette.primary10;
+  static const Color lightOnTertiaryContainer = AppPalette.tertiary10;
   static const Color lightOnSurface =
       AppPalette.charcoal40; // #36454F — ~7:1 on neutral99
   static const Color lightOnSurfaceVariant = AppPalette.charcoal40;

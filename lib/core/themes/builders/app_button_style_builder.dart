@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../component/app_button_tokens.dart';
 import '../../constants/dimensions.dart';
 import '../extensions/theme_extensions.dart';
+import '../foundation/app_motion.dart';
 import '../semantic/app_elevation_tokens.dart';
 
 enum AppButtonSize { small, medium, large }
@@ -67,9 +68,14 @@ abstract final class AppButtonStyleBuilder {
   static IconButtonThemeData icon({
     required ColorScheme colorScheme,
     required AppButtonTokens buttonTokens,
+    AppButtonSize size = AppButtonSize.medium,
   }) {
     return IconButtonThemeData(
-      style: iconStyle(colorScheme: colorScheme, buttonTokens: buttonTokens),
+      style: iconStyle(
+        colorScheme: colorScheme,
+        buttonTokens: buttonTokens,
+        size: size,
+      ),
     );
   }
 
@@ -96,6 +102,7 @@ abstract final class AppButtonStyleBuilder {
     return baseStyle.copyWith(
       elevation: WidgetStateProperty.resolveWith<double>(_resolveElevation),
       overlayColor: colorScheme.primary.asInteractiveOverlayProperty(),
+      animationDuration: AppMotion.fast,
     );
   }
 
@@ -119,6 +126,7 @@ abstract final class AppButtonStyleBuilder {
       overlayColor: _resolveFilledOverlayBase(
         colorScheme,
       ).asInteractiveOverlayProperty(),
+      animationDuration: AppMotion.fast,
     );
   }
 
@@ -141,6 +149,7 @@ abstract final class AppButtonStyleBuilder {
     return baseStyle.copyWith(
       overlayColor: colorScheme.onSecondaryContainer
           .asInteractiveOverlayProperty(),
+      animationDuration: AppMotion.fast,
     );
   }
 
@@ -179,6 +188,7 @@ abstract final class AppButtonStyleBuilder {
         );
       }),
       overlayColor: colorScheme.primary.asInteractiveOverlayProperty(),
+      animationDuration: AppMotion.fast,
     );
   }
 
@@ -199,12 +209,14 @@ abstract final class AppButtonStyleBuilder {
     );
     return baseStyle.copyWith(
       overlayColor: colorScheme.primary.asInteractiveOverlayProperty(),
+      animationDuration: AppMotion.fast,
     );
   }
 
   static ButtonStyle iconStyle({
     required ColorScheme colorScheme,
     required AppButtonTokens buttonTokens,
+    AppButtonSize size = AppButtonSize.medium,
   }) {
     final ButtonStyle baseStyle = IconButton.styleFrom(
       foregroundColor: colorScheme.onSurfaceVariant,
@@ -213,9 +225,9 @@ abstract final class AppButtonStyleBuilder {
         WidgetSizes.minTouchTarget,
         WidgetSizes.minTouchTarget,
       ),
-      iconSize: buttonTokens.iconSizeMd,
+      iconSize: _iconSize(size: size, buttonTokens: buttonTokens),
       padding: const EdgeInsets.all(Insets.spacing8),
-      shape: _shape(size: AppButtonSize.medium, buttonTokens: buttonTokens),
+      shape: _shape(size: size, buttonTokens: buttonTokens),
       backgroundColor: colorScheme.transparentSurfaceColor,
     );
     return baseStyle.copyWith(
@@ -231,6 +243,7 @@ abstract final class AppButtonStyleBuilder {
         return colorScheme.onSurfaceVariant;
       }),
       overlayColor: colorScheme.onSurfaceVariant.asInteractiveOverlayProperty(),
+      animationDuration: AppMotion.fast,
     );
   }
 }
@@ -324,6 +337,17 @@ Size _minimumSize({
     AppButtonSize.large => buttonTokens.heightLg,
   };
   return Size(WidgetSizes.buttonMinWidth, height);
+}
+
+double _iconSize({
+  required AppButtonSize size,
+  required AppButtonTokens buttonTokens,
+}) {
+  return switch (size) {
+    AppButtonSize.small => buttonTokens.iconSizeSm,
+    AppButtonSize.medium => buttonTokens.iconSizeMd,
+    AppButtonSize.large => buttonTokens.iconSizeLg,
+  };
 }
 
 EdgeInsets _padding({

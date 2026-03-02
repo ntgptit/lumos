@@ -37,25 +37,32 @@ abstract final class AppTextThemeBuilder {
         'fontFamily must not be empty',
       );
     }
-    final Color resolvedTextColor = textColor ?? colorScheme.onSurface;
+    final bool hasExplicitTextColor = textColor != null;
+    final Color resolvedPrimaryTextColor = textColor ?? colorScheme.onSurface;
+    Color resolvedMutedTextColor = resolvedPrimaryTextColor;
+    if (!hasExplicitTextColor) {
+      resolvedMutedTextColor = colorScheme.onSurfaceVariant;
+    }
     final TextTheme displayTheme = _buildDisplayTheme(
-      color: resolvedTextColor,
+      color: resolvedPrimaryTextColor,
       fontFamily: fontFamily,
     );
     final TextTheme headlineTheme = _buildHeadlineTheme(
-      color: resolvedTextColor,
+      color: resolvedPrimaryTextColor,
       fontFamily: fontFamily,
     );
     final TextTheme titleTheme = _buildTitleTheme(
-      color: resolvedTextColor,
+      color: resolvedPrimaryTextColor,
       fontFamily: fontFamily,
     );
     final TextTheme bodyTheme = _buildBodyTheme(
-      color: resolvedTextColor,
+      primaryColor: resolvedPrimaryTextColor,
+      secondaryColor: resolvedMutedTextColor,
       fontFamily: fontFamily,
     );
     final TextTheme labelTheme = _buildLabelTheme(
-      color: resolvedTextColor,
+      primaryColor: resolvedPrimaryTextColor,
+      secondaryColor: resolvedMutedTextColor,
       fontFamily: fontFamily,
     );
     return displayTheme.copyWith(
@@ -155,46 +162,48 @@ abstract final class AppTextThemeBuilder {
   }
 
   static TextTheme _buildBodyTheme({
-    required Color color,
+    required Color primaryColor,
+    required Color secondaryColor,
     required String fontFamily,
   }) {
     return TextTheme(
       bodyLarge: _style(
         config: AppTypographyConst.bodyLargeStyle,
-        color: color,
+        color: primaryColor,
         fontFamily: fontFamily,
       ),
       bodyMedium: _style(
         config: AppTypographyConst.bodyMediumStyle,
-        color: color,
+        color: primaryColor,
         fontFamily: fontFamily,
       ),
       bodySmall: _style(
         config: AppTypographyConst.bodySmallStyle,
-        color: color,
+        color: secondaryColor,
         fontFamily: fontFamily,
       ),
     );
   }
 
   static TextTheme _buildLabelTheme({
-    required Color color,
+    required Color primaryColor,
+    required Color secondaryColor,
     required String fontFamily,
   }) {
     return TextTheme(
       labelLarge: _style(
         config: AppTypographyConst.labelLargeStyle,
-        color: color,
+        color: primaryColor,
         fontFamily: fontFamily,
       ),
       labelMedium: _style(
         config: AppTypographyConst.labelMediumStyle,
-        color: color,
+        color: primaryColor,
         fontFamily: fontFamily,
       ),
       labelSmall: _style(
         config: AppTypographyConst.labelSmallStyle,
-        color: color,
+        color: secondaryColor,
         fontFamily: fontFamily,
       ),
     );

@@ -5,6 +5,7 @@ import '../component/app_card_tokens.dart';
 import '../component/app_dialog_tokens.dart';
 import '../component/app_input_tokens.dart';
 import '../component/app_navigation_bar_tokens.dart';
+import '../component/app_theme_contract_tokens.dart';
 import '../semantic/app_color_tokens.dart';
 import '../semantic/app_text_tokens.dart';
 
@@ -27,7 +28,10 @@ extension BuildContextThemeX on BuildContext {
     if (tokens != null) {
       return tokens;
     }
-    _assertThemeExtensionFallback<AppColorTokens>(resolvedTheme);
+    _assertThemeExtensionFallback<AppColorTokens>(
+      theme: resolvedTheme,
+      accessor: 'appColors',
+    );
     return AppColorTokens.fromColorScheme(
       colorScheme: resolvedTheme.colorScheme,
     );
@@ -39,7 +43,10 @@ extension BuildContextThemeX on BuildContext {
     if (tokens != null) {
       return tokens;
     }
-    _assertThemeExtensionFallback<AppTextTokens>(resolvedTheme);
+    _assertThemeExtensionFallback<AppTextTokens>(
+      theme: resolvedTheme,
+      accessor: 'appText',
+    );
     return AppTextTokens.fromTheme(
       colorScheme: resolvedTheme.colorScheme,
       textTheme: resolvedTheme.textTheme,
@@ -52,7 +59,10 @@ extension BuildContextThemeX on BuildContext {
     if (tokens != null) {
       return tokens;
     }
-    _assertThemeExtensionFallback<AppButtonTokens>(resolvedTheme);
+    _assertThemeExtensionFallback<AppButtonTokens>(
+      theme: resolvedTheme,
+      accessor: 'appButton',
+    );
     return AppButtonTokens.defaults;
   }
 
@@ -62,7 +72,10 @@ extension BuildContextThemeX on BuildContext {
     if (tokens != null) {
       return tokens;
     }
-    _assertThemeExtensionFallback<AppInputTokens>(resolvedTheme);
+    _assertThemeExtensionFallback<AppInputTokens>(
+      theme: resolvedTheme,
+      accessor: 'appInput',
+    );
     return AppInputTokens.defaults;
   }
 
@@ -72,7 +85,10 @@ extension BuildContextThemeX on BuildContext {
     if (tokens != null) {
       return tokens;
     }
-    _assertThemeExtensionFallback<AppCardTokens>(resolvedTheme);
+    _assertThemeExtensionFallback<AppCardTokens>(
+      theme: resolvedTheme,
+      accessor: 'appCard',
+    );
     return AppCardTokens.defaults;
   }
 
@@ -82,7 +98,10 @@ extension BuildContextThemeX on BuildContext {
     if (tokens != null) {
       return tokens;
     }
-    _assertThemeExtensionFallback<AppDialogTokens>(resolvedTheme);
+    _assertThemeExtensionFallback<AppDialogTokens>(
+      theme: resolvedTheme,
+      accessor: 'appDialog',
+    );
     return AppDialogTokens.defaults;
   }
 
@@ -93,61 +112,31 @@ extension BuildContextThemeX on BuildContext {
     if (tokens != null) {
       return tokens;
     }
-    _assertThemeExtensionFallback<AppNavigationBarTokens>(resolvedTheme);
+    _assertThemeExtensionFallback<AppNavigationBarTokens>(
+      theme: resolvedTheme,
+      accessor: 'appNavigationBar',
+    );
     return AppNavigationBarTokens.defaults;
   }
 }
 
-void _assertThemeExtensionFallback<T extends ThemeExtension<T>>(
-  ThemeData theme,
-) {
+void _assertThemeExtensionFallback<T extends ThemeExtension<T>>({
+  required ThemeData theme,
+  required String accessor,
+}) {
   assert(() {
-    if (!_hasAnyAppThemeExtension(theme)) {
+    final T? extension = theme.extension<T>();
+    if (extension != null) {
+      return true;
+    }
+    final AppThemeContractTokens? contractTokens = theme
+        .extension<AppThemeContractTokens>();
+    if (contractTokens == null) {
       return true;
     }
     throw FlutterError(
-      'Missing ThemeExtension<$T> in ThemeData.extensions. '
+      'Missing ThemeExtension<$T> for BuildContextThemeX.$accessor. '
       'Ensure AppThemeExtensionsBuilder.toThemeExtensions() is applied.',
     );
   }());
-}
-
-bool _hasAnyAppThemeExtension(ThemeData theme) {
-  final AppColorTokens? appColorTokens = theme.extension<AppColorTokens>();
-  if (appColorTokens != null) {
-    return true;
-  }
-
-  final AppTextTokens? appTextTokens = theme.extension<AppTextTokens>();
-  if (appTextTokens != null) {
-    return true;
-  }
-
-  final AppButtonTokens? appButtonTokens = theme.extension<AppButtonTokens>();
-  if (appButtonTokens != null) {
-    return true;
-  }
-
-  final AppInputTokens? appInputTokens = theme.extension<AppInputTokens>();
-  if (appInputTokens != null) {
-    return true;
-  }
-
-  final AppCardTokens? appCardTokens = theme.extension<AppCardTokens>();
-  if (appCardTokens != null) {
-    return true;
-  }
-
-  final AppDialogTokens? appDialogTokens = theme.extension<AppDialogTokens>();
-  if (appDialogTokens != null) {
-    return true;
-  }
-
-  final AppNavigationBarTokens? appNavigationBarTokens = theme
-      .extension<AppNavigationBarTokens>();
-  if (appNavigationBarTokens != null) {
-    return true;
-  }
-
-  return false;
 }
