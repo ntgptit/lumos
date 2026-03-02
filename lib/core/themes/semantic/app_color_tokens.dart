@@ -2,6 +2,15 @@ import 'package:flutter/material.dart';
 
 import '../foundation/app_palette.dart';
 
+// ---------------------------------------------------------------------------
+// AppColorTokens — Semantic color extensions beyond M3 ColorScheme roles
+// Covers: success, warning, info (each with full M3-style role quartet)
+//
+// Colors are resolved statically from AppPalette tonal scales, matching the
+// Ocean Depth theme convention. Light/dark selection mirrors M3 role mapping:
+//   light: color=*40, onColor=*99, container=*90, onContainer=*10
+//   dark:  color=*80, onColor=*20, container=*30, onContainer=*90
+// ---------------------------------------------------------------------------
 @immutable
 class AppColorTokens extends ThemeExtension<AppColorTokens> {
   const AppColorTokens({
@@ -34,36 +43,43 @@ class AppColorTokens extends ThemeExtension<AppColorTokens> {
   final Color infoContainer;
   final Color onInfoContainer;
 
+  // ── Static singletons ──────────────────────────────────────────────────
+  static const AppColorTokens light = AppColorTokens(
+    success: AppPalette.success40,
+    onSuccess: AppPalette.success99,
+    successContainer: AppPalette.success90,
+    onSuccessContainer: AppPalette.success10,
+    warning: AppPalette.warning40,
+    onWarning: AppPalette.warning99,
+    warningContainer: AppPalette.warning90,
+    onWarningContainer: AppPalette.warning10,
+    info: AppPalette.info40,
+    onInfo: AppPalette.info99,
+    infoContainer: AppPalette.info90,
+    onInfoContainer: AppPalette.info10,
+  );
+
+  static const AppColorTokens dark = AppColorTokens(
+    success: AppPalette.success80,
+    onSuccess: AppPalette.success20,
+    successContainer: AppPalette.success30,
+    onSuccessContainer: AppPalette.success90,
+    warning: AppPalette.warning80,
+    onWarning: AppPalette.warning20,
+    warningContainer: AppPalette.warning30,
+    onWarningContainer: AppPalette.warning90,
+    info: AppPalette.info80,
+    onInfo: AppPalette.info20,
+    infoContainer: AppPalette.info30,
+    onInfoContainer: AppPalette.info90,
+  );
+
+  // Resolves the correct instance based on ColorScheme brightness.
   factory AppColorTokens.fromColorScheme({required ColorScheme colorScheme}) {
-    final Brightness brightness = colorScheme.brightness;
-    final ColorScheme successScheme = ColorScheme.fromSeed(
-      seedColor: AppPalette.success40,
-      brightness: brightness,
-    );
-    final ColorScheme warningScheme = ColorScheme.fromSeed(
-      seedColor: AppPalette.warning40,
-      brightness: brightness,
-    );
-    final ColorScheme infoScheme = ColorScheme.fromSeed(
-      seedColor: AppPalette.info40,
-      brightness: brightness,
-    );
-    return AppColorTokens(
-      success: successScheme.primary,
-      onSuccess: successScheme.onPrimary,
-      successContainer: successScheme.primaryContainer,
-      onSuccessContainer: successScheme.onPrimaryContainer,
-      warning: warningScheme.primary,
-      onWarning: warningScheme.onPrimary,
-      warningContainer: warningScheme.primaryContainer,
-      onWarningContainer: warningScheme.onPrimaryContainer,
-      info: infoScheme.primary,
-      onInfo: infoScheme.onPrimary,
-      infoContainer: infoScheme.primaryContainer,
-      onInfoContainer: infoScheme.onPrimaryContainer,
-    );
+    return colorScheme.brightness == Brightness.dark ? dark : light;
   }
 
+  // ── ThemeExtension overrides ───────────────────────────────────────────
   @override
   AppColorTokens copyWith({
     Color? success,
@@ -97,9 +113,7 @@ class AppColorTokens extends ThemeExtension<AppColorTokens> {
 
   @override
   AppColorTokens lerp(ThemeExtension<AppColorTokens>? other, double t) {
-    if (other is! AppColorTokens) {
-      return this;
-    }
+    if (other is! AppColorTokens) return this;
     return AppColorTokens(
       success: Color.lerp(success, other.success, t) ?? success,
       onSuccess: Color.lerp(onSuccess, other.onSuccess, t) ?? onSuccess,
