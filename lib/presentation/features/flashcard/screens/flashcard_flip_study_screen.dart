@@ -16,11 +16,12 @@ abstract final class FlashcardFlipStudyConst {
   FlashcardFlipStudyConst._();
 
   static const double screenHorizontalPadding = Insets.spacing16;
+  static const double screenVerticalPadding = Insets.spacing12;
   static const double progressTopGap = Insets.spacing8;
   static const double progressBottomGap = Insets.spacing16;
   static const double cardVerticalInset = Insets.spacing12;
-  static const double cardContentHorizontalPadding = Insets.spacing16;
-  static const double cardContentVerticalPadding = Insets.spacing16;
+  static const double cardContentHorizontalPadding = Insets.spacing20;
+  static const double cardContentVerticalPadding = Insets.spacing20;
   static const double cardActionGap = Insets.spacing8;
   static const double cardTitleGap = Insets.spacing12;
   static const double cardBottomGap = Insets.spacing12;
@@ -28,6 +29,7 @@ abstract final class FlashcardFlipStudyConst {
   static const double bottomBarBottomGap = Insets.spacing16;
   static const int backTextMaxLines = 8;
   static const int noteMaxLines = 4;
+  static const double cardBorderRadius = Insets.spacing24;
 }
 
 class FlashcardFlipStudyRouteExtra {
@@ -112,117 +114,144 @@ class _FlashcardFlipStudyScreenState
       deckName: widget.deckName,
       fallbackTitle: l10n.flashcardTitle,
     );
+    final ThemeData screenTheme = _buildScreenTheme(context: context);
     if (widget.items.isEmpty) {
-      return Scaffold(
-        appBar: LumosAppBar(title: title),
-        body: Center(
-          child: LumosEmptyState(
-            title: l10n.flashcardEmptyTitle,
-            message: l10n.flashcardEmptySubtitle,
-            icon: Icons.style_outlined,
+      return Theme(
+        data: screenTheme,
+        child: Scaffold(
+          appBar: LumosAppBar(title: title),
+          body: Center(
+            child: LumosEmptyState(
+              title: l10n.flashcardEmptyTitle,
+              message: l10n.flashcardEmptySubtitle,
+              icon: Icons.style_outlined,
+            ),
           ),
         ),
       );
     }
-    return Scaffold(
-      appBar: LumosAppBar(
-        title: title,
-        leading: LumosIconButton(
-          onPressed: () => context.pop(),
-          tooltip: l10n.flashcardCloseTooltip,
-          icon: Icons.close_rounded,
-        ),
-        actions: <Widget>[
-          ValueListenableBuilder<int>(
-            valueListenable: _currentIndexNotifier,
-            builder: (BuildContext context, int value, Widget? child) {
-              final int displayIndex = value + 1;
-              final int total = widget.items.length;
-              return Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(right: Insets.spacing16),
-                  child: LumosInlineText(
-                    '$displayIndex / $total',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                ),
-              );
-            },
+    return Theme(
+      data: screenTheme,
+      child: Scaffold(
+        appBar: LumosAppBar(
+          title: title,
+          leading: LumosIconButton(
+            onPressed: () => context.pop(),
+            tooltip: l10n.flashcardCloseTooltip,
+            icon: Icons.arrow_back_rounded,
           ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: FlashcardFlipStudyConst.screenHorizontalPadding,
-        ),
-        child: Column(
-          children: <Widget>[
-            const SizedBox(height: FlashcardFlipStudyConst.progressTopGap),
-            ValueListenableBuilder<int>(
-              valueListenable: _currentIndexNotifier,
-              builder: (BuildContext context, int value, Widget? child) {
-                final double progress = (value + 1) / widget.items.length;
-                return LumosProgressBar(value: progress);
-              },
+          actions: <Widget>[
+            LumosIconButton(
+              onPressed: _onSharePressed,
+              tooltip: l10n.flashcardShareButtonTooltip,
+              icon: Icons.ios_share_rounded,
             ),
-            const SizedBox(height: FlashcardFlipStudyConst.progressBottomGap),
-            Expanded(
-              child: PageView.builder(
-                controller: _pageController,
-                itemCount: widget.items.length,
-                onPageChanged: _onPageChanged,
-                itemBuilder: (BuildContext context, int index) {
-                  final FlashcardNode item = widget.items[index];
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: FlashcardFlipStudyConst.cardVerticalInset,
-                    ),
-                    child: AnimatedBuilder(
-                      animation: Listenable.merge(<Listenable>[
-                        _currentIndexNotifier,
-                        _isFlippedNotifier,
-                        _starredFlashcardIdsNotifier,
-                        _playingFlashcardIdNotifier,
-                      ]),
-                      builder: (BuildContext context, Widget? child) {
-                        final bool isCurrent =
-                            _currentIndexNotifier.value == index;
-                        final bool isFlipped =
-                            isCurrent && _isFlippedNotifier.value;
-                        return _FlashcardStudyCard(
-                          item: item,
-                          isFlipped: isFlipped,
-                          isStarred: _starredState(item),
-                          isAudioPlaying:
-                              _playingFlashcardIdNotifier.value == item.id,
-                          onFlipPressed: _toggleFlipped,
-                          onAudioPressed: () => _onAudioPressed(item),
-                          onStarPressed: () => _onStarPressed(item),
-                        );
-                      },
-                    ),
+            LumosIconButton(
+              onPressed: _onMorePressed,
+              tooltip: l10n.flashcardMoreButtonTooltip,
+              icon: Icons.more_vert_rounded,
+            ),
+          ],
+        ),
+        body: Padding(
+          padding: const EdgeInsets.fromLTRB(
+            FlashcardFlipStudyConst.screenHorizontalPadding,
+            FlashcardFlipStudyConst.screenVerticalPadding,
+            FlashcardFlipStudyConst.screenHorizontalPadding,
+            Insets.spacing0,
+          ),
+          child: Column(
+            children: <Widget>[
+              const SizedBox(height: FlashcardFlipStudyConst.progressTopGap),
+              ValueListenableBuilder<int>(
+                valueListenable: _currentIndexNotifier,
+                builder: (BuildContext context, int value, Widget? child) {
+                  final double progress = (value + 1) / widget.items.length;
+                  return LumosProgressBar(value: progress);
+                },
+              ),
+              const SizedBox(height: FlashcardFlipStudyConst.progressBottomGap),
+              Expanded(
+                child: PageView.builder(
+                  controller: _pageController,
+                  itemCount: widget.items.length,
+                  onPageChanged: _onPageChanged,
+                  itemBuilder: (BuildContext context, int index) {
+                    final FlashcardNode item = widget.items[index];
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: FlashcardFlipStudyConst.cardVerticalInset,
+                      ),
+                      child: AnimatedBuilder(
+                        animation: Listenable.merge(<Listenable>[
+                          _currentIndexNotifier,
+                          _isFlippedNotifier,
+                          _starredFlashcardIdsNotifier,
+                          _playingFlashcardIdNotifier,
+                        ]),
+                        builder: (BuildContext context, Widget? child) {
+                          final bool isCurrent =
+                              _currentIndexNotifier.value == index;
+                          final bool isFlipped =
+                              isCurrent && _isFlippedNotifier.value;
+                          return _FlashcardStudyCard(
+                            item: item,
+                            isFlipped: isFlipped,
+                            isStarred: _starredState(item),
+                            isAudioPlaying:
+                                _playingFlashcardIdNotifier.value == item.id,
+                            onFlipPressed: _toggleFlipped,
+                            onAudioPressed: () => _onAudioPressed(item),
+                            onStarPressed: () => _onStarPressed(item),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: FlashcardFlipStudyConst.bottomBarTopGap),
+              ValueListenableBuilder<int>(
+                valueListenable: _currentIndexNotifier,
+                builder: (BuildContext context, int value, Widget? child) {
+                  final bool canGoPrevious =
+                      value > FlashcardStateConst.firstPage;
+                  final bool isAtLastCard = value >= widget.items.length - 1;
+                  return _FlashcardStudyBottomBar(
+                    onPreviousPressed: canGoPrevious ? _goPrevious : null,
+                    onNextPressed: () => _goNext(isAtLastCard: isAtLastCard),
                   );
                 },
               ),
-            ),
-            const SizedBox(height: FlashcardFlipStudyConst.bottomBarTopGap),
-            ValueListenableBuilder<int>(
-              valueListenable: _currentIndexNotifier,
-              builder: (BuildContext context, int value, Widget? child) {
-                final bool canGoPrevious =
-                    value > FlashcardStateConst.firstPage;
-                final bool isAtLastCard = value >= widget.items.length - 1;
-                return _FlashcardStudyBottomBar(
-                  onPreviousPressed: canGoPrevious ? _goPrevious : null,
-                  onNextPressed: () => _goNext(isAtLastCard: isAtLastCard),
-                );
-              },
-            ),
-            const SizedBox(height: FlashcardFlipStudyConst.bottomBarBottomGap),
-          ],
+              const SizedBox(
+                height: FlashcardFlipStudyConst.bottomBarBottomGap,
+              ),
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  ThemeData _buildScreenTheme({required BuildContext context}) {
+    final ThemeData baseTheme = Theme.of(context);
+    final ColorScheme colorScheme = baseTheme.colorScheme;
+    return baseTheme.copyWith(
+      appBarTheme: baseTheme.appBarTheme.copyWith(
+        backgroundColor: colorScheme.surfaceContainerLowest,
+        foregroundColor: colorScheme.onSurface,
+      ),
+    );
+  }
+
+  void _onSharePressed() {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
+    _showInfoSnackBar(message: l10n.flashcardShareComingSoonToast);
+  }
+
+  void _onMorePressed() {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
+    _showInfoSnackBar(message: l10n.flashcardMoreOptionsComingSoonToast);
   }
 
   void _onPageChanged(int index) {
@@ -380,7 +409,10 @@ class _FlashcardStudyCard extends StatelessWidget {
     final String normalizedNote = StringUtils.normalizeName(item.note);
     final bool hasNote = normalizedNote.isNotEmpty;
     return LumosCard(
-      variant: LumosCardVariant.elevated,
+      variant: LumosCardVariant.filled,
+      borderRadius: BorderRadius.circular(
+        FlashcardFlipStudyConst.cardBorderRadius,
+      ),
       onTap: onFlipPressed,
       child: Padding(
         padding: const EdgeInsets.symmetric(

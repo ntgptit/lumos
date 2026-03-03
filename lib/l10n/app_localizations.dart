@@ -647,6 +647,12 @@ abstract class AppLocalizations {
   /// **'Owner'**
   String get flashcardOwnerFallback;
 
+  /// No description provided for @flashcardPlusBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Plus'**
+  String get flashcardPlusBadge;
+
   /// No description provided for @flashcardUpdatedRecentlyLabel.
   ///
   /// In en, this message translates to:
@@ -671,6 +677,12 @@ abstract class AppLocalizations {
   /// **'No preview available'**
   String get flashcardPreviewPlaceholder;
 
+  /// No description provided for @flashcardReviewActionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Flashcards'**
+  String get flashcardReviewActionLabel;
+
   /// No description provided for @flashcardFlipActionLabel.
   ///
   /// In en, this message translates to:
@@ -682,6 +694,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Learn'**
   String get flashcardLearnActionLabel;
+
+  /// No description provided for @flashcardQuizActionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Quiz'**
+  String get flashcardQuizActionLabel;
+
+  /// No description provided for @flashcardMatchActionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Match'**
+  String get flashcardMatchActionLabel;
+
+  /// No description provided for @flashcardBlastActionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Blast'**
+  String get flashcardBlastActionLabel;
+
+  /// No description provided for @flashcardProgressTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your progress'**
+  String get flashcardProgressTitle;
+
+  /// No description provided for @flashcardProgressDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Your progress is based on your last two study attempts across every mode, excluding games.'**
+  String get flashcardProgressDescription;
+
+  /// No description provided for @flashcardProgressNotStartedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Not started'**
+  String get flashcardProgressNotStartedLabel;
+
+  /// No description provided for @flashcardProgressLearningLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Learning'**
+  String get flashcardProgressLearningLabel;
+
+  /// No description provided for @flashcardProgressMasteredLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Mastered'**
+  String get flashcardProgressMasteredLabel;
+
+  /// No description provided for @flashcardStudyDeckButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Study this deck'**
+  String get flashcardStudyDeckButton;
 
   /// No description provided for @flashcardPlayAudioTooltip.
   ///
@@ -707,6 +773,18 @@ abstract class AppLocalizations {
   /// **'Delete card'**
   String get flashcardDeleteTooltip;
 
+  /// No description provided for @flashcardShareButtonTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Share deck'**
+  String get flashcardShareButtonTooltip;
+
+  /// No description provided for @flashcardMoreButtonTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'More options'**
+  String get flashcardMoreButtonTooltip;
+
   /// No description provided for @flashcardAudioPlayToast.
   ///
   /// In en, this message translates to:
@@ -724,6 +802,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Bookmark removed'**
   String get flashcardUnbookmarkToast;
+
+  /// No description provided for @flashcardShareComingSoonToast.
+  ///
+  /// In en, this message translates to:
+  /// **'Sharing will be available soon.'**
+  String get flashcardShareComingSoonToast;
+
+  /// No description provided for @flashcardMoreOptionsComingSoonToast.
+  ///
+  /// In en, this message translates to:
+  /// **'More options will be available soon.'**
+  String get flashcardMoreOptionsComingSoonToast;
 
   /// No description provided for @flashcardStudyUnavailableToast.
   ///

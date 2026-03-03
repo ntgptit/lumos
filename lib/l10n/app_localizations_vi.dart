@@ -313,6 +313,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get flashcardOwnerFallback => 'Người tạo';
 
   @override
+  String get flashcardPlusBadge => 'Plus';
+
+  @override
   String get flashcardUpdatedRecentlyLabel => 'Cập nhật gần đây';
 
   @override
@@ -327,10 +330,40 @@ class AppLocalizationsVi extends AppLocalizations {
   String get flashcardPreviewPlaceholder => 'Chưa có nội dung xem trước';
 
   @override
+  String get flashcardReviewActionLabel => 'Thẻ ghi nhớ';
+
+  @override
   String get flashcardFlipActionLabel => 'Lật thẻ';
 
   @override
   String get flashcardLearnActionLabel => 'Học';
+
+  @override
+  String get flashcardQuizActionLabel => 'Kiểm tra';
+
+  @override
+  String get flashcardMatchActionLabel => 'Ghép thẻ';
+
+  @override
+  String get flashcardBlastActionLabel => 'Blast';
+
+  @override
+  String get flashcardProgressTitle => 'Tiến độ của bạn';
+
+  @override
+  String get flashcardProgressDescription => 'Tiến độ dựa trên hai lần học gần nhất của bạn ở tất cả chế độ, ngoại trừ trò chơi.';
+
+  @override
+  String get flashcardProgressNotStartedLabel => 'Chưa học';
+
+  @override
+  String get flashcardProgressLearningLabel => 'Đang học';
+
+  @override
+  String get flashcardProgressMasteredLabel => 'Thành thạo';
+
+  @override
+  String get flashcardStudyDeckButton => 'Học bộ học phần này';
 
   @override
   String get flashcardPlayAudioTooltip => 'Phát âm thanh';
@@ -345,6 +378,12 @@ class AppLocalizationsVi extends AppLocalizations {
   String get flashcardDeleteTooltip => 'Xóa thẻ';
 
   @override
+  String get flashcardShareButtonTooltip => 'Chia sẻ bộ thẻ';
+
+  @override
+  String get flashcardMoreButtonTooltip => 'Thêm tùy chọn';
+
+  @override
   String flashcardAudioPlayToast(Object text) {
     return 'Đang phát: $text';
   }
@@ -354,6 +393,12 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get flashcardUnbookmarkToast => 'Đã bỏ đánh dấu';
+
+  @override
+  String get flashcardShareComingSoonToast => 'Tính năng chia sẻ sẽ sớm có.';
+
+  @override
+  String get flashcardMoreOptionsComingSoonToast => 'Các tùy chọn bổ sung sẽ sớm có.';
 
   @override
   String get flashcardStudyUnavailableToast => 'Không có thẻ để học.';

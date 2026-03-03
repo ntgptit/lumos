@@ -8,11 +8,15 @@ import '../../../../../shared/widgets/lumos_widgets.dart';
 abstract final class FlashcardPreviewCarouselConst {
   FlashcardPreviewCarouselConst._();
 
-  static const double carouselHeight = 200;
-  static const double pageSpacing = Insets.spacing8;
+  static const double carouselHeight = 280;
+  static const double pageSpacing = Insets.spacing4;
   static const double dotSpacing = Insets.spacing4;
-  static const double activeDotScale = 1.6;
+  static const double activeDotScale = 1.7;
   static const double dotSize = Insets.spacing8;
+  static const double titleHorizontalPadding = Insets.spacing24;
+  static const double titleVerticalPadding = Insets.spacing24;
+  static const double expandButtonInset = Insets.spacing12;
+  static const double cardBorderRadius = Insets.spacing24;
 }
 
 class FlashcardPreviewCarousel extends StatelessWidget {
@@ -56,24 +60,34 @@ class FlashcardPreviewCarousel extends StatelessWidget {
                 child: GestureDetector(
                   onTap: () => onExpandPressed(index),
                   child: LumosCard(
-                    variant: LumosCardVariant.elevated,
+                    variant: LumosCardVariant.filled,
+                    borderRadius: BorderRadius.circular(
+                      FlashcardPreviewCarouselConst.cardBorderRadius,
+                    ),
                     child: Stack(
                       children: <Widget>[
                         Center(
                           child: Padding(
-                            padding: const EdgeInsets.all(Insets.spacing16),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: FlashcardPreviewCarouselConst
+                                  .titleHorizontalPadding,
+                              vertical: FlashcardPreviewCarouselConst
+                                  .titleVerticalPadding,
+                            ),
                             child: LumosInlineText(
                               title,
                               align: TextAlign.center,
                               maxLines: 3,
                               overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.titleLarge,
+                              style: Theme.of(context).textTheme.headlineMedium,
                             ),
                           ),
                         ),
                         Positioned(
-                          right: Insets.spacing8,
-                          bottom: Insets.spacing8,
+                          right:
+                              FlashcardPreviewCarouselConst.expandButtonInset,
+                          bottom:
+                              FlashcardPreviewCarouselConst.expandButtonInset,
                           child: LumosIconButton(
                             onPressed: () => onExpandPressed(index),
                             tooltip: l10n.flashcardExpandPreviewTooltip,

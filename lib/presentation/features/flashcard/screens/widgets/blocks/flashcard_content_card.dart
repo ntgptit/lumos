@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../../core/constants/dimensions.dart';
+import '../../../../../../core/utils/string_utils.dart';
 import '../../../../../../domain/entities/flashcard_models.dart';
 import '../../../../../../l10n/app_localizations.dart';
 import '../../../../../shared/widgets/lumos_widgets.dart';
@@ -8,10 +9,14 @@ import '../../../../../shared/widgets/lumos_widgets.dart';
 abstract final class FlashcardContentCardConst {
   FlashcardContentCardConst._();
 
-  static const double cardPadding = Insets.spacing16;
-  static const double textGap = Insets.spacing8;
-  static const int backTextMaxLines = 3;
-  static const int noteMaxLines = 2;
+  static const double cardPadding = Insets.spacing20;
+  static const double textGap = Insets.spacing12;
+  static const double iconSpacing = Insets.spacing4;
+  static const int backTextMaxLines = 6;
+  static const int noteMaxLines = 4;
+  static const double cardRadius = Insets.spacing20;
+  static const String actionEdit = 'action-edit';
+  static const String actionDelete = 'action-delete';
 }
 
 class FlashcardContentCard extends StatelessWidget {
@@ -37,29 +42,24 @@ class FlashcardContentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
+    final ThemeData theme = Theme.of(context);
     return LumosCard(
-      variant: LumosCardVariant.elevated,
+      variant: LumosCardVariant.filled,
+      borderRadius: BorderRadius.circular(FlashcardContentCardConst.cardRadius),
       child: Padding(
         padding: const EdgeInsets.all(FlashcardContentCardConst.cardPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            LumosInlineText(
-              item.frontText,
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            const SizedBox(height: FlashcardContentCardConst.textGap),
-            LumosInlineText(
-              item.backText,
-              style: Theme.of(context).textTheme.bodyMedium,
-              maxLines: FlashcardContentCardConst.backTextMaxLines,
-              overflow: TextOverflow.ellipsis,
-            ),
-            ..._buildNote(context: context),
-            const SizedBox(height: FlashcardContentCardConst.textGap),
-            Wrap(
-              spacing: Insets.spacing8,
+            Row(
               children: <Widget>[
+                Expanded(
+                  child: LumosInlineText(
+                    item.frontText,
+                    style: theme.textTheme.headlineSmall,
+                  ),
+                ),
+                const SizedBox(width: FlashcardContentCardConst.iconSpacing),
                 LumosIconButton(
                   onPressed: onAudioPressed,
                   tooltip: l10n.flashcardPlayAudioTooltip,
@@ -68,25 +68,48 @@ class FlashcardContentCard extends StatelessWidget {
                   selectedIcon: Icons.graphic_eq_rounded,
                 ),
                 LumosIconButton(
-                  onPressed: onEditPressed,
-                  tooltip: l10n.flashcardEditTooltip,
-                  icon: Icons.edit_outlined,
-                ),
-                LumosIconButton(
-                  onPressed: onDeletePressed,
-                  tooltip: l10n.flashcardDeleteTooltip,
-                  icon: Icons.delete_outline_rounded,
-                  variant: LumosIconButtonVariant.outlined,
-                ),
-                LumosIconButton(
                   onPressed: onStarPressed,
                   tooltip: l10n.flashcardBookmarkTooltip,
                   icon: Icons.star_border,
                   selected: isStarred,
                   selectedIcon: Icons.star,
                 ),
+                PopupMenuButton<String>(
+                  tooltip: l10n.flashcardMoreButtonTooltip,
+                  onSelected: (String value) {
+                    if (value == FlashcardContentCardConst.actionEdit) {
+                      onEditPressed();
+                      return;
+                    }
+                    onDeletePressed();
+                  },
+                  itemBuilder: (BuildContext context) {
+                    return <PopupMenuEntry<String>>[
+                      PopupMenuItem<String>(
+                        value: FlashcardContentCardConst.actionEdit,
+                        child: LumosInlineText(l10n.flashcardEditTooltip),
+                      ),
+                      PopupMenuItem<String>(
+                        value: FlashcardContentCardConst.actionDelete,
+                        child: LumosInlineText(l10n.flashcardDeleteTooltip),
+                      ),
+                    ];
+                  },
+                  child: const Padding(
+                    padding: EdgeInsets.all(Insets.spacing8),
+                    child: LumosIcon(Icons.more_vert_rounded),
+                  ),
+                ),
               ],
             ),
+            const SizedBox(height: FlashcardContentCardConst.textGap),
+            LumosInlineText(
+              item.backText,
+              style: theme.textTheme.bodyLarge,
+              maxLines: FlashcardContentCardConst.backTextMaxLines,
+              overflow: TextOverflow.ellipsis,
+            ),
+            ..._buildNote(context: context),
           ],
         ),
       ),
@@ -94,13 +117,14 @@ class FlashcardContentCard extends StatelessWidget {
   }
 
   List<Widget> _buildNote({required BuildContext context}) {
-    if (item.note.isEmpty) {
+    final String normalizedNote = StringUtils.normalizeName(item.note);
+    if (normalizedNote.isEmpty) {
       return const <Widget>[];
     }
     return <Widget>[
       const SizedBox(height: FlashcardContentCardConst.textGap),
       LumosInlineText(
-        item.note,
+        normalizedNote,
         style: Theme.of(context).textTheme.bodySmall,
         maxLines: FlashcardContentCardConst.noteMaxLines,
         overflow: TextOverflow.ellipsis,

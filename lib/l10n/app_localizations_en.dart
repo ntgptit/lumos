@@ -313,6 +313,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get flashcardOwnerFallback => 'Owner';
 
   @override
+  String get flashcardPlusBadge => 'Plus';
+
+  @override
   String get flashcardUpdatedRecentlyLabel => 'Updated recently';
 
   @override
@@ -327,10 +330,40 @@ class AppLocalizationsEn extends AppLocalizations {
   String get flashcardPreviewPlaceholder => 'No preview available';
 
   @override
+  String get flashcardReviewActionLabel => 'Flashcards';
+
+  @override
   String get flashcardFlipActionLabel => 'Flip cards';
 
   @override
   String get flashcardLearnActionLabel => 'Learn';
+
+  @override
+  String get flashcardQuizActionLabel => 'Quiz';
+
+  @override
+  String get flashcardMatchActionLabel => 'Match';
+
+  @override
+  String get flashcardBlastActionLabel => 'Blast';
+
+  @override
+  String get flashcardProgressTitle => 'Your progress';
+
+  @override
+  String get flashcardProgressDescription => 'Your progress is based on your last two study attempts across every mode, excluding games.';
+
+  @override
+  String get flashcardProgressNotStartedLabel => 'Not started';
+
+  @override
+  String get flashcardProgressLearningLabel => 'Learning';
+
+  @override
+  String get flashcardProgressMasteredLabel => 'Mastered';
+
+  @override
+  String get flashcardStudyDeckButton => 'Study this deck';
 
   @override
   String get flashcardPlayAudioTooltip => 'Play audio';
@@ -345,6 +378,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get flashcardDeleteTooltip => 'Delete card';
 
   @override
+  String get flashcardShareButtonTooltip => 'Share deck';
+
+  @override
+  String get flashcardMoreButtonTooltip => 'More options';
+
+  @override
   String flashcardAudioPlayToast(Object text) {
     return 'Playing: $text';
   }
@@ -354,6 +393,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get flashcardUnbookmarkToast => 'Bookmark removed';
+
+  @override
+  String get flashcardShareComingSoonToast => 'Sharing will be available soon.';
+
+  @override
+  String get flashcardMoreOptionsComingSoonToast => 'More options will be available soon.';
 
   @override
   String get flashcardStudyUnavailableToast => 'No cards available for study.';
