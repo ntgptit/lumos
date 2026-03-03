@@ -5,7 +5,7 @@ This project follows a centralized layout system for Flutter UI.
 ## Rules
 
 - Do not hard-code spacing, size, radius, or icon dimensions in widgets.
-- Use tokens from `lib/core/constants/dimensions.dart`.
+- Use tokens from `lib/core/themes/foundation/app_foundation.dart`.
 - Use `Theme.of(context).colorScheme` and `Theme.of(context).textTheme`.
 - Keep UI render-only; state and business logic stay in providers/notifiers.
 

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/constants/dimensions.dart';
+import '../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../core/constants/route_names.dart';
 import '../../../../core/utils/string_utils.dart';
 import '../../../../domain/entities/flashcard_models.dart';
@@ -696,7 +696,7 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
                       children: <Widget>[
                         LumosText(
                           l10n.flashcardSortSheetTitle,
-                          style: LumosTextStyle.titleLarge,
+                          style: LumosTextStyle.titleMedium,
                         ),
                         const SizedBox(height: Insets.spacing12),
                         _buildSortOptionTile(

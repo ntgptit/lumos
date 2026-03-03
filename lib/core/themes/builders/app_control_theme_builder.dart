@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../constants/dimensions.dart';
+import '../foundation/app_foundation.dart';
 import '../extensions/theme_extensions.dart';
 
 abstract final class AppControlThemeBuilder {

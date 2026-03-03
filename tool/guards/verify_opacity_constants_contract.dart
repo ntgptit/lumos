@@ -4,7 +4,8 @@ class OpacityContractConst {
   const OpacityContractConst._();
 
   static const String libRoot = 'lib';
-  static const String dimensionsPath = 'lib/core/constants/dimensions.dart';
+  static const String dimensionsPath =
+      'lib/core/themes/foundation/app_widget_opacity_tokens.dart';
   static const String allowedSharedWidgetsPath =
       'lib/presentation/shared/widgets/';
   static const String allowedCoreThemesPath = 'lib/core/themes/';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/constants/dimensions.dart';
+import '../../../../core/themes/foundation/app_foundation.dart';
 import '../providers/home_provider.dart';
 import 'widgets/blocks/home_navigation_scaffold.dart';
 

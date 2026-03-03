@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../component/app_navigation_bar_tokens.dart';
-import '../../constants/dimensions.dart';
+import '../foundation/app_foundation.dart';
 import '../extensions/theme_extensions.dart';
 import '../semantic/app_elevation_tokens.dart';
 

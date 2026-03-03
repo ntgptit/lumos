@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../core/constants/dimensions.dart';
+import '../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../domain/entities/flashcard_models.dart';
 import '../../../../../../l10n/app_localizations.dart';
 import '../../../../../shared/widgets/lumos_widgets.dart';
@@ -8,15 +8,16 @@ import '../../../../../shared/widgets/lumos_widgets.dart';
 abstract final class FlashcardPreviewCarouselConst {
   FlashcardPreviewCarouselConst._();
 
-  static const double carouselHeight = 280;
+  static const double carouselHeight = Insets.spacing40 * 6;
   static const double pageSpacing = Insets.spacing4;
   static const double dotSpacing = Insets.spacing4;
   static const double activeDotScale = 1.7;
   static const double dotSize = Insets.spacing8;
-  static const double titleHorizontalPadding = Insets.spacing24;
-  static const double titleVerticalPadding = Insets.spacing24;
-  static const double expandButtonInset = Insets.spacing12;
-  static const double cardBorderRadius = Insets.spacing24;
+  static const double titleHorizontalPadding = Insets.spacing20;
+  static const double titleVerticalPadding = Insets.spacing16;
+  static const double expandButtonInset = Insets.spacing8;
+  static const double cardBorderRadius = Insets.spacing16;
+  static const double expandIconSize = Insets.spacing20;
 }
 
 class FlashcardPreviewCarousel extends StatelessWidget {
@@ -79,7 +80,7 @@ class FlashcardPreviewCarousel extends StatelessWidget {
                               align: TextAlign.center,
                               maxLines: 3,
                               overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.headlineMedium,
+                              style: Theme.of(context).textTheme.titleMedium,
                             ),
                           ),
                         ),
@@ -92,6 +93,7 @@ class FlashcardPreviewCarousel extends StatelessWidget {
                             onPressed: () => onExpandPressed(index),
                             tooltip: l10n.flashcardExpandPreviewTooltip,
                             icon: Icons.fullscreen_rounded,
+                            size: FlashcardPreviewCarouselConst.expandIconSize,
                             variant: LumosIconButtonVariant.tonal,
                           ),
                         ),

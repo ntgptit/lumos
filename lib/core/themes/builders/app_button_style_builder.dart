@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../component/app_button_tokens.dart';
-import '../../constants/dimensions.dart';
+import '../foundation/app_foundation.dart';
 import '../extensions/theme_extensions.dart';
-import '../foundation/app_motion.dart';
 import '../semantic/app_elevation_tokens.dart';
 
 enum AppButtonSize { small, medium, large }

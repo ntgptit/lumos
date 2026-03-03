@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/constants/dimensions.dart';
+import '../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../core/utils/string_utils.dart';
 import '../../../../domain/entities/flashcard_models.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -19,17 +19,19 @@ abstract final class FlashcardFlipStudyConst {
   static const double screenVerticalPadding = Insets.spacing12;
   static const double progressTopGap = Insets.spacing8;
   static const double progressBottomGap = Insets.spacing16;
-  static const double cardVerticalInset = Insets.spacing12;
-  static const double cardContentHorizontalPadding = Insets.spacing20;
-  static const double cardContentVerticalPadding = Insets.spacing20;
+  static const double cardVerticalInset = Insets.spacing8;
+  static const double cardContentHorizontalPadding = Insets.spacing16;
+  static const double cardContentVerticalPadding = Insets.spacing16;
   static const double cardActionGap = Insets.spacing8;
-  static const double cardTitleGap = Insets.spacing12;
-  static const double cardBottomGap = Insets.spacing12;
+  static const double cardTitleGap = Insets.spacing8;
+  static const double cardBottomGap = Insets.spacing8;
   static const double bottomBarTopGap = Insets.spacing8;
   static const double bottomBarBottomGap = Insets.spacing16;
+  static const double actionIconSize = Insets.spacing20;
+  static const double hintIconSize = Insets.spacing20;
   static const int backTextMaxLines = 8;
   static const int noteMaxLines = 4;
-  static const double cardBorderRadius = Insets.spacing24;
+  static const double cardBorderRadius = Insets.spacing16;
 }
 
 class FlashcardFlipStudyRouteExtra {
@@ -428,6 +430,7 @@ class _FlashcardStudyCard extends StatelessWidget {
                   onPressed: onAudioPressed,
                   tooltip: l10n.flashcardPlayAudioTooltip,
                   icon: Icons.volume_up_outlined,
+                  size: FlashcardFlipStudyConst.actionIconSize,
                   selected: isAudioPlaying,
                   selectedIcon: Icons.graphic_eq_rounded,
                 ),
@@ -436,6 +439,7 @@ class _FlashcardStudyCard extends StatelessWidget {
                   onPressed: onStarPressed,
                   tooltip: l10n.flashcardBookmarkTooltip,
                   icon: Icons.star_border,
+                  size: FlashcardFlipStudyConst.actionIconSize,
                   selected: isStarred,
                   selectedIcon: Icons.star,
                 ),
@@ -456,7 +460,7 @@ class _FlashcardStudyCard extends StatelessWidget {
                             LumosInlineText(
                               item.backText,
                               align: TextAlign.center,
-                              style: theme.textTheme.titleLarge,
+                              style: theme.textTheme.titleMedium,
                               maxLines:
                                   FlashcardFlipStudyConst.backTextMaxLines,
                               overflow: TextOverflow.ellipsis,
@@ -481,7 +485,7 @@ class _FlashcardStudyCard extends StatelessWidget {
                           item.frontText,
                           key: const ValueKey<String>('flashcard-front'),
                           align: TextAlign.center,
-                          style: theme.textTheme.headlineSmall,
+                          style: theme.textTheme.titleMedium,
                           maxLines: FlashcardFlipStudyConst.backTextMaxLines,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -489,7 +493,12 @@ class _FlashcardStudyCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: FlashcardFlipStudyConst.cardBottomGap),
-            Center(child: const LumosIcon(Icons.flip_to_back_rounded)),
+            Center(
+              child: const LumosIcon(
+                Icons.flip_to_back_rounded,
+                size: FlashcardFlipStudyConst.hintIconSize,
+              ),
+            ),
           ],
         ),
       ),

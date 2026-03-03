@@ -20,7 +20,7 @@ class ComponentThemeGuardConst {
   static const String partPrefix = 'part ';
   static const String coreThemeImportMarker = 'core/themes/';
   static const String coreThemeDimensionsImportMarker =
-      'core/constants/dimensions.dart';
+      'core/themes/foundation/app_foundation.dart';
   static const String widgetBuildMarker = 'Widget build(';
   static const String showDialogMarker = 'showDialog';
   static const String showModalBottomSheetMarker = 'showModalBottomSheet';
@@ -266,7 +266,7 @@ void _checkFile({
       lineNumber: 1,
       reason:
           'UI file with direct Material theme usage must import from `lib/core/themes/**` '
-          'or `lib/core/constants/dimensions.dart`.',
+          'or `lib/core/themes/foundation/app_foundation.dart`.',
       lineContent: path,
     ),
   );

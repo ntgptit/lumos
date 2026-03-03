@@ -4,7 +4,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../../core/constants/dimensions.dart';
+import '../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../folder/providers/folder_ui_signal_provider.dart';
 import '../../folder/screens/folder_screen.dart';

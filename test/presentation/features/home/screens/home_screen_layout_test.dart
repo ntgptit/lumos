@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:lumos/core/constants/dimensions.dart';
+import 'package:lumos/core/themes/foundation/app_foundation.dart';
 import 'package:lumos/l10n/app_localizations.dart';
 import 'package:lumos/presentation/features/home/screens/home_screen.dart';
 

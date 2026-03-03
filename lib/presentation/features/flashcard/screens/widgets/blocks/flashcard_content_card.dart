@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../core/constants/dimensions.dart';
+import '../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../core/utils/string_utils.dart';
 import '../../../../../../domain/entities/flashcard_models.dart';
 import '../../../../../../l10n/app_localizations.dart';
@@ -9,12 +9,13 @@ import '../../../../../shared/widgets/lumos_widgets.dart';
 abstract final class FlashcardContentCardConst {
   FlashcardContentCardConst._();
 
-  static const double cardPadding = Insets.spacing20;
-  static const double textGap = Insets.spacing12;
+  static const double cardPadding = Insets.spacing16;
+  static const double textGap = Insets.spacing8;
   static const double iconSpacing = Insets.spacing4;
+  static const double actionIconSize = Insets.spacing20;
   static const int backTextMaxLines = 6;
   static const int noteMaxLines = 4;
-  static const double cardRadius = Insets.spacing20;
+  static const double cardRadius = Insets.spacing16;
   static const String actionEdit = 'action-edit';
   static const String actionDelete = 'action-delete';
 }
@@ -56,7 +57,7 @@ class FlashcardContentCard extends StatelessWidget {
                 Expanded(
                   child: LumosInlineText(
                     item.frontText,
-                    style: theme.textTheme.headlineSmall,
+                    style: theme.textTheme.titleMedium,
                   ),
                 ),
                 const SizedBox(width: FlashcardContentCardConst.iconSpacing),
@@ -64,6 +65,7 @@ class FlashcardContentCard extends StatelessWidget {
                   onPressed: onAudioPressed,
                   tooltip: l10n.flashcardPlayAudioTooltip,
                   icon: Icons.volume_up_outlined,
+                  size: FlashcardContentCardConst.actionIconSize,
                   selected: isAudioPlaying,
                   selectedIcon: Icons.graphic_eq_rounded,
                 ),
@@ -71,6 +73,7 @@ class FlashcardContentCard extends StatelessWidget {
                   onPressed: onStarPressed,
                   tooltip: l10n.flashcardBookmarkTooltip,
                   icon: Icons.star_border,
+                  size: FlashcardContentCardConst.actionIconSize,
                   selected: isStarred,
                   selectedIcon: Icons.star,
                 ),
@@ -97,7 +100,10 @@ class FlashcardContentCard extends StatelessWidget {
                   },
                   child: const Padding(
                     padding: EdgeInsets.all(Insets.spacing8),
-                    child: LumosIcon(Icons.more_vert_rounded),
+                    child: LumosIcon(
+                      Icons.more_vert_rounded,
+                      size: FlashcardContentCardConst.actionIconSize,
+                    ),
                   ),
                 ),
               ],
@@ -105,7 +111,7 @@ class FlashcardContentCard extends StatelessWidget {
             const SizedBox(height: FlashcardContentCardConst.textGap),
             LumosInlineText(
               item.backText,
-              style: theme.textTheme.bodyLarge,
+              style: theme.textTheme.bodyMedium,
               maxLines: FlashcardContentCardConst.backTextMaxLines,
               overflow: TextOverflow.ellipsis,
             ),

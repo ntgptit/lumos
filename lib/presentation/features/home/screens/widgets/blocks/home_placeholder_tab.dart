@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../core/constants/dimensions.dart';
-import '../../../../../../core/themes/foundation/app_stroke.dart';
+import '../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../core/themes/semantic/app_elevation_tokens.dart';
 import '../../../../../shared/widgets/lumos_widgets.dart';
 

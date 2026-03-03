@@ -12,17 +12,29 @@ void main() {
     for (final entry in inventory.feEntries) {
       test('${entry.filePath} :: ${entry.signature}', () {
         final file = File(entry.filePath);
-        expect(file.existsSync(), isTrue, reason: 'Missing source file: ${entry.filePath}');
+        expect(
+          file.existsSync(),
+          isTrue,
+          reason: 'Missing source file: ${entry.filePath}',
+        );
 
-        final source = sourceCache.putIfAbsent(entry.filePath, file.readAsStringSync);
+        final source = sourceCache.putIfAbsent(
+          entry.filePath,
+          file.readAsStringSync,
+        );
         final tokens = _signatureTokens(entry.signature);
-        expect(tokens.isNotEmpty, isTrue, reason: 'Cannot derive tokens for ${entry.signature}');
+        expect(
+          tokens.isNotEmpty,
+          isTrue,
+          reason: 'Cannot derive tokens for ${entry.signature}',
+        );
 
         final hasAnyToken = tokens.any(source.contains);
         expect(
           hasAnyToken,
           isTrue,
-          reason: 'No token from ${tokens.join(', ')} found in ${entry.filePath} for ${entry.signature}',
+          reason:
+              'No token from ${tokens.join(', ')} found in ${entry.filePath} for ${entry.signature}',
         );
       });
     }

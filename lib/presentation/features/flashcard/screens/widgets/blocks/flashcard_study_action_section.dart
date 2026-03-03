@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../core/constants/dimensions.dart';
+import '../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../core/themes/extensions/theme_extensions.dart';
 import '../../../../../shared/widgets/lumos_widgets.dart';
 
@@ -8,10 +8,10 @@ abstract final class FlashcardStudyActionSectionConst {
   FlashcardStudyActionSectionConst._();
 
   static const double itemSpacing = Insets.spacing12;
-  static const double iconContainerSize = Insets.spacing40;
-  static const double iconContainerRadius = Insets.spacing12;
-  static const double iconSize = IconSizes.iconMedium;
-  static const double labelLeftSpacing = Insets.spacing16;
+  static const double iconContainerSize = WidgetSizes.avatarMedium;
+  static const double iconContainerRadius = Radius.radiusMedium;
+  static const double iconSize = IconSizes.iconSmall;
+  static const double labelLeftSpacing = Insets.spacing12;
 }
 
 enum FlashcardStudyActionTone { primary, info, warning, success, neutral }
@@ -88,7 +88,7 @@ class FlashcardStudyActionSection extends StatelessWidget {
                 Expanded(
                   child: LumosInlineText(
                     action.label,
-                    style: Theme.of(context).textTheme.titleLarge,
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ),
               ],

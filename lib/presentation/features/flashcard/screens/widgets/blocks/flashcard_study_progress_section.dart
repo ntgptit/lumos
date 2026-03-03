@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../core/constants/dimensions.dart';
+import '../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../shared/widgets/lumos_widgets.dart';
 
 abstract final class FlashcardStudyProgressSectionConst {
@@ -8,7 +8,8 @@ abstract final class FlashcardStudyProgressSectionConst {
 
   static const double sectionSpacing = Insets.spacing16;
   static const double itemSpacing = Insets.spacing12;
-  static const double progressRingSize = Insets.spacing64;
+  static const double progressRingSize = WidgetSizes.avatarLarge;
+  static const double actionIconSize = Insets.spacing20;
   static const double progressTextMaxValue = 1;
 }
 
@@ -51,11 +52,11 @@ class FlashcardStudyProgressSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        LumosText(title, style: LumosTextStyle.headlineSmall),
+        LumosText(title, style: LumosTextStyle.titleMedium),
         const SizedBox(height: FlashcardStudyProgressSectionConst.itemSpacing),
         LumosInlineText(
           description,
-          style: Theme.of(context).textTheme.bodyLarge,
+          style: Theme.of(context).textTheme.bodyMedium,
         ),
         const SizedBox(
           height: FlashcardStudyProgressSectionConst.sectionSpacing,
@@ -161,7 +162,7 @@ class FlashcardStudyProgressSection extends StatelessWidget {
                     size: FlashcardStudyProgressSectionConst.progressRingSize,
                     centerChild: LumosInlineText(
                       '${item.value}',
-                      style: theme.textTheme.headlineSmall?.copyWith(
+                      style: theme.textTheme.titleMedium?.copyWith(
                         color: textColor,
                       ),
                     ),
@@ -171,7 +172,7 @@ class FlashcardStudyProgressSection extends StatelessWidget {
                 Expanded(
                   child: LumosInlineText(
                     item.label,
-                    style: theme.textTheme.headlineSmall?.copyWith(
+                    style: theme.textTheme.titleMedium?.copyWith(
                       color: textColor,
                     ),
                   ),
@@ -179,7 +180,10 @@ class FlashcardStudyProgressSection extends StatelessWidget {
                 const SizedBox(width: Insets.spacing16),
                 IconTheme(
                   data: IconThemeData(color: textColor),
-                  child: const LumosIcon(Icons.arrow_forward_rounded),
+                  child: const LumosIcon(
+                    Icons.arrow_forward_rounded,
+                    size: FlashcardStudyProgressSectionConst.actionIconSize,
+                  ),
                 ),
               ],
             ),

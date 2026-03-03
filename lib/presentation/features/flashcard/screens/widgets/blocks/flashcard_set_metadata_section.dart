@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../core/constants/dimensions.dart';
+import '../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../l10n/app_localizations.dart';
 import '../../../../../shared/widgets/lumos_widgets.dart';
 
@@ -9,6 +9,7 @@ abstract final class FlashcardSetMetadataSectionConst {
 
   static const double titleBottomSpacing = Insets.spacing12;
   static const double rowSpacing = Insets.spacing12;
+  static const double ownerAvatarRadius = Insets.spacing16;
   static const double ownerNameRightSpacing = Insets.spacing8;
   static const double chipHorizontalPadding = Insets.spacing12;
   static const double chipVerticalPadding = Insets.spacing4;
@@ -34,14 +35,14 @@ class FlashcardSetMetadataSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        LumosText(title, style: LumosTextStyle.headlineMedium),
+        LumosText(title, style: LumosTextStyle.titleMedium),
         const SizedBox(
           height: FlashcardSetMetadataSectionConst.titleBottomSpacing,
         ),
         Row(
           children: <Widget>[
             CircleAvatar(
-              radius: WidgetSizes.avatarSmall,
+              radius: FlashcardSetMetadataSectionConst.ownerAvatarRadius,
               backgroundColor: colorScheme.secondaryContainer,
               child: IconTheme(
                 data: IconThemeData(color: colorScheme.onSecondaryContainer),
@@ -51,7 +52,7 @@ class FlashcardSetMetadataSection extends StatelessWidget {
             const SizedBox(width: FlashcardSetMetadataSectionConst.rowSpacing),
             LumosInlineText(
               ownerName,
-              style: Theme.of(context).textTheme.titleMedium,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(
               width: FlashcardSetMetadataSectionConst.ownerNameRightSpacing,
@@ -88,7 +89,7 @@ class FlashcardSetMetadataSection extends StatelessWidget {
             Expanded(
               child: LumosInlineText(
                 l10n.flashcardTotalLabel(totalFlashcards),
-                style: Theme.of(context).textTheme.titleMedium,
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
             ),
           ],

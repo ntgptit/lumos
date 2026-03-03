@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../component/app_dialog_tokens.dart';
-import '../../constants/dimensions.dart';
+import '../foundation/app_foundation.dart';
 
 abstract final class AppDialogThemeBuilder {
   static DialogThemeData dialogTheme({

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../core/constants/dimensions.dart';
+import '../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../core/utils/string_utils.dart';
 import '../../../../../../domain/entities/folder_models.dart';
 import '../../../../../../l10n/app_localizations.dart';

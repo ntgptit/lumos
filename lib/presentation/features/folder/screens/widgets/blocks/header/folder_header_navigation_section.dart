@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../../../../core/constants/dimensions.dart';
+import '../../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../../l10n/app_localizations.dart';
 import '../../../../providers/states/folder_state.dart';
 import '../../../../../../shared/widgets/lumos_widgets.dart';

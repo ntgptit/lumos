@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../core/constants/dimensions.dart';
+import '../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../shared/widgets/lumos_widgets.dart';
 
 abstract final class FlashcardCardSectionHeaderConst {
@@ -34,7 +34,7 @@ class FlashcardCardSectionHeader extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              LumosInlineText(title, style: theme.textTheme.headlineSmall),
+              LumosInlineText(title, style: theme.textTheme.titleMedium),
               const SizedBox(
                 height: FlashcardCardSectionHeaderConst.titleBottomSpacing,
               ),

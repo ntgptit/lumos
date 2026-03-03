@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../core/constants/dimensions.dart';
+import '../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../shared/widgets/lumos_widgets.dart';
 import 'home_adaptive_body.dart';
 import 'home_app_bar.dart';

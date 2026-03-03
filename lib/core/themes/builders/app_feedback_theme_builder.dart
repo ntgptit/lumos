@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../constants/dimensions.dart';
+import '../foundation/app_foundation.dart';
 import '../semantic/app_elevation_tokens.dart';
-import '../foundation/app_radius.dart';
 
 abstract final class AppFeedbackThemeBuilder {
   static ProgressIndicatorThemeData progressIndicatorTheme({

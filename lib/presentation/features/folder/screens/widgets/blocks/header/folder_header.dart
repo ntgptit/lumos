@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../../core/constants/dimensions.dart';
+import '../../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../../core/themes/semantic/app_elevation_tokens.dart';
 import '../../../../../../../l10n/app_localizations.dart';
 import '../../../../providers/states/folder_state.dart';

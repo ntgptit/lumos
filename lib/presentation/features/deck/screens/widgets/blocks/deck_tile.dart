@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../core/constants/dimensions.dart';
+import '../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../l10n/app_localizations.dart';
 import '../../../../../shared/widgets/cards/lumos_action_list_item_card.dart';
 import '../../../../../shared/widgets/misc/lumos_misc_widgets.dart';

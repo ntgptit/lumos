@@ -4,7 +4,7 @@ import 'builders/app_color_scheme_builder.dart';
 import 'builders/app_component_theme_builder.dart';
 import 'builders/app_text_theme_builder.dart';
 import 'builders/app_theme_extensions_builder.dart';
-import '../constants/dimensions.dart';
+import 'foundation/app_foundation.dart';
 
 final class AppDarkTheme {
   static ThemeData build({Color? seedColor}) {

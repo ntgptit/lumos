@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../constants/dimensions.dart';
+import '../foundation/app_foundation.dart';
 
 abstract final class WidgetStatePriorities {
   static const List<WidgetState> interaction = <WidgetState>[

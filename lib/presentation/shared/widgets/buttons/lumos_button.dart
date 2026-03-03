@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/themes/builders/app_button_style_builder.dart';
-import '../../../../core/constants/dimensions.dart';
+import '../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../core/themes/extensions/theme_extensions.dart';
 
 abstract final class LumosButtonConst {

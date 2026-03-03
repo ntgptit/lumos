@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../component/app_card_tokens.dart';
-import '../../constants/dimensions.dart';
+import '../foundation/app_foundation.dart';
 import '../extensions/theme_extensions.dart';
-import '../foundation/app_radius.dart';
 
 abstract final class AppContentComponentThemeBuilder {
   static CardThemeData cardTheme({
