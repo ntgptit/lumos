@@ -41,6 +41,19 @@ public interface DeckRepository extends JpaRepository<Deck, Long>, JpaSpecificat
 
     @Modifying
     @Query(value = """
+            UPDATE decks
+            SET flashcard_count = GREATEST(flashcard_count + :delta, 0),
+                updated_at = :updatedAt
+            WHERE id = :deckId
+              AND deleted_at IS NULL
+            """, nativeQuery = true)
+    int adjustFlashcardCount(
+            @Param("deckId") Long deckId,
+            @Param("delta") Integer delta,
+            @Param("updatedAt") Instant updatedAt);
+
+    @Modifying
+    @Query(value = """
             WITH RECURSIVE folder_tree AS (
                 SELECT f.id
                 FROM folders f

@@ -208,6 +208,169 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
+  String get flashcardTitle => 'Flashcard';
+
+  @override
+  String get flashcardCreateButton => 'Thẻ mới';
+
+  @override
+  String get flashcardCreateTitle => 'Tạo flashcard';
+
+  @override
+  String get flashcardEditTitle => 'Sửa flashcard';
+
+  @override
+  String get flashcardDeleteTitle => 'Xóa flashcard';
+
+  @override
+  String flashcardDeleteConfirm(Object name) {
+    return 'Xóa \"$name\"?';
+  }
+
+  @override
+  String get flashcardSearchHint => 'Tìm flashcard';
+
+  @override
+  String get flashcardSearchClearTooltip => 'Xóa tìm kiếm flashcard';
+
+  @override
+  String get flashcardToggleSearchTooltip => 'Bật/tắt tìm kiếm flashcard';
+
+  @override
+  String get flashcardSortButtonTooltip => 'Sắp xếp flashcard';
+
+  @override
+  String get flashcardSortSheetTitle => 'Sắp xếp flashcard';
+
+  @override
+  String get flashcardSortByCreatedAt => 'Thời gian tạo';
+
+  @override
+  String get flashcardSortByUpdatedAt => 'Thời gian cập nhật';
+
+  @override
+  String get flashcardSortByFrontText => 'Mặt trước';
+
+  @override
+  String get flashcardSortDirectionDesc => 'Mới nhất trước';
+
+  @override
+  String get flashcardSortDirectionAsc => 'Cũ nhất trước';
+
+  @override
+  String get flashcardSortDirectionAz => 'A-Z';
+
+  @override
+  String get flashcardSortDirectionZa => 'Z-A';
+
+  @override
+  String get flashcardSortSaveButton => 'Áp dụng';
+
+  @override
+  String get flashcardCardSectionTitle => 'Danh sách thẻ';
+
+  @override
+  String get flashcardEmptyTitle => 'Chưa có flashcard nào.';
+
+  @override
+  String get flashcardEmptySubtitle => 'Hãy tạo thẻ đầu tiên để bắt đầu học.';
+
+  @override
+  String get flashcardSearchEmptyTitle => 'Không có flashcard phù hợp.';
+
+  @override
+  String get flashcardSearchEmptySubtitle => 'Hãy thử từ khóa khác.';
+
+  @override
+  String get flashcardFrontLabel => 'Mặt trước';
+
+  @override
+  String get flashcardFrontHint => 'Nhập nội dung mặt trước';
+
+  @override
+  String get flashcardBackLabel => 'Mặt sau';
+
+  @override
+  String get flashcardBackHint => 'Nhập nội dung mặt sau';
+
+  @override
+  String get flashcardFrontRequiredValidation => 'Nội dung mặt trước là bắt buộc.';
+
+  @override
+  String flashcardFrontMaxLengthValidation(int max) {
+    return 'Mặt trước tối đa $max ký tự.';
+  }
+
+  @override
+  String get flashcardBackRequiredValidation => 'Nội dung mặt sau là bắt buộc.';
+
+  @override
+  String flashcardBackMaxLengthValidation(int max) {
+    return 'Mặt sau tối đa $max ký tự.';
+  }
+
+  @override
+  String get flashcardOwnerFallback => 'Người tạo';
+
+  @override
+  String get flashcardUpdatedRecentlyLabel => 'Cập nhật gần đây';
+
+  @override
+  String flashcardTotalLabel(int count) {
+    return '$count thẻ';
+  }
+
+  @override
+  String get flashcardExpandPreviewTooltip => 'Mở chế độ học thẻ';
+
+  @override
+  String get flashcardPreviewPlaceholder => 'Chưa có nội dung xem trước';
+
+  @override
+  String get flashcardFlipActionLabel => 'Lật thẻ';
+
+  @override
+  String get flashcardLearnActionLabel => 'Học';
+
+  @override
+  String get flashcardPlayAudioTooltip => 'Phát âm thanh';
+
+  @override
+  String get flashcardBookmarkTooltip => 'Đánh dấu';
+
+  @override
+  String get flashcardEditTooltip => 'Sửa thẻ';
+
+  @override
+  String get flashcardDeleteTooltip => 'Xóa thẻ';
+
+  @override
+  String flashcardAudioPlayToast(Object text) {
+    return 'Đang phát: $text';
+  }
+
+  @override
+  String get flashcardBookmarkToast => 'Đã đánh dấu thẻ';
+
+  @override
+  String get flashcardUnbookmarkToast => 'Đã bỏ đánh dấu';
+
+  @override
+  String get flashcardStudyUnavailableToast => 'Không có thẻ để học.';
+
+  @override
+  String get flashcardStudyCompletedToast => 'Đã hoàn thành phiên học.';
+
+  @override
+  String get flashcardCloseTooltip => 'Đóng màn hình học';
+
+  @override
+  String get flashcardPreviousButton => 'Trước';
+
+  @override
+  String get flashcardNextButton => 'Tiếp';
+
+  @override
   String get homeGreeting => 'Chào buổi tối, người học';
 
   @override

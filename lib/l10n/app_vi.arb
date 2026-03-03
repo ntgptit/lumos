@@ -132,6 +132,88 @@
       }
     }
   },
+  "flashcardTitle": "Flashcard",
+  "flashcardCreateButton": "Thẻ mới",
+  "flashcardCreateTitle": "Tạo flashcard",
+  "flashcardEditTitle": "Sửa flashcard",
+  "flashcardDeleteTitle": "Xóa flashcard",
+  "flashcardDeleteConfirm": "Xóa \"{name}\"?",
+  "@flashcardDeleteConfirm": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "flashcardSearchHint": "Tìm flashcard",
+  "flashcardSearchClearTooltip": "Xóa tìm kiếm flashcard",
+  "flashcardToggleSearchTooltip": "Bật/tắt tìm kiếm flashcard",
+  "flashcardSortButtonTooltip": "Sắp xếp flashcard",
+  "flashcardSortSheetTitle": "Sắp xếp flashcard",
+  "flashcardSortByCreatedAt": "Thời gian tạo",
+  "flashcardSortByUpdatedAt": "Thời gian cập nhật",
+  "flashcardSortByFrontText": "Mặt trước",
+  "flashcardSortDirectionDesc": "Mới nhất trước",
+  "flashcardSortDirectionAsc": "Cũ nhất trước",
+  "flashcardSortDirectionAz": "A-Z",
+  "flashcardSortDirectionZa": "Z-A",
+  "flashcardSortSaveButton": "Áp dụng",
+  "flashcardCardSectionTitle": "Danh sách thẻ",
+  "flashcardEmptyTitle": "Chưa có flashcard nào.",
+  "flashcardEmptySubtitle": "Hãy tạo thẻ đầu tiên để bắt đầu học.",
+  "flashcardSearchEmptyTitle": "Không có flashcard phù hợp.",
+  "flashcardSearchEmptySubtitle": "Hãy thử từ khóa khác.",
+  "flashcardFrontLabel": "Mặt trước",
+  "flashcardFrontHint": "Nhập nội dung mặt trước",
+  "flashcardBackLabel": "Mặt sau",
+  "flashcardBackHint": "Nhập nội dung mặt sau",
+  "flashcardFrontRequiredValidation": "Nội dung mặt trước là bắt buộc.",
+  "flashcardFrontMaxLengthValidation": "Mặt trước tối đa {max} ký tự.",
+  "@flashcardFrontMaxLengthValidation": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "flashcardBackRequiredValidation": "Nội dung mặt sau là bắt buộc.",
+  "flashcardBackMaxLengthValidation": "Mặt sau tối đa {max} ký tự.",
+  "@flashcardBackMaxLengthValidation": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "flashcardOwnerFallback": "Người tạo",
+  "flashcardUpdatedRecentlyLabel": "Cập nhật gần đây",
+  "flashcardTotalLabel": "{count} thẻ",
+  "@flashcardTotalLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "flashcardExpandPreviewTooltip": "Mở chế độ học thẻ",
+  "flashcardPreviewPlaceholder": "Chưa có nội dung xem trước",
+  "flashcardFlipActionLabel": "Lật thẻ",
+  "flashcardLearnActionLabel": "Học",
+  "flashcardPlayAudioTooltip": "Phát âm thanh",
+  "flashcardBookmarkTooltip": "Đánh dấu",
+  "flashcardEditTooltip": "Sửa thẻ",
+  "flashcardDeleteTooltip": "Xóa thẻ",
+  "flashcardAudioPlayToast": "Đang phát: {text}",
+  "@flashcardAudioPlayToast": {
+    "placeholders": {
+      "text": {}
+    }
+  },
+  "flashcardBookmarkToast": "Đã đánh dấu thẻ",
+  "flashcardUnbookmarkToast": "Đã bỏ đánh dấu",
+  "flashcardStudyUnavailableToast": "Không có thẻ để học.",
+  "flashcardStudyCompletedToast": "Đã hoàn thành phiên học.",
+  "flashcardCloseTooltip": "Đóng màn hình học",
+  "flashcardPreviousButton": "Trước",
+  "flashcardNextButton": "Tiếp",
   "homeGreeting": "Chào buổi tối, người học",
   "homeGoalProgress": "Bạn đã hoàn thành 78% mục tiêu tuần này.",
   "homeHeroTitle": "Xây dựng độ trôi chảy với đà tiến bộ",

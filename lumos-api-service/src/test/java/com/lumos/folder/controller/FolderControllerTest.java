@@ -4,8 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static com.lumos.testkit.FolderTestFixtures.createFolderRequest;
+import static com.lumos.testkit.FolderTestFixtures.folderResponse;
+import static com.lumos.testkit.FolderTestFixtures.renameFolderRequest;
+import static com.lumos.testkit.FolderTestFixtures.updateFolderRequest;
+import static com.lumos.testkit.SearchRequestFixtures.byNameAsc;
 
-import java.time.Instant;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -15,13 +19,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 
-import com.lumos.common.dto.request.SearchRequest;
-import com.lumos.common.enums.SortBy;
-import com.lumos.common.enums.SortType;
-import com.lumos.folder.dto.request.CreateFolderRequest;
-import com.lumos.folder.dto.request.RenameFolderRequest;
-import com.lumos.folder.dto.request.UpdateFolderRequest;
-import com.lumos.folder.dto.response.AuditMetadataResponse;
 import com.lumos.folder.dto.response.FolderResponse;
 import com.lumos.folder.service.FolderService;
 
@@ -38,7 +35,7 @@ class FolderControllerTest {
 
     @Test
     void createFolder_returnsCreatedResponse() {
-        final var request = new CreateFolderRequest("Folder A", "Description", null);
+        final var request = createFolderRequest("Folder A", "Description", null);
         final var response = sampleFolderResponse();
         when(this.folderService.createFolder(request)).thenReturn(response);
 
@@ -50,7 +47,7 @@ class FolderControllerTest {
 
     @Test
     void renameFolder_returnsOkResponse() {
-        final var request = new RenameFolderRequest("Folder B");
+        final var request = renameFolderRequest("Folder B");
         final var response = sampleFolderResponse();
         when(this.folderService.renameFolder(FOLDER_ID, request)).thenReturn(response);
 
@@ -62,7 +59,7 @@ class FolderControllerTest {
 
     @Test
     void updateFolder_returnsOkResponse() {
-        final var request = new UpdateFolderRequest("Folder C", "Updated", null);
+        final var request = updateFolderRequest("Folder C", "Updated", null);
         final var response = sampleFolderResponse();
         when(this.folderService.updateFolder(FOLDER_ID, request)).thenReturn(response);
 
@@ -83,7 +80,7 @@ class FolderControllerTest {
 
     @Test
     void getFolders_returnsFolderList() {
-        final var searchRequest = new SearchRequest("folder", SortBy.NAME, SortType.ASC);
+        final var searchRequest = byNameAsc("folder");
         final var pageable = PageRequest.of(0, 20);
         final var response = List.of(sampleFolderResponse());
         when(this.folderService.getFolders(10L, searchRequest, pageable)).thenReturn(response);
@@ -95,16 +92,13 @@ class FolderControllerTest {
     }
 
     private FolderResponse sampleFolderResponse() {
-        return new FolderResponse(
+        return folderResponse(
                 FOLDER_ID,
                 "Folder A",
                 "Description",
                 "#112233",
                 null,
                 1,
-                0,
-                new AuditMetadataResponse(
-                        Instant.parse("2026-01-01T00:00:00Z"),
-                        Instant.parse("2026-01-02T00:00:00Z")));
+                0);
     }
 }

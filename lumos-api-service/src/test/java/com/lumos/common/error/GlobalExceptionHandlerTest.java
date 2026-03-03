@@ -28,6 +28,7 @@ import org.springframework.core.MethodParameter;
 import com.lumos.deck.exception.DeckNameConflictException;
 import com.lumos.deck.exception.DeckNotFoundException;
 import com.lumos.deck.exception.DeckParentHasSubfoldersException;
+import com.lumos.flashcard.exception.FlashcardNotFoundException;
 import com.lumos.folder.exception.FolderHasDecksConflictException;
 import com.lumos.folder.exception.FolderNameConflictException;
 import com.lumos.folder.exception.FolderNotFoundException;
@@ -116,6 +117,17 @@ class GlobalExceptionHandlerTest {
 
         assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
         assertEquals("resolved:deck.parent-has-subfolders", response.getBody().message());
+    }
+
+    @Test
+    void handleFlashcardNotFound_returnsNotFoundResponse() {
+        final var handler = handler();
+        final var request = request("/api/v1/decks/1/flashcards/2");
+
+        final var response = handler.handleFlashcardNotFound(new FlashcardNotFoundException(2L), request);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals("resolved:flashcard.not-found", response.getBody().message());
     }
 
     @Test

@@ -1,7 +1,6 @@
 package com.lumos.common.config;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -40,7 +39,7 @@ class CorsConfigTest {
         assertEquals(properties.allowedMethods(), corsConfiguration.getAllowedMethods());
         assertEquals(properties.allowedHeaders(), corsConfiguration.getAllowedHeaders());
         assertEquals(properties.exposedHeaders(), corsConfiguration.getExposedHeaders());
-        assertTrue(Boolean.TRUE.equals(corsConfiguration.getAllowCredentials()));
+        assertEquals(Boolean.TRUE, corsConfiguration.getAllowCredentials());
         assertEquals(properties.maxAgeSeconds(), corsConfiguration.getMaxAge());
     }
 

@@ -7,6 +7,11 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static com.lumos.testkit.FolderTestFixtures.createFolderRequest;
+import static com.lumos.testkit.FolderTestFixtures.updateFolderRequest;
+import static com.lumos.testkit.FolderTestFixtures.renameFolderRequest;
+import static com.lumos.testkit.SearchRequestFixtures.byNameAsc;
+import static com.lumos.testkit.SearchRequestFixtures.empty;
 
 import java.time.Instant;
 import java.util.List;
@@ -23,15 +28,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 
-import com.lumos.common.dto.request.SearchRequest;
-import com.lumos.common.enums.SortBy;
-import com.lumos.common.enums.SortType;
 import com.lumos.deck.repository.DeckRepository;
 import com.lumos.folder.constant.FolderConstants;
-import com.lumos.folder.dto.request.CreateFolderRequest;
-import com.lumos.folder.dto.request.RenameFolderRequest;
-import com.lumos.folder.dto.request.UpdateFolderRequest;
-import com.lumos.folder.dto.response.AuditMetadataResponse;
 import com.lumos.folder.dto.response.FolderResponse;
 import com.lumos.folder.entity.Folder;
 import com.lumos.folder.exception.FolderHasDecksConflictException;
@@ -61,7 +59,7 @@ class FolderServiceImplTest {
 
     @Test
     void createFolder_createsRootFolderWithNormalizedFields() {
-        final var request = new CreateFolderRequest("  Folder A  ", "  Description  ", null);
+        final var request = createFolderRequest("  Folder A  ", "  Description  ", null);
         final var mappedFolder = folder(FOLDER_ID, null, 1, "Folder A", "Description");
         final var response = folderResponse(FOLDER_ID, null, 1, 0);
         when(this.folderRepository.existsActiveSiblingName(null, "Folder A", null)).thenReturn(false);
@@ -81,7 +79,7 @@ class FolderServiceImplTest {
 
     @Test
     void createFolder_withNullDescription_usesDefaultDescription() {
-        final var request = new CreateFolderRequest(" Folder A ", null, null);
+        final var request = createFolderRequest(" Folder A ", null, null);
         final var mappedFolder = folder(FOLDER_ID, null, 1, "Folder A", FolderConstants.EMPTY_DESCRIPTION);
         when(this.folderRepository.existsActiveSiblingName(null, "Folder A", null)).thenReturn(false);
         when(this.folderMapper.toFolderEntity(
@@ -106,7 +104,7 @@ class FolderServiceImplTest {
     @Test
     void createFolder_withMissingParent_throwsFolderNotFoundException() {
         when(this.folderRepository.findByIdAndDeletedAtIsNull(PARENT_ID)).thenReturn(Optional.empty());
-        final var request = new CreateFolderRequest("Folder A", "Description", PARENT_ID);
+        final var request = createFolderRequest("Folder A", "Description", PARENT_ID);
 
         assertThrows(FolderNotFoundException.class, () -> this.folderService.createFolder(request));
     }
@@ -116,7 +114,7 @@ class FolderServiceImplTest {
         final var parent = folder(PARENT_ID, null, 1, "Parent", "");
         when(this.folderRepository.findByIdAndDeletedAtIsNull(PARENT_ID)).thenReturn(Optional.of(parent));
         when(this.deckRepository.existsByFolderIdAndDeletedAtIsNull(PARENT_ID)).thenReturn(true);
-        final var request = new CreateFolderRequest("Folder A", "Description", PARENT_ID);
+        final var request = createFolderRequest("Folder A", "Description", PARENT_ID);
 
         assertThrows(FolderHasDecksConflictException.class, () -> this.folderService.createFolder(request));
     }
@@ -127,7 +125,7 @@ class FolderServiceImplTest {
         when(this.folderRepository.findByIdAndDeletedAtIsNull(PARENT_ID)).thenReturn(Optional.of(parent));
         when(this.deckRepository.existsByFolderIdAndDeletedAtIsNull(PARENT_ID)).thenReturn(false);
         when(this.folderRepository.existsActiveSiblingName(PARENT_ID, "Folder A", null)).thenReturn(true);
-        final var request = new CreateFolderRequest("Folder A", "Description", PARENT_ID);
+        final var request = createFolderRequest("Folder A", "Description", PARENT_ID);
 
         assertThrows(FolderNameConflictException.class, () -> this.folderService.createFolder(request));
     }
@@ -136,7 +134,7 @@ class FolderServiceImplTest {
     void renameFolder_updatesName() {
         final var parent = folder(PARENT_ID, null, 1, "Parent", "");
         final var folder = folder(FOLDER_ID, parent, 2, "Old Name", "Description");
-        final var request = new RenameFolderRequest("  New Name  ");
+        final var request = renameFolderRequest("  New Name  ");
         final var response = folderResponse(FOLDER_ID, PARENT_ID, 2, 0);
         when(this.folderRepository.findByIdAndDeletedAtIsNull(FOLDER_ID)).thenReturn(Optional.of(folder));
         when(this.folderRepository.existsActiveSiblingName(PARENT_ID, "New Name", FOLDER_ID)).thenReturn(false);
@@ -151,7 +149,7 @@ class FolderServiceImplTest {
     void updateFolder_updatesNameAndDescription() {
         final var parent = folder(PARENT_ID, null, 1, "Parent", "");
         final var folder = folder(FOLDER_ID, parent, 2, "Old Name", "Old Description");
-        final var request = new UpdateFolderRequest("  New Name  ", "  New Description  ", null);
+        final var request = updateFolderRequest("  New Name  ", "  New Description  ", null);
         final var response = folderResponse(FOLDER_ID, PARENT_ID, 2, 0);
         when(this.folderRepository.findByIdAndDeletedAtIsNull(FOLDER_ID)).thenReturn(Optional.of(folder));
         when(this.folderRepository.existsActiveSiblingName(PARENT_ID, "New Name", FOLDER_ID)).thenReturn(false);
@@ -180,7 +178,7 @@ class FolderServiceImplTest {
         final var parent = folder(PARENT_ID, null, 1, "Parent", "");
         final var folderOne = folder(20L, parent, 2, "Folder One", "Description");
         final var folderTwo = folder(21L, parent, 2, "Folder Two", "Description");
-        final var searchRequest = new SearchRequest("folder", SortBy.NAME, SortType.ASC);
+        final var searchRequest = byNameAsc("folder");
         final var pageable = PageRequest.of(0, 20);
         final var folderPage = new PageImpl<>(List.of(folderOne, folderTwo));
         final var projection = projection(folderOne.getId(), 3L);
@@ -199,7 +197,7 @@ class FolderServiceImplTest {
 
     @Test
     void getFolders_whenPageIsEmpty_skipsChildCountQuery() {
-        final var searchRequest = new SearchRequest(null, null, null);
+        final var searchRequest = empty();
         final var pageable = PageRequest.of(0, 20);
         when(this.folderRepository.findAll(any(Specification.class), any(PageRequest.class)))
                 .thenReturn(new PageImpl<>(List.of()));
@@ -222,17 +220,14 @@ class FolderServiceImplTest {
     }
 
     private FolderResponse folderResponse(Long id, Long parentId, Integer depth, Integer childFolderCount) {
-        return new FolderResponse(
+        return com.lumos.testkit.FolderTestFixtures.folderResponse(
                 id,
                 "Folder A",
                 "Description",
                 FolderConstants.DEFAULT_COLOR_HEX,
                 parentId,
                 depth,
-                childFolderCount,
-                new AuditMetadataResponse(
-                        Instant.parse("2026-01-01T00:00:00Z"),
-                        Instant.parse("2026-01-02T00:00:00Z")));
+                childFolderCount);
     }
 
     private FolderChildCountProjection projection(Long parentId, Long childCount) {

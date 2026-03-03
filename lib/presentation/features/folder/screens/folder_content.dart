@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/constants/route_names.dart';
 import '../../../../core/constants/dimensions.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../domain/entities/deck_models.dart';
@@ -479,7 +480,15 @@ class _FolderContentState extends ConsumerState<FolderContent> {
   }) {
     return DeckTile(
       item: item,
-      onOpen: () {},
+      onOpen: () {
+        context.pushNamed(
+          AppRouteName.flashcard,
+          pathParameters: <String, String>{
+            AppRouteParam.deckId: item.id.toString(),
+          },
+          queryParameters: <String, String>{AppRouteQuery.deckName: item.name},
+        );
+      },
       onRename: () => showDeckEditorDialog(
         context: context,
         titleBuilder: (AppLocalizations l10n) => l10n.deckRenameTitle,

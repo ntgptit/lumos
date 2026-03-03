@@ -15,4 +15,6 @@ public class ErrorMessageKeys {
     public static final String DECK_NOT_FOUND = "deck.not-found";
     public static final String DECK_NAME_CONFLICT = "deck.name-conflict";
     public static final String DECK_PARENT_HAS_SUBFOLDERS = "deck.parent-has-subfolders";
+
+    public static final String FLASHCARD_NOT_FOUND = "flashcard.not-found";
 }

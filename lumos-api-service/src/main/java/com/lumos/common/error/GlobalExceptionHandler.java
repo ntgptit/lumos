@@ -21,6 +21,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import com.lumos.deck.exception.DeckNameConflictException;
 import com.lumos.deck.exception.DeckNotFoundException;
 import com.lumos.deck.exception.DeckParentHasSubfoldersException;
+import com.lumos.flashcard.exception.FlashcardNotFoundException;
 import com.lumos.folder.exception.FolderHasDecksConflictException;
 import com.lumos.folder.exception.FolderNameConflictException;
 import com.lumos.folder.exception.FolderNotFoundException;
@@ -98,6 +99,17 @@ public class GlobalExceptionHandler {
             HttpServletRequest request) {
         return buildErrorResponse(
                 HttpStatus.CONFLICT,
+                resolveMessage(exception.getMessageKey(), exception.getMessageArgs()),
+                request.getRequestURI(),
+                Map.of());
+    }
+
+    @ExceptionHandler(FlashcardNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleFlashcardNotFound(
+            FlashcardNotFoundException exception,
+            HttpServletRequest request) {
+        return buildErrorResponse(
+                HttpStatus.NOT_FOUND,
                 resolveMessage(exception.getMessageKey(), exception.getMessageArgs()),
                 request.getRequestURI(),
                 Map.of());

@@ -449,6 +449,312 @@ abstract class AppLocalizations {
   /// **'{count} deck(s)'**
   String deckCount(int count);
 
+  /// No description provided for @flashcardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Flashcards'**
+  String get flashcardTitle;
+
+  /// No description provided for @flashcardCreateButton.
+  ///
+  /// In en, this message translates to:
+  /// **'New Card'**
+  String get flashcardCreateButton;
+
+  /// No description provided for @flashcardCreateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create flashcard'**
+  String get flashcardCreateTitle;
+
+  /// No description provided for @flashcardEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit flashcard'**
+  String get flashcardEditTitle;
+
+  /// No description provided for @flashcardDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete flashcard'**
+  String get flashcardDeleteTitle;
+
+  /// No description provided for @flashcardDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete \"{name}\"?'**
+  String flashcardDeleteConfirm(Object name);
+
+  /// No description provided for @flashcardSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search flashcards'**
+  String get flashcardSearchHint;
+
+  /// No description provided for @flashcardSearchClearTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear flashcard search'**
+  String get flashcardSearchClearTooltip;
+
+  /// No description provided for @flashcardToggleSearchTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Toggle flashcard search'**
+  String get flashcardToggleSearchTooltip;
+
+  /// No description provided for @flashcardSortButtonTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort flashcards'**
+  String get flashcardSortButtonTooltip;
+
+  /// No description provided for @flashcardSortSheetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort flashcards'**
+  String get flashcardSortSheetTitle;
+
+  /// No description provided for @flashcardSortByCreatedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Created time'**
+  String get flashcardSortByCreatedAt;
+
+  /// No description provided for @flashcardSortByUpdatedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated time'**
+  String get flashcardSortByUpdatedAt;
+
+  /// No description provided for @flashcardSortByFrontText.
+  ///
+  /// In en, this message translates to:
+  /// **'Front text'**
+  String get flashcardSortByFrontText;
+
+  /// No description provided for @flashcardSortDirectionDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Newest first'**
+  String get flashcardSortDirectionDesc;
+
+  /// No description provided for @flashcardSortDirectionAsc.
+  ///
+  /// In en, this message translates to:
+  /// **'Oldest first'**
+  String get flashcardSortDirectionAsc;
+
+  /// No description provided for @flashcardSortDirectionAz.
+  ///
+  /// In en, this message translates to:
+  /// **'A-Z'**
+  String get flashcardSortDirectionAz;
+
+  /// No description provided for @flashcardSortDirectionZa.
+  ///
+  /// In en, this message translates to:
+  /// **'Z-A'**
+  String get flashcardSortDirectionZa;
+
+  /// No description provided for @flashcardSortSaveButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply sort'**
+  String get flashcardSortSaveButton;
+
+  /// No description provided for @flashcardCardSectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cards'**
+  String get flashcardCardSectionTitle;
+
+  /// No description provided for @flashcardEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No flashcards yet.'**
+  String get flashcardEmptyTitle;
+
+  /// No description provided for @flashcardEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create your first card to start learning.'**
+  String get flashcardEmptySubtitle;
+
+  /// No description provided for @flashcardSearchEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No matching flashcards.'**
+  String get flashcardSearchEmptyTitle;
+
+  /// No description provided for @flashcardSearchEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Try another keyword.'**
+  String get flashcardSearchEmptySubtitle;
+
+  /// No description provided for @flashcardFrontLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Front text'**
+  String get flashcardFrontLabel;
+
+  /// No description provided for @flashcardFrontHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter front text'**
+  String get flashcardFrontHint;
+
+  /// No description provided for @flashcardBackLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Back text'**
+  String get flashcardBackLabel;
+
+  /// No description provided for @flashcardBackHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter back text'**
+  String get flashcardBackHint;
+
+  /// No description provided for @flashcardFrontRequiredValidation.
+  ///
+  /// In en, this message translates to:
+  /// **'Front text is required.'**
+  String get flashcardFrontRequiredValidation;
+
+  /// No description provided for @flashcardFrontMaxLengthValidation.
+  ///
+  /// In en, this message translates to:
+  /// **'Front text must be at most {max} character(s).'**
+  String flashcardFrontMaxLengthValidation(int max);
+
+  /// No description provided for @flashcardBackRequiredValidation.
+  ///
+  /// In en, this message translates to:
+  /// **'Back text is required.'**
+  String get flashcardBackRequiredValidation;
+
+  /// No description provided for @flashcardBackMaxLengthValidation.
+  ///
+  /// In en, this message translates to:
+  /// **'Back text must be at most {max} character(s).'**
+  String flashcardBackMaxLengthValidation(int max);
+
+  /// No description provided for @flashcardOwnerFallback.
+  ///
+  /// In en, this message translates to:
+  /// **'Owner'**
+  String get flashcardOwnerFallback;
+
+  /// No description provided for @flashcardUpdatedRecentlyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated recently'**
+  String get flashcardUpdatedRecentlyLabel;
+
+  /// No description provided for @flashcardTotalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} card(s)'**
+  String flashcardTotalLabel(int count);
+
+  /// No description provided for @flashcardExpandPreviewTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Open card study'**
+  String get flashcardExpandPreviewTooltip;
+
+  /// No description provided for @flashcardPreviewPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'No preview available'**
+  String get flashcardPreviewPlaceholder;
+
+  /// No description provided for @flashcardFlipActionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Flip cards'**
+  String get flashcardFlipActionLabel;
+
+  /// No description provided for @flashcardLearnActionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Learn'**
+  String get flashcardLearnActionLabel;
+
+  /// No description provided for @flashcardPlayAudioTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Play audio'**
+  String get flashcardPlayAudioTooltip;
+
+  /// No description provided for @flashcardBookmarkTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Bookmark'**
+  String get flashcardBookmarkTooltip;
+
+  /// No description provided for @flashcardEditTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit card'**
+  String get flashcardEditTooltip;
+
+  /// No description provided for @flashcardDeleteTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete card'**
+  String get flashcardDeleteTooltip;
+
+  /// No description provided for @flashcardAudioPlayToast.
+  ///
+  /// In en, this message translates to:
+  /// **'Playing: {text}'**
+  String flashcardAudioPlayToast(Object text);
+
+  /// No description provided for @flashcardBookmarkToast.
+  ///
+  /// In en, this message translates to:
+  /// **'Card bookmarked'**
+  String get flashcardBookmarkToast;
+
+  /// No description provided for @flashcardUnbookmarkToast.
+  ///
+  /// In en, this message translates to:
+  /// **'Bookmark removed'**
+  String get flashcardUnbookmarkToast;
+
+  /// No description provided for @flashcardStudyUnavailableToast.
+  ///
+  /// In en, this message translates to:
+  /// **'No cards available for study.'**
+  String get flashcardStudyUnavailableToast;
+
+  /// No description provided for @flashcardStudyCompletedToast.
+  ///
+  /// In en, this message translates to:
+  /// **'Study session completed.'**
+  String get flashcardStudyCompletedToast;
+
+  /// No description provided for @flashcardCloseTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Close study'**
+  String get flashcardCloseTooltip;
+
+  /// No description provided for @flashcardPreviousButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous'**
+  String get flashcardPreviousButton;
+
+  /// No description provided for @flashcardNextButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get flashcardNextButton;
+
   /// No description provided for @homeGreeting.
   ///
   /// In en, this message translates to:

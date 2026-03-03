@@ -208,6 +208,169 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get flashcardTitle => 'Flashcards';
+
+  @override
+  String get flashcardCreateButton => 'New Card';
+
+  @override
+  String get flashcardCreateTitle => 'Create flashcard';
+
+  @override
+  String get flashcardEditTitle => 'Edit flashcard';
+
+  @override
+  String get flashcardDeleteTitle => 'Delete flashcard';
+
+  @override
+  String flashcardDeleteConfirm(Object name) {
+    return 'Delete \"$name\"?';
+  }
+
+  @override
+  String get flashcardSearchHint => 'Search flashcards';
+
+  @override
+  String get flashcardSearchClearTooltip => 'Clear flashcard search';
+
+  @override
+  String get flashcardToggleSearchTooltip => 'Toggle flashcard search';
+
+  @override
+  String get flashcardSortButtonTooltip => 'Sort flashcards';
+
+  @override
+  String get flashcardSortSheetTitle => 'Sort flashcards';
+
+  @override
+  String get flashcardSortByCreatedAt => 'Created time';
+
+  @override
+  String get flashcardSortByUpdatedAt => 'Updated time';
+
+  @override
+  String get flashcardSortByFrontText => 'Front text';
+
+  @override
+  String get flashcardSortDirectionDesc => 'Newest first';
+
+  @override
+  String get flashcardSortDirectionAsc => 'Oldest first';
+
+  @override
+  String get flashcardSortDirectionAz => 'A-Z';
+
+  @override
+  String get flashcardSortDirectionZa => 'Z-A';
+
+  @override
+  String get flashcardSortSaveButton => 'Apply sort';
+
+  @override
+  String get flashcardCardSectionTitle => 'Cards';
+
+  @override
+  String get flashcardEmptyTitle => 'No flashcards yet.';
+
+  @override
+  String get flashcardEmptySubtitle => 'Create your first card to start learning.';
+
+  @override
+  String get flashcardSearchEmptyTitle => 'No matching flashcards.';
+
+  @override
+  String get flashcardSearchEmptySubtitle => 'Try another keyword.';
+
+  @override
+  String get flashcardFrontLabel => 'Front text';
+
+  @override
+  String get flashcardFrontHint => 'Enter front text';
+
+  @override
+  String get flashcardBackLabel => 'Back text';
+
+  @override
+  String get flashcardBackHint => 'Enter back text';
+
+  @override
+  String get flashcardFrontRequiredValidation => 'Front text is required.';
+
+  @override
+  String flashcardFrontMaxLengthValidation(int max) {
+    return 'Front text must be at most $max character(s).';
+  }
+
+  @override
+  String get flashcardBackRequiredValidation => 'Back text is required.';
+
+  @override
+  String flashcardBackMaxLengthValidation(int max) {
+    return 'Back text must be at most $max character(s).';
+  }
+
+  @override
+  String get flashcardOwnerFallback => 'Owner';
+
+  @override
+  String get flashcardUpdatedRecentlyLabel => 'Updated recently';
+
+  @override
+  String flashcardTotalLabel(int count) {
+    return '$count card(s)';
+  }
+
+  @override
+  String get flashcardExpandPreviewTooltip => 'Open card study';
+
+  @override
+  String get flashcardPreviewPlaceholder => 'No preview available';
+
+  @override
+  String get flashcardFlipActionLabel => 'Flip cards';
+
+  @override
+  String get flashcardLearnActionLabel => 'Learn';
+
+  @override
+  String get flashcardPlayAudioTooltip => 'Play audio';
+
+  @override
+  String get flashcardBookmarkTooltip => 'Bookmark';
+
+  @override
+  String get flashcardEditTooltip => 'Edit card';
+
+  @override
+  String get flashcardDeleteTooltip => 'Delete card';
+
+  @override
+  String flashcardAudioPlayToast(Object text) {
+    return 'Playing: $text';
+  }
+
+  @override
+  String get flashcardBookmarkToast => 'Card bookmarked';
+
+  @override
+  String get flashcardUnbookmarkToast => 'Bookmark removed';
+
+  @override
+  String get flashcardStudyUnavailableToast => 'No cards available for study.';
+
+  @override
+  String get flashcardStudyCompletedToast => 'Study session completed.';
+
+  @override
+  String get flashcardCloseTooltip => 'Close study';
+
+  @override
+  String get flashcardPreviousButton => 'Previous';
+
+  @override
+  String get flashcardNextButton => 'Next';
+
+  @override
   String get homeGreeting => 'Good evening, Learner';
 
   @override

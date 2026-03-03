@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../core/constants/route_names.dart';
 import '../../../../core/constants/dimensions.dart';
 import '../../../../domain/entities/deck_models.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -111,7 +113,17 @@ class DeckContent extends ConsumerWidget {
             padding: const EdgeInsets.only(bottom: Insets.spacing8),
             child: DeckTile(
               item: item,
-              onOpen: () {},
+              onOpen: () {
+                context.pushNamed(
+                  AppRouteName.flashcard,
+                  pathParameters: <String, String>{
+                    AppRouteParam.deckId: item.id.toString(),
+                  },
+                  queryParameters: <String, String>{
+                    AppRouteQuery.deckName: item.name,
+                  },
+                );
+              },
               onRename: () => showDeckEditorDialog(
                 context: context,
                 titleBuilder: (AppLocalizations l10n) => l10n.deckRenameTitle,

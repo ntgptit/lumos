@@ -4,8 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static com.lumos.testkit.DeckTestFixtures.createDeckRequest;
+import static com.lumos.testkit.DeckTestFixtures.deckResponse;
+import static com.lumos.testkit.DeckTestFixtures.updateDeckRequest;
+import static com.lumos.testkit.SearchRequestFixtures.byNameAsc;
 
-import java.time.Instant;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -15,12 +18,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 
-import com.lumos.common.dto.request.SearchRequest;
-import com.lumos.common.enums.SortBy;
-import com.lumos.common.enums.SortType;
-import com.lumos.deck.dto.request.CreateDeckRequest;
-import com.lumos.deck.dto.request.UpdateDeckRequest;
-import com.lumos.deck.dto.response.AuditMetadataResponse;
 import com.lumos.deck.dto.response.DeckResponse;
 import com.lumos.deck.service.DeckService;
 
@@ -38,7 +35,7 @@ class DeckControllerTest {
 
     @Test
     void createDeck_returnsCreatedResponse() {
-        final var request = new CreateDeckRequest("Deck A", "Description");
+        final var request = createDeckRequest("Deck A", "Description");
         final var response = sampleDeckResponse();
         when(this.deckService.createDeck(FOLDER_ID, request)).thenReturn(response);
 
@@ -50,7 +47,7 @@ class DeckControllerTest {
 
     @Test
     void updateDeck_returnsOkResponse() {
-        final var request = new UpdateDeckRequest("Deck B", "Description");
+        final var request = updateDeckRequest("Deck B", "Description");
         final var response = sampleDeckResponse();
         when(this.deckService.updateDeck(FOLDER_ID, DECK_ID, request)).thenReturn(response);
 
@@ -71,7 +68,7 @@ class DeckControllerTest {
 
     @Test
     void getDecks_returnsDeckList() {
-        final var searchRequest = new SearchRequest("deck", SortBy.NAME, SortType.ASC);
+        final var searchRequest = byNameAsc("deck");
         final var pageable = PageRequest.of(0, 20);
         final var response = List.of(sampleDeckResponse());
         when(this.deckService.getDecks(FOLDER_ID, searchRequest, pageable)).thenReturn(response);
@@ -83,14 +80,11 @@ class DeckControllerTest {
     }
 
     private DeckResponse sampleDeckResponse() {
-        return new DeckResponse(
+        return deckResponse(
                 DECK_ID,
                 FOLDER_ID,
                 "Deck A",
                 "Description",
-                5,
-                new AuditMetadataResponse(
-                        Instant.parse("2026-01-01T00:00:00Z"),
-                        Instant.parse("2026-01-02T00:00:00Z")));
+                5);
     }
 }

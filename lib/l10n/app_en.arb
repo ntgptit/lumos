@@ -135,6 +135,88 @@
       }
     }
   },
+  "flashcardTitle": "Flashcards",
+  "flashcardCreateButton": "New Card",
+  "flashcardCreateTitle": "Create flashcard",
+  "flashcardEditTitle": "Edit flashcard",
+  "flashcardDeleteTitle": "Delete flashcard",
+  "flashcardDeleteConfirm": "Delete \"{name}\"?",
+  "@flashcardDeleteConfirm": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "flashcardSearchHint": "Search flashcards",
+  "flashcardSearchClearTooltip": "Clear flashcard search",
+  "flashcardToggleSearchTooltip": "Toggle flashcard search",
+  "flashcardSortButtonTooltip": "Sort flashcards",
+  "flashcardSortSheetTitle": "Sort flashcards",
+  "flashcardSortByCreatedAt": "Created time",
+  "flashcardSortByUpdatedAt": "Updated time",
+  "flashcardSortByFrontText": "Front text",
+  "flashcardSortDirectionDesc": "Newest first",
+  "flashcardSortDirectionAsc": "Oldest first",
+  "flashcardSortDirectionAz": "A-Z",
+  "flashcardSortDirectionZa": "Z-A",
+  "flashcardSortSaveButton": "Apply sort",
+  "flashcardCardSectionTitle": "Cards",
+  "flashcardEmptyTitle": "No flashcards yet.",
+  "flashcardEmptySubtitle": "Create your first card to start learning.",
+  "flashcardSearchEmptyTitle": "No matching flashcards.",
+  "flashcardSearchEmptySubtitle": "Try another keyword.",
+  "flashcardFrontLabel": "Front text",
+  "flashcardFrontHint": "Enter front text",
+  "flashcardBackLabel": "Back text",
+  "flashcardBackHint": "Enter back text",
+  "flashcardFrontRequiredValidation": "Front text is required.",
+  "flashcardFrontMaxLengthValidation": "Front text must be at most {max} character(s).",
+  "@flashcardFrontMaxLengthValidation": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "flashcardBackRequiredValidation": "Back text is required.",
+  "flashcardBackMaxLengthValidation": "Back text must be at most {max} character(s).",
+  "@flashcardBackMaxLengthValidation": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "flashcardOwnerFallback": "Owner",
+  "flashcardUpdatedRecentlyLabel": "Updated recently",
+  "flashcardTotalLabel": "{count} card(s)",
+  "@flashcardTotalLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "flashcardExpandPreviewTooltip": "Open card study",
+  "flashcardPreviewPlaceholder": "No preview available",
+  "flashcardFlipActionLabel": "Flip cards",
+  "flashcardLearnActionLabel": "Learn",
+  "flashcardPlayAudioTooltip": "Play audio",
+  "flashcardBookmarkTooltip": "Bookmark",
+  "flashcardEditTooltip": "Edit card",
+  "flashcardDeleteTooltip": "Delete card",
+  "flashcardAudioPlayToast": "Playing: {text}",
+  "@flashcardAudioPlayToast": {
+    "placeholders": {
+      "text": {}
+    }
+  },
+  "flashcardBookmarkToast": "Card bookmarked",
+  "flashcardUnbookmarkToast": "Bookmark removed",
+  "flashcardStudyUnavailableToast": "No cards available for study.",
+  "flashcardStudyCompletedToast": "Study session completed.",
+  "flashcardCloseTooltip": "Close study",
+  "flashcardPreviousButton": "Previous",
+  "flashcardNextButton": "Next",
   "homeGreeting": "Good evening, Learner",
   "homeGoalProgress": "You are 78% closer to your weekly goal.",
   "homeHeroTitle": "Build fluency with momentum",

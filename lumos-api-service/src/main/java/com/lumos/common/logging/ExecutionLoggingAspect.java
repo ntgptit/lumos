@@ -1,197 +1,188 @@
 package com.lumos.common.logging;
 
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
-import org.aspectj.lang.reflect.MethodSignature;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-import java.util.concurrent.TimeUnit;
+import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.util.ContentCachingRequestWrapper;
+import org.springframework.web.util.ContentCachingResponseWrapper;
 
-@Aspect
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+/**
+ * HTTP request/response logging filter with boxed output format.
+ */
 @Component
-@Order(Ordered.LOWEST_PRECEDENCE)
-public class ExecutionLoggingAspect {
+@Order(Ordered.HIGHEST_PRECEDENCE)
+public class ExecutionLoggingAspect extends OncePerRequestFilter {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ExecutionLoggingAspect.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ExecutionLoggingAspect.class);
 
-    private static final String LOG_EVENT_START = "START";
-    private static final String LOG_EVENT_END = "END";
-    private static final String LOG_STATUS_SUCCESS = "SUCCESS";
-    private static final String LOG_STATUS_ERROR = "ERROR";
-    private static final String LOG_LATENCY_NORMAL = "NORMAL";
-    private static final String LOG_LATENCY_SLOW = "SLOW";
-    private static final String LOG_LAYER_SERVICE = "SERVICE";
-    private static final String LOG_LAYER_CONTROLLER = "CONTROLLER";
-    private static final String LOG_LAYER_APPLICATION = "APPLICATION";
+    private static final int BOX_WIDTH = 80;
+    private static final int MAX_BODY_LOG_BYTES = 4096;
+    private static final int REQUEST_CACHE_LIMIT_BYTES = MAX_BODY_LOG_BYTES;
+    private static final String ELLIPSIS = "... [truncated]";
 
-    private static final String LOG_START_TEMPLATE =
-            "EXEC event={} layer={} method={} argCount={} traceId={}";
-    private static final String LOG_SUCCESS_TEMPLATE =
-            "EXEC event={} layer={} method={} argCount={} status={} latency={} durationMs={} traceId={}";
-    private static final String LOG_ERROR_TEMPLATE =
-            "EXEC event={} layer={} method={} argCount={} status={} durationMs={} errorType={} errorMessage={} traceId={}";
+    private static final String TOP_LEFT = "╔";
+    private static final String PIPE = "║";
+    private static final String BOTTOM_LEFT = "╚";
+    private static final String DIVIDER_LEFT = "╠";
+    private static final String CORNER_BADGE = "╣";
+    private static final String H_LINE = "═";
+    private static final String DIVIDER_END = "╣";
+    private static final String BOTTOM_RIGHT = "╝";
+    private static final String EMPTY_LINE = "\n";
 
-    private static final String TRACE_ID_KEY = "traceId";
-    private static final String TRACE_ID_B3_KEY = "X-B3-TraceId";
-    private static final String TRACE_ID_FALLBACK = "N/A";
-    private static final String ERROR_MESSAGE_FALLBACK = "N/A";
-    private static final int MAX_ERROR_MESSAGE_LENGTH = 240;
-    private static final long SLOW_EXECUTION_THRESHOLD_MS = 300L;
+    private static final String BOTTOM_LINE = BOTTOM_LEFT + H_LINE.repeat(BOX_WIDTH) + BOTTOM_RIGHT;
+    private static final String DIVIDER_LINE = DIVIDER_LEFT + H_LINE.repeat(BOX_WIDTH) + DIVIDER_END;
 
-    @Pointcut("within(@org.springframework.stereotype.Service *) || within(@org.springframework.web.bind.annotation.RestController *)")
-    public void applicationLayerBean() {
-    }
+    @Override
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain) throws ServletException, IOException {
+        final var wrappedRequest = new ContentCachingRequestWrapper(request, REQUEST_CACHE_LIMIT_BYTES);
+        final var wrappedResponse = new ContentCachingResponseWrapper(response);
+        final var startNs = System.nanoTime();
 
-    @Pointcut("@annotation(com.lumos.common.logging.SkipTraceLogging)")
-    public void skipTraceLogging() {
-    }
-
-    @Around("execution(public * *(..)) && applicationLayerBean() && !skipTraceLogging()")
-    public Object logMethodExecution(ProceedingJoinPoint joinPoint) throws Throwable {
-        final String methodName = resolveMethodName(joinPoint);
-        final String layerName = resolveLayerName(methodName);
-        final String traceId = resolveTraceId();
-        final int argCount = joinPoint.getArgs().length;
-        final long startNanoTime = System.nanoTime();
-
-        // Emit start log only at debug level to reduce production noise.
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug(
-                    LOG_START_TEMPLATE,
-                    LOG_EVENT_START,
-                    layerName,
-                    methodName,
-                    argCount,
-                    traceId
-            );
-        }
         try {
-            final Object result = joinPoint.proceed();
-            final long durationMs = toMillis(startNanoTime);
-            final String latencyClass = resolveLatencyClass(durationMs);
+            filterChain.doFilter(wrappedRequest, wrappedResponse);
+        } finally {
+            final var durationMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startNs);
+            this.logRequest(wrappedRequest);
+            this.logResponse(wrappedRequest, wrappedResponse, durationMs);
+            wrappedResponse.copyBodyToResponse();
+        }
+    }
 
-            // Escalate slow successful executions to WARN for production observability.
-            if (isSlowExecution(durationMs)) {
-                LOGGER.warn(
-                        LOG_SUCCESS_TEMPLATE,
-                        LOG_EVENT_END,
-                        layerName,
-                        methodName,
-                        argCount,
-                        LOG_STATUS_SUCCESS,
-                        latencyClass,
-                        durationMs,
-                        traceId
-                );
-                return result;
+    private void logRequest(ContentCachingRequestWrapper request) {
+        // Skip request log when debug logging is disabled.
+        if (!LOG.isDebugEnabled()) {
+            return;
+        }
+
+        final var method = request.getMethod();
+        final var uri = this.buildUri(request);
+        final var body = this.readBody(request.getContentAsByteArray());
+        final var builder = new StringBuilder(EMPTY_LINE);
+
+        builder.append(this.boxTop(this.badge("Request") + " ║ " + method + " ║ " + uri)).append(EMPTY_LINE);
+        this.appendHeaderLine(builder, "Content-Type", request.getContentType());
+        this.appendHeaderLine(builder, "Accept", request.getHeader("Accept"));
+        this.appendHeaderLine(builder, "TraceId", request.getHeader("X-Trace-Id"));
+
+        // Append request body block only when payload exists.
+        if (StringUtils.isNotBlank(body)) {
+            builder.append(DIVIDER_LINE).append(EMPTY_LINE);
+            builder.append(PIPE).append("  Body").append(EMPTY_LINE);
+            builder.append(PIPE).append(EMPTY_LINE);
+            for (String line : body.split(EMPTY_LINE)) {
+                builder.append(PIPE).append("  ").append(line).append(EMPTY_LINE);
             }
-
-            LOGGER.info(
-                    LOG_SUCCESS_TEMPLATE,
-                    LOG_EVENT_END,
-                    layerName,
-                    methodName,
-                    argCount,
-                    LOG_STATUS_SUCCESS,
-                    latencyClass,
-                    durationMs,
-                    traceId
-            );
-            return result;
-        } catch (Throwable throwable) {
-            final long durationMs = toMillis(startNanoTime);
-            final String errorType = throwable.getClass().getSimpleName();
-            final String errorMessage = resolveErrorMessage(throwable);
-            LOGGER.error(
-                    LOG_ERROR_TEMPLATE,
-                    LOG_EVENT_END,
-                    layerName,
-                    methodName,
-                    argCount,
-                    LOG_STATUS_ERROR,
-                    durationMs,
-                    errorType,
-                    errorMessage,
-                    traceId
-            );
-            throw throwable;
-        }
-    }
-
-    private String resolveMethodName(ProceedingJoinPoint joinPoint) {
-        final MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-        final String declaringType = signature.getDeclaringTypeName();
-        final String method = signature.getName();
-        return declaringType + "." + method;
-    }
-
-    private String resolveLayerName(String methodName) {
-        // Service layer path marker takes precedence when method belongs to service package.
-        if (StringUtils.contains(methodName, ".service.")) {
-            return LOG_LAYER_SERVICE;
-        }
-        // Controller layer path marker is used for REST endpoint executions.
-        if (StringUtils.contains(methodName, ".controller.")) {
-            return LOG_LAYER_CONTROLLER;
-        }
-        return LOG_LAYER_APPLICATION;
-    }
-
-    private String resolveTraceId() {
-        final String traceId = MDC.get(TRACE_ID_KEY);
-        // Prefer traceId set by application logging context.
-        if (hasText(traceId)) {
-            return traceId;
+            builder.append(PIPE).append(EMPTY_LINE);
         }
 
-        final String b3TraceId = MDC.get(TRACE_ID_B3_KEY);
-        // Fallback to B3 propagation key if application traceId is absent.
-        if (hasText(b3TraceId)) {
-            return b3TraceId;
+        builder.append(BOTTOM_LINE);
+        LOG.debug("{}", builder);
+    }
+
+    private void logResponse(ContentCachingRequestWrapper request, ContentCachingResponseWrapper response, long durationMs) {
+        final var method = request.getMethod();
+        final var status = response.getStatus();
+        final var url = this.buildFullUrl(request);
+        final var body = this.readBody(response.getContentAsByteArray());
+        final var builder = new StringBuilder(EMPTY_LINE);
+
+        builder.append(this.boxTop(this.badge("Response") + " ║ " + method + " ║ Status: " + status + "   ║ Time: "
+                + durationMs + " ms")).append(EMPTY_LINE);
+        builder.append(PIPE).append("  ").append(url).append(EMPTY_LINE);
+        builder.append(BOTTOM_LINE).append(EMPTY_LINE);
+        builder.append(this.boxTop("Body")).append(EMPTY_LINE);
+        builder.append(PIPE).append(EMPTY_LINE);
+
+        // Append response body lines only when payload exists.
+        if (StringUtils.isNotBlank(body)) {
+            for (String line : body.split(EMPTY_LINE)) {
+                builder.append(PIPE).append("    ").append(line).append(EMPTY_LINE);
+            }
         }
 
-        return TRACE_ID_FALLBACK;
-    }
+        builder.append(PIPE).append(EMPTY_LINE);
+        builder.append(BOTTOM_LINE);
 
-    private boolean hasText(String value) {
-        return StringUtils.isNotBlank(value);
-    }
-
-    private String resolveLatencyClass(long durationMs) {
-        // Mark requests slower than threshold for warning-level observability.
-        if (isSlowExecution(durationMs)) {
-            return LOG_LATENCY_SLOW;
+        // Route 5xx responses to error level.
+        if (status >= 500) {
+            LOG.error("{}", builder);
+            return;
         }
-        return LOG_LATENCY_NORMAL;
-    }
-
-    private boolean isSlowExecution(long durationMs) {
-        return durationMs >= SLOW_EXECUTION_THRESHOLD_MS;
-    }
-
-    private String resolveErrorMessage(Throwable throwable) {
-        final String message = throwable.getMessage();
-        // Keep a stable fallback when exception message is blank.
-        if (!hasText(message)) {
-            return ERROR_MESSAGE_FALLBACK;
+        // Route 4xx responses to warn level.
+        if (status >= 400) {
+            LOG.warn("{}", builder);
+            return;
         }
-        final String normalizedMessage = StringUtils.normalizeSpace(message);
-        // Return as-is when message already fits the log payload size.
-        if (normalizedMessage.length() <= MAX_ERROR_MESSAGE_LENGTH) {
-            return normalizedMessage;
-        }
-        return normalizedMessage.substring(0, MAX_ERROR_MESSAGE_LENGTH) + "...";
+        LOG.info("{}", builder);
     }
 
-    private long toMillis(long startNanoTime) {
-        final long elapsedNano = System.nanoTime() - startNanoTime;
-        return TimeUnit.NANOSECONDS.toMillis(elapsedNano);
+    private String boxTop(String content) {
+        return TOP_LEFT + CORNER_BADGE + " " + content;
+    }
+
+    private String badge(String label) {
+        return label;
+    }
+
+    private void appendHeaderLine(StringBuilder builder, String key, String value) {
+        // Skip empty header values.
+        if (StringUtils.isBlank(value)) {
+            return;
+        }
+        builder.append(PIPE).append("  ").append(key).append(": ").append(value).append(EMPTY_LINE);
+    }
+
+    private String buildUri(HttpServletRequest request) {
+        final var queryString = request.getQueryString();
+        // Return URI only when query string is absent.
+        if (StringUtils.isBlank(queryString)) {
+            return request.getRequestURI();
+        }
+        return request.getRequestURI() + "?" + queryString;
+    }
+
+    private String buildFullUrl(HttpServletRequest request) {
+        final var url = request.getRequestURL();
+        final var queryString = request.getQueryString();
+        // Append query string when request contains parameters.
+        if (StringUtils.isNotBlank(queryString)) {
+            url.append("?").append(queryString);
+        }
+        return url.toString();
+    }
+
+    private String readBody(byte[] bodyBytes) {
+        // Return empty body when byte array is null or empty.
+        if (bodyBytes == null || bodyBytes.length == 0) {
+            return StringUtils.EMPTY;
+        }
+
+        final var shouldTruncate = bodyBytes.length > MAX_BODY_LOG_BYTES;
+        final byte[] slice = shouldTruncate ? Arrays.copyOf(bodyBytes, MAX_BODY_LOG_BYTES) : bodyBytes;
+        final var body = StringUtils.trim(new String(slice, StandardCharsets.UTF_8));
+
+        // Append truncation marker when payload exceeds log limit.
+        if (shouldTruncate) {
+            return body + EMPTY_LINE + ELLIPSIS;
+        }
+        return body;
     }
 }
