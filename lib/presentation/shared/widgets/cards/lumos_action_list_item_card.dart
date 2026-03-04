@@ -15,15 +15,15 @@ abstract final class LumosActionListItemCardConst {
   LumosActionListItemCardConst._();
 
   static const EdgeInsets popupItemPadding = EdgeInsets.symmetric(
-    horizontal: Insets.spacing12,
-    vertical: Insets.spacing8,
+    horizontal: AppSpacing.md,
+    vertical: AppSpacing.sm,
   );
   static const EdgeInsetsGeometry badgePadding = EdgeInsets.symmetric(
-    horizontal: Insets.spacing8,
-    vertical: Insets.spacing4,
+    horizontal: AppSpacing.sm,
+    vertical: AppSpacing.xs,
   );
-  static const double menuItemSpacing = Insets.spacing12;
-  static const double contentSpacing = Insets.spacing4;
+  static const double menuItemSpacing = AppSpacing.md;
+  static const double contentSpacing = AppSpacing.xs;
 
   // Swipe threshold: fraction of card width to trigger action.
   static const double swipeThreshold = WidgetRatios.swipeRevealThreshold;
@@ -383,7 +383,7 @@ class _SwipeActionWrapper extends StatefulWidget {
 
 class _SwipeActionWrapperState extends State<_SwipeActionWrapper> {
   final ValueNotifier<double> _dragExtentNotifier = ValueNotifier<double>(
-    Insets.spacing0,
+    AppSpacing.none,
   );
 
   @override
@@ -394,11 +394,11 @@ class _SwipeActionWrapperState extends State<_SwipeActionWrapper> {
 
   void _onHorizontalDragUpdate(DragUpdateDetails details) {
     // Only allow left swipe (negative delta = end direction).
-    if (details.delta.dx > 0 && _dragExtentNotifier.value == Insets.spacing0) {
+    if (details.delta.dx > 0 && _dragExtentNotifier.value == AppSpacing.none) {
       return;
     }
     final double nextExtent = (_dragExtentNotifier.value + details.delta.dx)
-        .clamp(-LumosActionListItemCardConst.swipeRevealWidth, Insets.spacing0)
+        .clamp(-LumosActionListItemCardConst.swipeRevealWidth, AppSpacing.none)
         .toDouble();
     _dragExtentNotifier.value = nextExtent;
   }
@@ -413,11 +413,11 @@ class _SwipeActionWrapperState extends State<_SwipeActionWrapper> {
           -LumosActionListItemCardConst.swipeRevealWidth;
       return;
     }
-    _dragExtentNotifier.value = Insets.spacing0;
+    _dragExtentNotifier.value = AppSpacing.none;
   }
 
   void _closeSwipe() {
-    _dragExtentNotifier.value = Insets.spacing0;
+    _dragExtentNotifier.value = AppSpacing.none;
   }
 
   @override
@@ -445,9 +445,9 @@ class _SwipeActionWrapperState extends State<_SwipeActionWrapper> {
               ),
               // Slide layer — card slides left to reveal actions.
               Transform.translate(
-                offset: Offset(dragExtent, Insets.spacing0),
+                offset: Offset(dragExtent, AppSpacing.none),
                 child: GestureDetector(
-                  onTap: dragExtent != Insets.spacing0 ? _closeSwipe : null,
+                  onTap: dragExtent != AppSpacing.none ? _closeSwipe : null,
                   child: widget.child,
                 ),
               ),

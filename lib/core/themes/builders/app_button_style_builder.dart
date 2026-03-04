@@ -94,7 +94,7 @@ abstract final class AppButtonStyleBuilder {
       padding: _padding(size: size, buttonTokens: buttonTokens),
       shape: _shape(size: size, buttonTokens: buttonTokens),
       shadowColor: colorScheme.shadow.withValues(
-        alpha: WidgetOpacities.elevationLevel2,
+        alpha: AppOpacity.elevationLevel2,
       ),
       surfaceTintColor: colorScheme.surfaceTint,
     );
@@ -225,7 +225,7 @@ abstract final class AppButtonStyleBuilder {
         WidgetSizes.minTouchTarget,
       ),
       iconSize: _iconSize(size: size, buttonTokens: buttonTokens),
-      padding: const EdgeInsets.all(Insets.spacing8),
+      padding: const EdgeInsets.all(AppSpacing.sm),
       shape: _shape(size: size, buttonTokens: buttonTokens),
       backgroundColor: colorScheme.transparentSurfaceColor,
     );

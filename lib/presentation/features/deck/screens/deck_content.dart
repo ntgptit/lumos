@@ -16,7 +16,7 @@ import 'widgets/states/deck_empty_view.dart';
 abstract final class DeckContentConst {
   DeckContentConst._();
 
-  static const double listBottomSpacing = Insets.spacing64;
+  static const double listBottomSpacing = AppSpacing.canvas;
 }
 
 class DeckContent extends ConsumerWidget {
@@ -49,7 +49,7 @@ class DeckContent extends ConsumerWidget {
               if (state.inlineErrorMessage case final String message)
                 _DeckErrorBanner(message: message),
               if (state.inlineErrorMessage != null)
-                const SizedBox(height: Insets.spacing12),
+                const SizedBox(height: AppSpacing.md),
               ..._buildDeckTiles(
                 context: context,
                 ref: ref,
@@ -65,7 +65,7 @@ class DeckContent extends ConsumerWidget {
         if (!state.isMutating)
           Positioned(
             right: LumosScreenFrame.resolveHorizontalInset(context),
-            bottom: Insets.gapBetweenSections,
+            bottom: AppSpacing.xxl,
             child: LumosFloatingActionButton(
               onPressed: () => showDeckEditorDialog(
                 context: context,
@@ -110,7 +110,7 @@ class DeckContent extends ConsumerWidget {
     return visibleDecks
         .map((DeckNode item) {
           return Padding(
-            padding: const EdgeInsets.only(bottom: Insets.spacing8),
+            padding: const EdgeInsets.only(bottom: AppSpacing.sm),
             child: DeckTile(
               item: item,
               onOpen: () {
@@ -175,7 +175,7 @@ class _DeckErrorBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Container(
-      padding: const EdgeInsets.all(Insets.spacing12),
+      padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
         color: colorScheme.errorContainer,
         borderRadius: BorderRadii.medium,

@@ -27,7 +27,7 @@ class LumosReviewProgress extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         LumosProgressBar(value: progress),
-        const SizedBox(height: Insets.spacing8),
+        const SizedBox(height: AppSpacing.sm),
         LumosText(
           '$completed / $total reviewed',
           style: LumosTextStyle.labelLarge,
@@ -50,7 +50,7 @@ class LumosReviewProgress extends StatelessWidget {
     }
     final int minutes = estimatedTime!.inMinutes;
     return <Widget>[
-      const SizedBox(height: Insets.spacing4),
+      const SizedBox(height: AppSpacing.xs),
       LumosText('$minutes min left', style: LumosTextStyle.labelSmall),
     ];
   }
@@ -71,11 +71,11 @@ class LumosRatingButtons extends StatelessWidget {
     return Row(
       children: <Widget>[
         Expanded(child: _buildButton(ReviewRating.again)),
-        const SizedBox(width: Insets.spacing8),
+        const SizedBox(width: AppSpacing.sm),
         Expanded(child: _buildButton(ReviewRating.hard)),
-        const SizedBox(width: Insets.spacing8),
+        const SizedBox(width: AppSpacing.sm),
         Expanded(child: _buildButton(ReviewRating.good)),
-        const SizedBox(width: Insets.spacing8),
+        const SizedBox(width: AppSpacing.sm),
         Expanded(child: _buildButton(ReviewRating.easy)),
       ],
     );
@@ -129,7 +129,7 @@ class LumosSessionProgress extends StatelessWidget {
       return const <Widget>[];
     }
     return <Widget>[
-      const SizedBox(width: Insets.gapBetweenItems),
+      const SizedBox(width: AppSpacing.md),
       Row(
         children: <Widget>[
           Icon(
@@ -137,7 +137,7 @@ class LumosSessionProgress extends StatelessWidget {
             size: IconSizes.iconSmall,
             color: context.colorScheme.error,
           ),
-          const SizedBox(width: Insets.spacing4),
+          const SizedBox(width: AppSpacing.xs),
           LumosText('$heartsRemaining', style: LumosTextStyle.labelLarge),
         ],
       ),
@@ -168,12 +168,12 @@ class LumosStatsCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           const LumosText('Statistics', style: LumosTextStyle.titleLarge),
-          const SizedBox(height: Insets.gapBetweenItems),
+          const SizedBox(height: AppSpacing.md),
           LumosText('Total: $totalCards', style: LumosTextStyle.bodyMedium),
           LumosText('Mastered: $mastered', style: LumosTextStyle.bodyMedium),
           LumosText('Learning: $learning', style: LumosTextStyle.bodyMedium),
           LumosText('Due: $due', style: LumosTextStyle.bodyMedium),
-          const SizedBox(height: Insets.gapBetweenItems),
+          const SizedBox(height: AppSpacing.md),
           LumosProgressBar(value: retentionRate / 100),
         ],
       ),
@@ -202,13 +202,13 @@ class LumosReviewQueue extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           LumosText('Due today: $dueCount', style: LumosTextStyle.titleMedium),
-          const SizedBox(height: Insets.spacing8),
+          const SizedBox(height: AppSpacing.sm),
           LumosText(
             'Queue size: $totalForReview',
             style: LumosTextStyle.bodySmall,
           ),
           ..._buildPreview(),
-          const SizedBox(height: Insets.gapBetweenItems),
+          const SizedBox(height: AppSpacing.md),
           LumosButton(
             label: 'Start review',
             onPressed: onStartReview,
@@ -227,10 +227,10 @@ class LumosReviewQueue extends StatelessWidget {
       return const <Widget>[];
     }
     return <Widget>[
-      const SizedBox(height: Insets.gapBetweenItems),
+      const SizedBox(height: AppSpacing.md),
       Wrap(
-        spacing: Insets.spacing8,
-        runSpacing: Insets.spacing8,
+        spacing: AppSpacing.sm,
+        runSpacing: AppSpacing.sm,
         children: previewCards!
             .map(
               (DueCardPreview item) => Chip(
@@ -282,7 +282,7 @@ class LumosNextReviewBadge extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         const Icon(Icons.schedule, size: IconSizes.iconSmall),
-        const SizedBox(width: Insets.spacing4),
+        const SizedBox(width: AppSpacing.xs),
         LumosText(label, style: LumosTextStyle.labelMedium),
       ],
     );

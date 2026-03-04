@@ -263,7 +263,7 @@ class _LumosDeckCardState extends State<LumosDeckCard>
         children: <Widget>[
           _buildHeader(),
           if (widget.description case final String desc) ...[
-            const SizedBox(height: Insets.spacing8),
+            const SizedBox(height: AppSpacing.sm),
             LumosText(
               desc,
               style: LumosTextStyle.bodySmall,
@@ -271,14 +271,14 @@ class _LumosDeckCardState extends State<LumosDeckCard>
               overflow: TextOverflow.ellipsis,
             ),
           ],
-          const SizedBox(height: Insets.gapBetweenItems),
+          const SizedBox(height: AppSpacing.md),
           LumosText(
             widget.statsLabel,
             style: LumosTextStyle.labelMedium,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
-          const SizedBox(height: Insets.spacing8),
+          const SizedBox(height: AppSpacing.sm),
           LumosProgressBar(value: widget.progress),
         ],
       ),

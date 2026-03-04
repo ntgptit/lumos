@@ -9,13 +9,13 @@ import '../../../../../shared/widgets/lumos_widgets.dart';
 abstract final class FlashcardContentCardConst {
   FlashcardContentCardConst._();
 
-  static const double cardPadding = Insets.spacing16;
-  static const double textGap = Insets.spacing8;
-  static const double iconSpacing = Insets.spacing4;
-  static const double actionIconSize = Insets.spacing20;
+  static const double cardPadding = AppSpacing.lg;
+  static const double textGap = AppSpacing.sm;
+  static const double iconSpacing = AppSpacing.xs;
+  static const double actionIconSize = AppSpacing.xl;
   static const int backTextMaxLines = 6;
   static const int noteMaxLines = 4;
-  static const double cardRadius = Insets.spacing16;
+  static const double cardRadius = AppSpacing.lg;
   static const String actionEdit = 'action-edit';
   static const String actionDelete = 'action-delete';
 }
@@ -99,7 +99,7 @@ class FlashcardContentCard extends StatelessWidget {
                     ];
                   },
                   child: const Padding(
-                    padding: EdgeInsets.all(Insets.spacing8),
+                    padding: EdgeInsets.all(AppSpacing.sm),
                     child: LumosIcon(
                       Icons.more_vert_rounded,
                       size: FlashcardContentCardConst.actionIconSize,

@@ -8,4 +8,7 @@ abstract final class AppSpacing {
   static const double xl = 20.0;
   static const double xxl = 24.0;
   static const double xxxl = 32.0;
+  static const double section = 40.0;
+  static const double page = 48.0;
+  static const double canvas = 64.0;
 }

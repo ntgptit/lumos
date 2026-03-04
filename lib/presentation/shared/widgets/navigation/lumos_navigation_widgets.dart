@@ -63,9 +63,9 @@ class LumosScreenTransition extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Offset beginOffset = moveForward
-        ? const Offset(Insets.spacing0, LumosScreenTransitionConst.slideOffsetY)
+        ? const Offset(AppSpacing.none, LumosScreenTransitionConst.slideOffsetY)
         : const Offset(
-            Insets.spacing0,
+            AppSpacing.none,
             -LumosScreenTransitionConst.slideOffsetY,
           );
     return AnimatedSwitcher(

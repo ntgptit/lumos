@@ -10,4 +10,3 @@ export 'app_responsive.dart';
 export 'app_spacing.dart';
 export 'app_stroke.dart';
 export 'app_typography_tokens.dart';
-export 'app_widget_opacity_tokens.dart';

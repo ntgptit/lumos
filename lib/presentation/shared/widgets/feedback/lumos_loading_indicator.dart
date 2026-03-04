@@ -6,7 +6,7 @@ abstract final class LumosLoadingIndicatorConst {
   LumosLoadingIndicatorConst._();
 
   static const double defaultCircularSize = IconSizes.iconLarge;
-  static const double defaultLinearHeight = Insets.spacing8;
+  static const double defaultLinearHeight = AppSpacing.sm;
 }
 
 class LumosLoadingIndicator extends StatelessWidget {

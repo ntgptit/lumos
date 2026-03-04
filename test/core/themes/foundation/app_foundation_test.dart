@@ -14,7 +14,7 @@ void main() {
 
     test('returns tablet between mobile and tablet breakpoints', () {
       final DeviceType result = DeviceTypeHelper.fromWidth(
-        width: Breakpoints.kMobileMaxWidth + Insets.spacing4,
+        width: Breakpoints.kMobileMaxWidth + AppSpacing.xs,
       );
 
       expect(result, DeviceType.tablet);
@@ -22,7 +22,7 @@ void main() {
 
     test('returns desktop above tablet breakpoint', () {
       final DeviceType result = DeviceTypeHelper.fromWidth(
-        width: Breakpoints.kTabletMaxWidth + Insets.spacing4,
+        width: Breakpoints.kTabletMaxWidth + AppSpacing.xs,
       );
 
       expect(result, DeviceType.desktop);
@@ -37,8 +37,8 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
     addTearDown(tester.view.resetPhysicalSize);
 
-    double widthValue = Insets.spacing0;
-    double heightValue = Insets.spacing0;
+    double widthValue = AppSpacing.none;
+    double heightValue = AppSpacing.none;
 
     await tester.pumpWidget(
       MaterialApp(

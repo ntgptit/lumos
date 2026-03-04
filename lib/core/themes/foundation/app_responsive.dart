@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:lumos/core/themes/foundation/app_spacing.dart';
 
 import 'app_breakpoint_tokens.dart';
-import 'app_layout_tokens.dart';
 
 abstract final class ResponsiveDimensions {
   static const double baseDesignWidth = 390.0;
@@ -29,8 +29,8 @@ abstract final class ResponsiveDimensions {
 
   static EdgeInsets pagePadding({required BuildContext context}) {
     return EdgeInsets.symmetric(
-      horizontal: adaptive(context: context, baseValue: Insets.paddingScreen),
-      vertical: adaptive(context: context, baseValue: Insets.gapBetweenItems),
+      horizontal: adaptive(context: context, baseValue: AppSpacing.lg),
+      vertical: adaptive(context: context, baseValue: AppSpacing.md),
     );
   }
 

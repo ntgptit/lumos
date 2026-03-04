@@ -29,14 +29,14 @@ class LumosXPBadge extends StatelessWidget {
       child: Row(
         children: <Widget>[
           Icon(Icons.bolt_rounded, size: badgeSize),
-          const SizedBox(width: Insets.spacing8),
+          const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 LumosText('Level $level', style: LumosTextStyle.titleMedium),
                 LumosText('$currentXP XP', style: LumosTextStyle.bodySmall),
-                const SizedBox(height: Insets.spacing4),
+                const SizedBox(height: AppSpacing.xs),
                 LumosProgressBar(value: progress),
               ],
             ),
@@ -81,7 +81,7 @@ class LumosStreakCounter extends StatelessWidget {
           color: color,
           size: IconSizes.iconMedium,
         ),
-        const SizedBox(width: Insets.spacing4),
+        const SizedBox(width: AppSpacing.xs),
         LumosText('$streakDays', style: LumosTextStyle.labelLarge),
       ],
     );
@@ -123,7 +123,7 @@ class LumosHeartMeter extends StatelessWidget {
       return const <Widget>[];
     }
     return <Widget>[
-      const SizedBox(width: Insets.spacing8),
+      const SizedBox(width: AppSpacing.sm),
       LumosText('${refillTime!.inMinutes}m', style: LumosTextStyle.labelSmall),
     ];
   }
@@ -155,7 +155,7 @@ class LumosAchievementBadge extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Icon(icon, size: IconSizes.iconLarge, color: color),
-          const SizedBox(height: Insets.spacing8),
+          const SizedBox(height: AppSpacing.sm),
           LumosText(
             title,
             style: LumosTextStyle.labelLarge,
@@ -172,7 +172,7 @@ class LumosAchievementBadge extends StatelessWidget {
       return const <Widget>[];
     }
     return <Widget>[
-      const SizedBox(height: Insets.spacing8),
+      const SizedBox(height: AppSpacing.sm),
       LumosProgressBar(value: progress!),
     ];
   }
@@ -198,9 +198,9 @@ class LumosDailyGoal extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           const LumosText('Daily Goal', style: LumosTextStyle.titleMedium),
-          const SizedBox(height: Insets.spacing8),
+          const SizedBox(height: AppSpacing.sm),
           LumosText('$current/$goal $unit', style: LumosTextStyle.bodyMedium),
-          const SizedBox(height: Insets.spacing8),
+          const SizedBox(height: AppSpacing.sm),
           LumosProgressBar(value: progress),
         ],
       ),

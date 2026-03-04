@@ -25,7 +25,7 @@ class HomePlaceholderTab extends StatelessWidget {
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 560),
         child: Padding(
-          padding: const EdgeInsets.all(Insets.spacing16),
+          padding: const EdgeInsets.all(AppSpacing.lg),
           child: LumosCard(
             margin: EdgeInsets.zero,
             elevation: AppElevationTokens.level1,
@@ -33,7 +33,7 @@ class HomePlaceholderTab extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Container(
-                  padding: const EdgeInsets.all(Insets.spacing16),
+                  padding: const EdgeInsets.all(AppSpacing.lg),
                   decoration: BoxDecoration(
                     border: Border.all(
                       color: colorScheme.outlineVariant,
@@ -47,9 +47,9 @@ class HomePlaceholderTab extends StatelessWidget {
                     child: LumosIcon(icon, size: IconSizes.iconXLarge),
                   ),
                 ),
-                const SizedBox(height: Insets.spacing16),
+                const SizedBox(height: AppSpacing.lg),
                 LumosText(title, style: LumosTextStyle.headlineSmall),
-                const SizedBox(height: Insets.spacing8),
+                const SizedBox(height: AppSpacing.sm),
                 LumosText(
                   subtitle,
                   style: LumosTextStyle.bodyMedium,

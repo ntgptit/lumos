@@ -29,16 +29,16 @@ import 'widgets/states/folder_mutating_overlay.dart';
 abstract final class FolderContentConst {
   FolderContentConst._();
 
-  static const double listBottomSpacing = Insets.spacing64;
-  static const double loadMoreThreshold = Insets.spacing64;
-  static const double scrollTopOffset = Insets.spacing0;
-  static const double scrollTopTriggerOffset = Insets.spacing8;
+  static const double listBottomSpacing = AppSpacing.canvas;
+  static const double loadMoreThreshold = AppSpacing.canvas;
+  static const double scrollTopOffset = AppSpacing.none;
+  static const double scrollTopTriggerOffset = AppSpacing.sm;
   static const Duration scrollTopDuration = AppDurations.fast;
-  static const double loadMoreTopSpacing = Insets.spacing12;
-  static const double loadMoreBottomSpacing = Insets.spacing8;
-  static const double createActionSheetHorizontalPadding = Insets.spacing16;
-  static const double createActionSheetVerticalPadding = Insets.spacing12;
-  static const double createActionSheetBottomPadding = Insets.spacing16;
+  static const double loadMoreTopSpacing = AppSpacing.md;
+  static const double loadMoreBottomSpacing = AppSpacing.sm;
+  static const double createActionSheetHorizontalPadding = AppSpacing.lg;
+  static const double createActionSheetVerticalPadding = AppSpacing.md;
+  static const double createActionSheetBottomPadding = AppSpacing.lg;
 }
 
 class FolderContent extends ConsumerStatefulWidget {
@@ -255,14 +255,14 @@ class _FolderContentState extends ConsumerState<FolderContent> {
           onSearchChanged: onSearchChanged,
         ),
       ),
-      const SliverToBoxAdapter(child: SizedBox(height: Insets.spacing16)),
+      const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.lg)),
     ];
     if (widget.state.inlineErrorMessage case final String message) {
       slivers.add(
         SliverToBoxAdapter(child: FolderErrorBanner(message: message)),
       );
       slivers.add(
-        const SliverToBoxAdapter(child: SizedBox(height: Insets.spacing12)),
+        const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.md)),
       );
     }
     return slivers;
@@ -298,7 +298,7 @@ class _FolderContentState extends ConsumerState<FolderContent> {
       itemBuilder: (BuildContext context, int index) {
         final FolderNode item = visibleFolders[index];
         return Padding(
-          padding: const EdgeInsets.only(bottom: Insets.spacing8),
+          padding: const EdgeInsets.only(bottom: AppSpacing.sm),
           child: _buildFolderTile(context: context, ref: ref, item: item),
         );
       },
@@ -365,7 +365,7 @@ class _FolderContentState extends ConsumerState<FolderContent> {
         SliverToBoxAdapter(child: FolderErrorBanner(message: message)),
       );
       deckLeadingSlivers.add(
-        const SliverToBoxAdapter(child: SizedBox(height: Insets.spacing12)),
+        const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.md)),
       );
     }
     return LumosPagedSliverList(
@@ -376,7 +376,7 @@ class _FolderContentState extends ConsumerState<FolderContent> {
       itemBuilder: (BuildContext context, int index) {
         final DeckNode item = deckState.decks[index];
         return Padding(
-          padding: const EdgeInsets.only(bottom: Insets.spacing8),
+          padding: const EdgeInsets.only(bottom: AppSpacing.sm),
           child: _buildDeckTile(
             context: context,
             ref: ref,
@@ -425,7 +425,7 @@ class _FolderContentState extends ConsumerState<FolderContent> {
 
   Widget _buildDeckLoading() {
     return const Padding(
-      padding: EdgeInsets.symmetric(vertical: Insets.spacing16),
+      padding: EdgeInsets.symmetric(vertical: AppSpacing.lg),
       child: Center(child: LumosLoadingIndicator()),
     );
   }
@@ -555,7 +555,7 @@ class _FolderContentState extends ConsumerState<FolderContent> {
     final _FolderCreateFabAction singleAction = actions.first;
     return Positioned(
       right: horizontalInset,
-      bottom: Insets.gapBetweenSections,
+      bottom: AppSpacing.xxl,
       child: LumosFloatingActionButton(
         onPressed: () {
           if (isSingleAction) {

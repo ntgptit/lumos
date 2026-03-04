@@ -58,9 +58,9 @@ extension InteractiveOverlayColorExtension on Color {
     return states.resolveWithPriority<Color?>(
       priority: WidgetStatePriorities.interaction,
       values: <WidgetState, Color?>{
-        WidgetState.pressed: withValues(alpha: WidgetOpacities.statePress),
-        WidgetState.hovered: withValues(alpha: WidgetOpacities.stateHover),
-        WidgetState.focused: withValues(alpha: WidgetOpacities.stateFocus),
+        WidgetState.pressed: withValues(alpha: AppOpacity.statePress),
+        WidgetState.hovered: withValues(alpha: AppOpacity.stateHover),
+        WidgetState.focused: withValues(alpha: AppOpacity.stateFocus),
       },
       fallback: null,
     );

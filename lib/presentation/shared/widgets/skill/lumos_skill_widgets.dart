@@ -27,7 +27,7 @@ class LumosSkillTree extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       itemCount: nodes.length,
       separatorBuilder: (BuildContext context, int index) =>
-          const SizedBox(height: Insets.spacing8),
+          const SizedBox(height: AppSpacing.sm),
       itemBuilder: (BuildContext context, int index) {
         final SkillNodeData node = nodes[index];
         return LumosSkillNode(
@@ -75,7 +75,7 @@ class LumosSkillNode extends StatelessWidget {
             size: IconSizes.iconMedium,
             color: _resolveColor(context),
           ),
-          const SizedBox(width: Insets.spacing8),
+          const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -124,7 +124,7 @@ class LumosSkillNode extends StatelessWidget {
       return const <Widget>[];
     }
     return <Widget>[
-      const SizedBox(height: Insets.spacing4),
+      const SizedBox(height: AppSpacing.xs),
       LumosProgressBar(value: progress!),
     ];
   }
@@ -166,7 +166,7 @@ class LumosLessonCard extends StatelessWidget {
         children: <Widget>[
           LumosText(title, style: LumosTextStyle.titleMedium),
           ..._buildSubtitle(),
-          const SizedBox(height: Insets.spacing8),
+          const SizedBox(height: AppSpacing.sm),
           LumosText('$xpValue XP', style: LumosTextStyle.labelLarge),
           ..._buildProgress(),
         ],
@@ -179,7 +179,7 @@ class LumosLessonCard extends StatelessWidget {
       return const <Widget>[];
     }
     return <Widget>[
-      const SizedBox(height: Insets.spacing4),
+      const SizedBox(height: AppSpacing.xs),
       LumosText(
         subtitle!,
         style: LumosTextStyle.bodySmall,
@@ -194,7 +194,7 @@ class LumosLessonCard extends StatelessWidget {
       return const <Widget>[];
     }
     return <Widget>[
-      const SizedBox(height: Insets.spacing8),
+      const SizedBox(height: AppSpacing.sm),
       LumosProgressBar(value: progress!),
     ];
   }

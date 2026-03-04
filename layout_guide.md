@@ -11,9 +11,9 @@ This project follows a centralized layout system for Flutter UI.
 
 ## Spacing and Sizing
 
-- Spacing tokens: `Insets.spacing4 ... Insets.spacing64`
-- Semantic spacing: `Insets.paddingScreen`, `Insets.gapBetweenItems`, `Insets.gapBetweenSections`
-- Radius tokens: `Radius.radiusSmall ... Radius.radiusXLarge`
+- Spacing tokens: `AppSpacing.xs ... AppSpacing.canvas`
+- Semantic spacing: `AppSpacing.lg` (screen), `AppSpacing.md` (items), `AppSpacing.xxl` (sections)
+- Radius tokens: `AppRadius.xs ... AppRadius.pill`
 - Widget size tokens: `WidgetSizes.*`
 - Icon tokens: `IconSizes.*`
 

@@ -33,7 +33,7 @@ abstract final class AppDialogThemeBuilder {
       backgroundColor: colorScheme.surfaceContainerHigh,
       surfaceTintColor: colorScheme.surfaceTint,
       dragHandleColor: colorScheme.outlineVariant,
-      dragHandleSize: const Size(Insets.spacing32, Insets.spacing4),
+      dragHandleSize: const Size(AppSpacing.xxxl, AppSpacing.xs),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(dialogTokens.radius),
       ),

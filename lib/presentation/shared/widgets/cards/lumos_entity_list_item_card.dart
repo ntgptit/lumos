@@ -16,22 +16,22 @@ abstract final class LumosEntityListItemCardConst {
 
   // Horizontal content padding — matches screen padding for visual alignment.
   static const EdgeInsets contentPaddingMobile = EdgeInsets.symmetric(
-    horizontal: Insets.spacing16,
-    vertical: Insets.spacing12,
+    horizontal: AppSpacing.lg,
+    vertical: AppSpacing.md,
   );
   static const EdgeInsets contentPaddingTablet = EdgeInsets.symmetric(
-    horizontal: Insets.spacing20,
-    vertical: Insets.spacing12,
+    horizontal: AppSpacing.xl,
+    vertical: AppSpacing.md,
   );
 
   // Gap between leading widget and text content.
-  static const double leadingGap = Insets.spacing12;
+  static const double leadingGap = AppSpacing.md;
 
   // Gap between text content and trailing widget.
-  static const double trailingGap = Insets.spacing8;
+  static const double trailingGap = AppSpacing.sm;
 
   // Gap between title and subtitle.
-  static const double subtitleGap = Insets.spacing4;
+  static const double subtitleGap = AppSpacing.xs;
 
   // Checkbox size in multi-select mode.
   static const double checkboxSize = IconSizes.iconMedium; // 24dp
@@ -261,7 +261,7 @@ class _LumosEntityListItemCardState extends State<LumosEntityListItemCard>
         children: [
           if (item.icon != null) ...[
             Icon(item.icon, size: IconSizes.iconSmall, color: labelColor),
-            const SizedBox(width: Insets.spacing8),
+            const SizedBox(width: AppSpacing.sm),
           ],
           Text(
             item.label,
@@ -344,7 +344,7 @@ class _LumosEntityListItemCardState extends State<LumosEntityListItemCard>
       // Dim entire card when disabled — communicates non-interactivity.
       opacity: widget.isEnabled
           ? WidgetRatios.full
-          : WidgetOpacities.disabledContent,
+          : AppOpacity.disabledContent,
       child: LumosCard(
         onTap: widget.isEnabled ? widget.onTap : null,
         onLongPress: _hasContextMenu ? _showContextMenu : null,

@@ -45,7 +45,7 @@ class LumosFlashcardFront extends StatelessWidget {
       return const <Widget>[];
     }
     return <Widget>[
-      const SizedBox(height: Insets.gapBetweenItems),
+      const SizedBox(height: AppSpacing.md),
       LumosText(
         example!,
         style: LumosTextStyle.bodyMedium,
@@ -63,10 +63,10 @@ class LumosFlashcardFront extends StatelessWidget {
       return const <Widget>[];
     }
     return <Widget>[
-      const SizedBox(height: Insets.gapBetweenItems),
+      const SizedBox(height: AppSpacing.md),
       Wrap(
-        spacing: Insets.spacing8,
-        runSpacing: Insets.spacing8,
+        spacing: AppSpacing.sm,
+        runSpacing: AppSpacing.sm,
         children: tags!
             .map(
               (String tag) =>
@@ -82,7 +82,7 @@ class LumosFlashcardFront extends StatelessWidget {
       return const <Widget>[];
     }
     return <Widget>[
-      const SizedBox(height: Insets.gapBetweenItems),
+      const SizedBox(height: AppSpacing.md),
       LumosText(
         imageUrl!,
         style: LumosTextStyle.labelSmall,
@@ -132,7 +132,7 @@ class LumosFlashcardBack extends StatelessWidget {
       return const <Widget>[];
     }
     return <Widget>[
-      const SizedBox(height: Insets.gapBetweenItems),
+      const SizedBox(height: AppSpacing.md),
       LumosText(
         explanation!,
         style: LumosTextStyle.bodyMedium,
@@ -147,7 +147,7 @@ class LumosFlashcardBack extends StatelessWidget {
       return const <Widget>[];
     }
     return <Widget>[
-      const SizedBox(height: Insets.gapBetweenItems),
+      const SizedBox(height: AppSpacing.md),
       LumosText(
         example!,
         style: LumosTextStyle.bodySmall,
@@ -162,7 +162,7 @@ class LumosFlashcardBack extends StatelessWidget {
       return const <Widget>[];
     }
     return <Widget>[
-      const SizedBox(height: Insets.gapBetweenSections),
+      const SizedBox(height: AppSpacing.xxl),
       Row(
         children: <Widget>[
           Expanded(
@@ -173,7 +173,7 @@ class LumosFlashcardBack extends StatelessWidget {
               size: LumosButtonSize.small,
             ),
           ),
-          const SizedBox(width: Insets.gapBetweenItems),
+          const SizedBox(width: AppSpacing.md),
           Expanded(
             child: LumosButton(
               label: 'Known',
@@ -261,7 +261,7 @@ class LumosFlashcard extends StatelessWidget {
       return const <Widget>[];
     }
     return <Widget>[
-      const SizedBox(height: Insets.gapBetweenItems),
+      const SizedBox(height: AppSpacing.md),
       LumosText(
         pronunciation!,
         style: LumosTextStyle.labelMedium,
@@ -280,7 +280,7 @@ class LumosFlashcard extends StatelessWidget {
       return const <Widget>[];
     }
     return <Widget>[
-      const SizedBox(height: Insets.gapBetweenItems),
+      const SizedBox(height: AppSpacing.md),
       LumosText(
         translation!,
         style: LumosTextStyle.bodyLarge,
@@ -295,7 +295,7 @@ class LumosFlashcard extends StatelessWidget {
       return const <Widget>[];
     }
     return <Widget>[
-      const SizedBox(height: Insets.spacing8),
+      const SizedBox(height: AppSpacing.sm),
       LumosText(
         imageUrl!,
         style: LumosTextStyle.labelSmall,
@@ -309,12 +309,12 @@ class LumosFlashcard extends StatelessWidget {
     final ColorScheme colorScheme = context.colorScheme;
     if (status == FlashcardStatus.correct) {
       return context.appColors.successContainer.withValues(
-        alpha: WidgetOpacities.stateHover,
+        alpha: AppOpacity.stateHover,
       );
     }
     if (status == FlashcardStatus.incorrect) {
       return colorScheme.errorContainer.withValues(
-        alpha: WidgetOpacities.stateHover,
+        alpha: AppOpacity.stateHover,
       );
     }
     return null;
@@ -354,7 +354,7 @@ class LumosFlashcardStack extends StatelessWidget {
           imageUrl: currentCard.imageUrl,
           isFlipped: false,
         ),
-        const SizedBox(height: Insets.gapBetweenSections),
+        const SizedBox(height: AppSpacing.xxl),
         LumosProgressBar(value: (currentIndex + 1) / cards.length),
       ],
     );

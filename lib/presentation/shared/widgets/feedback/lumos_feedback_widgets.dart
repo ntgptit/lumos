@@ -92,10 +92,10 @@ class LumosCelebration extends StatelessWidget {
       }
     });
     return Container(
-      padding: const EdgeInsets.all(Insets.spacing16),
+      padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
         color: appColors.successContainer.withValues(
-          alpha: WidgetOpacities.stateHover,
+          alpha: AppOpacity.stateHover,
         ),
         borderRadius: BorderRadii.large,
       ),
@@ -107,7 +107,7 @@ class LumosCelebration extends StatelessWidget {
             size: IconSizes.iconLarge,
             color: appColors.onSuccessContainer,
           ),
-          const SizedBox(width: Insets.spacing8),
+          const SizedBox(width: AppSpacing.sm),
           Text(
             'Great job!',
             style: context.textTheme.titleMedium.withResolvedColor(
@@ -158,7 +158,7 @@ class LumosResultSummary extends StatelessWidget {
           style: LumosTextStyle.headlineSmall,
           align: TextAlign.center,
         ),
-        const SizedBox(height: Insets.gapBetweenItems),
+        const SizedBox(height: AppSpacing.md),
         LumosText(
           'XP earned: $xpEarned',
           style: LumosTextStyle.bodyLarge,
@@ -166,7 +166,7 @@ class LumosResultSummary extends StatelessWidget {
         ),
         ..._buildStreakBonus(),
         ..._buildWeakWords(),
-        const SizedBox(height: Insets.gapBetweenSections),
+        const SizedBox(height: AppSpacing.xxl),
         LumosButton(label: 'Continue', onPressed: onContinue, expanded: true),
       ],
     );
@@ -177,7 +177,7 @@ class LumosResultSummary extends StatelessWidget {
       return const <Widget>[];
     }
     return <Widget>[
-      const SizedBox(height: Insets.spacing8),
+      const SizedBox(height: AppSpacing.sm),
       LumosText(
         'Streak bonus: +$streakBonus XP',
         style: LumosTextStyle.labelLarge,
@@ -194,10 +194,10 @@ class LumosResultSummary extends StatelessWidget {
       return const <Widget>[];
     }
     return <Widget>[
-      const SizedBox(height: Insets.gapBetweenItems),
+      const SizedBox(height: AppSpacing.md),
       Wrap(
-        spacing: Insets.spacing8,
-        runSpacing: Insets.spacing8,
+        spacing: AppSpacing.sm,
+        runSpacing: AppSpacing.sm,
         children: weakWords!
             .map(
               (String word) =>
@@ -225,11 +225,11 @@ class LumosTipMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     final Color foregroundColor = _resolveForegroundColor(context);
     return Container(
-      padding: const EdgeInsets.all(Insets.spacing12),
+      padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
         color: _resolveBackgroundColor(
           context,
-        ).withValues(alpha: WidgetOpacities.stateHover),
+        ).withValues(alpha: AppOpacity.stateHover),
         borderRadius: BorderRadii.medium,
       ),
       child: Row(
@@ -239,7 +239,7 @@ class LumosTipMessage extends StatelessWidget {
             size: IconSizes.iconMedium,
             color: foregroundColor,
           ),
-          const SizedBox(width: Insets.spacing8),
+          const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Text(
               message,

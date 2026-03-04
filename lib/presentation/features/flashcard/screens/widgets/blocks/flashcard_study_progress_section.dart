@@ -6,10 +6,10 @@ import '../../../../../shared/widgets/lumos_widgets.dart';
 abstract final class FlashcardStudyProgressSectionConst {
   FlashcardStudyProgressSectionConst._();
 
-  static const double sectionSpacing = Insets.spacing16;
-  static const double itemSpacing = Insets.spacing12;
+  static const double sectionSpacing = AppSpacing.lg;
+  static const double itemSpacing = AppSpacing.md;
   static const double progressRingSize = WidgetSizes.avatarLarge;
-  static const double actionIconSize = Insets.spacing20;
+  static const double actionIconSize = AppSpacing.xl;
   static const double progressTextMaxValue = 1;
 }
 
@@ -168,7 +168,7 @@ class FlashcardStudyProgressSection extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(width: Insets.spacing16),
+                const SizedBox(width: AppSpacing.lg),
                 Expanded(
                   child: LumosInlineText(
                     item.label,
@@ -177,7 +177,7 @@ class FlashcardStudyProgressSection extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(width: Insets.spacing16),
+                const SizedBox(width: AppSpacing.lg),
                 IconTheme(
                   data: IconThemeData(color: textColor),
                   child: const LumosIcon(
@@ -218,7 +218,7 @@ class FlashcardStudyProgressSection extends StatelessWidget {
       return enabledColor;
     }
     return colorScheme.onSurfaceVariant.withValues(
-      alpha: WidgetOpacities.lowEmphasis,
+      alpha: AppOpacity.lowEmphasis,
     );
   }
 }

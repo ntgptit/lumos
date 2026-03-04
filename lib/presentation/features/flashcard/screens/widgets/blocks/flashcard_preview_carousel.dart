@@ -8,16 +8,16 @@ import '../../../../../shared/widgets/lumos_widgets.dart';
 abstract final class FlashcardPreviewCarouselConst {
   FlashcardPreviewCarouselConst._();
 
-  static const double carouselHeight = Insets.spacing40 * 6;
-  static const double pageSpacing = Insets.spacing4;
-  static const double dotSpacing = Insets.spacing4;
+  static const double carouselHeight = AppSpacing.section * 6;
+  static const double pageSpacing = AppSpacing.xs;
+  static const double dotSpacing = AppSpacing.xs;
   static const double activeDotScale = 1.7;
-  static const double dotSize = Insets.spacing8;
-  static const double titleHorizontalPadding = Insets.spacing20;
-  static const double titleVerticalPadding = Insets.spacing16;
-  static const double expandButtonInset = Insets.spacing8;
-  static const double cardBorderRadius = Insets.spacing16;
-  static const double expandIconSize = Insets.spacing20;
+  static const double dotSize = AppSpacing.sm;
+  static const double titleHorizontalPadding = AppSpacing.xl;
+  static const double titleVerticalPadding = AppSpacing.lg;
+  static const double expandButtonInset = AppSpacing.sm;
+  static const double cardBorderRadius = AppSpacing.lg;
+  static const double expandIconSize = AppSpacing.xl;
 }
 
 class FlashcardPreviewCarousel extends StatelessWidget {
@@ -105,7 +105,7 @@ class FlashcardPreviewCarousel extends StatelessWidget {
             },
           ),
         ),
-        const SizedBox(height: Insets.spacing8),
+        const SizedBox(height: AppSpacing.sm),
         _buildIndicator(
           context: context,
           dotCount: dotCount,

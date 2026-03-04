@@ -26,16 +26,16 @@ abstract final class FlashcardContentConst {
   FlashcardContentConst._();
 
   static const Duration searchDebounceDuration = AppDurations.medium;
-  static const double listBottomSpacing = Insets.spacing64;
-  static const double loadMoreThreshold = Insets.spacing64;
-  static const double listItemSpacing = Insets.spacing8;
-  static const double sectionSpacing = Insets.spacing16;
-  static const double progressMaskTopInset = Insets.spacing8;
+  static const double listBottomSpacing = AppSpacing.canvas;
+  static const double loadMoreThreshold = AppSpacing.canvas;
+  static const double listItemSpacing = AppSpacing.sm;
+  static const double sectionSpacing = AppSpacing.lg;
+  static const double progressMaskTopInset = AppSpacing.sm;
   static const double progressMaskHeight = WidgetSizes.progressTrackHeight;
   static const double previewViewportFraction = 0.96;
-  static const double screenVerticalPadding = Insets.spacing16;
-  static const double bottomStudyBarHorizontalPadding = Insets.spacing16;
-  static const double bottomStudyBarVerticalPadding = Insets.spacing12;
+  static const double screenVerticalPadding = AppSpacing.lg;
+  static const double bottomStudyBarHorizontalPadding = AppSpacing.lg;
+  static const double bottomStudyBarVerticalPadding = AppSpacing.md;
   static const int defaultLearningProgressCount = 0;
 }
 
@@ -214,7 +214,7 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
         SliverToBoxAdapter(child: _FlashcardErrorBanner(message: message)),
       );
       slivers.add(
-        const SliverToBoxAdapter(child: SizedBox(height: Insets.spacing12)),
+        const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.md)),
       );
     }
     if (state.hasItems) {
@@ -323,7 +323,7 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
         ),
       );
       slivers.add(
-        const SliverToBoxAdapter(child: SizedBox(height: Insets.spacing12)),
+        const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.md)),
       );
     }
     return slivers;
@@ -335,10 +335,7 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
       slivers.add(
         const SliverToBoxAdapter(
           child: Padding(
-            padding: EdgeInsets.only(
-              top: Insets.spacing12,
-              bottom: Insets.spacing8,
-            ),
+            padding: EdgeInsets.only(top: AppSpacing.md, bottom: AppSpacing.sm),
             child: Center(child: LumosLoadingIndicator()),
           ),
         ),
@@ -689,7 +686,7 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
               ) {
                 return SafeArea(
                   child: Padding(
-                    padding: const EdgeInsets.all(Insets.spacing16),
+                    padding: const EdgeInsets.all(AppSpacing.lg),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -698,7 +695,7 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
                           l10n.flashcardSortSheetTitle,
                           style: LumosTextStyle.titleMedium,
                         ),
-                        const SizedBox(height: Insets.spacing12),
+                        const SizedBox(height: AppSpacing.md),
                         _buildSortOptionTile(
                           context: context,
                           label: l10n.flashcardSortByCreatedAt,
@@ -750,7 +747,7 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
                             });
                           },
                         ),
-                        const SizedBox(height: Insets.spacing12),
+                        const SizedBox(height: AppSpacing.md),
                         _buildSortOptionTile(
                           context: context,
                           label: _descDirectionLabel(
@@ -783,7 +780,7 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
                             });
                           },
                         ),
-                        const SizedBox(height: Insets.spacing16),
+                        const SizedBox(height: AppSpacing.lg),
                         LumosButton(
                           onPressed: () {
                             sheetContext.pop();
@@ -823,7 +820,7 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
         borderRadius: BorderRadii.medium,
       ),
       child: LumosListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: Insets.spacing8),
+        contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
         title: LumosInlineText(
           label,
           style: Theme.of(
@@ -969,7 +966,7 @@ class _FlashcardErrorBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Container(
-      padding: const EdgeInsets.all(Insets.spacing12),
+      padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
         color: colorScheme.errorContainer,
         borderRadius: BorderRadii.medium,

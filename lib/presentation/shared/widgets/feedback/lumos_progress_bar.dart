@@ -7,7 +7,7 @@ import '../../../../core/themes/semantic/app_color_tokens.dart';
 abstract final class LumosProgressBarConst {
   LumosProgressBarConst._();
 
-  static const double defaultHeight = Insets.spacing8;
+  static const double defaultHeight = AppSpacing.sm;
 }
 
 class LumosProgressBar extends StatelessWidget {

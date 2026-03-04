@@ -139,8 +139,8 @@ class LumosBadge extends StatelessWidget {
     final ColorScheme colorScheme = theme.colorScheme;
     return Container(
       padding: const EdgeInsets.symmetric(
-        horizontal: Insets.spacing8,
-        vertical: Insets.spacing4,
+        horizontal: AppSpacing.sm,
+        vertical: AppSpacing.xs,
       ),
       decoration: BoxDecoration(
         color: colorScheme.error,
@@ -162,7 +162,7 @@ class LumosDivider extends StatelessWidget {
     super.key,
     this.label,
     this.thickness = WidgetSizes.borderWidthRegular,
-    this.indent = Insets.spacing0,
+    this.indent = AppSpacing.none,
   });
 
   final String? label;
@@ -180,7 +180,7 @@ class LumosDivider extends StatelessWidget {
           child: Divider(thickness: thickness, indent: indent),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Insets.spacing8),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
           child: LumosText(label!, style: LumosTextStyle.labelSmall),
         ),
         Expanded(
@@ -259,7 +259,7 @@ class LumosProgressRing extends StatelessWidget {
         children: <Widget>[
           CircularProgressIndicator(
             value: progress,
-            strokeWidth: WidgetSizes.borderWidthRegular * Insets.spacing4,
+            strokeWidth: WidgetSizes.borderWidthRegular * AppSpacing.xs,
           ),
           if (centerChild case final Widget child) child,
         ],
@@ -311,11 +311,11 @@ class LumosCountdownTimer extends StatelessWidget {
     return TweenAnimationBuilder<double>(
       tween: Tween<double>(
         begin: duration.inSeconds.toDouble(),
-        end: Insets.spacing0,
+        end: AppSpacing.none,
       ),
       duration: duration,
       builder: (BuildContext context, double value, _) {
-        if (value <= Insets.spacing0) {
+        if (value <= AppSpacing.none) {
           onComplete(true);
         }
         return _buildLabel(Duration(seconds: value.round()));

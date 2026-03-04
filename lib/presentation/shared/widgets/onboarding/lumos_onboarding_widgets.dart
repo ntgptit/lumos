@@ -23,12 +23,12 @@ class LumosLevelTest extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           const LumosText('Placement Test', style: LumosTextStyle.titleLarge),
-          const SizedBox(height: Insets.spacing8),
+          const SizedBox(height: AppSpacing.sm),
           LumosText(
             '${questions.length} questions',
             style: LumosTextStyle.bodySmall,
           ),
-          const SizedBox(height: Insets.gapBetweenItems),
+          const SizedBox(height: AppSpacing.md),
           LumosButton(
             label: 'Complete test',
             onPressed: () {
@@ -62,8 +62,8 @@ class LumosGoalSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Wrap(
-      spacing: Insets.spacing8,
-      runSpacing: Insets.spacing8,
+      spacing: AppSpacing.sm,
+      runSpacing: AppSpacing.sm,
       children: options
           .map(
             (GoalOption option) => ChoiceChip(

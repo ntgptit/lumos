@@ -30,7 +30,7 @@ abstract final class AppSurfaceThemeBuilder {
       constraints: const BoxConstraints(minHeight: WidgetSizes.minTouchTarget),
       elevation: const WidgetStatePropertyAll<double>(WidgetSizes.none),
       padding: const WidgetStatePropertyAll<EdgeInsets>(
-        EdgeInsets.symmetric(horizontal: Insets.spacing12),
+        EdgeInsets.symmetric(horizontal: AppSpacing.md),
       ),
       side: WidgetStatePropertyAll<BorderSide>(
         BorderSide(
@@ -52,7 +52,7 @@ abstract final class AppSurfaceThemeBuilder {
     return DividerThemeData(
       color: colorScheme.outlineVariant,
       thickness: WidgetSizes.borderWidthRegular,
-      space: Insets.spacing16,
+      space: AppSpacing.lg,
     );
   }
 

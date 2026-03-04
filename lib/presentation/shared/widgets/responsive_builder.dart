@@ -11,7 +11,7 @@ class ResponsiveBuilder extends StatelessWidget {
     super.key,
     this.tabletBuilder,
     this.desktopBuilder,
-    this.padding = Insets.screenPadding,
+    this.padding = const EdgeInsets.all(AppSpacing.lg),
     this.applyPadding = true,
   });
 

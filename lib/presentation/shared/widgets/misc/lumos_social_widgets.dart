@@ -33,12 +33,12 @@ class LumosShopItem extends StatelessWidget {
             LumosNetworkImage(
               imageUrl: imageUrl!,
               width: double.infinity,
-              height: WidgetSizes.buttonHeightLarge * Insets.spacing4,
+              height: WidgetSizes.buttonHeightLarge * AppSpacing.xs,
             ),
           LumosText(name, style: LumosTextStyle.titleSmall),
-          const SizedBox(height: Insets.spacing8),
+          const SizedBox(height: AppSpacing.sm),
           LumosText('$price gems', style: LumosTextStyle.bodySmall),
-          const SizedBox(height: Insets.spacing8),
+          const SizedBox(height: AppSpacing.sm),
           LumosButton(
             label: isPurchased ? 'Purchased' : 'Buy',
             onPressed: isPurchased ? null : onBuy,
@@ -85,12 +85,12 @@ class LumosSubscriptionPlan extends StatelessWidget {
               if (isPopular) const Chip(label: Text('Popular')),
             ],
           ),
-          const SizedBox(height: Insets.spacing8),
+          const SizedBox(height: AppSpacing.sm),
           LumosText(price, style: LumosTextStyle.bodyMedium),
-          const SizedBox(height: Insets.spacing8),
+          const SizedBox(height: AppSpacing.sm),
           ...features.map(
             (String feature) => Padding(
-              padding: const EdgeInsets.only(bottom: Insets.spacing4),
+              padding: const EdgeInsets.only(bottom: AppSpacing.xs),
               child: LumosText(feature, style: LumosTextStyle.bodySmall),
             ),
           ),
@@ -119,7 +119,7 @@ class LumosFriendActivity extends StatelessWidget {
     return Row(
       children: <Widget>[
         LumosAvatar(imageUrl: avatarUrl, initials: _initial(friendName)),
-        const SizedBox(width: Insets.spacing8),
+        const SizedBox(width: AppSpacing.sm),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -155,21 +155,21 @@ class LumosLeaderboardRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(Insets.spacing12),
+      padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
         color: isCurrentUser
             ? context.colorScheme.primaryContainer
             : context.colorScheme.surface.withValues(
-                alpha: WidgetOpacities.transparent,
+                alpha: AppOpacity.transparent,
               ),
         borderRadius: BorderRadii.medium,
       ),
       child: Row(
         children: <Widget>[
           LumosText('#$rank', style: LumosTextStyle.labelLarge),
-          const SizedBox(width: Insets.spacing8),
+          const SizedBox(width: AppSpacing.sm),
           LumosAvatar(imageUrl: avatarUrl, initials: _initial(username)),
-          const SizedBox(width: Insets.spacing8),
+          const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: LumosText(username, style: LumosTextStyle.bodyMedium),
           ),

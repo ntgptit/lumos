@@ -16,7 +16,7 @@ abstract final class FolderHeaderNavigationSectionLayout {
   FolderHeaderNavigationSectionLayout._();
 
   static const double contextMetaPillWidth =
-      Insets.spacing64 + Insets.spacing64 + Insets.spacing16;
+      AppSpacing.canvas + AppSpacing.canvas + AppSpacing.lg;
 }
 
 class FolderHeaderNavigationSection extends StatefulWidget {
@@ -116,7 +116,7 @@ class _FolderHeaderNavigationSectionState
         ? _buildSearchHint()
         : currentSortLabel;
     return Container(
-      padding: const EdgeInsets.all(Insets.spacing8),
+      padding: const EdgeInsets.all(AppSpacing.sm),
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerHigh,
         borderRadius: BorderRadii.large,
@@ -132,7 +132,7 @@ class _FolderHeaderNavigationSectionState
             children: <Widget>[
               _buildNavigationSummary(),
               const Spacer(),
-              const SizedBox(width: Insets.spacing8),
+              const SizedBox(width: AppSpacing.sm),
               SizedBox(
                 width: FolderHeaderNavigationSectionLayout.contextMetaPillWidth,
                 child: FolderHeaderMetaPill(
@@ -145,7 +145,7 @@ class _FolderHeaderNavigationSectionState
               ),
             ],
           ),
-          const SizedBox(height: Insets.spacing8),
+          const SizedBox(height: AppSpacing.sm),
           _buildControlRow(context: context),
         ],
       ),
@@ -198,7 +198,7 @@ class _FolderHeaderNavigationSectionState
     return Row(
       children: <Widget>[
         Expanded(child: _buildSearchBar()),
-        const SizedBox(width: Insets.spacing4),
+        const SizedBox(width: AppSpacing.xs),
         _buildSortButton(context: context),
       ],
     );
@@ -319,17 +319,17 @@ class _FolderSortBottomSheet extends StatelessWidget {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(
-          Insets.spacing16,
-          Insets.spacing8,
-          Insets.spacing16,
-          Insets.spacing16,
+          AppSpacing.lg,
+          AppSpacing.sm,
+          AppSpacing.lg,
+          AppSpacing.lg,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             LumosText(l10n.folderSortTitle, style: LumosTextStyle.titleMedium),
-            const SizedBox(height: Insets.spacing8),
+            const SizedBox(height: AppSpacing.sm),
             _buildSortOptionTile(
               context: context,
               option: const _FolderSortSelection(

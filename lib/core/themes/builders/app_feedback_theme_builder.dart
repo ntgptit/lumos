@@ -29,8 +29,8 @@ abstract final class AppFeedbackThemeBuilder {
       actionTextColor: colorScheme.inversePrimary,
       closeIconColor: colorScheme.onInverseSurface,
       insetPadding: const EdgeInsets.symmetric(
-        horizontal: Insets.spacing16,
-        vertical: Insets.spacing8,
+        horizontal: AppSpacing.lg,
+        vertical: AppSpacing.sm,
       ),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppRadius.sm),

@@ -10,8 +10,8 @@ class FolderMutatingOverlay extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        width: Insets.spacing64 * 2,
-        padding: const EdgeInsets.all(Insets.spacing16),
+        width: AppSpacing.canvas * 2,
+        padding: const EdgeInsets.all(AppSpacing.lg),
         decoration: BoxDecoration(
           borderRadius: BorderRadii.large,
           color: Theme.of(context).colorScheme.surface,
@@ -20,12 +20,12 @@ class FolderMutatingOverlay extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             LumosSkeletonBox(
-              width: Insets.spacing48,
-              height: Insets.spacing48,
+              width: AppSpacing.page,
+              height: AppSpacing.page,
               borderRadius: BorderRadii.large,
             ),
-            SizedBox(height: Insets.spacing12),
-            LumosSkeletonBox(height: Insets.spacing12),
+            SizedBox(height: AppSpacing.md),
+            LumosSkeletonBox(height: AppSpacing.md),
           ],
         ),
       ),

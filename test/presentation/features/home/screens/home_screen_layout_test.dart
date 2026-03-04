@@ -26,10 +26,7 @@ void main() {
   ) async {
     await _pumpHomeWithSize(
       tester: tester,
-      logicalSize: const Size(
-        Breakpoints.kMobileMaxWidth + Insets.spacing4,
-        900,
-      ),
+      logicalSize: const Size(Breakpoints.kMobileMaxWidth + AppSpacing.xs, 900),
     );
 
     expect(find.byKey(HomeScreenKeys.mobileLayout), findsNothing);
@@ -43,7 +40,7 @@ void main() {
     await _pumpHomeWithSize(
       tester: tester,
       logicalSize: const Size(
-        Breakpoints.kTabletMaxWidth + Insets.spacing4,
+        Breakpoints.kTabletMaxWidth + AppSpacing.xs,
         1000,
       ),
     );

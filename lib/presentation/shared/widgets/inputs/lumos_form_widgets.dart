@@ -167,7 +167,7 @@ class LumosRadioGroup<T> extends StatelessWidget {
       return RadioGroup<T>(
         groupValue: value,
         onChanged: onChanged,
-        child: Wrap(spacing: Insets.spacing8, children: tiles),
+        child: Wrap(spacing: AppSpacing.sm, children: tiles),
       );
     }
     return RadioGroup<T>(
@@ -210,8 +210,8 @@ class LumosWordBank extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Wrap(
-      spacing: Insets.spacing8,
-      runSpacing: Insets.spacing8,
+      spacing: AppSpacing.sm,
+      runSpacing: AppSpacing.sm,
       children: words.map(_buildWordChip).toList(),
     );
   }
@@ -284,7 +284,7 @@ class LumosAnswerInput extends StatelessWidget {
           initialValue: userAnswer,
           onChanged: onAnswerChanged,
         ),
-        const SizedBox(height: Insets.gapBetweenItems),
+        const SizedBox(height: AppSpacing.md),
         LumosButton(label: 'Submit', onPressed: onSubmit),
       ],
     );
@@ -302,8 +302,8 @@ class LumosAnswerInput extends StatelessWidget {
   Widget _buildMultipleChoice() {
     final List<String> options = wordBank ?? const <String>[];
     return Wrap(
-      spacing: Insets.spacing8,
-      runSpacing: Insets.spacing8,
+      spacing: AppSpacing.sm,
+      runSpacing: AppSpacing.sm,
       children: options
           .map(
             (String option) => LumosButton(
@@ -343,11 +343,11 @@ class LumosFillBlank extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         Text(sentence, overflow: TextOverflow.ellipsis, maxLines: 2),
-        const SizedBox(height: Insets.gapBetweenItems),
+        const SizedBox(height: AppSpacing.md),
         if (options != null)
           Wrap(
-            spacing: Insets.spacing8,
-            runSpacing: Insets.spacing8,
+            spacing: AppSpacing.sm,
+            runSpacing: AppSpacing.sm,
             children: options!
                 .map(
                   (String option) => LumosButton(

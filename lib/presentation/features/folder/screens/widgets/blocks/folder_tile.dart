@@ -15,8 +15,8 @@ abstract final class FolderTileConst {
   static const double leadingSize = WidgetSizes.avatarLarge;
   static const double leadingIconSize = IconSizes.iconMedium;
   static const double leadingBorderWidth = WidgetSizes.borderWidthRegular;
-  static const double badgeMinSize = Insets.spacing20;
-  static const double badgeHorizontalPadding = Insets.spacing4;
+  static const double badgeMinSize = AppSpacing.xl;
+  static const double badgeHorizontalPadding = AppSpacing.xs;
   static const double badgeFontSize = FontSizes.fontSizeSmall;
 }
 
@@ -145,8 +145,8 @@ class _FolderTileLeading extends StatelessWidget {
             ),
           ),
           Positioned(
-            right: Insets.spacing0,
-            bottom: Insets.spacing0,
+            right: AppSpacing.none,
+            bottom: AppSpacing.none,
             child: _FolderChildCountBadge(
               childFolderCount: childFolderCount,
               isRoot: isRoot,

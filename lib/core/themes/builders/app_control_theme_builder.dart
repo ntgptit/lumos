@@ -82,7 +82,7 @@ abstract final class AppControlThemeBuilder {
       inactiveTrackColor: colorScheme.secondaryContainer,
       thumbColor: colorScheme.primary,
       overlayColor: colorScheme.primary.withValues(
-        alpha: WidgetOpacities.statePress,
+        alpha: AppOpacity.statePress,
       ),
       trackHeight: WidgetSizes.sliderTrackHeight,
     );

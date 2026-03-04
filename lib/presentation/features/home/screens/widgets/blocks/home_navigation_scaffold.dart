@@ -9,8 +9,8 @@ import 'home_bottom_nav.dart';
 abstract final class HomeNavigationScaffoldConst {
   HomeNavigationScaffoldConst._();
 
-  static const double topBlobSize = Insets.spacing64 * 3;
-  static const double sideBlobSize = Insets.spacing64 * 2.2;
+  static const double topBlobSize = AppSpacing.canvas * 3;
+  static const double sideBlobSize = AppSpacing.canvas * 2.2;
 }
 
 class HomeNavigationScaffold extends StatelessWidget {
@@ -38,14 +38,14 @@ class HomeNavigationScaffold extends StatelessWidget {
               ],
               blobs: <LumosDecorativeBlob>[
                 LumosDecorativeBlob(
-                  top: -Insets.spacing64,
-                  right: -Insets.spacing64,
+                  top: -AppSpacing.canvas,
+                  right: -AppSpacing.canvas,
                   fill: colorScheme.primaryContainer,
                   size: HomeNavigationScaffoldConst.topBlobSize,
                 ),
                 LumosDecorativeBlob(
-                  left: -Insets.spacing48,
-                  top: Insets.spacing64 * 2,
+                  left: -AppSpacing.page,
+                  top: AppSpacing.canvas * 2,
                   fill: colorScheme.secondaryContainer,
                   size: HomeNavigationScaffoldConst.sideBlobSize,
                 ),

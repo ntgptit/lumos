@@ -69,7 +69,7 @@ class LumosButton extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Icon(icon, size: IconSizes.iconButton),
-        const SizedBox(width: Insets.spacing8),
+        const SizedBox(width: AppSpacing.sm),
         Flexible(child: Text(label, overflow: TextOverflow.ellipsis)),
       ],
     );
@@ -88,7 +88,7 @@ class LumosButton extends StatelessWidget {
             valueColor: AlwaysStoppedAnimation<Color>(indicatorColor),
           ),
         ),
-        const SizedBox(width: Insets.spacing8),
+        const SizedBox(width: AppSpacing.sm),
         Flexible(child: Text(label, overflow: TextOverflow.ellipsis)),
       ],
     );

@@ -15,7 +15,7 @@ abstract final class LumosCardConst {
   LumosCardConst._();
 
   static const EdgeInsetsGeometry defaultPadding = EdgeInsets.all(
-    Insets.paddingScreen,
+    AppSpacing.lg,
   );
 
   // Selected state: slight elevation boost to lift card above siblings.
@@ -276,7 +276,7 @@ class _LumosCardState extends State<LumosCard>
 
     final Color unselectedColor = widget.variant == LumosCardVariant.outlined
         ? colorScheme.outlineVariant
-        : colorScheme.surface.withValues(alpha: WidgetOpacities.transparent);
+        : colorScheme.surface.withValues(alpha: AppOpacity.transparent);
 
     final Color resolvedColor = Color.lerp(
       unselectedColor,
@@ -389,10 +389,10 @@ class _LumosCardState extends State<LumosCard>
     return InkWell(
       borderRadius: borderRadius,
       splashColor: colorScheme.primary.withValues(
-        alpha: WidgetOpacities.statePress, // 0.12
+        alpha: AppOpacity.statePress, // 0.12
       ),
       highlightColor: colorScheme.primary.withValues(
-        alpha: WidgetOpacities.stateHover, // 0.08
+        alpha: AppOpacity.stateHover, // 0.08
       ),
       onTap: widget.onTap,
       onLongPress: widget.onLongPress,
@@ -440,8 +440,8 @@ class _LumosCardSkeletonState extends State<_LumosCardSkeleton>
 
     _shimmerAnimation =
         Tween<double>(
-          begin: WidgetOpacities.scrimLight,
-          end: WidgetOpacities.scrimDark,
+          begin: AppOpacity.scrimLight,
+          end: AppOpacity.scrimDark,
         ).animate(
           CurvedAnimation(parent: _shimmerController, curve: Curves.easeInOut),
         );
@@ -480,25 +480,25 @@ class _LumosCardSkeletonState extends State<_LumosCardSkeleton>
                   color: shimmerColor,
                   opacity: _shimmerAnimation.value,
                   widthFactor: WidgetRatios.shimmerLineWidthShort,
-                  height: Insets.spacing16,
+                  height: AppSpacing.lg,
                 ),
-                const SizedBox(height: Insets.spacing8),
+                const SizedBox(height: AppSpacing.sm),
                 _shimmerLine(
                   color: shimmerColor,
                   opacity:
                       _shimmerAnimation.value *
                       WidgetRatios.shimmerSecondaryBlendScale,
                   widthFactor: WidgetRatios.shimmerLineWidthFull,
-                  height: Insets.spacing12,
+                  height: AppSpacing.md,
                 ),
-                const SizedBox(height: Insets.spacing4),
+                const SizedBox(height: AppSpacing.xs),
                 _shimmerLine(
                   color: shimmerColor,
                   opacity:
                       _shimmerAnimation.value *
                       WidgetRatios.shimmerTertiaryBlendScale,
                   widthFactor: WidgetRatios.shimmerLineWidthMedium,
-                  height: Insets.spacing12,
+                  height: AppSpacing.md,
                 ),
               ],
             ),

@@ -11,7 +11,7 @@ abstract final class HomeContentConst {
 
   static const double heroMinHeightMobile = 280;
   static const double heroMinHeightLarge = 250;
-  static const double avatarRadius = Insets.spacing16;
+  static const double avatarRadius = AppSpacing.lg;
   static const double emphasizedBorderWidth = AppStroke.thin;
 }
 
@@ -28,14 +28,14 @@ class HomeContent extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             _buildAnimatedReveal(order: 0, child: HomeHeaderBlock(l10n: l10n)),
-            const SizedBox(height: Insets.gapBetweenSections),
+            const SizedBox(height: AppSpacing.xxl),
             _buildAnimatedReveal(
               order: 1,
               child: HomeHeroCard(deviceType: deviceType, l10n: l10n),
             ),
-            const SizedBox(height: Insets.gapBetweenSections),
+            const SizedBox(height: AppSpacing.xxl),
             _buildAnimatedReveal(order: 2, child: const HomeStatGrid()),
-            const SizedBox(height: Insets.gapBetweenSections),
+            const SizedBox(height: AppSpacing.xxl),
             _buildAnimatedReveal(
               order: 3,
               child: HomeSplitSection(deviceType: deviceType),
@@ -52,9 +52,9 @@ class HomeContent extends StatelessWidget {
       duration: Duration(milliseconds: durationMs),
       tween: Tween<double>(begin: 0, end: 1),
       builder: (BuildContext context, double value, Widget? animatedChild) {
-        final double dy = Insets.spacing16 * (1 - value);
+        final double dy = AppSpacing.lg * (1 - value);
         return Transform.translate(
-          offset: Offset(Insets.spacing0, dy),
+          offset: Offset(AppSpacing.none, dy),
           child: animatedChild,
         );
       },
@@ -83,7 +83,7 @@ class HomeHeaderBlock extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-              const SizedBox(height: Insets.spacing4),
+              const SizedBox(height: AppSpacing.xs),
               LumosText(
                 l10n.homeGoalProgress,
                 style: LumosTextStyle.bodyMedium,
@@ -92,7 +92,7 @@ class HomeHeaderBlock extends StatelessWidget {
           ),
         ),
         Container(
-          padding: const EdgeInsets.all(Insets.spacing4),
+          padding: const EdgeInsets.all(AppSpacing.xs),
           decoration: BoxDecoration(
             borderRadius: BorderRadii.large,
             border: Border.all(
@@ -146,19 +146,19 @@ class HomeHeroCard extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadii.large,
         child: Padding(
-          padding: const EdgeInsets.all(Insets.spacing24),
+          padding: const EdgeInsets.all(AppSpacing.xxl),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               _buildHeroBadge(colorScheme: colorScheme),
-              const SizedBox(height: Insets.spacing16),
+              const SizedBox(height: AppSpacing.lg),
               LumosText(
                 l10n.homeHeroTitle,
                 style: LumosTextStyle.headlineMedium,
                 containerRole: LumosTextContainerRole.primaryContainer,
               ),
-              const SizedBox(height: Insets.spacing8),
+              const SizedBox(height: AppSpacing.sm),
               LumosText(
                 l10n.homeHeroBody,
                 style: LumosTextStyle.bodyMedium,
@@ -166,7 +166,7 @@ class HomeHeroCard extends StatelessWidget {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
-              const SizedBox(height: Insets.spacing16),
+              const SizedBox(height: AppSpacing.lg),
               _buildActionButtons(l10n: l10n, colorScheme: colorScheme),
             ],
           ),
@@ -194,8 +194,8 @@ class HomeHeroCard extends StatelessWidget {
       boxShadow: <BoxShadow>[
         BoxShadow(
           color: colorScheme.shadow,
-          blurRadius: Insets.spacing24,
-          offset: const Offset(Insets.spacing0, Insets.spacing12),
+          blurRadius: AppSpacing.xxl,
+          offset: const Offset(AppSpacing.none, AppSpacing.md),
         ),
       ],
     );
@@ -211,11 +211,11 @@ class HomeHeroCard extends StatelessWidget {
             size: IconSizes.iconMedium,
           ),
         ),
-        const SizedBox(width: Insets.spacing8),
+        const SizedBox(width: AppSpacing.sm),
         Container(
           padding: const EdgeInsets.symmetric(
-            horizontal: Insets.spacing8,
-            vertical: Insets.spacing4,
+            horizontal: AppSpacing.sm,
+            vertical: AppSpacing.xs,
           ),
           decoration: BoxDecoration(
             color: colorScheme.surfaceContainer,
@@ -236,8 +236,8 @@ class HomeHeroCard extends StatelessWidget {
     required ColorScheme colorScheme,
   }) {
     return Wrap(
-      spacing: Insets.spacing8,
-      runSpacing: Insets.spacing8,
+      spacing: AppSpacing.sm,
+      runSpacing: AppSpacing.sm,
       children: <Widget>[
         LumosButton(
           label: l10n.homePrimaryAction,

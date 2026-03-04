@@ -63,7 +63,7 @@ class AppButtonTokens extends ThemeExtension<AppButtonTokens> {
     iconSizeSm: AppSpacing.lg,
     iconSizeMd: AppSpacing.xxl,
     iconSizeLg: AppSpacing.xxxl,
-    disabledOpacity: AppOpacity.disabled,
+    disabledOpacity: AppOpacity.disabledContent,
   );
 
   @override

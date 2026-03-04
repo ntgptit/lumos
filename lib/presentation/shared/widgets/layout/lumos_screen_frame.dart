@@ -6,8 +6,8 @@ abstract final class LumosScreenFrameConst {
   LumosScreenFrameConst._();
 
   static const double defaultMaxWidth = WidgetSizes.maxContentWidth;
-  static const double defaultHorizontalPadding = Insets.paddingScreen;
-  static const double defaultVerticalPadding = Insets.gapBetweenSections;
+  static const double defaultHorizontalPadding = AppSpacing.lg;
+  static const double defaultVerticalPadding = AppSpacing.xxl;
 }
 
 class LumosScreenFrame extends StatelessWidget {

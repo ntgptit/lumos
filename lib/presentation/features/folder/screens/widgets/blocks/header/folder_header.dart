@@ -55,7 +55,7 @@ class FolderHeader extends StatelessWidget {
             isDeckManager: isDeckManager,
             deckCount: deckCount,
           ),
-          const SizedBox(height: Insets.spacing12),
+          const SizedBox(height: AppSpacing.md),
           FolderHeaderNavigationSection(
             l10n: l10n,
             currentDepth: currentDepth,

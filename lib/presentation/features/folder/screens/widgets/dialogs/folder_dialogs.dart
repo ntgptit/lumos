@@ -24,7 +24,7 @@ abstract final class FolderDialogConst {
       FolderStateConst.folderDescriptionMaxLength;
   static const String emptyValue = '';
   static const int folderDescriptionMaxLines = 3;
-  static const double sectionSpacing = Insets.spacing12;
+  static const double sectionSpacing = AppSpacing.md;
 }
 
 Future<void> showFolderEditorDialog({

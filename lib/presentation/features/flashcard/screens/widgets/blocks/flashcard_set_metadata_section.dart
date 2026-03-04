@@ -7,14 +7,14 @@ import '../../../../../shared/widgets/lumos_widgets.dart';
 abstract final class FlashcardSetMetadataSectionConst {
   FlashcardSetMetadataSectionConst._();
 
-  static const double titleBottomSpacing = Insets.spacing12;
-  static const double rowSpacing = Insets.spacing12;
-  static const double ownerAvatarRadius = Insets.spacing16;
-  static const double ownerNameRightSpacing = Insets.spacing8;
-  static const double chipHorizontalPadding = Insets.spacing12;
-  static const double chipVerticalPadding = Insets.spacing4;
-  static const double dividerHorizontalMargin = Insets.spacing12;
-  static const double dividerHeight = Insets.spacing24;
+  static const double titleBottomSpacing = AppSpacing.md;
+  static const double rowSpacing = AppSpacing.md;
+  static const double ownerAvatarRadius = AppSpacing.lg;
+  static const double ownerNameRightSpacing = AppSpacing.sm;
+  static const double chipHorizontalPadding = AppSpacing.md;
+  static const double chipVerticalPadding = AppSpacing.xs;
+  static const double dividerHorizontalMargin = AppSpacing.md;
+  static const double dividerHeight = AppSpacing.xxl;
 }
 
 class FlashcardSetMetadataSection extends StatelessWidget {

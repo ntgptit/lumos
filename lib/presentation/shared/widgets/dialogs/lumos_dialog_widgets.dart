@@ -12,19 +12,19 @@ abstract final class LumosDialogSizingConst {
   static const double dialogWidthFactor = WidgetRatios.dialogWidthFactor;
   static const double dialogMinWidth = WidgetSizes.dialogMinWidth;
   static const double dialogMaxWidth = WidgetSizes.overlayMaxWidthDesktop;
-  static const double dialogHorizontalInset = Insets.spacing16;
-  static const double dialogMinScreenInset = Insets.spacing8;
-  static const double dialogVerticalInset = Insets.spacing24;
+  static const double dialogHorizontalInset = AppSpacing.lg;
+  static const double dialogMinScreenInset = AppSpacing.sm;
+  static const double dialogVerticalInset = AppSpacing.xxl;
   static const EdgeInsetsGeometry dialogActionsPadding = EdgeInsets.fromLTRB(
-    Insets.spacing16,
-    Insets.spacing0,
-    Insets.spacing16,
-    Insets.spacing16,
+    AppSpacing.lg,
+    AppSpacing.none,
+    AppSpacing.lg,
+    AppSpacing.lg,
   );
   static const EdgeInsetsGeometry dialogActionButtonPadding = EdgeInsets.only(
-    left: Insets.spacing8,
+    left: AppSpacing.sm,
   );
-  static const double promptContentSpacing = Insets.spacing12;
+  static const double promptContentSpacing = AppSpacing.md;
 }
 
 class LumosDialog extends StatelessWidget {
@@ -270,7 +270,7 @@ class LumosBottomSheet extends StatelessWidget {
         minHeight: WidgetSizes.minTouchTarget,
         maxHeight: maxHeight,
       ),
-      padding: Insets.screenPadding,
+      padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
         color: context.colorScheme.surface,
         borderRadius: BorderRadii.topMedium,
@@ -301,7 +301,7 @@ class LumosActionSheet extends StatelessWidget {
         ...actions.map(_buildActionButton),
         if (cancelText != null)
           Padding(
-            padding: const EdgeInsets.only(top: Insets.gapBetweenItems),
+            padding: const EdgeInsets.only(top: AppSpacing.md),
             child: LumosButton(
               label: cancelText!,
               onPressed: onCancel,
@@ -314,7 +314,7 @@ class LumosActionSheet extends StatelessWidget {
 
   Widget _buildActionButton(LumosActionItem action) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: Insets.spacing8),
+      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
       child: LumosButton(
         label: action.label,
         icon: action.icon,

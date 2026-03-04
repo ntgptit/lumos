@@ -15,23 +15,23 @@ import '../providers/states/flashcard_state.dart';
 abstract final class FlashcardFlipStudyConst {
   FlashcardFlipStudyConst._();
 
-  static const double screenHorizontalPadding = Insets.spacing16;
-  static const double screenVerticalPadding = Insets.spacing12;
-  static const double progressTopGap = Insets.spacing8;
-  static const double progressBottomGap = Insets.spacing16;
-  static const double cardVerticalInset = Insets.spacing8;
-  static const double cardContentHorizontalPadding = Insets.spacing16;
-  static const double cardContentVerticalPadding = Insets.spacing16;
-  static const double cardActionGap = Insets.spacing8;
-  static const double cardTitleGap = Insets.spacing8;
-  static const double cardBottomGap = Insets.spacing8;
-  static const double bottomBarTopGap = Insets.spacing8;
-  static const double bottomBarBottomGap = Insets.spacing16;
-  static const double actionIconSize = Insets.spacing20;
-  static const double hintIconSize = Insets.spacing20;
+  static const double screenHorizontalPadding = AppSpacing.lg;
+  static const double screenVerticalPadding = AppSpacing.md;
+  static const double progressTopGap = AppSpacing.sm;
+  static const double progressBottomGap = AppSpacing.lg;
+  static const double cardVerticalInset = AppSpacing.sm;
+  static const double cardContentHorizontalPadding = AppSpacing.lg;
+  static const double cardContentVerticalPadding = AppSpacing.lg;
+  static const double cardActionGap = AppSpacing.sm;
+  static const double cardTitleGap = AppSpacing.sm;
+  static const double cardBottomGap = AppSpacing.sm;
+  static const double bottomBarTopGap = AppSpacing.sm;
+  static const double bottomBarBottomGap = AppSpacing.lg;
+  static const double actionIconSize = AppSpacing.xl;
+  static const double hintIconSize = AppSpacing.xl;
   static const int backTextMaxLines = 8;
   static const int noteMaxLines = 4;
-  static const double cardBorderRadius = Insets.spacing16;
+  static const double cardBorderRadius = AppSpacing.lg;
 }
 
 class FlashcardFlipStudyRouteExtra {
@@ -160,7 +160,7 @@ class _FlashcardFlipStudyScreenState
             FlashcardFlipStudyConst.screenHorizontalPadding,
             FlashcardFlipStudyConst.screenVerticalPadding,
             FlashcardFlipStudyConst.screenHorizontalPadding,
-            Insets.spacing0,
+            AppSpacing.none,
           ),
           child: Column(
             children: <Widget>[

@@ -5,12 +5,12 @@ class OpacityContractConst {
 
   static const String libRoot = 'lib';
   static const String dimensionsPath =
-      'lib/core/themes/foundation/app_widget_opacity_tokens.dart';
+      'lib/core/themes/foundation/app_opacity.dart';
   static const String allowedSharedWidgetsPath =
       'lib/presentation/shared/widgets/';
   static const String allowedCoreThemesPath = 'lib/core/themes/';
   static const String allowedFeaturePath = 'lib/presentation/features/';
-  static const String allowedClassName = 'WidgetOpacities';
+  static const String allowedClassName = 'AppOpacity';
   static const String generatedSuffix = '.g.dart';
   static const String freezedSuffix = '.freezed.dart';
   static const String dartSuffix = '.dart';
@@ -31,10 +31,10 @@ class OpacityViolation {
 }
 
 const Map<String, String> _allowedOpacityConstants = <String, String>{
-  'transparent': 'Insets.spacing0',
+  'transparent': '0.0',
   'divider': '0.12',
   'scrimLight': '0.32',
-  'scrimDark': '0.4',
+  'scrimDark': '0.40',
   'disabledContent': '0.38',
   'stateHover': '0.08',
   'stateFocus': '0.12',
@@ -45,17 +45,21 @@ const Map<String, String> _allowedOpacityConstants = <String, String>{
   'elevationLevel3': '0.11',
   'elevationLevel4': '0.12',
   'elevationLevel5': '0.14',
-  'lowEmphasis': '0.6',
+  'lowEmphasis': '0.60',
   'hint': '0.38',
+  'faint': '0.08',
+  'subtle': '0.12',
+  'soft': '0.16',
+  'medium': '0.24',
+  'strong': '0.48',
+  'disabled': '0.38',
 };
 
 final RegExp _constDoubleRegExp = RegExp(
   r'^\s*static\s+const\s+double\s+([A-Za-z0-9_]+)\s*=\s*([^;]+);',
 );
 final RegExp _opacityWordRegExp = RegExp(r'(opacity|Opacity|alpha|Alpha)');
-final RegExp _widgetOpacitiesUseRegExp = RegExp(
-  r'WidgetOpacities\.([A-Za-z0-9_]+)',
-);
+final RegExp _widgetOpacitiesUseRegExp = RegExp(r'AppOpacity\.([A-Za-z0-9_]+)');
 final RegExp _withOpacityUseRegExp = RegExp(r'\bwithOpacity\s*\(');
 final RegExp _withValuesAlphaUseRegExp = RegExp(
   r'\bwithValues\s*\([^)]*\balpha\s*:',
@@ -65,7 +69,7 @@ final RegExp _alphaNamedArgumentRegExp = RegExp(r'\balpha\s*:');
 
 Future<void> main() async {
   final List<OpacityViolation> violations = <OpacityViolation>[];
-  await _checkWidgetOpacitiesClass(violations);
+  await _checkAppOpacityClass(violations);
   await _checkNoExtraOpacityConstants(violations);
   await _checkOnlyAllowedWidgetOpacityUsages(violations);
   await _checkOpacityUsageRestrictedByPath(violations);
@@ -85,9 +89,7 @@ Future<void> main() async {
   exitCode = 1;
 }
 
-Future<void> _checkWidgetOpacitiesClass(
-  List<OpacityViolation> violations,
-) async {
+Future<void> _checkAppOpacityClass(List<OpacityViolation> violations) async {
   final File dimensionsFile = File(OpacityContractConst.dimensionsPath);
   if (!dimensionsFile.existsSync()) {
     violations.add(
@@ -104,21 +106,21 @@ Future<void> _checkWidgetOpacitiesClass(
   final List<String> lines = await dimensionsFile.readAsLines();
   final Map<String, String> foundConstants = <String, String>{};
   int classStartLine = -1;
-  bool inWidgetOpacitiesClass = false;
+  bool inAppOpacityClass = false;
   int braceBalance = 0;
 
   for (int i = 0; i < lines.length; i++) {
     final String line = lines[i];
-    if (!inWidgetOpacitiesClass &&
+    if (!inAppOpacityClass &&
         line.contains('class ${OpacityContractConst.allowedClassName}')) {
-      inWidgetOpacitiesClass = true;
+      inAppOpacityClass = true;
       classStartLine = i + 1;
       braceBalance += _countChar(line, '{');
       braceBalance -= _countChar(line, '}');
       continue;
     }
 
-    if (!inWidgetOpacitiesClass) {
+    if (!inAppOpacityClass) {
       continue;
     }
 
@@ -133,7 +135,7 @@ Future<void> _checkWidgetOpacitiesClass(
     }
 
     if (braceBalance <= 0) {
-      inWidgetOpacitiesClass = false;
+      inAppOpacityClass = false;
     }
   }
 
@@ -142,7 +144,7 @@ Future<void> _checkWidgetOpacitiesClass(
       const OpacityViolation(
         filePath: OpacityContractConst.dimensionsPath,
         lineNumber: 1,
-        message: 'Missing WidgetOpacities class.',
+        message: 'Missing AppOpacity class.',
         lineContent: OpacityContractConst.allowedClassName,
       ),
     );
@@ -217,21 +219,21 @@ Future<void> _checkNoExtraOpacityConstants(
     }
 
     final List<String> lines = await entity.readAsLines();
-    bool inWidgetOpacitiesClass = false;
+    bool inAppOpacityClass = false;
     int braceBalance = 0;
     for (int i = 0; i < lines.length; i++) {
       final String line = lines[i];
-      if (!inWidgetOpacitiesClass &&
+      if (!inAppOpacityClass &&
           normalizedPath == OpacityContractConst.dimensionsPath &&
           line.contains('class ${OpacityContractConst.allowedClassName}')) {
-        inWidgetOpacitiesClass = true;
+        inAppOpacityClass = true;
         braceBalance += _countChar(line, '{');
         braceBalance -= _countChar(line, '}');
-      } else if (inWidgetOpacitiesClass) {
+      } else if (inAppOpacityClass) {
         braceBalance += _countChar(line, '{');
         braceBalance -= _countChar(line, '}');
         if (braceBalance <= 0) {
-          inWidgetOpacitiesClass = false;
+          inAppOpacityClass = false;
         }
       }
 
@@ -244,7 +246,7 @@ Future<void> _checkNoExtraOpacityConstants(
         continue;
       }
       if (normalizedPath == OpacityContractConst.dimensionsPath &&
-          inWidgetOpacitiesClass) {
+          inAppOpacityClass) {
         continue;
       }
       violations.add(
@@ -252,7 +254,7 @@ Future<void> _checkNoExtraOpacityConstants(
           filePath: normalizedPath,
           lineNumber: i + 1,
           message:
-              'Opacity constants must be declared only in WidgetOpacities class.',
+              'Opacity constants must be declared only in AppOpacity class.',
           lineContent: line.trim(),
         ),
       );
@@ -302,7 +304,7 @@ Future<void> _checkOnlyAllowedWidgetOpacityUsages(
             filePath: normalizedPath,
             lineNumber: i + 1,
             message:
-                'Usage of WidgetOpacities.$constantName is not allowed by opacity contract.',
+                'Usage of AppOpacity.$constantName is not allowed by opacity contract.',
             lineContent: line.trim(),
           ),
         );

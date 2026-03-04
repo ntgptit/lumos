@@ -32,7 +32,7 @@ class LumosEmptyState extends StatelessWidget {
     final ColorScheme colorScheme = context.colorScheme;
     return Center(
       child: Padding(
-        padding: Insets.screenPadding,
+        padding: const EdgeInsets.all(AppSpacing.lg),
         child: ConstrainedBox(
           constraints: const BoxConstraints(
             maxWidth: WidgetSizes.maxContentWidth,
@@ -45,7 +45,7 @@ class LumosEmptyState extends StatelessWidget {
                 size: IconSizes.iconXLarge,
                 color: colorScheme.onSurfaceVariant,
               ),
-              const SizedBox(height: Insets.gapBetweenItems),
+              const SizedBox(height: AppSpacing.md),
               LumosText(
                 title,
                 style: LumosTextStyle.titleLarge,
@@ -65,7 +65,7 @@ class LumosEmptyState extends StatelessWidget {
       return const <Widget>[];
     }
     return <Widget>[
-      const SizedBox(height: Insets.spacing8),
+      const SizedBox(height: AppSpacing.sm),
       LumosText(
         message!,
         style: LumosTextStyle.bodyMedium,
@@ -84,7 +84,7 @@ class LumosEmptyState extends StatelessWidget {
       return const <Widget>[];
     }
     return <Widget>[
-      const SizedBox(height: Insets.gapBetweenSections),
+      const SizedBox(height: AppSpacing.xxl),
       LumosButton(
         label: buttonLabel!,
         onPressed: onButtonPressed,

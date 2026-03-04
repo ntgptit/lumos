@@ -44,16 +44,16 @@ class FolderHeaderBanner extends StatelessWidget {
         ],
         blobs: <LumosDecorativeBlob>[
           LumosDecorativeBlob(
-            top: -Insets.spacing32,
-            right: -Insets.spacing32,
+            top: -AppSpacing.xxxl,
+            right: -AppSpacing.xxxl,
             fill: colorScheme.tertiaryContainer,
-            size: Insets.spacing64 * 2,
+            size: AppSpacing.canvas * 2,
           ),
           LumosDecorativeBlob(
-            bottom: -Insets.spacing24,
-            left: -Insets.spacing24,
+            bottom: -AppSpacing.xxl,
+            left: -AppSpacing.xxl,
             fill: colorScheme.secondaryContainer,
-            size: Insets.spacing64,
+            size: AppSpacing.canvas,
           ),
         ],
       ),
@@ -65,7 +65,7 @@ class FolderHeaderBanner extends StatelessWidget {
       child: DecoratedBox(
         decoration: BoxDecoration(
           color: colorScheme.surface.withValues(
-            alpha: WidgetOpacities.scrimLight,
+            alpha: AppOpacity.scrimLight,
           ),
           border: Border.all(
             color: colorScheme.outlineVariant,
@@ -78,11 +78,11 @@ class FolderHeaderBanner extends StatelessWidget {
 
   Widget _buildBannerContent({required ColorScheme colorScheme}) {
     return Padding(
-      padding: const EdgeInsets.all(Insets.spacing12),
+      padding: const EdgeInsets.all(AppSpacing.md),
       child: Row(
         children: <Widget>[
           _buildHeaderLeadingIcon(colorScheme: colorScheme),
-          const SizedBox(width: Insets.spacing16),
+          const SizedBox(width: AppSpacing.lg),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -91,15 +91,15 @@ class FolderHeaderBanner extends StatelessWidget {
                   _buildManagerTitle(),
                   style: LumosTextStyle.titleLarge,
                 ),
-                const SizedBox(height: Insets.spacing8),
+                const SizedBox(height: AppSpacing.sm),
                 LumosText(
                   _buildManagerSubtitle(),
                   style: LumosTextStyle.bodySmall,
                 ),
-                const SizedBox(height: Insets.spacing8),
+                const SizedBox(height: AppSpacing.sm),
                 Wrap(
-                  spacing: Insets.spacing8,
-                  runSpacing: Insets.spacing8,
+                  spacing: AppSpacing.sm,
+                  runSpacing: AppSpacing.sm,
                   children: <Widget>[
                     FolderHeaderMetaPill(
                       icon: Icons.home_rounded,
@@ -129,8 +129,8 @@ class FolderHeaderBanner extends StatelessWidget {
 
   Widget _buildHeaderLeadingIcon({required ColorScheme colorScheme}) {
     return Container(
-      width: Insets.spacing40,
-      height: Insets.spacing40,
+      width: AppSpacing.section,
+      height: AppSpacing.section,
       decoration: BoxDecoration(
         color: colorScheme.primaryContainer,
         borderRadius: BorderRadii.medium,

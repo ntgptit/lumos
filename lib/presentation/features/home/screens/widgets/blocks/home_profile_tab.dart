@@ -34,7 +34,7 @@ class HomeProfileTab extends ConsumerWidget {
           maxWidth: HomeProfileTabConst.maxWidth,
         ),
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(Insets.spacing16),
+          padding: const EdgeInsets.all(AppSpacing.lg),
           child: content,
         ),
       ),
@@ -69,7 +69,7 @@ class HomeProfileTab extends ConsumerWidget {
     return LumosCard(
       margin: EdgeInsets.zero,
       child: Padding(
-        padding: const EdgeInsets.all(Insets.spacing16),
+        padding: const EdgeInsets.all(AppSpacing.lg),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -77,18 +77,18 @@ class HomeProfileTab extends ConsumerWidget {
               l10n.profileThemeSectionTitle,
               style: LumosTextStyle.titleLarge,
             ),
-            const SizedBox(height: Insets.spacing8),
+            const SizedBox(height: AppSpacing.sm),
             LumosText(
               l10n.profileThemeSectionSubtitle,
               style: LumosTextStyle.bodyMedium,
             ),
-            const SizedBox(height: Insets.spacing16),
+            const SizedBox(height: AppSpacing.lg),
             _buildThemePreferenceSelector(
               ref: ref,
               l10n: l10n,
               selectedPreference: selectedPreference,
             ),
-            const SizedBox(height: Insets.spacing8),
+            const SizedBox(height: AppSpacing.sm),
             _buildQuickToggleButton(ref: ref, l10n: l10n, themeMode: themeMode),
           ],
         ),

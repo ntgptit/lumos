@@ -15,13 +15,13 @@ class FolderSkeletonView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              const LumosSkeletonBox(height: Insets.spacing64),
-              const SizedBox(height: Insets.spacing16),
+              const LumosSkeletonBox(height: AppSpacing.canvas),
+              const SizedBox(height: AppSpacing.lg),
               ...List<Widget>.generate(
                 6,
                 (int index) => const Padding(
-                  padding: EdgeInsets.only(bottom: Insets.spacing8),
-                  child: LumosSkeletonBox(height: Insets.spacing64),
+                  padding: EdgeInsets.only(bottom: AppSpacing.sm),
+                  child: LumosSkeletonBox(height: AppSpacing.canvas),
                 ),
               ),
             ],

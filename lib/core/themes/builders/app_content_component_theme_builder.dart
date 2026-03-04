@@ -66,7 +66,7 @@ abstract final class AppContentComponentThemeBuilder {
         color: colorScheme.onSurfaceVariant,
       ),
       minLeadingWidth: IconSizes.iconLarge,
-      minVerticalPadding: Insets.spacing8,
+      minVerticalPadding: AppSpacing.sm,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppRadius.lg),
       ),

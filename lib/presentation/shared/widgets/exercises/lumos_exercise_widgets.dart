@@ -26,23 +26,23 @@ class LumosMatchPairs extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         const LumosText('Match pairs', style: LumosTextStyle.titleMedium),
-        const SizedBox(height: Insets.gapBetweenItems),
+        const SizedBox(height: AppSpacing.md),
         Wrap(
-          spacing: Insets.spacing8,
-          runSpacing: Insets.spacing8,
+          spacing: AppSpacing.sm,
+          runSpacing: AppSpacing.sm,
           children: leftItems
               .map((PairItem item) => Chip(label: Text(item.label)))
               .toList(),
         ),
-        const SizedBox(height: Insets.spacing8),
+        const SizedBox(height: AppSpacing.sm),
         Wrap(
-          spacing: Insets.spacing8,
-          runSpacing: Insets.spacing8,
+          spacing: AppSpacing.sm,
+          runSpacing: AppSpacing.sm,
           children: rightItems
               .map((PairItem item) => Chip(label: Text(item.label)))
               .toList(),
         ),
-        const SizedBox(height: Insets.gapBetweenItems),
+        const SizedBox(height: AppSpacing.md),
         LumosButton(
           label: isCompleted ? 'Completed' : 'Submit matches',
           onPressed: () {
@@ -73,15 +73,15 @@ class LumosReorderWords extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         const LumosText('Reorder words', style: LumosTextStyle.titleMedium),
-        const SizedBox(height: Insets.gapBetweenItems),
+        const SizedBox(height: AppSpacing.md),
         Wrap(
-          spacing: Insets.spacing8,
-          runSpacing: Insets.spacing8,
+          spacing: AppSpacing.sm,
+          runSpacing: AppSpacing.sm,
           children: words
               .map((String word) => Chip(label: Text(word)))
               .toList(),
         ),
-        const SizedBox(height: Insets.gapBetweenItems),
+        const SizedBox(height: AppSpacing.md),
         LumosButton(
           label: 'Check order',
           onPressed: () {
@@ -118,17 +118,17 @@ class LumosListeningExercise extends StatelessWidget {
           'Listening exercise',
           style: LumosTextStyle.titleMedium,
         ),
-        const SizedBox(height: Insets.spacing8),
+        const SizedBox(height: AppSpacing.sm),
         LumosText(
           audioUrl,
           style: LumosTextStyle.labelSmall,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
-        const SizedBox(height: Insets.gapBetweenItems),
+        const SizedBox(height: AppSpacing.md),
         ...options.map(
           (String option) => Padding(
-            padding: const EdgeInsets.only(bottom: Insets.spacing8),
+            padding: const EdgeInsets.only(bottom: AppSpacing.sm),
             child: LumosButton(
               label: option,
               onPressed: () {

@@ -3,53 +3,19 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 
 import 'app_material3_tokens.dart';
-
-abstract final class Insets {
-  static const double spacing0 = Material3SpacingTokens.none;
-  static const double spacing4 = Material3SpacingTokens.xSmall;
-  static const double spacing8 = Material3SpacingTokens.small;
-  static const double spacing12 = Material3SpacingTokens.medium;
-  static const double spacing16 = Material3SpacingTokens.large;
-  static const double spacing20 = Material3SpacingTokens.xLarge;
-  static const double spacing24 = Material3SpacingTokens.xxLarge;
-  static const double spacing32 = Material3SpacingTokens.xxxLarge;
-  static const double spacing40 = Material3SpacingTokens.section;
-  static const double spacing48 = Material3SpacingTokens.page;
-  static const double spacing64 = Material3SpacingTokens.canvas;
-  static const double paddingScreen = spacing16;
-  static const double gapBetweenItems = spacing12;
-  static const double gapBetweenSections = spacing24;
-  static const EdgeInsets screenPadding = EdgeInsets.all(paddingScreen);
-  static const EdgeInsets itemGapPadding = EdgeInsets.all(gapBetweenItems);
-  static const EdgeInsets sectionGapPadding = EdgeInsets.all(
-    gapBetweenSections,
-  );
-}
-
-abstract final class Radius {
-  static const double radiusNone = Material3ShapeTokens.none;
-  static const double radiusSmall = Material3ShapeTokens.extraSmall;
-  static const double radiusMedium = Material3ShapeTokens.small;
-  static const double radiusLarge = Material3ShapeTokens.medium;
-  static const double radiusXLarge = Material3ShapeTokens.large;
-  static const double radiusXXLarge = Material3ShapeTokens.extraLarge;
-  static const double radiusCircle = Material3ShapeTokens.full;
-  static const double radiusSurface = radiusLarge;
-  static const double radiusButton = radiusSurface;
-  static const double radiusCard = radiusSurface;
-  static const double radiusDialog = radiusSurface;
-}
+import 'app_radius.dart';
+import 'app_spacing.dart';
 
 abstract final class BorderRadii {
   static const BorderRadius medium = BorderRadius.all(
-    ui.Radius.circular(Radius.radiusMedium),
+    ui.Radius.circular(AppRadius.sm),
   );
   static const BorderRadius large = BorderRadius.all(
-    ui.Radius.circular(Radius.radiusLarge),
+    ui.Radius.circular(AppRadius.md),
   );
   static const BorderRadius topMedium = BorderRadius.only(
-    topLeft: ui.Radius.circular(Radius.radiusMedium),
-    topRight: ui.Radius.circular(Radius.radiusMedium),
+    topLeft: ui.Radius.circular(AppRadius.sm),
+    topRight: ui.Radius.circular(AppRadius.sm),
   );
 }
 
@@ -64,7 +30,7 @@ abstract final class IconSizes {
 }
 
 abstract final class WidgetSizes {
-  static const double none = Insets.spacing0;
+  static const double none = AppSpacing.none;
   static const double borderWidthRegular =
       Material3ComponentSizeTokens.borderWidth;
   static const double minTouchTarget =
@@ -107,7 +73,7 @@ abstract final class WidgetSizes {
 }
 
 abstract final class WidgetRatios {
-  static const double none = Insets.spacing0;
+  static const double none = AppSpacing.none;
   static const double half = 0.5;
   static const double full = 1.0;
   static const double transitionSlideOffsetY = 0.06;
