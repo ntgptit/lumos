@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
-import '../themes/foundation/app_palette.dart';
+import 'foundation/app_palette.dart';
 
 // ---------------------------------------------------------------------------
 // Palette constants — Ocean Depth theme

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../constants/color_schemes.dart';
 import '../constants/storage_keys.dart';
 import '../themes/app_theme.dart';
+import '../themes/color_schemes.dart';
 
 part 'theme_provider.g.dart';
 

@@ -6,7 +6,7 @@
 
 ## FE (Dart)
 
-### `lib/core/constants/color_schemes.dart`
+### `lib/core/themes/color_schemes.dart`
 - L92: `(top-level).buildLightColorScheme` (function)
 - L97: `(top-level).buildDarkColorScheme` (function)
 - L490: `_ContrastPair._ContrastPair()` (constructor)

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../constants/color_schemes.dart' as app_color_schemes;
+import '../color_schemes.dart' as app_color_schemes;
 
 abstract final class AppColorSchemeBuilder {
   static ColorScheme build({required Brightness brightness, Color? seedColor}) {
