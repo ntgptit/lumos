@@ -239,16 +239,12 @@ class HomeHeroCard extends StatelessWidget {
       spacing: AppSpacing.sm,
       runSpacing: AppSpacing.sm,
       children: <Widget>[
-        LumosButton(
+        LumosPrimaryButton(
           label: l10n.homePrimaryAction,
           onPressed: () {},
           icon: Icons.play_arrow_rounded,
         ),
-        LumosButton(
-          label: l10n.homeSecondaryAction,
-          onPressed: () {},
-          type: LumosButtonType.secondary,
-        ),
+        LumosSecondaryButton(label: l10n.homeSecondaryAction, onPressed: () {}),
       ],
     );
   }

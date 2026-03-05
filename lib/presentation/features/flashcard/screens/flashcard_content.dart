@@ -481,7 +481,7 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
           FlashcardContentConst.bottomStudyBarHorizontalPadding,
           FlashcardContentConst.bottomStudyBarVerticalPadding,
         ),
-        child: LumosButton(
+        child: LumosPrimaryButton(
           onPressed: () =>
               _openStudyScreen(initialIndex: widget.state.safePreviewIndex),
           label: l10n.flashcardStudyDeckButton,
@@ -781,7 +781,7 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
                           },
                         ),
                         const SizedBox(height: AppSpacing.lg),
-                        LumosButton(
+                        LumosPrimaryButton(
                           onPressed: () {
                             sheetContext.pop();
                             _applySort(

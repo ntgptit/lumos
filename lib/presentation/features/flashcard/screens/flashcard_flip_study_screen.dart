@@ -521,16 +521,15 @@ class _FlashcardStudyBottomBar extends StatelessWidget {
     return Row(
       children: <Widget>[
         Expanded(
-          child: LumosButton(
+          child: LumosOutlineButton(
             onPressed: onPreviousPressed,
             icon: Icons.navigate_before_rounded,
             label: l10n.flashcardPreviousButton,
-            type: LumosButtonType.outline,
           ),
         ),
         const SizedBox(width: FlashcardFlipStudyConst.cardActionGap),
         Expanded(
-          child: LumosButton(
+          child: LumosPrimaryButton(
             onPressed: onNextPressed,
             icon: Icons.navigate_next_rounded,
             label: l10n.flashcardNextButton,

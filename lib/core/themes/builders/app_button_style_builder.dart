@@ -152,6 +152,28 @@ abstract final class AppButtonStyleBuilder {
     );
   }
 
+  static ButtonStyle dangerStyle({
+    required ColorScheme colorScheme,
+    required TextTheme textTheme,
+    required AppButtonTokens buttonTokens,
+    AppButtonSize size = AppButtonSize.medium,
+  }) {
+    final ButtonStyle baseStyle = FilledButton.styleFrom(
+      backgroundColor: colorScheme.error,
+      foregroundColor: colorScheme.onError,
+      disabledBackgroundColor: colorScheme.disabledContainerColor,
+      disabledForegroundColor: colorScheme.disabledContentColor,
+      textStyle: _textStyle(textTheme: textTheme, size: size),
+      minimumSize: _minimumSize(size: size, buttonTokens: buttonTokens),
+      padding: _padding(size: size, buttonTokens: buttonTokens),
+      shape: _shape(size: size, buttonTokens: buttonTokens),
+    );
+    return baseStyle.copyWith(
+      overlayColor: colorScheme.onError.asInteractiveOverlayProperty(),
+      animationDuration: AppMotion.fast,
+    );
+  }
+
   static ButtonStyle outlinedStyle({
     required ColorScheme colorScheme,
     required TextTheme textTheme,

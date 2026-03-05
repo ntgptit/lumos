@@ -43,7 +43,7 @@ class LumosMatchPairs extends StatelessWidget {
               .toList(),
         ),
         const SizedBox(height: AppSpacing.md),
-        LumosButton(
+        LumosPrimaryButton(
           label: isCompleted ? 'Completed' : 'Submit matches',
           onPressed: () {
             onMatchComplete(const <MatchedPair>[]);
@@ -82,7 +82,7 @@ class LumosReorderWords extends StatelessWidget {
               .toList(),
         ),
         const SizedBox(height: AppSpacing.md),
-        LumosButton(
+        LumosPrimaryButton(
           label: 'Check order',
           onPressed: () {
             final String candidate = words.join(' ');
@@ -129,12 +129,11 @@ class LumosListeningExercise extends StatelessWidget {
         ...options.map(
           (String option) => Padding(
             padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-            child: LumosButton(
+            child: LumosOutlineButton(
               label: option,
               onPressed: () {
                 onAnswer(option);
               },
-              type: LumosButtonType.outline,
               expanded: true,
             ),
           ),

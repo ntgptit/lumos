@@ -89,13 +89,16 @@ class LumosDialog extends StatelessWidget {
           type: LumosButtonType.text,
           size: LumosButtonSize.small,
         ),
-      if (confirmText != null)
-        LumosButton(
+      if (confirmText != null && isDestructive)
+        LumosDangerButton(
           label: confirmText!,
           onPressed: onConfirm,
-          type: isDestructive
-              ? LumosButtonType.outline
-              : LumosButtonType.primary,
+          size: LumosButtonSize.small,
+        ),
+      if (confirmText != null && !isDestructive)
+        LumosPrimaryButton(
+          label: confirmText!,
+          onPressed: onConfirm,
           size: LumosButtonSize.small,
         ),
     ];
@@ -165,14 +168,13 @@ class LumosPromptDialog extends StatelessWidget {
           type: LumosButtonType.text,
           size: LumosButtonSize.small,
         ),
-        LumosButton(
+        LumosPrimaryButton(
           label: confirmText,
           onPressed: isConfirmEnabled
               ? () {
                   onConfirm(resolvedController.text);
                 }
               : null,
-          type: LumosButtonType.primary,
           size: LumosButtonSize.small,
         ),
       ],
@@ -313,15 +315,24 @@ class LumosActionSheet extends StatelessWidget {
   }
 
   Widget _buildActionButton(LumosActionItem action) {
+    if (action.isDestructive) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+        child: LumosDangerButton(
+          label: action.label,
+          icon: action.icon,
+          onPressed: action.onPressed,
+          expanded: true,
+        ),
+      );
+    }
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
       child: LumosButton(
         label: action.label,
         icon: action.icon,
         onPressed: action.onPressed,
-        type: action.isDestructive
-            ? LumosButtonType.outline
-            : LumosButtonType.text,
+        type: LumosButtonType.text,
         expanded: true,
       ),
     );

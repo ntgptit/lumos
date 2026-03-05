@@ -167,7 +167,11 @@ class LumosResultSummary extends StatelessWidget {
         ..._buildStreakBonus(),
         ..._buildWeakWords(),
         const SizedBox(height: AppSpacing.xxl),
-        LumosButton(label: 'Continue', onPressed: onContinue, expanded: true),
+        LumosPrimaryButton(
+          label: 'Continue',
+          onPressed: onContinue,
+          expanded: true,
+        ),
       ],
     );
   }

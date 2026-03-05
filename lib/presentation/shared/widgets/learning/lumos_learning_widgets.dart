@@ -82,11 +82,10 @@ class LumosRatingButtons extends StatelessWidget {
   }
 
   Widget _buildButton(ReviewRating rating) {
-    return LumosButton(
+    return LumosOutlineButton(
       label: rating.name,
       onPressed: _resolveAction(rating),
       size: LumosButtonSize.small,
-      type: LumosButtonType.outline,
     );
   }
 
@@ -209,7 +208,7 @@ class LumosReviewQueue extends StatelessWidget {
           ),
           ..._buildPreview(),
           const SizedBox(height: AppSpacing.md),
-          LumosButton(
+          LumosPrimaryButton(
             label: 'Start review',
             onPressed: onStartReview,
             expanded: true,

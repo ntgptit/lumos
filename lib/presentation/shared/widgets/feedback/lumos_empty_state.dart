@@ -85,7 +85,7 @@ class LumosEmptyState extends StatelessWidget {
     }
     return <Widget>[
       const SizedBox(height: AppSpacing.xxl),
-      LumosButton(
+      LumosPrimaryButton(
         label: buttonLabel!,
         onPressed: onButtonPressed,
         expanded: true,

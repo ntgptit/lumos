@@ -29,7 +29,7 @@ class LumosLevelTest extends StatelessWidget {
             style: LumosTextStyle.bodySmall,
           ),
           const SizedBox(height: AppSpacing.md),
-          LumosButton(
+          LumosPrimaryButton(
             label: 'Complete test',
             onPressed: () {
               onComplete(

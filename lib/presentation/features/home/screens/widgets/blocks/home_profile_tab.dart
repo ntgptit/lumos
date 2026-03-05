@@ -121,10 +121,9 @@ class HomeProfileTab extends ConsumerWidget {
     required AppLocalizations l10n,
     required ThemeMode themeMode,
   }) {
-    return LumosButton(
+    return LumosOutlineButton(
       label: _quickToggleLabel(l10n: l10n, mode: themeMode),
       icon: Icons.brightness_6_outlined,
-      type: LumosButtonType.outline,
       expanded: true,
       onPressed: () {
         ref.read(appThemeModeProvider.notifier).toggleTheme();

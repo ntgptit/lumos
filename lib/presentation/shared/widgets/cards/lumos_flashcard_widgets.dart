@@ -166,16 +166,15 @@ class LumosFlashcardBack extends StatelessWidget {
       Row(
         children: <Widget>[
           Expanded(
-            child: LumosButton(
+            child: LumosOutlineButton(
               label: 'Again',
               onPressed: onAgain,
-              type: LumosButtonType.outline,
               size: LumosButtonSize.small,
             ),
           ),
           const SizedBox(width: AppSpacing.md),
           Expanded(
-            child: LumosButton(
+            child: LumosPrimaryButton(
               label: 'Known',
               onPressed: onKnown,
               size: LumosButtonSize.small,

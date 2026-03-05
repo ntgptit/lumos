@@ -285,13 +285,13 @@ class LumosAnswerInput extends StatelessWidget {
           onChanged: onAnswerChanged,
         ),
         const SizedBox(height: AppSpacing.md),
-        LumosButton(label: 'Submit', onPressed: onSubmit),
+        LumosPrimaryButton(label: 'Submit', onPressed: onSubmit),
       ],
     );
   }
 
   Widget _buildSpeaking() {
-    return LumosButton(
+    return LumosPrimaryButton(
       label: 'Tap to speak',
       icon: Icons.mic,
       onPressed: onSubmit,
@@ -306,7 +306,7 @@ class LumosAnswerInput extends StatelessWidget {
       runSpacing: AppSpacing.sm,
       children: options
           .map(
-            (String option) => LumosButton(
+            (String option) => LumosOutlineButton(
               label: option,
               onPressed: () {
                 if (onAnswerChanged != null) {
@@ -314,7 +314,6 @@ class LumosAnswerInput extends StatelessWidget {
                 }
                 onSubmit.call();
               },
-              type: LumosButtonType.outline,
               size: LumosButtonSize.small,
             ),
           )
@@ -350,12 +349,11 @@ class LumosFillBlank extends StatelessWidget {
             runSpacing: AppSpacing.sm,
             children: options!
                 .map(
-                  (String option) => LumosButton(
+                  (String option) => LumosOutlineButton(
                     label: option,
                     onPressed: () {
                       onAnswer(option);
                     },
-                    type: LumosButtonType.outline,
                     size: LumosButtonSize.small,
                   ),
                 )

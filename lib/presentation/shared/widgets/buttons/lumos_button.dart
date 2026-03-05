@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/themes/builders/app_button_style_builder.dart';
+import '../../../../core/themes/component/app_button_tokens.dart';
 import '../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../core/themes/extensions/theme_extensions.dart';
 
@@ -11,7 +12,7 @@ abstract final class LumosButtonConst {
   static const LumosButtonSize defaultSize = LumosButtonSize.medium;
 }
 
-enum LumosButtonType { primary, secondary, outline, text }
+enum LumosButtonType { primary, secondary, outline, text, danger }
 
 enum LumosButtonSize { small, medium, large }
 
@@ -122,6 +123,14 @@ class LumosButton extends StatelessWidget {
         buttonTokens: buttonTokens,
       );
     }
+    if (type == LumosButtonType.danger) {
+      return _dangerStyle(
+        colorScheme: theme.colorScheme,
+        textTheme: theme.textTheme,
+        size: componentSize,
+        buttonTokens: buttonTokens,
+      );
+    }
     return AppButtonStyleBuilder.textStyle(
       colorScheme: theme.colorScheme,
       textTheme: theme.textTheme,
@@ -158,6 +167,9 @@ class LumosButton extends StatelessWidget {
     if (type == LumosButtonType.outline) {
       return OutlinedButton(onPressed: onPressed, style: style, child: child);
     }
+    if (type == LumosButtonType.danger) {
+      return FilledButton(onPressed: onPressed, style: style, child: child);
+    }
     return TextButton(onPressed: onPressed, style: style, child: child);
   }
 
@@ -169,6 +181,150 @@ class LumosButton extends StatelessWidget {
     if (type == LumosButtonType.secondary) {
       return colorScheme.onSecondaryContainer;
     }
+    if (type == LumosButtonType.danger) {
+      return colorScheme.onError;
+    }
     return colorScheme.primary;
+  }
+
+  ButtonStyle _dangerStyle({
+    required ColorScheme colorScheme,
+    required TextTheme textTheme,
+    required AppButtonSize size,
+    required AppButtonTokens buttonTokens,
+  }) {
+    return AppButtonStyleBuilder.dangerStyle(
+      colorScheme: colorScheme,
+      textTheme: textTheme,
+      buttonTokens: buttonTokens,
+      size: size,
+    );
+  }
+}
+
+class LumosPrimaryButton extends StatelessWidget {
+  const LumosPrimaryButton({
+    required this.label,
+    super.key,
+    this.onPressed,
+    this.size = LumosButtonConst.defaultSize,
+    this.isLoading = false,
+    this.icon,
+    this.expanded = false,
+  });
+
+  final String label;
+  final VoidCallback? onPressed;
+  final LumosButtonSize size;
+  final bool isLoading;
+  final IconData? icon;
+  final bool expanded;
+
+  @override
+  Widget build(BuildContext context) {
+    return LumosButton(
+      label: label,
+      onPressed: onPressed,
+      size: size,
+      isLoading: isLoading,
+      icon: icon,
+      expanded: expanded,
+    );
+  }
+}
+
+class LumosSecondaryButton extends StatelessWidget {
+  const LumosSecondaryButton({
+    required this.label,
+    super.key,
+    this.onPressed,
+    this.size = LumosButtonConst.defaultSize,
+    this.isLoading = false,
+    this.icon,
+    this.expanded = false,
+  });
+
+  final String label;
+  final VoidCallback? onPressed;
+  final LumosButtonSize size;
+  final bool isLoading;
+  final IconData? icon;
+  final bool expanded;
+
+  @override
+  Widget build(BuildContext context) {
+    return LumosButton(
+      label: label,
+      onPressed: onPressed,
+      type: LumosButtonType.secondary,
+      size: size,
+      isLoading: isLoading,
+      icon: icon,
+      expanded: expanded,
+    );
+  }
+}
+
+class LumosOutlineButton extends StatelessWidget {
+  const LumosOutlineButton({
+    required this.label,
+    super.key,
+    this.onPressed,
+    this.size = LumosButtonConst.defaultSize,
+    this.isLoading = false,
+    this.icon,
+    this.expanded = false,
+  });
+
+  final String label;
+  final VoidCallback? onPressed;
+  final LumosButtonSize size;
+  final bool isLoading;
+  final IconData? icon;
+  final bool expanded;
+
+  @override
+  Widget build(BuildContext context) {
+    return LumosButton(
+      label: label,
+      onPressed: onPressed,
+      type: LumosButtonType.outline,
+      size: size,
+      isLoading: isLoading,
+      icon: icon,
+      expanded: expanded,
+    );
+  }
+}
+
+class LumosDangerButton extends StatelessWidget {
+  const LumosDangerButton({
+    required this.label,
+    super.key,
+    this.onPressed,
+    this.size = LumosButtonConst.defaultSize,
+    this.isLoading = false,
+    this.icon,
+    this.expanded = false,
+  });
+
+  final String label;
+  final VoidCallback? onPressed;
+  final LumosButtonSize size;
+  final bool isLoading;
+  final IconData? icon;
+  final bool expanded;
+
+  @override
+  Widget build(BuildContext context) {
+    return LumosButton(
+      label: label,
+      onPressed: onPressed,
+      type: LumosButtonType.danger,
+      size: size,
+      isLoading: isLoading,
+      icon: icon,
+      expanded: expanded,
+    );
   }
 }

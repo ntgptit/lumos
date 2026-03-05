@@ -39,7 +39,7 @@ class LumosShopItem extends StatelessWidget {
           const SizedBox(height: AppSpacing.sm),
           LumosText('$price gems', style: LumosTextStyle.bodySmall),
           const SizedBox(height: AppSpacing.sm),
-          LumosButton(
+          LumosPrimaryButton(
             label: isPurchased ? 'Purchased' : 'Buy',
             onPressed: isPurchased ? null : onBuy,
             expanded: true,
