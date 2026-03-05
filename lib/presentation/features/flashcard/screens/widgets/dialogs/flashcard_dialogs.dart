@@ -1,13 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../../../core/utils/string_utils.dart';
 import '../../../../../../domain/entities/flashcard_models.dart';
 import '../../../../../../l10n/app_localizations.dart';
 import '../../../../../shared/widgets/lumos_widgets.dart';
+import '../../../providers/flashcard_dialog_form_provider.dart';
 import '../../../providers/flashcard_provider.dart';
+import '../../../providers/states/flashcard_dialog_form_state.dart';
 
 typedef FlashcardUpsertSubmit =
     Future<FlashcardSubmitResult> Function(FlashcardUpsertInput input);
@@ -17,6 +20,7 @@ abstract final class FlashcardDialogConst {
   FlashcardDialogConst._();
 
   static const int backTextMaxLines = 4;
+  static const String emptyValue = '';
 }
 
 Future<void> showFlashcardEditorDialog({
@@ -26,73 +30,76 @@ Future<void> showFlashcardEditorDialog({
   required FlashcardNode? initialFlashcard,
   required FlashcardUpsertSubmit onSubmitted,
 }) async {
-  String currentFrontText = initialFlashcard?.frontText ?? '';
-  String currentBackText = initialFlashcard?.backText ?? '';
-  bool isSubmitting = false;
+  final String initialFrontText =
+      initialFlashcard?.frontText ?? FlashcardDialogConst.emptyValue;
+  final String initialBackText =
+      initialFlashcard?.backText ?? FlashcardDialogConst.emptyValue;
 
   await showDialog<void>(
     context: context,
     barrierDismissible: false,
     builder: (BuildContext dialogContext) {
       final AppLocalizations l10n = AppLocalizations.of(dialogContext)!;
-      return StatefulBuilder(
-        builder:
-            (BuildContext _, void Function(void Function()) setDialogState) {
-              return LumosPromptDialog(
-                title: titleBuilder(l10n),
-                label: l10n.flashcardFrontLabel,
-                hint: l10n.flashcardFrontHint,
-                cancelText: l10n.commonCancel,
-                confirmText: actionLabelBuilder(l10n),
-                initialValue: currentFrontText,
-                additionalContent: LumosTextField(
-                  initialValue: currentBackText,
-                  onChanged: (String value) {
-                    setDialogState(() {
-                      currentBackText = value;
-                    });
+      return Consumer(
+        builder: (BuildContext context, WidgetRef ref, Widget? child) {
+          final FlashcardDialogFormState formState = ref.watch(
+            flashcardDialogFormControllerProvider(
+              initialFrontText,
+              initialBackText,
+            ),
+          );
+          final FlashcardDialogFormController formController = ref.read(
+            flashcardDialogFormControllerProvider(
+              initialFrontText,
+              initialBackText,
+            ).notifier,
+          );
+
+          return LumosPromptDialog(
+            title: titleBuilder(l10n),
+            label: l10n.flashcardFrontLabel,
+            hint: l10n.flashcardFrontHint,
+            cancelText: l10n.commonCancel,
+            confirmText: actionLabelBuilder(l10n),
+            controller: formController.frontTextController,
+            additionalContent: LumosTextField(
+              controller: formController.backTextController,
+              label: l10n.flashcardBackLabel,
+              hint: l10n.flashcardBackHint,
+              maxLines: FlashcardDialogConst.backTextMaxLines,
+              textInputAction: TextInputAction.newline,
+            ),
+            isCancelEnabled: !formState.isSubmitting,
+            isConfirmEnabled: !formState.isSubmitting,
+            onCancel: () {
+              if (formState.isSubmitting) {
+                return;
+              }
+              dialogContext.pop();
+            },
+            onConfirm: (_) {
+              if (formState.isSubmitting) {
+                return;
+              }
+              formController.startSubmitting();
+              unawaited(
+                _handleSubmit(
+                  dialogContext: dialogContext,
+                  l10n: l10n,
+                  rawFrontText: formState.frontText,
+                  rawBackText: formState.backText,
+                  onSubmitted: onSubmitted,
+                  onSubmitDone: () {
+                    if (!dialogContext.mounted) {
+                      return;
+                    }
+                    formController.stopSubmitting();
                   },
-                  label: l10n.flashcardBackLabel,
-                  hint: l10n.flashcardBackHint,
-                  maxLines: FlashcardDialogConst.backTextMaxLines,
-                  textInputAction: TextInputAction.newline,
                 ),
-                isCancelEnabled: !isSubmitting,
-                isConfirmEnabled: !isSubmitting,
-                onCancel: () {
-                  if (isSubmitting) {
-                    return;
-                  }
-                  dialogContext.pop();
-                },
-                onConfirm: (String rawFrontText) {
-                  if (isSubmitting) {
-                    return;
-                  }
-                  setDialogState(() {
-                    currentFrontText = rawFrontText;
-                    isSubmitting = true;
-                  });
-                  unawaited(
-                    _handleSubmit(
-                      dialogContext: dialogContext,
-                      l10n: l10n,
-                      rawFrontText: rawFrontText,
-                      rawBackText: currentBackText,
-                      onSubmitted: onSubmitted,
-                      onSubmitDone: () {
-                        if (!dialogContext.mounted) {
-                          return;
-                        }
-                        setDialogState(() {
-                          isSubmitting = false;
-                        });
-                      },
-                    ),
-                  );
-                },
               );
             },
+          );
+        },
       );
     },
   );
