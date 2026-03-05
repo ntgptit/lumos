@@ -16,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.MessageSource;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.validation.BeanPropertyBindingResult;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.core.MethodParameter;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import com.lumos.deck.exception.DeckNameConflictException;
 import com.lumos.deck.exception.DeckNotFoundException;
@@ -159,6 +161,21 @@ class GlobalExceptionHandlerTest {
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals("resolved:app.validation.failed", response.getBody().message());
+    }
+
+    @Test
+    void handleNoResourceFound_returnsNotFoundResponse() {
+        final var handler = handler();
+        final var request = request("/actuator/health");
+        final var exception = new NoResourceFoundException(
+                HttpMethod.GET,
+                "/actuator/health",
+                "No static resource");
+
+        final var response = handler.handleNoResourceFound(exception, request);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals("resolved:common.resource-not-found", response.getBody().message());
     }
 
     @Test

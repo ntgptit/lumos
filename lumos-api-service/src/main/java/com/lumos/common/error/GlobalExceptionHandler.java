@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import com.lumos.deck.exception.DeckNameConflictException;
 import com.lumos.deck.exception.DeckNotFoundException;
@@ -138,6 +139,17 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(
                 HttpStatus.BAD_REQUEST,
                 resolveMessage(ErrorMessageKeys.APP_VALIDATION_FAILED),
+                request.getRequestURI(),
+                Map.of());
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleNoResourceFound(
+            NoResourceFoundException exception,
+            HttpServletRequest request) {
+        return buildErrorResponse(
+                HttpStatus.NOT_FOUND,
+                resolveMessage(ErrorMessageKeys.COMMON_RESOURCE_NOT_FOUND),
                 request.getRequestURI(),
                 Map.of());
     }
