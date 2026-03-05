@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../core/themes/extensions/theme_extensions.dart';
-import '../buttons/lumos_button.dart';
+import '../buttons/lumos_buttons.dart';
 import '../inputs/lumos_form_widgets.dart';
 import '../lumos_models.dart';
 
@@ -83,25 +83,26 @@ class LumosDialog extends StatelessWidget {
   List<Widget> _buildActions() {
     return <Widget>[
       if (cancelText != null)
-        LumosButton(
+        LumosButtonFactory.text(
           label: cancelText!,
           onPressed: onCancel,
-          type: LumosButtonType.text,
           size: LumosButtonSize.small,
         ),
-      if (confirmText != null && isDestructive)
-        LumosDangerButton(
-          label: confirmText!,
-          onPressed: onConfirm,
-          size: LumosButtonSize.small,
-        ),
-      if (confirmText != null && !isDestructive)
-        LumosPrimaryButton(
+      if (confirmText != null)
+        LumosButtonFactory.build(
+          type: _resolveConfirmButtonType(),
           label: confirmText!,
           onPressed: onConfirm,
           size: LumosButtonSize.small,
         ),
     ];
+  }
+
+  LumosButtonType _resolveConfirmButtonType() {
+    if (isDestructive) {
+      return LumosButtonType.danger;
+    }
+    return LumosButtonType.primary;
   }
 }
 
@@ -162,13 +163,12 @@ class LumosPromptDialog extends StatelessWidget {
       title: Text(title, overflow: TextOverflow.ellipsis),
       content: _buildContent(controller: resolvedController),
       actions: <Widget>[
-        LumosButton(
+        LumosButtonFactory.text(
           label: cancelText,
           onPressed: isCancelEnabled ? onCancel : null,
-          type: LumosButtonType.text,
           size: LumosButtonSize.small,
         ),
-        LumosPrimaryButton(
+        LumosButtonFactory.primary(
           label: confirmText,
           onPressed: isConfirmEnabled
               ? () {
@@ -304,10 +304,9 @@ class LumosActionSheet extends StatelessWidget {
         if (cancelText != null)
           Padding(
             padding: const EdgeInsets.only(top: AppSpacing.md),
-            child: LumosButton(
+            child: LumosButtonFactory.text(
               label: cancelText!,
               onPressed: onCancel,
-              type: LumosButtonType.text,
             ),
           ),
       ],
@@ -315,26 +314,23 @@ class LumosActionSheet extends StatelessWidget {
   }
 
   Widget _buildActionButton(LumosActionItem action) {
-    if (action.isDestructive) {
-      return Padding(
-        padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-        child: LumosDangerButton(
-          label: action.label,
-          icon: action.icon,
-          onPressed: action.onPressed,
-          expanded: true,
-        ),
-      );
-    }
+    final LumosButtonType buttonType = _resolveActionButtonType(action: action);
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-      child: LumosButton(
+      child: LumosButtonFactory.build(
+        type: buttonType,
         label: action.label,
         icon: action.icon,
         onPressed: action.onPressed,
-        type: LumosButtonType.text,
         expanded: true,
       ),
     );
+  }
+
+  LumosButtonType _resolveActionButtonType({required LumosActionItem action}) {
+    if (action.isDestructive) {
+      return LumosButtonType.danger;
+    }
+    return LumosButtonType.text;
   }
 }

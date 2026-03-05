@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../core/themes/extensions/theme_extensions.dart';
 import '../../../../core/themes/semantic/app_color_tokens.dart';
-import '../buttons/lumos_icon_button.dart';
+import '../buttons/lumos_buttons.dart';
 import '../navigation/lumos_menu_widgets.dart';
 import 'lumos_entity_list_item_card.dart';
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/themes/foundation/app_foundation.dart';
-import '../buttons/lumos_button.dart';
+import '../buttons/lumos_buttons.dart';
 import '../lumos_models.dart';
 
 class LumosTextField extends StatelessWidget {

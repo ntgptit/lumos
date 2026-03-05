@@ -1,6 +1,12 @@
 lib/presentation/shared/widgets/buttons/lumos_button.dart
+lib/presentation/shared/widgets/buttons/lumos_button_factory.dart
+lib/presentation/shared/widgets/buttons/lumos_buttons.dart
+lib/presentation/shared/widgets/buttons/lumos_danger_button.dart
 lib/presentation/shared/widgets/buttons/lumos_floating_action_button.dart
 lib/presentation/shared/widgets/buttons/lumos_icon_button.dart
+lib/presentation/shared/widgets/buttons/lumos_outline_button.dart
+lib/presentation/shared/widgets/buttons/lumos_primary_button.dart
+lib/presentation/shared/widgets/buttons/lumos_secondary_button.dart
 lib/presentation/shared/widgets/cards/lumos_action_list_item_card.dart
 lib/presentation/shared/widgets/cards/lumos_card.dart
 lib/presentation/shared/widgets/cards/lumos_card_variant.dart

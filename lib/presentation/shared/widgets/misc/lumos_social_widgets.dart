@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../core/themes/extensions/theme_extensions.dart';
-import '../buttons/lumos_button.dart';
+import '../buttons/lumos_buttons.dart';
 import '../cards/lumos_card.dart';
 import '../typography/lumos_text.dart';
 import 'lumos_misc_widgets.dart';

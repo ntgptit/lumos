@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../core/themes/extensions/theme_extensions.dart';
-import '../buttons/lumos_button.dart';
+import '../buttons/lumos_buttons.dart';
 import '../feedback/lumos_progress_bar.dart';
 import '../lumos_models.dart';
 import '../typography/lumos_text.dart';

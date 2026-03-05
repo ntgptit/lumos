@@ -1,6 +1,4 @@
-export 'buttons/lumos_button.dart';
-export 'buttons/lumos_floating_action_button.dart';
-export 'buttons/lumos_icon_button.dart';
+export 'buttons/lumos_buttons.dart';
 export 'cards/lumos_deck_card.dart';
 export 'cards/lumos_flashcard_widgets.dart';
 export 'cards/lumos_card.dart';
