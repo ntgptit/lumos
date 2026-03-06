@@ -72,6 +72,7 @@ class LumosCard extends StatefulWidget {
     this.margin,
     this.variant = LumosCardVariant.elevated,
     this.deviceType = DeviceType.mobile,
+    this.backgroundColor,
   });
 
   final Widget child;
@@ -85,6 +86,7 @@ class LumosCard extends StatefulWidget {
   final EdgeInsetsGeometry? margin;
   final LumosCardVariant variant;
   final DeviceType deviceType;
+  final Color? backgroundColor;
 
   @override
   State<LumosCard> createState() => _LumosCardState();
@@ -298,6 +300,14 @@ class _LumosCardState extends State<LumosCard>
     required ColorScheme colorScheme,
     required double selectionProgress,
   }) {
+    final Color? customBackgroundColor = widget.backgroundColor;
+    if (customBackgroundColor != null) {
+      return Color.lerp(
+        customBackgroundColor,
+        colorScheme.primaryContainer,
+        selectionProgress,
+      );
+    }
     final Color unselectedColor = _resolveUnselectedColor(
       colorScheme: colorScheme,
     );
@@ -310,6 +320,10 @@ class _LumosCardState extends State<LumosCard>
   }
 
   Color _resolveUnselectedColor({required ColorScheme colorScheme}) {
+    final Color? customBackgroundColor = widget.backgroundColor;
+    if (customBackgroundColor != null) {
+      return customBackgroundColor;
+    }
     final Color baseUnselectedColor = switch (widget.variant) {
       LumosCardVariant.elevated => colorScheme.surfaceContainerLowest,
       LumosCardVariant.filled => colorScheme.surfaceContainerHighest,
