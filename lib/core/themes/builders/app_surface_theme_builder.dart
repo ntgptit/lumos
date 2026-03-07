@@ -11,12 +11,16 @@ abstract final class AppSurfaceThemeBuilder {
     required TextTheme textTheme,
   }) {
     return AppBarTheme(
-      backgroundColor: colorScheme.surfaceContainerLowest,
+      backgroundColor: colorScheme.surface,
       foregroundColor: colorScheme.onSurface,
       elevation: WidgetSizes.none,
       centerTitle: false,
       toolbarHeight: WidgetSizes.appBarHeight,
-      surfaceTintColor: colorScheme.surfaceContainerLowest,
+      surfaceTintColor: colorScheme.surface.withValues(
+        alpha: AppOpacity.transparent,
+      ),
+      scrolledUnderElevation: WidgetSizes.none,
+      shadowColor: colorScheme.shadow.withValues(alpha: AppOpacity.transparent),
       titleTextStyle: textTheme.titleLarge?.copyWith(
         color: colorScheme.onSurface,
       ),

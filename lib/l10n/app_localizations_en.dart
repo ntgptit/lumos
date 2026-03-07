@@ -512,6 +512,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeTabProfile => 'Profile';
 
   @override
+  String get homeProfileQuickName => 'Learner';
+
+  @override
   String get homeLibrarySubtitle => 'Your decks, lessons, and curated packs.';
 
   @override

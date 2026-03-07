@@ -512,6 +512,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get homeTabProfile => 'Hồ sơ';
 
   @override
+  String get homeProfileQuickName => 'Người học';
+
+  @override
   String get homeLibrarySubtitle => 'Bộ thẻ, bài học và gói học đã tuyển chọn của bạn.';
 
   @override

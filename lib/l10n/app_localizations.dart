@@ -1037,6 +1037,12 @@ abstract class AppLocalizations {
   /// **'Profile'**
   String get homeTabProfile;
 
+  /// No description provided for @homeProfileQuickName.
+  ///
+  /// In en, this message translates to:
+  /// **'Learner'**
+  String get homeProfileQuickName;
+
   /// No description provided for @homeLibrarySubtitle.
   ///
   /// In en, this message translates to:
