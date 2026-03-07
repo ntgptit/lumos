@@ -65,15 +65,16 @@ abstract final class AppSurfaceThemeBuilder {
     required ColorScheme colorScheme,
     required TextTheme textTheme,
   }) {
+    final TextStyle? navigationLabelStyle = textTheme.labelMedium;
     return BottomNavigationBarThemeData(
       backgroundColor: colorScheme.surfaceContainerLowest,
       selectedItemColor: colorScheme.primary,
       unselectedItemColor: colorScheme.onSurfaceVariant,
-      selectedLabelStyle: textTheme.labelMedium?.copyWith(
+      selectedLabelStyle: navigationLabelStyle?.copyWith(
         color: colorScheme.primary,
         fontWeight: FontWeight.w600,
       ),
-      unselectedLabelStyle: textTheme.labelMedium?.copyWith(
+      unselectedLabelStyle: navigationLabelStyle?.copyWith(
         color: colorScheme.onSurfaceVariant,
       ),
       elevation: WidgetSizes.none,
@@ -86,6 +87,7 @@ abstract final class AppSurfaceThemeBuilder {
     required TextTheme textTheme,
     required AppNavigationBarTokens navigationBarTokens,
   }) {
+    final TextStyle? navigationLabelStyle = textTheme.labelMedium;
     return NavigationBarThemeData(
       backgroundColor: colorScheme.surfaceContainerLowest,
       elevation: WidgetSizes.none,
@@ -114,12 +116,12 @@ abstract final class AppSurfaceThemeBuilder {
         Set<WidgetState> states,
       ) {
         if (states.isSelected) {
-          return textTheme.labelMedium?.copyWith(
+          return navigationLabelStyle?.copyWith(
             color: colorScheme.onSurface,
             fontWeight: FontWeight.w600,
           );
         }
-        return textTheme.labelMedium?.copyWith(
+        return navigationLabelStyle?.copyWith(
           color: colorScheme.onSurfaceVariant,
         );
       }),
@@ -166,10 +168,11 @@ abstract final class AppSurfaceThemeBuilder {
     required ColorScheme colorScheme,
     required TextTheme textTheme,
   }) {
+    final TextStyle? segmentedLabelStyle = textTheme.titleSmall;
     return SegmentedButtonThemeData(
       style: ButtonStyle(
         textStyle: WidgetStatePropertyAll<TextStyle?>(
-          textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w600),
+          segmentedLabelStyle?.copyWith(fontWeight: FontWeight.w600),
         ),
         foregroundColor: WidgetStateProperty.resolveWith<Color>((
           Set<WidgetState> states,

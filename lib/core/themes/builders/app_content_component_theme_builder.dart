@@ -30,6 +30,7 @@ abstract final class AppContentComponentThemeBuilder {
     required ColorScheme colorScheme,
     required TextTheme textTheme,
   }) {
+    final TextStyle? chipLabelStyle = textTheme.titleSmall;
     return ChipThemeData(
       backgroundColor: colorScheme.surfaceContainerLow,
       selectedColor: colorScheme.secondaryContainer,
@@ -46,8 +47,8 @@ abstract final class AppContentComponentThemeBuilder {
           width: WidgetSizes.borderWidthRegular,
         );
       }),
-      labelStyle: textTheme.labelMedium?.copyWith(color: colorScheme.onSurface),
-      secondaryLabelStyle: textTheme.labelMedium?.copyWith(
+      labelStyle: chipLabelStyle?.copyWith(color: colorScheme.onSurface),
+      secondaryLabelStyle: chipLabelStyle?.copyWith(
         color: colorScheme.onSecondaryContainer,
       ),
       shape: RoundedRectangleBorder(
