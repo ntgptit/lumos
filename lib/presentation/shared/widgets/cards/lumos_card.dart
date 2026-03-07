@@ -30,6 +30,10 @@ abstract final class LumosCardConst {
 
   // Dark mode lift to keep cards slightly brighter than deep surfaces.
   static const double darkModeSurfaceLiftBlend = 0.35;
+
+  // Selected cards should feel gently emphasized, not fully recolored.
+  static const double selectedSurfaceTintLight = AppOpacity.stateHover;
+  static const double selectedSurfaceTintDark = AppOpacity.stateFocus;
 }
 
 /// A themed card widget supporting all [LumosCardVariant] styles,
@@ -265,20 +269,14 @@ class _LumosCardState extends State<LumosCard>
   }
 
   // ---------------------------------------------------------------------------
-  // Animated border — interpolates color from outlineVariant → primary
+  // Animated border — cards keep a light outline even when not selected.
   // ---------------------------------------------------------------------------
 
   BorderSide? _resolveBorderSide({
     required ColorScheme colorScheme,
     required double selectionProgress,
   }) {
-    if (widget.variant == LumosCardVariant.elevated && !widget.isSelected) {
-      return null;
-    }
-
-    final Color unselectedColor = widget.variant == LumosCardVariant.outlined
-        ? colorScheme.outlineVariant
-        : colorScheme.surface.withValues(alpha: AppOpacity.transparent);
+    final Color unselectedColor = colorScheme.outlineVariant;
 
     final Color resolvedColor = Color.lerp(
       unselectedColor,
@@ -293,7 +291,7 @@ class _LumosCardState extends State<LumosCard>
   }
 
   // ---------------------------------------------------------------------------
-  // Animated color — interpolates surface → primaryContainer
+  // Animated color — selected state uses a subtle primary tint over the base.
   // ---------------------------------------------------------------------------
 
   Color? _resolveCardColor({
@@ -304,7 +302,10 @@ class _LumosCardState extends State<LumosCard>
     if (customBackgroundColor != null) {
       return Color.lerp(
         customBackgroundColor,
-        colorScheme.primaryContainer,
+        _resolveSelectedSurfaceColor(
+          colorScheme: colorScheme,
+          baseColor: customBackgroundColor,
+        ),
         selectionProgress,
       );
     }
@@ -314,8 +315,24 @@ class _LumosCardState extends State<LumosCard>
 
     return Color.lerp(
       unselectedColor,
-      colorScheme.primaryContainer,
+      _resolveSelectedSurfaceColor(
+        colorScheme: colorScheme,
+        baseColor: unselectedColor,
+      ),
       selectionProgress,
+    );
+  }
+
+  Color _resolveSelectedSurfaceColor({
+    required ColorScheme colorScheme,
+    required Color baseColor,
+  }) {
+    final double tintOpacity = colorScheme.brightness == Brightness.dark
+        ? LumosCardConst.selectedSurfaceTintDark
+        : LumosCardConst.selectedSurfaceTintLight;
+    return Color.alphaBlend(
+      colorScheme.primary.withValues(alpha: tintOpacity),
+      baseColor,
     );
   }
 
@@ -362,7 +379,7 @@ class _LumosCardState extends State<LumosCard>
   }
 
   // ---------------------------------------------------------------------------
-  // Scoped theme for selected state — text/icon colors follow primaryContainer
+  // Scoped theme for selected state — keep content readable and low-chroma.
   // ---------------------------------------------------------------------------
 
   Widget _buildThemedContent({
@@ -371,10 +388,9 @@ class _LumosCardState extends State<LumosCard>
     required double selectionProgress,
     required Widget content,
   }) {
-    // Interpolate text/icon color: onSurfaceVariant → onPrimaryContainer
     final Color iconTextColor = Color.lerp(
       colorScheme.onSurfaceVariant,
-      colorScheme.onPrimaryContainer,
+      colorScheme.onSurface,
       selectionProgress,
     )!;
     final TextStyle contentTextStyle = theme.textTheme.bodyMedium

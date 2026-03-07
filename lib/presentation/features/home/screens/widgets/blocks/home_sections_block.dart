@@ -10,10 +10,14 @@ abstract final class HomeSectionsConst {
   HomeSectionsConst._();
 
   static const double statIconContainerSize = AppSpacing.xxxl + AppSpacing.sm;
-  static const double activityAccentBarHeight = AppSpacing.xxxl;
-  static const double activityAccentBarWidth = AppSpacing.sm;
+  static const double activityAccentSize = AppSpacing.xxxl;
   static const double cardElevation = AppElevationTokens.level1;
-  static const double emphasizedBorderWidth = AppStroke.thin;
+  static const EdgeInsetsGeometry sectionHeaderPadding = EdgeInsets.fromLTRB(
+    AppSpacing.lg,
+    AppSpacing.lg,
+    AppSpacing.lg,
+    AppSpacing.md,
+  );
 }
 
 class HomeStatItem {
@@ -104,12 +108,13 @@ class HomeStatTile extends StatelessWidget {
           Container(
             width: HomeSectionsConst.statIconContainerSize,
             height: HomeSectionsConst.statIconContainerSize,
+            alignment: Alignment.center,
             decoration: BoxDecoration(
               borderRadius: BorderRadii.medium,
-              color: colorScheme.primaryContainer,
+              color: colorScheme.secondaryContainer,
             ),
             child: IconTheme(
-              data: IconThemeData(color: colorScheme.onPrimaryContainer),
+              data: IconThemeData(color: colorScheme.onSecondaryContainer),
               child: LumosIcon(stat.icon),
             ),
           ),
@@ -192,12 +197,12 @@ class HomeFocusCard extends StatelessWidget {
       child: LumosSectionCard(
         variant: LumosCardVariant.outlined,
         margin: EdgeInsets.zero,
+        headerPadding: HomeSectionsConst.sectionHeaderPadding,
         elevation: HomeSectionsConst.cardElevation,
+        title: l10n.homeFocusTitle,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            HomeSectionHeader(title: l10n.homeFocusTitle),
-            const SizedBox(height: AppSpacing.lg),
             HomeTaskLine(
               title: l10n.homeTaskShadowListeningTitle,
               progress: 0.66,
@@ -274,12 +279,12 @@ class HomeRecentActivityCard extends StatelessWidget {
     return LumosSectionCard(
       variant: LumosCardVariant.outlined,
       margin: EdgeInsets.zero,
+      headerPadding: HomeSectionsConst.sectionHeaderPadding,
       elevation: HomeSectionsConst.cardElevation,
+      title: l10n.homeActivityTitle,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          HomeSectionHeader(title: l10n.homeActivityTitle),
-          const SizedBox(height: AppSpacing.lg),
           HomeActivityItem(
             title: l10n.homeActivitySpanishTitle,
             subtitle: l10n.homeActivitySpanishSubtitle,
@@ -327,20 +332,21 @@ class HomeActivityItem extends StatelessWidget {
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
         borderRadius: BorderRadii.medium,
-        border: Border.all(
-          color: colorScheme.outlineVariant,
-          width: HomeSectionsConst.emphasizedBorderWidth,
-        ),
-        color: colorScheme.surfaceContainerLowest,
+        color: colorScheme.surfaceContainerLow,
       ),
       child: Row(
         children: <Widget>[
           Container(
-            width: HomeSectionsConst.activityAccentBarWidth,
-            height: HomeSectionsConst.activityAccentBarHeight,
+            width: HomeSectionsConst.activityAccentSize,
+            height: HomeSectionsConst.activityAccentSize,
+            alignment: Alignment.center,
             decoration: BoxDecoration(
-              borderRadius: BorderRadii.medium,
-              color: color,
+              borderRadius: BorderRadius.circular(AppRadius.pill),
+              color: color.withValues(alpha: AppOpacity.stateHover),
+            ),
+            child: IconTheme(
+              data: IconThemeData(color: color),
+              child: const LumosIcon(Icons.arrow_outward_rounded),
             ),
           ),
           const SizedBox(width: AppSpacing.sm),
@@ -371,24 +377,6 @@ class HomeActivityItem extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class HomeSectionHeader extends StatelessWidget {
-  const HomeSectionHeader({required this.title, super.key});
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        LumosText(title, style: LumosTextStyle.titleMedium),
-        const SizedBox(height: AppSpacing.md),
-        const Divider(),
-      ],
     );
   }
 }

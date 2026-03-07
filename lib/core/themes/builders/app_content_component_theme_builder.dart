@@ -10,9 +10,12 @@ abstract final class AppContentComponentThemeBuilder {
     required AppCardTokens cardTokens,
   }) {
     return CardThemeData(
-      color: colorScheme.surfaceContainerLow,
+      color: colorScheme.surfaceContainerLowest,
       elevation: WidgetSizes.none,
       margin: EdgeInsets.zero,
+      surfaceTintColor: colorScheme.surface.withValues(
+        alpha: AppOpacity.transparent,
+      ),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(cardTokens.radius),
         side: BorderSide(
