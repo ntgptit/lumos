@@ -10,7 +10,7 @@ abstract final class AppDialogThemeBuilder {
     required AppDialogTokens dialogTokens,
   }) {
     return DialogThemeData(
-      backgroundColor: colorScheme.surfaceContainerHigh,
+      backgroundColor: colorScheme.surfaceContainerLow,
       surfaceTintColor: colorScheme.surfaceTint,
       titleTextStyle: textTheme.headlineSmall?.copyWith(
         color: colorScheme.onSurface,
@@ -30,7 +30,7 @@ abstract final class AppDialogThemeBuilder {
     required AppDialogTokens dialogTokens,
   }) {
     return BottomSheetThemeData(
-      backgroundColor: colorScheme.surfaceContainerHigh,
+      backgroundColor: colorScheme.surfaceContainerLow,
       surfaceTintColor: colorScheme.surfaceTint,
       dragHandleColor: colorScheme.outlineVariant,
       dragHandleSize: const Size(AppSpacing.xxxl, AppSpacing.xs),

@@ -4,7 +4,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants/storage_keys.dart';
 import '../themes/app_theme.dart';
-import '../themes/color_schemes.dart';
 
 part 'theme_provider.g.dart';
 
@@ -102,8 +101,8 @@ class AppThemeMode extends _$AppThemeMode {
 class AppSeedColor extends _$AppSeedColor {
   /// Returns the default color seed for theme generation.
   @override
-  Color build() {
-    return AppColorSchemeConst.seedColor;
+  Color? build() {
+    return null;
   }
 
   /// Updates theme seed color.
@@ -113,20 +112,20 @@ class AppSeedColor extends _$AppSeedColor {
 
   /// Resets theme seed color to app default.
   void resetSeedColor() {
-    state = AppColorSchemeConst.seedColor;
+    state = null;
   }
 }
 
 /// Provides light [ThemeData] based on current seed color state.
 @Riverpod(keepAlive: true)
 ThemeData appLightTheme(Ref ref) {
-  final Color seedColor = ref.watch(appSeedColorProvider);
+  final Color? seedColor = ref.watch(appSeedColorProvider);
   return AppTheme.lightTheme(seedColor: seedColor);
 }
 
 /// Provides dark [ThemeData] based on current seed color state.
 @Riverpod(keepAlive: true)
 ThemeData appDarkTheme(Ref ref) {
-  final Color seedColor = ref.watch(appSeedColorProvider);
+  final Color? seedColor = ref.watch(appSeedColorProvider);
   return AppTheme.darkTheme(seedColor: seedColor);
 }

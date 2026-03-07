@@ -95,6 +95,7 @@ final class AppComponentThemeBuilder {
       ),
       iconTheme: IconThemeData(color: colorScheme.onSurfaceVariant),
       scaffoldBackgroundColor: colorScheme.surface,
+      canvasColor: colorScheme.surface,
     );
   }
 

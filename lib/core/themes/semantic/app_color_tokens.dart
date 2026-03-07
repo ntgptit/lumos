@@ -7,7 +7,7 @@ import '../foundation/app_palette.dart';
 // Covers: success, warning, info (each with full M3-style role quartet)
 //
 // Colors are resolved statically from AppPalette tonal scales, matching the
-// Ocean Depth theme convention. Light/dark selection mirrors M3 role mapping:
+// Tokyo-inspired theme convention. Light/dark selection mirrors M3 role mapping:
 //   light: color=*40, onColor=neutral100, container=*90, onContainer=*10
 //   dark:  color=*80, onColor=*20, container=*30, onContainer=*90
 // ---------------------------------------------------------------------------

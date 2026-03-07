@@ -1,83 +1,93 @@
 import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import 'foundation/app_palette.dart';
 
 // ---------------------------------------------------------------------------
-// Palette constants — Ocean Depth theme
-// All raw brand colors live in AppPalette. No other file should hardcode hex.
+// Palette constants — Tokyo Dashboard mapped into Material 3 roles.
+// All raw colors live in AppPalette. This file only assigns semantic roles.
 // ---------------------------------------------------------------------------
 @immutable
 abstract final class AppColorSchemeConst {
   // ── Light brand roles ────────────────────────────────────────────────────
-  static const Color brandPrimary = AppPalette.primary40; // #6A7E84
-  static const Color brandPrimaryContainer = AppPalette.primary90; // #C8D8DC
-  static const Color brandSecondary = AppPalette.secondary40; // #4D5D6D
-  static const Color brandSecondaryContainer =
-      AppPalette.secondary90; // #B9C6D2
-  static const Color brandTertiary = AppPalette.tertiary40; // #36454F
-  static const Color brandTertiaryContainer = AppPalette.tertiary90; // #A8B8C4
+  static const Color brandPrimary = AppPalette.primary40;
+  static const Color brandPrimaryContainer = AppPalette.primary90;
+  static const Color brandSecondary = AppPalette.secondary40;
+  static const Color brandSecondaryContainer = AppPalette.secondary90;
+  static const Color brandTertiary = AppPalette.tertiary40;
+  static const Color brandTertiaryContainer = AppPalette.tertiary90;
 
   // ── Dark brand roles ─────────────────────────────────────────────────────
-  static const Color darkPrimary = AppPalette.primary80; // #B0C6CC
-  static const Color darkOnPrimary = AppPalette.primary20;
-  static const Color darkPrimaryContainer = AppPalette.charcoal40; // #36454F
-  static const Color darkOnPrimaryContainer = AppPalette.charcoal90;
-  static const Color darkSecondary = AppPalette.secondary70; // #8090A0
-  static const Color darkOnSecondary = AppPalette.secondary20;
-  static const Color darkSecondaryContainer =
-      AppPalette.independence40; // #4D5D6D
-  static const Color darkOnSecondaryContainer = AppPalette.secondary90;
-  static const Color darkTertiary = AppPalette.cadetBlue40; // #6A7E84
-  static const Color darkOnTertiary = AppPalette.cadetBlue20;
-  static const Color darkTertiaryContainer = AppPalette.charcoal40; // #36454F
-  static const Color darkOnTertiaryContainer = AppPalette.charcoal90;
+  static const Color darkPrimary = AppPalette.violet40;
+  static const Color darkOnPrimary = AppPalette.violet10;
+  static const Color darkPrimaryContainer = AppPalette.violet20;
+  static const Color darkOnPrimaryContainer = AppPalette.violet90;
+  static const Color darkSecondary = AppPalette.midnight80;
+  static const Color darkOnSecondary = AppPalette.midnight20;
+  static const Color darkSecondaryContainer = AppPalette.midnight50;
+  static const Color darkOnSecondaryContainer = AppPalette.midnight95;
+  static const Color darkTertiary = AppPalette.tertiary80;
+  static const Color darkOnTertiary = AppPalette.tertiary20;
+  static const Color darkTertiaryContainer = AppPalette.tertiary30;
+  static const Color darkOnTertiaryContainer = AppPalette.tertiary90;
 
   // ── Light surface roles ──────────────────────────────────────────────────
-  static const Color lightSurface = AppPalette.neutral99; // #E8EDF1
-  static const Color lightBackground = AppPalette.neutral95; // #C6D1DB
-  static const Color lightSurfaceContainer =
-      AppPalette.neutral90; // #B0BCC8 — card surface, visible depth
+  static const Color lightSurface = AppPalette.neutral95;
+  static const Color lightSurfaceContainerLowest = AppPalette.neutral99;
+  static const Color lightSurfaceContainerLow = AppPalette.neutral99;
+  static const Color lightSurfaceContainer = AppPalette.neutral98;
   static const Color lightSurfaceContainerHigh = AppPalette.neutral95;
-  static const Color lightSurfaceContainerHighest = AppPalette.neutral99;
-  static const Color lightOnPrimary =
-      AppPalette.charcoal10; // palette-based dark foreground
-  static const Color lightOnPrimaryContainer =
-      AppPalette.primary10; // accessible on primary container
-  static const Color lightOnSecondary = AppPalette.neutral99;
+  static const Color lightSurfaceContainerHighest = AppPalette.neutral90;
+  static const Color lightOnPrimary = AppPalette.neutral0;
+  static const Color lightOnPrimaryContainer = AppPalette.primary10;
+  static const Color lightOnSecondary = AppPalette.neutral0;
   static const Color lightOnSecondaryContainer = AppPalette.secondary10;
   static const Color lightOnTertiary = AppPalette.neutral99;
   static const Color lightOnTertiaryContainer = AppPalette.tertiary10;
-  static const Color lightOnSurface =
-      AppPalette.charcoal40; // #36454F — ~7:1 on neutral99
-  static const Color lightOnSurfaceVariant = AppPalette.charcoal40;
-  static const Color lightOutline = AppPalette.tertiary40; // #36454F
-  static const Color lightOutlineVariant = AppPalette.cadetBlue40; // #6A7E84
+  static const Color lightOnSurface = AppPalette.neutral20;
+  static const Color lightOnSurfaceVariant = AppPalette.neutral40;
+  static const Color lightOutline = AppPalette.neutral40;
+  static const Color lightOutlineVariant = AppPalette.neutral70;
+  static const Color lightInverseSurface = AppPalette.neutral20;
+  static const Color lightOnInverseSurface = AppPalette.neutral99;
+  static const Color lightInversePrimary = AppPalette.primary80;
+  static const Color lightScrim = AppPalette.neutral20;
+  static const Color lightShadow = AppPalette.neutral20;
 
   // ── Dark surface roles ───────────────────────────────────────────────────
-  static const Color darkSurface = AppPalette.neutral20; // #1E2428
-  static const Color darkBackground = AppPalette.eigengrau10; // #16161D
-  static const Color darkSurfaceContainer = AppPalette.neutral30; // #2A3238
-  static const Color darkSurfaceContainerHigh = AppPalette.neutral40;
-  static const Color darkOutline = AppPalette.secondary80; // #9AAAB8
-  static const Color darkOutlineVariant = AppPalette.secondary70; // #8090A0
-  static const Color darkScrim = AppPalette.gunmetal20; // #1A2226
+  static const Color darkSurface = AppPalette.midnight10;
+  static const Color darkSurfaceContainerLowest = AppPalette.midnight20;
+  static const Color darkSurfaceContainerLow = AppPalette.midnight30;
+  static const Color darkSurfaceContainer = AppPalette.midnight40;
+  static const Color darkSurfaceContainerHigh = AppPalette.midnight50;
+  static const Color darkSurfaceContainerHighest = AppPalette.midnight60;
+  static const Color darkOnSurface = AppPalette.midnight95;
+  static const Color darkOnSurfaceVariant = AppPalette.midnight90;
+  static const Color darkOutline = AppPalette.midnight80;
+  static const Color darkOutlineVariant = AppPalette.midnight70;
+  static const Color darkInverseSurface = AppPalette.neutral99;
+  static const Color darkOnInverseSurface = AppPalette.midnight20;
+  static const Color darkInversePrimary = AppPalette.primary40;
+  static const Color darkScrim = AppPalette.midnight10;
+  static const Color darkShadow = AppPalette.midnight10;
 
   // ── Error roles ──────────────────────────────────────────────────────────
-  static const Color lightError = AppPalette.error40; // #BA1A1A
-  static const Color lightOnError = AppPalette.neutral100;
-  static const Color lightErrorContainer = AppPalette.error90; // #FFDAD6
+  static const Color lightError = AppPalette.error40;
+  static const Color lightOnError = AppPalette.neutral0;
+  static const Color lightErrorContainer = AppPalette.error90;
   static const Color lightOnErrorContainer = AppPalette.error10;
   static const Color darkError = AppPalette.error80;
   static const Color darkOnError = AppPalette.error20;
   static const Color darkErrorContainer = AppPalette.error30;
   static const Color darkOnErrorContainer = AppPalette.error90;
 
-  // ── Seed & scheme config ──────────────────────────────────────────────────
-  static const Color seedColor = brandPrimary;
+  // ── Seed & scheme config ─────────────────────────────────────────────────
+  static const Color lightSeedColor = brandPrimary;
+  static const Color darkSeedColor = darkPrimary;
   static const DynamicSchemeVariant dynamicSchemeVariant =
-      DynamicSchemeVariant.tonalSpot;
-  static const Color highContrastLightForeground = AppPalette.charcoal10;
+      DynamicSchemeVariant.fidelity;
+  static const Color highContrastLightForeground = AppPalette.neutral0;
   static const Color highContrastDarkForeground = AppPalette.neutral99;
 
   static const double minimumTextContrastRatio = 4.5;
@@ -87,13 +97,9 @@ abstract final class AppColorSchemeConst {
 // ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------
-// Contract: app runtime must use AppColorSchemeBuilder.*
-// This function remains as a low-level seam for tests and internal composition.
 ColorScheme buildLightColorScheme({Color? seedColor}) =>
     _buildColorScheme(seedColor: seedColor, brightness: Brightness.light);
 
-// Contract: app runtime must use AppColorSchemeBuilder.*
-// This function remains as a low-level seam for tests and internal composition.
 ColorScheme buildDarkColorScheme({Color? seedColor}) =>
     _buildColorScheme(seedColor: seedColor, brightness: Brightness.dark);
 
@@ -104,7 +110,10 @@ ColorScheme _buildColorScheme({
   required Brightness brightness,
   Color? seedColor,
 }) {
-  final Color resolvedSeed = seedColor ?? AppColorSchemeConst.seedColor;
+  final Color resolvedSeed = _resolveSeedColor(
+    brightness: brightness,
+    seedColor: seedColor,
+  );
 
   final ColorScheme seeded = ColorScheme.fromSeed(
     seedColor: resolvedSeed,
@@ -116,7 +125,6 @@ ColorScheme _buildColorScheme({
     base: seeded,
     brightness: brightness,
   );
-
   final ColorScheme withOnRoles = _applyAccessibleOnRoles(withPalette);
   final ColorScheme withOutlineRoles = _applyAccessibleOutlineRoles(
     withOnRoles,
@@ -128,6 +136,17 @@ ColorScheme _buildColorScheme({
   }());
 
   return withOutlineRoles;
+}
+
+Color _resolveSeedColor({required Brightness brightness, Color? seedColor}) {
+  if (seedColor != null) {
+    return seedColor;
+  }
+
+  return switch (brightness) {
+    Brightness.light => AppColorSchemeConst.lightSeedColor,
+    Brightness.dark => AppColorSchemeConst.darkSeedColor,
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -160,8 +179,8 @@ ColorScheme _applyLightRoles(ColorScheme base) {
     surface: AppColorSchemeConst.lightSurface,
     onSurface: AppColorSchemeConst.lightOnSurface,
     onSurfaceVariant: AppColorSchemeConst.lightOnSurfaceVariant,
-    surfaceContainerLowest: AppColorSchemeConst.lightBackground,
-    surfaceContainerLow: AppColorSchemeConst.lightBackground,
+    surfaceContainerLowest: AppColorSchemeConst.lightSurfaceContainerLowest,
+    surfaceContainerLow: AppColorSchemeConst.lightSurfaceContainerLow,
     surfaceContainer: AppColorSchemeConst.lightSurfaceContainer,
     surfaceContainerHigh: AppColorSchemeConst.lightSurfaceContainerHigh,
     surfaceContainerHighest: AppColorSchemeConst.lightSurfaceContainerHighest,
@@ -171,7 +190,12 @@ ColorScheme _applyLightRoles(ColorScheme base) {
     onError: AppColorSchemeConst.lightOnError,
     errorContainer: AppColorSchemeConst.lightErrorContainer,
     onErrorContainer: AppColorSchemeConst.lightOnErrorContainer,
+    inverseSurface: AppColorSchemeConst.lightInverseSurface,
+    onInverseSurface: AppColorSchemeConst.lightOnInverseSurface,
+    inversePrimary: AppColorSchemeConst.lightInversePrimary,
     surfaceTint: AppColorSchemeConst.brandPrimary,
+    scrim: AppColorSchemeConst.lightScrim,
+    shadow: AppColorSchemeConst.lightShadow,
   );
 }
 
@@ -190,19 +214,25 @@ ColorScheme _applyDarkRoles(ColorScheme base) {
     tertiaryContainer: AppColorSchemeConst.darkTertiaryContainer,
     onTertiaryContainer: AppColorSchemeConst.darkOnTertiaryContainer,
     surface: AppColorSchemeConst.darkSurface,
-    surfaceContainerLowest: AppColorSchemeConst.darkBackground,
-    surfaceContainerLow: AppColorSchemeConst.darkBackground,
+    onSurface: AppColorSchemeConst.darkOnSurface,
+    onSurfaceVariant: AppColorSchemeConst.darkOnSurfaceVariant,
+    surfaceContainerLowest: AppColorSchemeConst.darkSurfaceContainerLowest,
+    surfaceContainerLow: AppColorSchemeConst.darkSurfaceContainerLow,
     surfaceContainer: AppColorSchemeConst.darkSurfaceContainer,
     surfaceContainerHigh: AppColorSchemeConst.darkSurfaceContainerHigh,
-    surfaceContainerHighest: AppColorSchemeConst.darkSurfaceContainerHigh,
+    surfaceContainerHighest: AppColorSchemeConst.darkSurfaceContainerHighest,
     outline: AppColorSchemeConst.darkOutline,
     outlineVariant: AppColorSchemeConst.darkOutlineVariant,
     error: AppColorSchemeConst.darkError,
     onError: AppColorSchemeConst.darkOnError,
     errorContainer: AppColorSchemeConst.darkErrorContainer,
     onErrorContainer: AppColorSchemeConst.darkOnErrorContainer,
+    inverseSurface: AppColorSchemeConst.darkInverseSurface,
+    onInverseSurface: AppColorSchemeConst.darkOnInverseSurface,
+    inversePrimary: AppColorSchemeConst.darkInversePrimary,
     surfaceTint: AppColorSchemeConst.darkPrimary,
     scrim: AppColorSchemeConst.darkScrim,
+    shadow: AppColorSchemeConst.darkShadow,
   );
 }
 
@@ -340,7 +370,9 @@ Color _resolveAccessibleForeground({
   required Color background,
   required double minimumRatio,
 }) {
-  if (_contrastRatio(foreground, background) >= minimumRatio) return foreground;
+  if (_contrastRatio(foreground, background) >= minimumRatio) {
+    return foreground;
+  }
   return _highestContrastForeground(background);
 }
 
@@ -379,7 +411,9 @@ void _validateContrast(ColorScheme scheme) {
   _textPairs(scheme).where(_failsContrast).forEach(failures.add);
   _uiPairs(scheme).where(_failsUiContrast).forEach(failures.add);
 
-  if (failures.isEmpty) return;
+  if (failures.isEmpty) {
+    return;
+  }
 
   final String diagnostics = failures
       .map(
@@ -479,6 +513,7 @@ List<_ContrastPair> _uiPairs(ColorScheme s) => <_ContrastPair>[
 
 bool _failsContrast(_ContrastPair p) =>
     _contrastRatio(p.foreground, p.background) < p.minimumRatio;
+
 bool _failsUiContrast(_ContrastPair p) =>
     _contrastRatio(p.foreground, p.background) < p.minimumRatio;
 

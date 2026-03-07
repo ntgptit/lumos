@@ -11,11 +11,12 @@ abstract final class AppSurfaceThemeBuilder {
     required TextTheme textTheme,
   }) {
     return AppBarTheme(
-      backgroundColor: colorScheme.surface,
+      backgroundColor: colorScheme.surfaceContainerLowest,
       foregroundColor: colorScheme.onSurface,
       elevation: WidgetSizes.none,
       centerTitle: false,
       toolbarHeight: WidgetSizes.appBarHeight,
+      surfaceTintColor: colorScheme.surfaceContainerLowest,
       titleTextStyle: textTheme.titleLarge?.copyWith(
         color: colorScheme.onSurface,
       ),
@@ -39,7 +40,7 @@ abstract final class AppSurfaceThemeBuilder {
         ),
       ),
       backgroundColor: WidgetStatePropertyAll<Color>(
-        colorScheme.surfaceContainerHigh,
+        colorScheme.surfaceContainerLow,
       ),
       textStyle: WidgetStatePropertyAll<TextStyle?>(textTheme.bodyMedium),
       hintStyle: WidgetStatePropertyAll<TextStyle?>(
@@ -61,7 +62,7 @@ abstract final class AppSurfaceThemeBuilder {
     required TextTheme textTheme,
   }) {
     return BottomNavigationBarThemeData(
-      backgroundColor: colorScheme.surface,
+      backgroundColor: colorScheme.surfaceContainerLowest,
       selectedItemColor: colorScheme.primary,
       unselectedItemColor: colorScheme.onSurfaceVariant,
       selectedLabelStyle: textTheme.labelMedium?.copyWith(
@@ -82,7 +83,7 @@ abstract final class AppSurfaceThemeBuilder {
     required AppNavigationBarTokens navigationBarTokens,
   }) {
     return NavigationBarThemeData(
-      backgroundColor: colorScheme.surface,
+      backgroundColor: colorScheme.surfaceContainerLowest,
       elevation: WidgetSizes.none,
       indicatorColor: colorScheme.secondaryContainer,
       indicatorShape: RoundedRectangleBorder(
