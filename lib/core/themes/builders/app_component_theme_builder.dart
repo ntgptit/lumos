@@ -93,6 +93,10 @@ final class AppComponentThemeBuilder {
       dividerTheme: AppSurfaceThemeBuilder.dividerTheme(
         colorScheme: colorScheme,
       ),
+      tabBarTheme: AppSurfaceThemeBuilder.tabBarTheme(
+        colorScheme: colorScheme,
+        textTheme: textTheme,
+      ),
       iconTheme: IconThemeData(color: colorScheme.onSurfaceVariant),
       scaffoldBackgroundColor: colorScheme.surface,
       canvasColor: colorScheme.surface,
@@ -148,6 +152,10 @@ final class AppComponentThemeBuilder {
         colorScheme: colorScheme,
         textTheme: textTheme,
         navigationBarTokens: navigationBarTokens,
+      ),
+      segmentedButtonTheme: AppSurfaceThemeBuilder.segmentedButtonTheme(
+        colorScheme: colorScheme,
+        textTheme: textTheme,
       ),
       floatingActionButtonTheme:
           AppSurfaceThemeBuilder.floatingActionButtonTheme(

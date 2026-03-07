@@ -94,7 +94,8 @@ class HomeStatTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
-    return LumosCard(
+    return LumosSectionCard(
+      variant: LumosCardVariant.outlined,
       padding: const EdgeInsets.all(AppSpacing.lg),
       margin: EdgeInsets.zero,
       elevation: HomeSectionsConst.cardElevation,
@@ -105,14 +106,10 @@ class HomeStatTile extends StatelessWidget {
             height: HomeSectionsConst.statIconContainerSize,
             decoration: BoxDecoration(
               borderRadius: BorderRadii.medium,
-              border: Border.all(
-                color: colorScheme.outlineVariant,
-                width: HomeSectionsConst.emphasizedBorderWidth,
-              ),
-              color: colorScheme.surfaceContainer,
+              color: colorScheme.primaryContainer,
             ),
             child: IconTheme(
-              data: IconThemeData(color: colorScheme.primary),
+              data: IconThemeData(color: colorScheme.onPrimaryContainer),
               child: LumosIcon(stat.icon),
             ),
           ),
@@ -192,14 +189,15 @@ class HomeFocusCard extends StatelessWidget {
       label: HomeScreenSemantics.sectionCard,
       container: true,
       excludeSemantics: true,
-      child: LumosCard(
+      child: LumosSectionCard(
+        variant: LumosCardVariant.outlined,
         margin: EdgeInsets.zero,
         elevation: HomeSectionsConst.cardElevation,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            LumosText(l10n.homeFocusTitle, style: LumosTextStyle.titleMedium),
-            const SizedBox(height: AppSpacing.md),
+            HomeSectionHeader(title: l10n.homeFocusTitle),
+            const SizedBox(height: AppSpacing.lg),
             HomeTaskLine(
               title: l10n.homeTaskShadowListeningTitle,
               progress: 0.66,
@@ -273,14 +271,15 @@ class HomeRecentActivityCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
-    return LumosCard(
+    return LumosSectionCard(
+      variant: LumosCardVariant.outlined,
       margin: EdgeInsets.zero,
       elevation: HomeSectionsConst.cardElevation,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          LumosText(l10n.homeActivityTitle, style: LumosTextStyle.titleMedium),
-          const SizedBox(height: AppSpacing.md),
+          HomeSectionHeader(title: l10n.homeActivityTitle),
+          const SizedBox(height: AppSpacing.lg),
           HomeActivityItem(
             title: l10n.homeActivitySpanishTitle,
             subtitle: l10n.homeActivitySpanishSubtitle,
@@ -332,7 +331,7 @@ class HomeActivityItem extends StatelessWidget {
           color: colorScheme.outlineVariant,
           width: HomeSectionsConst.emphasizedBorderWidth,
         ),
-        color: colorScheme.surfaceContainer,
+        color: colorScheme.surfaceContainerLowest,
       ),
       child: Row(
         children: <Widget>[
@@ -372,6 +371,24 @@ class HomeActivityItem extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class HomeSectionHeader extends StatelessWidget {
+  const HomeSectionHeader({required this.title, super.key});
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        LumosText(title, style: LumosTextStyle.titleMedium),
+        const SizedBox(height: AppSpacing.md),
+        const Divider(),
+      ],
     );
   }
 }

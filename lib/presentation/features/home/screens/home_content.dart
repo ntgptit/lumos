@@ -11,8 +11,9 @@ abstract final class HomeContentConst {
 
   static const double heroMinHeightMobile = 280;
   static const double heroMinHeightLarge = 250;
-  static const double avatarRadius = AppSpacing.lg;
   static const double emphasizedBorderWidth = AppStroke.thin;
+  static const double heroShadowBlurRadius = AppSpacing.xxl;
+  static const double heroShadowOffsetY = AppSpacing.sm;
 }
 
 class HomeContent extends StatelessWidget {
@@ -22,25 +23,27 @@ class HomeContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final DeviceType deviceType = context.deviceType;
     final AppLocalizations l10n = AppLocalizations.of(context)!;
-    return SingleChildScrollView(
-      child: LumosScreenFrame(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            _buildAnimatedReveal(order: 0, child: HomeHeaderBlock(l10n: l10n)),
-            const SizedBox(height: AppSpacing.xxl),
-            _buildAnimatedReveal(
-              order: 1,
-              child: HomeHeroCard(deviceType: deviceType, l10n: l10n),
-            ),
-            const SizedBox(height: AppSpacing.xxl),
-            _buildAnimatedReveal(order: 2, child: const HomeStatGrid()),
-            const SizedBox(height: AppSpacing.xxl),
-            _buildAnimatedReveal(
-              order: 3,
-              child: HomeSplitSection(deviceType: deviceType),
-            ),
-          ],
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    return ColoredBox(
+      color: colorScheme.surface,
+      child: SingleChildScrollView(
+        child: LumosScreenFrame(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              _buildAnimatedReveal(
+                order: 0,
+                child: HomeHeroCard(deviceType: deviceType, l10n: l10n),
+              ),
+              const SizedBox(height: AppSpacing.xxl),
+              _buildAnimatedReveal(order: 1, child: const HomeStatGrid()),
+              const SizedBox(height: AppSpacing.xxl),
+              _buildAnimatedReveal(
+                order: 2,
+                child: HomeSplitSection(deviceType: deviceType),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -63,6 +66,22 @@ class HomeContent extends StatelessWidget {
   }
 }
 
+class HomePageTitleBand extends StatelessWidget {
+  const HomePageTitleBand({
+    required this.l10n,
+    required this.deviceType,
+    super.key,
+  });
+
+  final AppLocalizations l10n;
+  final DeviceType deviceType;
+
+  @override
+  Widget build(BuildContext context) {
+    return const SizedBox.shrink();
+  }
+}
+
 class HomeHeaderBlock extends StatelessWidget {
   const HomeHeaderBlock({required this.l10n, super.key});
 
@@ -70,47 +89,7 @@ class HomeHeaderBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
-    return Row(
-      children: <Widget>[
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              LumosText(
-                l10n.homeGreeting,
-                style: LumosTextStyle.headlineSmall,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: AppSpacing.xs),
-              LumosText(
-                l10n.homeGoalProgress,
-                style: LumosTextStyle.bodyMedium,
-              ),
-            ],
-          ),
-        ),
-        Container(
-          padding: const EdgeInsets.all(AppSpacing.xs),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadii.large,
-            border: Border.all(
-              color: colorScheme.outlineVariant,
-              width: HomeContentConst.emphasizedBorderWidth,
-            ),
-          ),
-          child: CircleAvatar(
-            radius: HomeContentConst.avatarRadius,
-            backgroundColor: colorScheme.primaryContainer,
-            child: LumosInlineText(
-              'L',
-              style: TextStyle(color: colorScheme.onPrimaryContainer),
-            ),
-          ),
-        ),
-      ],
-    );
+    return const SizedBox.shrink();
   }
 }
 
@@ -176,16 +155,16 @@ class HomeHeroCard extends StatelessWidget {
   }
 
   BoxDecoration _buildDecoration({required ColorScheme colorScheme}) {
+    final Color secondaryBlend = Color.alphaBlend(
+      colorScheme.secondaryContainer.withValues(alpha: AppOpacity.strong),
+      colorScheme.surfaceContainerLowest,
+    );
     return BoxDecoration(
       borderRadius: BorderRadii.large,
       gradient: LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
-        colors: <Color>[
-          colorScheme.primaryContainer,
-          colorScheme.secondaryContainer,
-          colorScheme.tertiaryContainer,
-        ],
+        colors: <Color>[colorScheme.primaryContainer, secondaryBlend],
       ),
       border: Border.all(
         color: colorScheme.outlineVariant,
@@ -193,9 +172,12 @@ class HomeHeroCard extends StatelessWidget {
       ),
       boxShadow: <BoxShadow>[
         BoxShadow(
-          color: colorScheme.shadow,
-          blurRadius: AppSpacing.xxl,
-          offset: const Offset(AppSpacing.none, AppSpacing.md),
+          color: colorScheme.shadow.withValues(alpha: AppOpacity.subtle),
+          blurRadius: HomeContentConst.heroShadowBlurRadius,
+          offset: const Offset(
+            AppSpacing.none,
+            HomeContentConst.heroShadowOffsetY,
+          ),
         ),
       ],
     );
@@ -218,8 +200,12 @@ class HomeHeroCard extends StatelessWidget {
             vertical: AppSpacing.xs,
           ),
           decoration: BoxDecoration(
-            color: colorScheme.surfaceContainer,
-            borderRadius: BorderRadii.medium,
+            color: colorScheme.surfaceContainerLowest,
+            borderRadius: BorderRadii.large,
+            border: Border.all(
+              color: colorScheme.outlineVariant,
+              width: HomeContentConst.emphasizedBorderWidth,
+            ),
           ),
           child: LumosText(
             l10n.homeAiLearningPath,

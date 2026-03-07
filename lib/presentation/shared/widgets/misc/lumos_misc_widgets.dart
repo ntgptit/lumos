@@ -116,8 +116,11 @@ class LumosAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (imageUrl == null) {
+      final ColorScheme colorScheme = context.colorScheme;
       return CircleAvatar(
         radius: radius,
+        backgroundColor: colorScheme.secondaryContainer,
+        foregroundColor: colorScheme.onSecondaryContainer,
         child: Text(initials ?? '?', overflow: TextOverflow.ellipsis),
       );
     }
@@ -138,19 +141,21 @@ class LumosBadge extends StatelessWidget {
     final ThemeData theme = context.theme;
     final ColorScheme colorScheme = theme.colorScheme;
     return Container(
+      constraints: const BoxConstraints(minWidth: AppSpacing.xxl),
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.sm,
         vertical: AppSpacing.xs,
       ),
       decoration: BoxDecoration(
-        color: colorScheme.error,
-        borderRadius: BorderRadii.large,
+        color: colorScheme.secondaryContainer,
+        borderRadius: BorderRadius.circular(AppRadius.pill),
       ),
       child: Text(
         '$count',
+        textAlign: TextAlign.center,
         overflow: TextOverflow.ellipsis,
         style: theme.textTheme.labelSmall.withResolvedColor(
-          colorScheme.onError,
+          colorScheme.onSecondaryContainer,
         ),
       ),
     );

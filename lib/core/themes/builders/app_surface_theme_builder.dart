@@ -134,4 +134,88 @@ abstract final class AppSurfaceThemeBuilder {
       highlightElevation: AppElevationTokens.level3,
     );
   }
+
+  static TabBarThemeData tabBarTheme({
+    required ColorScheme colorScheme,
+    required TextTheme textTheme,
+  }) {
+    return TabBarThemeData(
+      dividerColor: colorScheme.outlineVariant,
+      indicatorColor: colorScheme.primary,
+      indicatorSize: TabBarIndicatorSize.label,
+      labelColor: colorScheme.primary,
+      unselectedLabelColor: colorScheme.onSurfaceVariant,
+      labelStyle: textTheme.titleSmall?.copyWith(
+        color: colorScheme.primary,
+        fontWeight: FontWeight.w600,
+      ),
+      unselectedLabelStyle: textTheme.titleSmall?.copyWith(
+        color: colorScheme.onSurfaceVariant,
+        fontWeight: FontWeight.w500,
+      ),
+      overlayColor: colorScheme.primary.asInteractiveOverlayProperty(),
+      splashFactory: NoSplash.splashFactory,
+    );
+  }
+
+  static SegmentedButtonThemeData segmentedButtonTheme({
+    required ColorScheme colorScheme,
+    required TextTheme textTheme,
+  }) {
+    return SegmentedButtonThemeData(
+      style: ButtonStyle(
+        textStyle: WidgetStatePropertyAll<TextStyle?>(
+          textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w600),
+        ),
+        foregroundColor: WidgetStateProperty.resolveWith<Color>((
+          Set<WidgetState> states,
+        ) {
+          if (states.isDisabled) {
+            return colorScheme.disabledContentColor;
+          }
+          if (states.isSelected) {
+            return colorScheme.onSecondaryContainer;
+          }
+          return colorScheme.onSurfaceVariant;
+        }),
+        backgroundColor: WidgetStateProperty.resolveWith<Color>((
+          Set<WidgetState> states,
+        ) {
+          if (states.isDisabled) {
+            return colorScheme.surfaceContainerLow;
+          }
+          if (states.isSelected) {
+            return colorScheme.secondaryContainer;
+          }
+          return colorScheme.surfaceContainerLowest;
+        }),
+        side: WidgetStateProperty.resolveWith<BorderSide>((
+          Set<WidgetState> states,
+        ) {
+          if (states.isSelected) {
+            return BorderSide(
+              color: colorScheme.secondaryContainer,
+              width: WidgetSizes.borderWidthRegular,
+            );
+          }
+          return BorderSide(
+            color: colorScheme.outlineVariant,
+            width: WidgetSizes.borderWidthRegular,
+          );
+        }),
+        shape: WidgetStatePropertyAll<OutlinedBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppRadius.lg),
+          ),
+        ),
+        padding: const WidgetStatePropertyAll<EdgeInsetsGeometry>(
+          EdgeInsets.symmetric(
+            horizontal: AppSpacing.lg,
+            vertical: AppSpacing.sm,
+          ),
+        ),
+        overlayColor: colorScheme.primary.asInteractiveOverlayProperty(),
+      ),
+    );
+  }
 }
