@@ -389,12 +389,14 @@ class LumosSegmentedControl extends StatelessWidget {
     required this.options,
     required this.selectedIndex,
     required this.onChanged,
+    this.expandToAvailableWidth = false,
     super.key,
   });
 
   final List<String> options;
   final int selectedIndex;
   final ValueChanged<int> onChanged;
+  final bool expandToAvailableWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -413,6 +415,7 @@ class LumosSegmentedControl extends StatelessWidget {
       segments: segments,
       selected: selectedValues,
       showSelectedIcon: false,
+      expandedInsets: expandToAvailableWidth ? EdgeInsets.zero : null,
       onSelectionChanged: (Set<int> nextSelection) {
         if (nextSelection.isEmpty) {
           return;

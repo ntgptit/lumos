@@ -27,7 +27,7 @@ class DeckContent extends ConsumerWidget {
   });
 
   final DeckState state;
-  final ({int folderId, String searchQuery}) providerArgs;
+  final ({int folderId, String searchQuery, String sortType}) providerArgs;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -36,6 +36,7 @@ class DeckContent extends ConsumerWidget {
       deckAsyncControllerProvider(
         providerArgs.folderId,
         providerArgs.searchQuery,
+        providerArgs.sortType,
       ).notifier,
     );
     final List<DeckNode> visibleDecks = state.decks;
@@ -80,6 +81,7 @@ class DeckContent extends ConsumerWidget {
                         deckAsyncControllerProvider(
                           providerArgs.folderId,
                           providerArgs.searchQuery,
+                          providerArgs.sortType,
                         ).notifier,
                       )
                       .createDeck(input);
@@ -105,7 +107,7 @@ class DeckContent extends ConsumerWidget {
   List<Widget> _buildDeckTiles({
     required BuildContext context,
     required WidgetRef ref,
-    required ({int folderId, String searchQuery}) providerArgs,
+    required ({int folderId, String searchQuery, String sortType}) providerArgs,
     required List<DeckNode> visibleDecks,
   }) {
     return visibleDecks
@@ -136,6 +138,7 @@ class DeckContent extends ConsumerWidget {
                         deckAsyncControllerProvider(
                           providerArgs.folderId,
                           providerArgs.searchQuery,
+                          providerArgs.sortType,
                         ).notifier,
                       )
                       .updateDeck(deckId: item.id, input: input);
@@ -155,6 +158,7 @@ class DeckContent extends ConsumerWidget {
                         deckAsyncControllerProvider(
                           providerArgs.folderId,
                           providerArgs.searchQuery,
+                          providerArgs.sortType,
                         ).notifier,
                       )
                       .deleteDeck(item.id);

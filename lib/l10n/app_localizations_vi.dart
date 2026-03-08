@@ -24,6 +24,12 @@ class AppLocalizationsVi extends AppLocalizations {
   String get commonDelete => 'Xóa';
 
   @override
+  String get commonSortBy => 'Sắp xếp theo';
+
+  @override
+  String get commonDirection => 'Thứ tự';
+
+  @override
   String get commonRetry => 'Thử lại';
 
   @override
@@ -82,6 +88,12 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get folderSortTitle => 'Sắp xếp thư mục';
+
+  @override
+  String get folderSortByName => 'Tên';
+
+  @override
+  String get folderSortByCreatedAt => 'Thời gian tạo';
 
   @override
   String get folderSortNameAscending => 'Tên A-Z';
@@ -152,6 +164,18 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get deckDeleteTitle => 'Xóa deck';
+
+  @override
+  String get deckSortTitle => 'Sắp xếp deck';
+
+  @override
+  String get deckSortByName => 'Tên';
+
+  @override
+  String get deckSortNameAscending => 'Tên A-Z';
+
+  @override
+  String get deckSortNameDescending => 'Tên Z-A';
 
   @override
   String get deckNameLabel => 'Tên deck';

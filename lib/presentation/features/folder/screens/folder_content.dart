@@ -496,7 +496,13 @@ class _FolderContentState extends ConsumerState<FolderContent> {
         initialDeck: item,
         onSubmitted: (DeckUpsertInput input) {
           return ref
-              .read(deckAsyncControllerProvider(folderId, searchQuery).notifier)
+              .read(
+                deckAsyncControllerProvider(
+                  folderId,
+                  searchQuery,
+                  widget.state.sortType.apiValue,
+                ).notifier,
+              )
               .updateDeck(deckId: item.id, input: input);
         },
       ),
@@ -509,7 +515,13 @@ class _FolderContentState extends ConsumerState<FolderContent> {
         confirmLabelBuilder: (AppLocalizations l10n) => l10n.commonDelete,
         onConfirmed: () async {
           await ref
-              .read(deckAsyncControllerProvider(folderId, searchQuery).notifier)
+              .read(
+                deckAsyncControllerProvider(
+                  folderId,
+                  searchQuery,
+                  widget.state.sortType.apiValue,
+                ).notifier,
+              )
               .deleteDeck(item.id);
         },
       ),
@@ -624,6 +636,7 @@ class _FolderContentState extends ConsumerState<FolderContent> {
                       deckAsyncControllerProvider(
                         currentFolderId,
                         deckSearchQuery,
+                        widget.state.sortType.apiValue,
                       ).notifier,
                     )
                     .createDeck(input);
@@ -701,7 +714,13 @@ class _FolderContentState extends ConsumerState<FolderContent> {
     if (currentFolderId == null) {
       return null;
     }
-    return ref.watch(deckAsyncControllerProvider(currentFolderId, searchQuery));
+    return ref.watch(
+      deckAsyncControllerProvider(
+        currentFolderId,
+        searchQuery,
+        widget.state.sortType.apiValue,
+      ),
+    );
   }
 
   bool _canManageDecks({
@@ -814,6 +833,7 @@ class _FolderContentState extends ConsumerState<FolderContent> {
           deckAsyncControllerProvider(
             currentFolderId,
             deckSearchQuery,
+            widget.state.sortType.apiValue,
           ).notifier,
         )
         .refresh();
@@ -825,6 +845,7 @@ class _FolderContentState extends ConsumerState<FolderContent> {
           deckAsyncControllerProvider(
             currentFolderId,
             FolderStateConst.emptySearchQuery,
+            widget.state.sortType.apiValue,
           ).notifier,
         )
         .refresh();

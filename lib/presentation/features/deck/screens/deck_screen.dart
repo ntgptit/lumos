@@ -9,19 +9,25 @@ import '../providers/states/deck_state.dart';
 import 'deck_content.dart';
 
 class DeckScreen extends ConsumerWidget {
-  const DeckScreen({required this.folderId, this.searchQuery = '', super.key});
+  const DeckScreen({
+    required this.folderId,
+    this.searchQuery = '',
+    this.sortType = DeckStateConst.sortTypeAscending,
+    super.key,
+  });
 
   final int folderId;
   final String searchQuery;
+  final String sortType;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final AsyncValue<DeckState> deckAsync = ref.watch(
-      deckAsyncControllerProvider(folderId, searchQuery),
+      deckAsyncControllerProvider(folderId, searchQuery, sortType),
     );
     return LumosScreenTransition(
       switchKey: ValueKey<String>(
-        'deck-${deckAsync.runtimeType}-$folderId-$searchQuery',
+        'deck-${deckAsync.runtimeType}-$folderId-$searchQuery-$sortType',
       ),
       moveForward: true,
       child: deckAsync.whenWithLoading(
@@ -31,7 +37,11 @@ class DeckScreen extends ConsumerWidget {
         dataBuilder: (BuildContext context, DeckState state) {
           return DeckContent(
             state: state,
-            providerArgs: (folderId: folderId, searchQuery: searchQuery),
+            providerArgs: (
+              folderId: folderId,
+              searchQuery: searchQuery,
+              sortType: sortType,
+            ),
           );
         },
         errorBuilder: (BuildContext context, Failure failure) {
@@ -40,7 +50,11 @@ class DeckScreen extends ConsumerWidget {
             onRetry: () {
               ref
                   .read(
-                    deckAsyncControllerProvider(folderId, searchQuery).notifier,
+                    deckAsyncControllerProvider(
+                      folderId,
+                      searchQuery,
+                      sortType,
+                    ).notifier,
                   )
                   .refresh();
             },

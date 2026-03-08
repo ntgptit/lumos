@@ -49,6 +49,34 @@ extension FolderSortTypeApiExtension on FolderSortType {
   }
 }
 
+extension FolderSortByPresentationExtension on FolderSortBy {
+  int directionIndex({required FolderSortType sortType}) {
+    if (this == FolderSortBy.name) {
+      if (sortType == FolderSortType.asc) {
+        return 0;
+      }
+      return 1;
+    }
+    if (sortType == FolderSortType.desc) {
+      return 0;
+    }
+    return 1;
+  }
+
+  FolderSortType sortTypeForDirectionIndex(int directionIndex) {
+    if (this == FolderSortBy.name) {
+      if (directionIndex == 0) {
+        return FolderSortType.asc;
+      }
+      return FolderSortType.desc;
+    }
+    if (directionIndex == 0) {
+      return FolderSortType.desc;
+    }
+    return FolderSortType.asc;
+  }
+}
+
 @freezed
 abstract class FolderState with _$FolderState {
   const FolderState._();

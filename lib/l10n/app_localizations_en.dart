@@ -24,6 +24,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get commonDelete => 'Delete';
 
   @override
+  String get commonSortBy => 'Sort by';
+
+  @override
+  String get commonDirection => 'Direction';
+
+  @override
   String get commonRetry => 'Retry';
 
   @override
@@ -82,6 +88,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get folderSortTitle => 'Sort folders';
+
+  @override
+  String get folderSortByName => 'Name';
+
+  @override
+  String get folderSortByCreatedAt => 'Created time';
 
   @override
   String get folderSortNameAscending => 'Name A-Z';
@@ -152,6 +164,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deckDeleteTitle => 'Delete deck';
+
+  @override
+  String get deckSortTitle => 'Sort decks';
+
+  @override
+  String get deckSortByName => 'Name';
+
+  @override
+  String get deckSortNameAscending => 'Name A-Z';
+
+  @override
+  String get deckSortNameDescending => 'Name Z-A';
 
   @override
   String get deckNameLabel => 'Deck name';

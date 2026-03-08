@@ -252,32 +252,64 @@ class LumosBottomSheet extends StatelessWidget {
     super.key,
     this.initialHeight,
     this.isScrollControlled = true,
+    this.showHandle = true,
   });
 
   final Widget child;
   final double? initialHeight;
   final bool isScrollControlled;
+  final bool showHandle;
 
   @override
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.sizeOf(context).height;
+    final double bottomInset = MediaQuery.paddingOf(context).bottom;
     final double resolvedHeight =
         initialHeight ??
         (screenHeight * WidgetRatios.bottomSheetInitialHeightFactor);
     final double maxHeight = resolvedHeight
         .clamp(WidgetSizes.minTouchTarget, screenHeight)
         .toDouble();
-    return Container(
-      constraints: BoxConstraints(
-        minHeight: WidgetSizes.minTouchTarget,
-        maxHeight: maxHeight,
+    final ColorScheme colorScheme = context.colorScheme;
+    return SafeArea(
+      top: false,
+      child: Container(
+        constraints: BoxConstraints(
+          minHeight: WidgetSizes.minTouchTarget,
+          maxHeight: maxHeight,
+        ),
+        padding: EdgeInsets.fromLTRB(
+          AppSpacing.lg,
+          AppSpacing.sm,
+          AppSpacing.lg,
+          AppSpacing.lg + bottomInset,
+        ),
+        decoration: BoxDecoration(
+          color: colorScheme.surfaceContainerLow,
+          borderRadius: BorderRadii.topMedium,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            if (showHandle)
+              Align(
+                child: Container(
+                  width: AppSpacing.xxl,
+                  height: AppSpacing.xxs,
+                  decoration: BoxDecoration(
+                    color: colorScheme.onSurfaceVariant.withValues(
+                      alpha: AppOpacity.stateFocus,
+                    ),
+                    borderRadius: BorderRadius.circular(AppRadius.pill),
+                  ),
+                ),
+              ),
+            if (showHandle) const SizedBox(height: AppSpacing.md),
+            Flexible(child: child),
+          ],
+        ),
       ),
-      padding: const EdgeInsets.all(AppSpacing.lg),
-      decoration: BoxDecoration(
-        color: context.colorScheme.surface,
-        borderRadius: BorderRadii.topMedium,
-      ),
-      child: child,
     );
   }
 }

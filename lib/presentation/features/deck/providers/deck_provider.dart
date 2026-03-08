@@ -30,14 +30,23 @@ class DeckSubmitResult {
 @Riverpod(keepAlive: true)
 class DeckAsyncController extends _$DeckAsyncController {
   @override
-  Future<DeckState> build(int folderId, String searchQuery) async {
-    return _loadState(folderId: folderId, searchQuery: searchQuery);
+  Future<DeckState> build(
+    int folderId,
+    String searchQuery,
+    String sortType,
+  ) async {
+    return _loadState(
+      folderId: folderId,
+      searchQuery: searchQuery,
+      sortType: sortType,
+    );
   }
 
   Future<void> refresh() async {
     final DeckState nextState = await _loadState(
       folderId: folderId,
       searchQuery: searchQuery,
+      sortType: sortType,
     );
     state = AsyncData<DeckState>(nextState);
   }
@@ -84,7 +93,11 @@ class DeckAsyncController extends _$DeckAsyncController {
   }) async {
     final DeckState current =
         state.asData?.value ??
-        await _loadState(folderId: folderId, searchQuery: searchQuery);
+        await _loadState(
+          folderId: folderId,
+          searchQuery: searchQuery,
+          sortType: sortType,
+        );
     state = AsyncData<DeckState>(
       current.copyWith(mutationType: mutationType, inlineErrorMessage: null),
     );
@@ -117,6 +130,7 @@ class DeckAsyncController extends _$DeckAsyncController {
       final DeckState nextState = await _loadState(
         folderId: folderId,
         searchQuery: searchQuery,
+        sortType: sortType,
       );
       state = AsyncData<DeckState>(nextState);
       return const DeckSubmitResult.success();
@@ -129,13 +143,14 @@ class DeckAsyncController extends _$DeckAsyncController {
   Future<DeckState> _loadState({
     required int folderId,
     required String searchQuery,
+    required String sortType,
   }) async {
     final DeckRepository repository = ref.read(deckRepositoryProvider);
     final Either<Failure, List<DeckNode>> result = await repository.getDecks(
       folderId: folderId,
       searchQuery: searchQuery,
       sortBy: DeckStateConst.sortByName,
-      sortType: DeckStateConst.sortTypeAscending,
+      sortType: sortType,
       page: DeckStateConst.firstPage,
       size: DeckStateConst.pageSize,
     );

@@ -120,7 +120,7 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
                   : Icons.search_rounded,
             ),
             LumosIconButton(
-              onPressed: () => _showSortSheet(context: context, l10n: l10n),
+              onPressed: () => _showSortSheet(context: context),
               tooltip: l10n.flashcardSortButtonTooltip,
               size: IconSizes.iconMedium,
               icon: Icons.tune_rounded,
@@ -318,7 +318,7 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
               title: l10n.flashcardCardSectionTitle,
               subtitle: l10n.flashcardTotalLabel(state.totalElements),
               sortLabel: _buildSortLabel(l10n: l10n, state: state),
-              onSortPressed: () => _showSortSheet(context: context, l10n: l10n),
+              onSortPressed: () => _showSortSheet(context: context),
             ),
           ),
         ),
@@ -638,169 +638,51 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
     return l10n.flashcardSortDirectionAsc;
   }
 
-  Future<void> _showSortSheet({
-    required BuildContext context,
-    required AppLocalizations l10n,
-  }) {
+  Future<void> _showSortSheet({required BuildContext context}) {
     final FlashcardState state = widget.state;
-    FlashcardSortBy selectedSortBy = state.sortBy;
-    FlashcardSortDirection selectedSortDirection = state.sortDirection;
-    return showModalBottomSheet<void>(
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
+    return showLumosSortBottomSheet<FlashcardSortBy>(
       context: context,
-      showDragHandle: true,
-      builder: (BuildContext sheetContext) {
-        return StatefulBuilder(
-          builder:
-              (
-                BuildContext context,
-                void Function(void Function()) setSheetState,
-              ) {
-                return SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.all(AppSpacing.lg),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: <Widget>[
-                        LumosText(
-                          l10n.flashcardSortSheetTitle,
-                          style: LumosTextStyle.titleMedium,
-                        ),
-                        const SizedBox(height: AppSpacing.md),
-                        _buildSortOptionTile(
-                          context: context,
-                          label: l10n.flashcardSortByCreatedAt,
-                          isSelected:
-                              selectedSortBy == FlashcardSortBy.createdAt,
-                          onTap: () {
-                            setSheetState(() {
-                              selectedSortDirection =
-                                  _nextDirectionForSortSelection(
-                                    currentSortBy: selectedSortBy,
-                                    currentSortDirection: selectedSortDirection,
-                                    nextSortBy: FlashcardSortBy.createdAt,
-                                  );
-                              selectedSortBy = FlashcardSortBy.createdAt;
-                            });
-                          },
-                        ),
-                        _buildSortOptionTile(
-                          context: context,
-                          label: l10n.flashcardSortByUpdatedAt,
-                          isSelected:
-                              selectedSortBy == FlashcardSortBy.updatedAt,
-                          onTap: () {
-                            setSheetState(() {
-                              selectedSortDirection =
-                                  _nextDirectionForSortSelection(
-                                    currentSortBy: selectedSortBy,
-                                    currentSortDirection: selectedSortDirection,
-                                    nextSortBy: FlashcardSortBy.updatedAt,
-                                  );
-                              selectedSortBy = FlashcardSortBy.updatedAt;
-                            });
-                          },
-                        ),
-                        _buildSortOptionTile(
-                          context: context,
-                          label: l10n.flashcardSortByFrontText,
-                          isSelected:
-                              selectedSortBy == FlashcardSortBy.frontText,
-                          onTap: () {
-                            setSheetState(() {
-                              selectedSortDirection =
-                                  _nextDirectionForSortSelection(
-                                    currentSortBy: selectedSortBy,
-                                    currentSortDirection: selectedSortDirection,
-                                    nextSortBy: FlashcardSortBy.frontText,
-                                  );
-                              selectedSortBy = FlashcardSortBy.frontText;
-                            });
-                          },
-                        ),
-                        const SizedBox(height: AppSpacing.md),
-                        _buildSortOptionTile(
-                          context: context,
-                          label: _descDirectionLabel(
-                            l10n: l10n,
-                            sortBy: selectedSortBy,
-                          ),
-                          isSelected:
-                              selectedSortDirection ==
-                              FlashcardSortDirection.desc,
-                          onTap: () {
-                            setSheetState(() {
-                              selectedSortDirection =
-                                  FlashcardSortDirection.desc;
-                            });
-                          },
-                        ),
-                        _buildSortOptionTile(
-                          context: context,
-                          label: _ascDirectionLabel(
-                            l10n: l10n,
-                            sortBy: selectedSortBy,
-                          ),
-                          isSelected:
-                              selectedSortDirection ==
-                              FlashcardSortDirection.asc,
-                          onTap: () {
-                            setSheetState(() {
-                              selectedSortDirection =
-                                  FlashcardSortDirection.asc;
-                            });
-                          },
-                        ),
-                        const SizedBox(height: AppSpacing.lg),
-                        LumosPrimaryButton(
-                          onPressed: () {
-                            sheetContext.pop();
-                            _applySort(
-                              selectedSortBy: selectedSortBy,
-                              selectedSortDirection: selectedSortDirection,
-                            );
-                          },
-                          label: l10n.flashcardSortSaveButton,
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
+      title: l10n.flashcardSortSheetTitle,
+      subtitle: null,
+      optionSectionTitle: l10n.commonSortBy,
+      options: <({FlashcardSortBy value, String label, IconData? icon})>[
+        (
+          value: FlashcardSortBy.createdAt,
+          label: l10n.flashcardSortByCreatedAt,
+          icon: Icons.event_rounded,
+        ),
+        (
+          value: FlashcardSortBy.updatedAt,
+          label: l10n.flashcardSortByUpdatedAt,
+          icon: Icons.update_rounded,
+        ),
+        (
+          value: FlashcardSortBy.frontText,
+          label: l10n.flashcardSortByFrontText,
+          icon: Icons.sort_by_alpha_rounded,
+        ),
+      ],
+      initialValue: state.sortBy,
+      directionSectionTitle: l10n.commonDirection,
+      initialDirectionIndex: _directionIndexFromValue(state.sortDirection),
+      directionLabelBuilder: (
+        FlashcardSortBy selectedSortBy,
+        int directionIndex,
+      ) {
+        return _directionLabelForIndex(
+          l10n: l10n,
+          sortBy: selectedSortBy,
+          directionIndex: directionIndex,
         );
       },
-    );
-  }
-
-  Widget _buildSortOptionTile({
-    required BuildContext context,
-    required String label,
-    required bool isSelected,
-    required VoidCallback onTap,
-  }) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
-    final Color tileBackground = isSelected
-        ? colorScheme.secondaryContainer
-        : colorScheme.surfaceContainerLow;
-    final Color tileForeground = isSelected
-        ? colorScheme.onSecondaryContainer
-        : colorScheme.onSurface;
-    return Container(
-      decoration: BoxDecoration(
-        color: tileBackground,
-        borderRadius: BorderRadii.medium,
-      ),
-      child: LumosListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-        title: LumosInlineText(
-          label,
-          style: Theme.of(
-            context,
-          ).textTheme.bodyMedium?.copyWith(color: tileForeground),
-        ),
-        trailing: isSelected ? const LumosIcon(Icons.check_rounded) : null,
-        onTap: onTap,
-      ),
+      applyLabel: l10n.flashcardSortSaveButton,
+      onApply: (FlashcardSortBy selectedSortBy, int directionIndex) {
+        _applySort(
+          selectedSortBy: selectedSortBy,
+          selectedSortDirection: _directionFromIndex(directionIndex),
+        );
+      },
     );
   }
 
@@ -821,28 +703,29 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
     );
   }
 
-  FlashcardSortDirection _nextDirectionForSortSelection({
-    required FlashcardSortBy currentSortBy,
-    required FlashcardSortDirection currentSortDirection,
-    required FlashcardSortBy nextSortBy,
-  }) {
-    if (nextSortBy == FlashcardSortBy.frontText) {
-      if (currentSortBy != FlashcardSortBy.frontText) {
-        return FlashcardSortDirection.asc;
-      }
-      return _toggleSortDirection(currentSortDirection);
+  int _directionIndexFromValue(FlashcardSortDirection direction) {
+    if (direction == FlashcardSortDirection.asc) {
+      return 1;
     }
-    if (nextSortBy == currentSortBy) {
-      return currentSortDirection;
+    return 0;
+  }
+
+  FlashcardSortDirection _directionFromIndex(int index) {
+    if (index == 1) {
+      return FlashcardSortDirection.asc;
     }
     return FlashcardSortDirection.desc;
   }
 
-  FlashcardSortDirection _toggleSortDirection(FlashcardSortDirection value) {
-    if (value == FlashcardSortDirection.asc) {
-      return FlashcardSortDirection.desc;
+  String _directionLabelForIndex({
+    required AppLocalizations l10n,
+    required FlashcardSortBy sortBy,
+    required int directionIndex,
+  }) {
+    if (directionIndex == 1) {
+      return _ascDirectionLabel(l10n: l10n, sortBy: sortBy);
     }
-    return FlashcardSortDirection.asc;
+    return _descDirectionLabel(l10n: l10n, sortBy: sortBy);
   }
 
   void _openStudyScreenFromPreview(int previewIndex) {

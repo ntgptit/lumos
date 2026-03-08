@@ -1,8 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-
 import '../../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../../l10n/app_localizations.dart';
 import '../../../../providers/states/folder_state.dart';
@@ -96,19 +94,11 @@ class _FolderHeaderNavigationSectionState
   @override
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
-    final String currentSortLabel =
-        widget.sortBy == FolderSortBy.name &&
-            widget.sortType == FolderSortType.asc
-        ? widget.l10n.folderSortNameAscending
-        : widget.sortBy == FolderSortBy.name &&
-              widget.sortType == FolderSortType.desc
-        ? widget.l10n.folderSortNameDescending
-        : widget.sortBy == FolderSortBy.createdAt &&
-              widget.sortType == FolderSortType.desc
-        ? widget.l10n.folderSortCreatedNewest
-        : widget.l10n.folderSortCreatedOldest;
+    final String currentSortLabel = _buildCurrentSortLabel();
     final IconData contextMetaIcon = widget.searchQuery.isNotEmpty
         ? Icons.search_rounded
+        : widget.isDeckManager
+        ? Icons.sort_by_alpha_rounded
         : widget.sortBy == FolderSortBy.createdAt
         ? Icons.schedule_rounded
         : Icons.sort_by_alpha_rounded;
@@ -230,20 +220,9 @@ class _FolderHeaderNavigationSectionState
   }
 
   Widget _buildSortButton({required BuildContext context}) {
-    final String currentSortLabel =
-        widget.sortBy == FolderSortBy.name &&
-            widget.sortType == FolderSortType.asc
-        ? widget.l10n.folderSortNameAscending
-        : widget.sortBy == FolderSortBy.name &&
-              widget.sortType == FolderSortType.desc
-        ? widget.l10n.folderSortNameDescending
-        : widget.sortBy == FolderSortBy.createdAt &&
-              widget.sortType == FolderSortType.desc
-        ? widget.l10n.folderSortCreatedNewest
-        : widget.l10n.folderSortCreatedOldest;
     return LumosIconButton(
       icon: Icons.sort_rounded,
-      tooltip: currentSortLabel,
+      tooltip: _buildCurrentSortLabel(),
       variant: LumosIconButtonVariant.outlined,
       onPressed: () => _onSortPressed(context),
     );
@@ -280,121 +259,119 @@ class _FolderHeaderNavigationSectionState
   }
 
   Future<void> _openSortBottomSheet(BuildContext context) async {
-    final _FolderSortSelection? selectedSort =
-        await showModalBottomSheet<_FolderSortSelection>(
-          context: context,
-          showDragHandle: true,
-          builder: (BuildContext bottomSheetContext) {
-            return _FolderSortBottomSheet(
-              sortBy: widget.sortBy,
-              sortType: widget.sortType,
-              l10n: AppLocalizations.of(bottomSheetContext)!,
-            );
-          },
-        );
-    if (selectedSort == null) {
+    if (widget.isDeckManager) {
+      await _openDeckSortBottomSheet(context);
       return;
     }
-    if (selectedSort.sortBy == widget.sortBy &&
-        selectedSort.sortType == widget.sortType) {
-      return;
-    }
-    widget.onSortChanged(selectedSort.sortBy, selectedSort.sortType);
-  }
-}
-
-class _FolderSortBottomSheet extends StatelessWidget {
-  const _FolderSortBottomSheet({
-    required this.sortBy,
-    required this.sortType,
-    required this.l10n,
-  });
-
-  final FolderSortBy sortBy;
-  final FolderSortType sortType;
-  final AppLocalizations l10n;
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(
-          AppSpacing.lg,
-          AppSpacing.sm,
-          AppSpacing.lg,
-          AppSpacing.lg,
+    await showLumosSortBottomSheet<FolderSortBy>(
+      context: context,
+      title: widget.l10n.folderSortTitle,
+      subtitle: null,
+      optionSectionTitle: widget.l10n.commonSortBy,
+      options: <({FolderSortBy value, String label, IconData? icon})>[
+        (
+          value: FolderSortBy.name,
+          label: widget.l10n.folderSortByName,
+          icon: Icons.sort_by_alpha_rounded,
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            LumosText(l10n.folderSortTitle, style: LumosTextStyle.titleMedium),
-            const SizedBox(height: AppSpacing.sm),
-            _buildSortOptionTile(
-              context: context,
-              option: const _FolderSortSelection(
-                sortBy: FolderSortBy.name,
-                sortType: FolderSortType.asc,
-              ),
-              icon: Icons.sort_by_alpha_rounded,
-              label: l10n.folderSortNameAscending,
-            ),
-            _buildSortOptionTile(
-              context: context,
-              option: const _FolderSortSelection(
-                sortBy: FolderSortBy.name,
-                sortType: FolderSortType.desc,
-              ),
-              icon: Icons.sort_by_alpha_rounded,
-              label: l10n.folderSortNameDescending,
-            ),
-            _buildSortOptionTile(
-              context: context,
-              option: const _FolderSortSelection(
-                sortBy: FolderSortBy.createdAt,
-                sortType: FolderSortType.desc,
-              ),
-              icon: Icons.schedule_rounded,
-              label: l10n.folderSortCreatedNewest,
-            ),
-            _buildSortOptionTile(
-              context: context,
-              option: const _FolderSortSelection(
-                sortBy: FolderSortBy.createdAt,
-                sortType: FolderSortType.asc,
-              ),
-              icon: Icons.history_rounded,
-              label: l10n.folderSortCreatedOldest,
-            ),
-          ],
+        (
+          value: FolderSortBy.createdAt,
+          label: widget.l10n.folderSortByCreatedAt,
+          icon: Icons.schedule_rounded,
         ),
+      ],
+      initialValue: widget.sortBy,
+      directionSectionTitle: widget.l10n.commonDirection,
+      initialDirectionIndex: widget.sortBy.directionIndex(
+        sortType: widget.sortType,
       ),
+      directionLabelBuilder: (FolderSortBy selectedSortBy, int directionIndex) {
+        return _directionLabel(
+          sortBy: selectedSortBy,
+          directionIndex: directionIndex,
+        );
+      },
+      applyLabel: widget.l10n.commonSave,
+      onApply: (FolderSortBy selectedSortBy, int directionIndex) {
+        final FolderSortType selectedSortType = selectedSortBy
+            .sortTypeForDirectionIndex(directionIndex);
+        if (selectedSortBy == widget.sortBy &&
+            selectedSortType == widget.sortType) {
+          return;
+        }
+        widget.onSortChanged(selectedSortBy, selectedSortType);
+      },
     );
   }
 
-  Widget _buildSortOptionTile({
-    required BuildContext context,
-    required _FolderSortSelection option,
-    required IconData icon,
-    required String label,
+  Future<void> _openDeckSortBottomSheet(BuildContext context) async {
+    await showLumosSortBottomSheet<FolderSortBy>(
+      context: context,
+      title: widget.l10n.deckSortTitle,
+      subtitle: null,
+      optionSectionTitle: widget.l10n.commonSortBy,
+      options: <({FolderSortBy value, String label, IconData? icon})>[
+        (
+          value: FolderSortBy.name,
+          label: widget.l10n.deckSortByName,
+          icon: Icons.sort_by_alpha_rounded,
+        ),
+      ],
+      initialValue: FolderSortBy.name,
+      directionSectionTitle: widget.l10n.commonDirection,
+      initialDirectionIndex: FolderSortBy.name.directionIndex(
+        sortType: widget.sortType,
+      ),
+      directionLabelBuilder: (FolderSortBy _, int directionIndex) {
+        return _deckDirectionLabel(directionIndex: directionIndex);
+      },
+      applyLabel: widget.l10n.commonSave,
+      onApply: (FolderSortBy _, int directionIndex) {
+        final FolderSortType selectedSortType = FolderSortBy.name
+            .sortTypeForDirectionIndex(directionIndex);
+        if (widget.sortBy == FolderSortBy.name &&
+            selectedSortType == widget.sortType) {
+          return;
+        }
+        widget.onSortChanged(FolderSortBy.name, selectedSortType);
+      },
+    );
+  }
+
+  String _directionLabel({
+    required FolderSortBy sortBy,
+    required int directionIndex,
   }) {
-    final bool isSelected =
-        sortBy == option.sortBy && sortType == option.sortType;
-    return LumosListTile(
-      contentPadding: EdgeInsets.zero,
-      leading: LumosIcon(icon, size: IconSizes.iconMedium),
-      title: LumosText(label, style: LumosTextStyle.bodyMedium),
-      trailing: isSelected
-          ? const LumosIcon(Icons.check_rounded, size: IconSizes.iconSmall)
-          : null,
-      onTap: () => context.pop(option),
+    if (sortBy == FolderSortBy.name) {
+      if (directionIndex == 0) {
+        return widget.l10n.folderSortNameAscending;
+      }
+      return widget.l10n.folderSortNameDescending;
+    }
+    if (directionIndex == 0) {
+      return widget.l10n.folderSortCreatedNewest;
+    }
+    return widget.l10n.folderSortCreatedOldest;
+  }
+
+  String _buildCurrentSortLabel() {
+    if (widget.isDeckManager) {
+      return _deckDirectionLabel(
+        directionIndex: FolderSortBy.name.directionIndex(
+          sortType: widget.sortType,
+        ),
+      );
+    }
+    return _directionLabel(
+      sortBy: widget.sortBy,
+      directionIndex: widget.sortBy.directionIndex(sortType: widget.sortType),
     );
   }
-}
 
-class _FolderSortSelection {
-  const _FolderSortSelection({required this.sortBy, required this.sortType});
-
-  final FolderSortBy sortBy;
-  final FolderSortType sortType;
+  String _deckDirectionLabel({required int directionIndex}) {
+    if (directionIndex == 0) {
+      return widget.l10n.deckSortNameAscending;
+    }
+    return widget.l10n.deckSortNameDescending;
+  }
 }

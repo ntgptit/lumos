@@ -1,6 +1,7 @@
 export 'buttons/lumos_buttons.dart';
 export 'cards/lumos_cards.dart';
 export 'dialogs/lumos_dialog_widgets.dart';
+export 'dialogs/lumos_sort_bottom_sheet.dart';
 export 'feedback/lumos_empty_state.dart';
 export 'feedback/lumos_error_state.dart';
 export 'feedback/lumos_feedback_widgets.dart';

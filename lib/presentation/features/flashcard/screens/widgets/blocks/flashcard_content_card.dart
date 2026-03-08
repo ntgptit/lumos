@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../../core/constants/text_styles.dart';
 import '../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../core/utils/string_utils.dart';
 import '../../../../../../domain/entities/flashcard_models.dart';
@@ -10,8 +11,8 @@ abstract final class FlashcardContentCardConst {
   FlashcardContentCardConst._();
 
   static const EdgeInsets cardPadding = EdgeInsets.symmetric(
-    horizontal: AppSpacing.md,
-    vertical: AppSpacing.sm,
+    horizontal: AppSpacing.sm,
+    vertical: AppSpacing.xs,
   );
   static const double textGap = AppSpacing.xs;
   static const double iconSpacing = AppSpacing.xs;
@@ -61,7 +62,9 @@ class FlashcardContentCard extends StatelessWidget {
                 Expanded(
                   child: LumosInlineText(
                     item.frontText,
-                    style: theme.textTheme.titleMedium,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: AppTypographyConst.kFontWeightSemiBold,
+                    ),
                   ),
                 ),
                 const SizedBox(width: FlashcardContentCardConst.iconSpacing),
@@ -117,7 +120,9 @@ class FlashcardContentCard extends StatelessWidget {
             const SizedBox(height: FlashcardContentCardConst.textGap),
             LumosInlineText(
               item.backText,
-              style: theme.textTheme.bodyMedium,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
               maxLines: FlashcardContentCardConst.backTextMaxLines,
               overflow: TextOverflow.ellipsis,
             ),

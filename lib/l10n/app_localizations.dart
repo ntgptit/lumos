@@ -125,6 +125,18 @@ abstract class AppLocalizations {
   /// **'Delete'**
   String get commonDelete;
 
+  /// No description provided for @commonSortBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by'**
+  String get commonSortBy;
+
+  /// No description provided for @commonDirection.
+  ///
+  /// In en, this message translates to:
+  /// **'Direction'**
+  String get commonDirection;
+
   /// No description provided for @commonRetry.
   ///
   /// In en, this message translates to:
@@ -245,6 +257,18 @@ abstract class AppLocalizations {
   /// **'Sort folders'**
   String get folderSortTitle;
 
+  /// No description provided for @folderSortByName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get folderSortByName;
+
+  /// No description provided for @folderSortByCreatedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Created time'**
+  String get folderSortByCreatedAt;
+
   /// No description provided for @folderSortNameAscending.
   ///
   /// In en, this message translates to:
@@ -364,6 +388,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Delete deck'**
   String get deckDeleteTitle;
+
+  /// No description provided for @deckSortTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort decks'**
+  String get deckSortTitle;
+
+  /// No description provided for @deckSortByName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get deckSortByName;
+
+  /// No description provided for @deckSortNameAscending.
+  ///
+  /// In en, this message translates to:
+  /// **'Name A-Z'**
+  String get deckSortNameAscending;
+
+  /// No description provided for @deckSortNameDescending.
+  ///
+  /// In en, this message translates to:
+  /// **'Name Z-A'**
+  String get deckSortNameDescending;
 
   /// No description provided for @deckNameLabel.
   ///

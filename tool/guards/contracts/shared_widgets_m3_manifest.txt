@@ -19,6 +19,7 @@ lib/presentation/shared/widgets/cards/lumos_flashcard_widgets.dart
 lib/presentation/shared/widgets/cards/lumos_outlined_card.dart
 lib/presentation/shared/widgets/cards/lumos_section_card.dart
 lib/presentation/shared/widgets/dialogs/lumos_dialog_widgets.dart
+lib/presentation/shared/widgets/dialogs/lumos_sort_bottom_sheet.dart
 lib/presentation/shared/widgets/exercises/lumos_exercise_widgets.dart
 lib/presentation/shared/widgets/feedback/lumos_empty_state.dart
 lib/presentation/shared/widgets/feedback/lumos_error_state.dart
