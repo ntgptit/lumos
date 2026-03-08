@@ -93,7 +93,7 @@ abstract final class AppSurfaceThemeBuilder {
       elevation: WidgetSizes.none,
       indicatorColor: colorScheme.secondaryContainer,
       indicatorShape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(
+        borderRadius: BorderRadii.circular(
           navigationBarTokens.indicatorRadius,
         ),
       ),
@@ -212,7 +212,7 @@ abstract final class AppSurfaceThemeBuilder {
         }),
         shape: WidgetStatePropertyAll<OutlinedBorder>(
           RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppRadius.lg),
+            borderRadius: BorderRadii.xLarge,
           ),
         ),
         padding: const WidgetStatePropertyAll<EdgeInsetsGeometry>(

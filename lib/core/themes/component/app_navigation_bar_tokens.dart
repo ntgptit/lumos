@@ -22,7 +22,7 @@ class AppNavigationBarTokens extends ThemeExtension<AppNavigationBarTokens> {
   static const AppNavigationBarTokens defaults = AppNavigationBarTokens(
     height: AppSpacing.xxxl + AppSpacing.xxl + AppSpacing.xxl,
     iconSize: AppSpacing.xxl,
-    indicatorRadius: AppRadius.xl,
+    indicatorRadius: AppRadius.md,
     labelPadding: EdgeInsets.symmetric(
       horizontal: AppSpacing.sm,
       vertical: AppSpacing.xxs,

@@ -25,8 +25,8 @@ abstract final class LumosCardConst {
   // Animation duration for selected state transition.
   static const Duration selectionAnimationDuration = AppDurations.medium;
 
-  // Responsive border radius override for tablet/desktop.
-  static const BorderRadius borderRadiusTablet = BorderRadii.large; // 12dp
+  // Unified surface radius across app shells and cards.
+  static const BorderRadius surfaceBorderRadius = BorderRadii.large; // 12dp
 
   // Dark mode lift to keep cards slightly brighter than deep surfaces.
   static const double darkModeSurfaceLiftBlend = 0.35;
@@ -49,7 +49,7 @@ abstract final class LumosCardConst {
 ///   Skeleton respects [variant] and [borderRadius] for visual consistency.
 ///
 /// Responsive radius:
-///   Pass [deviceType] to automatically use [radiusLarge] on tablet/desktop.
+///   Uses a unified surface radius across device classes unless overridden.
 ///
 /// Example:
 /// ```dart
@@ -251,11 +251,7 @@ class _LumosCardState extends State<LumosCard>
 
   BorderRadius get _resolvedBorderRadius {
     if (widget.borderRadius != null) return widget.borderRadius!;
-    return switch (widget.deviceType) {
-      DeviceType.mobile => BorderRadii.medium, // 8dp
-      DeviceType.tablet => LumosCardConst.borderRadiusTablet, // 12dp
-      DeviceType.desktop => LumosCardConst.borderRadiusTablet, // 12dp
-    };
+    return LumosCardConst.surfaceBorderRadius;
   }
 
   ShapeBorder _resolveShape({

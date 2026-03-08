@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../component/app_input_tokens.dart';
 import '../extensions/theme_extensions.dart';
+import '../foundation/app_foundation.dart';
 
 abstract final class AppInputThemeBuilder {
   static InputDecorationTheme inputDecorationTheme({
@@ -9,7 +10,7 @@ abstract final class AppInputThemeBuilder {
     required TextTheme textTheme,
     required AppInputTokens inputTokens,
   }) {
-    final BorderRadius borderRadius = BorderRadius.circular(
+    final BorderRadius borderRadius = BorderRadii.circular(
       inputTokens.borderRadius,
     );
     return InputDecorationTheme(

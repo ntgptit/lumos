@@ -31,7 +31,6 @@ abstract final class FlashcardFlipStudyConst {
   static const double hintIconSize = AppSpacing.xl;
   static const int backTextMaxLines = 8;
   static const int noteMaxLines = 4;
-  static const double cardBorderRadius = AppSpacing.lg;
 }
 
 class FlashcardFlipStudyRouteExtra {
@@ -422,9 +421,7 @@ class _FlashcardStudyCard extends StatelessWidget {
     final bool hasNote = normalizedNote.isNotEmpty;
     return LumosCard(
       variant: LumosCardVariant.filled,
-      borderRadius: BorderRadius.circular(
-        FlashcardFlipStudyConst.cardBorderRadius,
-      ),
+      borderRadius: BorderRadii.xLarge,
       onTap: onFlipPressed,
       child: Padding(
         padding: const EdgeInsets.symmetric(

@@ -33,7 +33,7 @@ abstract final class AppFeedbackThemeBuilder {
         vertical: AppSpacing.sm,
       ),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppRadius.sm),
+        borderRadius: BorderRadii.medium,
       ),
     );
   }

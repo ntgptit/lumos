@@ -25,6 +25,9 @@ abstract final class LumosDialogSizingConst {
     left: AppSpacing.sm,
   );
   static const double promptContentSpacing = AppSpacing.md;
+  static const double bottomSheetHorizontalInset = AppSpacing.md;
+  static const double bottomSheetTopInset = AppSpacing.sm;
+  static const double bottomSheetBottomInset = AppSpacing.sm;
 }
 
 class LumosDialog extends StatelessWidget {
@@ -273,41 +276,49 @@ class LumosBottomSheet extends StatelessWidget {
     final ColorScheme colorScheme = context.colorScheme;
     return SafeArea(
       top: false,
-      child: Container(
-        constraints: BoxConstraints(
-          minHeight: WidgetSizes.minTouchTarget,
-          maxHeight: maxHeight,
-        ),
+      child: Padding(
         padding: EdgeInsets.fromLTRB(
-          AppSpacing.lg,
-          AppSpacing.sm,
-          AppSpacing.lg,
-          AppSpacing.lg + bottomInset,
+          LumosDialogSizingConst.bottomSheetHorizontalInset,
+          LumosDialogSizingConst.bottomSheetTopInset,
+          LumosDialogSizingConst.bottomSheetHorizontalInset,
+          LumosDialogSizingConst.bottomSheetBottomInset + bottomInset,
         ),
-        decoration: BoxDecoration(
-          color: colorScheme.surfaceContainerLow,
-          borderRadius: BorderRadii.topMedium,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            if (showHandle)
-              Align(
-                child: Container(
-                  width: AppSpacing.xxl,
-                  height: AppSpacing.xxs,
-                  decoration: BoxDecoration(
-                    color: colorScheme.onSurfaceVariant.withValues(
-                      alpha: AppOpacity.stateFocus,
+        child: Container(
+          constraints: BoxConstraints(
+            minHeight: WidgetSizes.minTouchTarget,
+            maxHeight: maxHeight,
+          ),
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.lg,
+            AppSpacing.sm,
+            AppSpacing.lg,
+            AppSpacing.lg,
+          ),
+          decoration: BoxDecoration(
+            color: colorScheme.surfaceContainerLow,
+            borderRadius: BorderRadii.xLarge,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              if (showHandle)
+                Align(
+                  child: Container(
+                    width: AppSpacing.xxl,
+                    height: AppSpacing.xxs,
+                    decoration: BoxDecoration(
+                      color: colorScheme.onSurfaceVariant.withValues(
+                        alpha: AppOpacity.stateFocus,
+                      ),
+                      borderRadius: BorderRadii.pill,
                     ),
-                    borderRadius: BorderRadius.circular(AppRadius.pill),
                   ),
                 ),
-              ),
-            if (showHandle) const SizedBox(height: AppSpacing.md),
-            Flexible(child: child),
-          ],
+              if (showHandle) const SizedBox(height: AppSpacing.md),
+              Flexible(child: child),
+            ],
+          ),
         ),
       ),
     );

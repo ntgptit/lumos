@@ -7,16 +7,47 @@ import 'app_radius.dart';
 import 'app_spacing.dart';
 
 abstract final class BorderRadii {
+  static const BorderRadius small = BorderRadius.all(
+    ui.Radius.circular(AppRadius.xs),
+  );
   static const BorderRadius medium = BorderRadius.all(
     ui.Radius.circular(AppRadius.sm),
   );
   static const BorderRadius large = BorderRadius.all(
     ui.Radius.circular(AppRadius.md),
   );
+  static const BorderRadius xLarge = BorderRadius.all(
+    ui.Radius.circular(AppRadius.md),
+  );
+  static const BorderRadius xxLarge = BorderRadius.all(
+    ui.Radius.circular(AppRadius.md),
+  );
+  static const BorderRadius pill = BorderRadius.all(
+    ui.Radius.circular(AppRadius.pill),
+  );
   static const BorderRadius topMedium = BorderRadius.only(
     topLeft: ui.Radius.circular(AppRadius.sm),
     topRight: ui.Radius.circular(AppRadius.sm),
   );
+  static const BorderRadius topLarge = BorderRadius.only(
+    topLeft: ui.Radius.circular(AppRadius.md),
+    topRight: ui.Radius.circular(AppRadius.md),
+  );
+  static const BorderRadius topXLarge = BorderRadius.only(
+    topLeft: ui.Radius.circular(AppRadius.md),
+    topRight: ui.Radius.circular(AppRadius.md),
+  );
+
+  static BorderRadius circular(double radius) {
+    return BorderRadius.all(ui.Radius.circular(radius));
+  }
+
+  static BorderRadius top(double radius) {
+    return BorderRadius.only(
+      topLeft: ui.Radius.circular(radius),
+      topRight: ui.Radius.circular(radius),
+    );
+  }
 }
 
 abstract final class IconSizes {

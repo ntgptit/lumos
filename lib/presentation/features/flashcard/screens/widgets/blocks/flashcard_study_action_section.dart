@@ -9,7 +9,6 @@ abstract final class FlashcardStudyActionSectionConst {
 
   static const double itemSpacing = AppSpacing.md;
   static const double iconContainerSize = WidgetSizes.avatarMedium;
-  static const double iconContainerRadius = AppRadius.sm;
   static const double iconSize = IconSizes.iconSmall;
   static const double labelLeftSpacing = AppSpacing.md;
 }
@@ -70,9 +69,7 @@ class FlashcardStudyActionSection extends StatelessWidget {
                   height: FlashcardStudyActionSectionConst.iconContainerSize,
                   decoration: BoxDecoration(
                     color: containerColor,
-                    borderRadius: BorderRadius.circular(
-                      FlashcardStudyActionSectionConst.iconContainerRadius,
-                    ),
+                    borderRadius: BorderRadii.medium,
                   ),
                   child: IconTheme(
                     data: IconThemeData(

@@ -26,7 +26,7 @@ class AppCardTokens extends ThemeExtension<AppCardTokens> {
     paddingSm: EdgeInsets.all(AppSpacing.sm),
     paddingMd: EdgeInsets.all(AppSpacing.md),
     paddingLg: EdgeInsets.all(AppSpacing.lg),
-    radius: AppRadius.lg,
+    radius: AppRadius.md,
     borderWidth: AppStroke.thin,
   );
 

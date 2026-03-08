@@ -50,7 +50,7 @@ class AppDialogTokens extends ThemeExtension<AppDialogTokens> {
     maxWidthDesktop:
         AppSpacing.xxxl * AppDialogTokensConst.desktopMaxWidthScale +
         AppDialogTokensConst.desktopMaxWidthOffset,
-    radius: AppRadius.lg,
+    radius: AppRadius.md,
   );
 
   @override

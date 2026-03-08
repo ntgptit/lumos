@@ -341,7 +341,7 @@ class HomeActivityItem extends StatelessWidget {
             height: HomeSectionsConst.activityAccentSize,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(AppRadius.pill),
+              borderRadius: BorderRadii.pill,
               color: color.withValues(alpha: AppOpacity.stateHover),
             ),
             child: IconTheme(

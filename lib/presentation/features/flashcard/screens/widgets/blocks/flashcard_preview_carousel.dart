@@ -16,7 +16,6 @@ abstract final class FlashcardPreviewCarouselConst {
   static const double titleHorizontalPadding = AppSpacing.xl;
   static const double titleVerticalPadding = AppSpacing.lg;
   static const double expandButtonInset = AppSpacing.sm;
-  static const double cardBorderRadius = AppSpacing.lg;
   static const double expandIconSize = AppSpacing.xl;
 }
 
@@ -62,9 +61,7 @@ class FlashcardPreviewCarousel extends StatelessWidget {
                   onTap: () => onExpandPressed(index),
                   child: LumosCard(
                     variant: LumosCardVariant.filled,
-                    borderRadius: BorderRadius.circular(
-                      FlashcardPreviewCarouselConst.cardBorderRadius,
-                    ),
+                    borderRadius: BorderRadii.xLarge,
                     child: Stack(
                       children: <Widget>[
                         Center(

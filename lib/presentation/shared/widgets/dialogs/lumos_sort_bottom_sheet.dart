@@ -386,7 +386,7 @@ class _LumosSortSheetOptionTile extends StatelessWidget {
       height: _LumosSortBottomSheetConst.optionCheckContainerSize,
       decoration: BoxDecoration(
         color: colorScheme.secondary,
-        borderRadius: BorderRadius.circular(AppRadius.pill),
+        borderRadius: BorderRadii.pill,
       ),
       child: IconTheme(
         data: IconThemeData(

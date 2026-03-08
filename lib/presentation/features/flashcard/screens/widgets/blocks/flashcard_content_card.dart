@@ -10,17 +10,17 @@ import '../../../../../shared/widgets/lumos_widgets.dart';
 abstract final class FlashcardContentCardConst {
   FlashcardContentCardConst._();
 
-  static const EdgeInsets cardPadding = EdgeInsets.symmetric(
-    horizontal: AppSpacing.sm,
-    vertical: AppSpacing.xs,
-  );
+  static const EdgeInsets cardPadding = EdgeInsets.all(AppSpacing.md);
   static const double textGap = AppSpacing.xs;
   static const double iconSpacing = AppSpacing.xs;
   static const double actionIconSize = IconSizes.iconMedium;
   static const double actionMenuPadding = AppSpacing.xs;
+  static const double frontTextFontSize =
+      AppTypographyConst.titleMediumFontSize + AppSpacing.xxs;
+  static const double frontTextHeight =
+      AppTypographyConst.titleMediumLineHeight / frontTextFontSize;
   static const int backTextMaxLines = 4;
   static const int noteMaxLines = 3;
-  static const double cardRadius = AppSpacing.lg;
   static const String actionEdit = 'action-edit';
   static const String actionDelete = 'action-delete';
 }
@@ -51,7 +51,8 @@ class FlashcardContentCard extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
     return LumosCard(
       variant: LumosCardVariant.filled,
-      borderRadius: BorderRadius.circular(FlashcardContentCardConst.cardRadius),
+      borderRadius: BorderRadii.xLarge,
+      padding: EdgeInsets.zero,
       child: Padding(
         padding: FlashcardContentCardConst.cardPadding,
         child: Column(
@@ -63,6 +64,9 @@ class FlashcardContentCard extends StatelessWidget {
                   child: LumosInlineText(
                     item.frontText,
                     style: theme.textTheme.titleMedium?.copyWith(
+                      fontSize: FlashcardContentCardConst.frontTextFontSize,
+                      height: FlashcardContentCardConst.frontTextHeight,
+                      letterSpacing: AppTypographyConst.titleMediumLetterSpacing,
                       fontWeight: AppTypographyConst.kFontWeightSemiBold,
                     ),
                   ),

@@ -114,7 +114,7 @@ class _HomeStatusChip extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         color: colorScheme.secondaryContainer,
-        borderRadius: BorderRadius.circular(AppRadius.pill),
+        borderRadius: BorderRadii.pill,
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(

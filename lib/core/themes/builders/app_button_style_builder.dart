@@ -391,5 +391,5 @@ RoundedRectangleBorder _shape({
     AppButtonSize.medium => buttonTokens.radiusMd,
     AppButtonSize.large => buttonTokens.radiusLg,
   };
-  return RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius));
+  return RoundedRectangleBorder(borderRadius: BorderRadii.circular(radius));
 }

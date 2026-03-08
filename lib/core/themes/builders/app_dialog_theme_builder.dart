@@ -19,7 +19,7 @@ abstract final class AppDialogThemeBuilder {
         color: colorScheme.onSurface,
       ),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(dialogTokens.radius),
+        borderRadius: BorderRadii.circular(dialogTokens.radius),
       ),
       insetPadding: dialogTokens.insetPaddingMobile,
     );
@@ -35,7 +35,7 @@ abstract final class AppDialogThemeBuilder {
       dragHandleColor: colorScheme.outlineVariant,
       dragHandleSize: const Size(AppSpacing.xxxl, AppSpacing.xs),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(dialogTokens.radius),
+        borderRadius: BorderRadii.circular(dialogTokens.radius),
       ),
     );
   }

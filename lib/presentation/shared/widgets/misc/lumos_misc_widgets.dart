@@ -148,7 +148,7 @@ class LumosBadge extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         color: colorScheme.secondaryContainer,
-        borderRadius: BorderRadius.circular(AppRadius.pill),
+        borderRadius: BorderRadii.pill,
       ),
       child: Text(
         '$count',

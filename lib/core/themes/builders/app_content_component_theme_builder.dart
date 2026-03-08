@@ -17,7 +17,7 @@ abstract final class AppContentComponentThemeBuilder {
         alpha: AppOpacity.transparent,
       ),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(cardTokens.radius),
+        borderRadius: BorderRadii.circular(cardTokens.radius),
         side: BorderSide(
           color: colorScheme.outlineVariant,
           width: cardTokens.borderWidth,
@@ -52,7 +52,7 @@ abstract final class AppContentComponentThemeBuilder {
         color: colorScheme.onSecondaryContainer,
       ),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppRadius.lg),
+        borderRadius: BorderRadii.xLarge,
       ),
       showCheckmark: true,
     );
@@ -72,7 +72,7 @@ abstract final class AppContentComponentThemeBuilder {
       minLeadingWidth: IconSizes.iconLarge,
       minVerticalPadding: AppSpacing.sm,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppRadius.lg),
+        borderRadius: BorderRadii.xLarge,
       ),
     );
   }
