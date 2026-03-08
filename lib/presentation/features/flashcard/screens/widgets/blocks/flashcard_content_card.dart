@@ -10,11 +10,16 @@ import '../../../../../shared/widgets/lumos_widgets.dart';
 abstract final class FlashcardContentCardConst {
   FlashcardContentCardConst._();
 
-  static const EdgeInsets cardPadding = EdgeInsets.all(AppSpacing.md);
+  static const EdgeInsets cardPadding = EdgeInsets.fromLTRB(
+    AppSpacing.lg,
+    AppSpacing.md,
+    AppSpacing.md,
+    AppSpacing.md,
+  );
   static const double textGap = AppSpacing.xs;
   static const double iconSpacing = AppSpacing.xs;
-  static const double actionIconSize = IconSizes.iconMedium;
-  static const double actionMenuPadding = AppSpacing.xs;
+  static const double actionIconSize = IconSizes.iconMedium - AppSpacing.xs;
+  static const VisualDensity actionVisualDensity = VisualDensity.compact;
   static const double frontTextFontSize =
       AppTypographyConst.titleMediumFontSize + AppSpacing.xxs;
   static const double frontTextHeight =
@@ -72,51 +77,59 @@ class FlashcardContentCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: FlashcardContentCardConst.iconSpacing),
-                LumosIconButton(
-                  onPressed: onAudioPressed,
-                  tooltip: l10n.flashcardPlayAudioTooltip,
-                  icon: Icons.volume_up_outlined,
-                  size: FlashcardContentCardConst.actionIconSize,
-                  selected: isAudioPlaying,
-                  selectedIcon: Icons.graphic_eq_rounded,
-                ),
-                LumosIconButton(
-                  onPressed: onStarPressed,
-                  tooltip: l10n.flashcardBookmarkTooltip,
-                  icon: Icons.star_border,
-                  size: FlashcardContentCardConst.actionIconSize,
-                  selected: isStarred,
-                  selectedIcon: Icons.star,
-                ),
-                PopupMenuButton<String>(
-                  tooltip: l10n.flashcardMoreButtonTooltip,
-                  onSelected: (String value) {
-                    if (value == FlashcardContentCardConst.actionEdit) {
-                      onEditPressed();
-                      return;
-                    }
-                    onDeletePressed();
-                  },
-                  itemBuilder: (BuildContext context) {
-                    return <PopupMenuEntry<String>>[
-                      PopupMenuItem<String>(
-                        value: FlashcardContentCardConst.actionEdit,
-                        child: LumosInlineText(l10n.flashcardEditTooltip),
+                Theme(
+                  data: theme.copyWith(
+                    visualDensity:
+                        FlashcardContentCardConst.actionVisualDensity,
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      LumosIconButton(
+                        onPressed: onAudioPressed,
+                        tooltip: l10n.flashcardPlayAudioTooltip,
+                        icon: Icons.volume_up_outlined,
+                        size: FlashcardContentCardConst.actionIconSize,
+                        selected: isAudioPlaying,
+                        selectedIcon: Icons.graphic_eq_rounded,
                       ),
-                      PopupMenuItem<String>(
-                        value: FlashcardContentCardConst.actionDelete,
-                        child: LumosInlineText(l10n.flashcardDeleteTooltip),
+                      LumosIconButton(
+                        onPressed: onStarPressed,
+                        tooltip: l10n.flashcardBookmarkTooltip,
+                        icon: Icons.star_border,
+                        size: FlashcardContentCardConst.actionIconSize,
+                        selected: isStarred,
+                        selectedIcon: Icons.star,
                       ),
-                    ];
-                  },
-                  child: const Padding(
-                    padding: EdgeInsets.all(
-                      FlashcardContentCardConst.actionMenuPadding,
-                    ),
-                    child: LumosIcon(
-                      Icons.more_vert_rounded,
-                      size: FlashcardContentCardConst.actionIconSize,
-                    ),
+                      LumosPopupMenuButton<String>(
+                        tooltip: l10n.flashcardMoreButtonTooltip,
+                        onSelected: (String value) {
+                          if (value == FlashcardContentCardConst.actionEdit) {
+                            onEditPressed();
+                            return;
+                          }
+                          onDeletePressed();
+                        },
+                        itemBuilder: (BuildContext context) {
+                          return <PopupMenuEntry<String>>[
+                            PopupMenuItem<String>(
+                              value: FlashcardContentCardConst.actionEdit,
+                              child: LumosInlineText(l10n.flashcardEditTooltip),
+                            ),
+                            PopupMenuItem<String>(
+                              value: FlashcardContentCardConst.actionDelete,
+                              child:
+                                  LumosInlineText(l10n.flashcardDeleteTooltip),
+                            ),
+                          ];
+                        },
+                        icon: const LumosIcon(
+                          Icons.more_vert_rounded,
+                          size: FlashcardContentCardConst.actionIconSize,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 
+import '../../../../../../core/constants/text_styles.dart';
 import '../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../domain/entities/flashcard_models.dart';
 import '../../../../../../l10n/app_localizations.dart';
@@ -17,6 +19,10 @@ abstract final class FlashcardPreviewCarouselConst {
   static const double titleVerticalPadding = AppSpacing.lg;
   static const double expandButtonInset = AppSpacing.sm;
   static const double expandIconSize = AppSpacing.xl;
+  static const double frontTextFontSize = AppTypographyConst.titleLargeFontSize;
+  static const double frontTextHeight =
+      AppTypographyConst.titleLargeLineHeight / frontTextFontSize;
+  static const double horizontalScrollActivationOffset = AppSpacing.xs;
 }
 
 class FlashcardPreviewCarousel extends StatelessWidget {
@@ -40,75 +46,112 @@ class FlashcardPreviewCarousel extends StatelessWidget {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
     final int dotCount = _dotCount();
     final int safePreviewIndex = _safePreviewIndex(dotCount: dotCount);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: <Widget>[
-        SizedBox(
-          height: FlashcardPreviewCarouselConst.carouselHeight,
-          child: PageView.builder(
-            controller: pageController,
-            itemCount: dotCount,
-            onPageChanged: onPageChanged,
-            itemBuilder: (BuildContext context, int index) {
-              final FlashcardNode? item = _itemAt(index);
-              final String title =
-                  item?.frontText ?? l10n.flashcardPreviewPlaceholder;
-              return Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: FlashcardPreviewCarouselConst.pageSpacing,
+    return RepaintBoundary(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          SizedBox(
+            height: FlashcardPreviewCarouselConst.carouselHeight,
+            child: Listener(
+              onPointerSignal: (PointerSignalEvent event) {
+                if (event is! PointerScrollEvent) {
+                  return;
+                }
+                if (!_isHorizontalScroll(event)) {
+                  return;
+                }
+                _handlePointerScroll(
+                  event: event,
+                  dotCount: dotCount,
+                );
+              },
+              child: ScrollConfiguration(
+                behavior: const MaterialScrollBehavior().copyWith(
+                  dragDevices: <PointerDeviceKind>{
+                    PointerDeviceKind.touch,
+                    PointerDeviceKind.mouse,
+                    PointerDeviceKind.trackpad,
+                    PointerDeviceKind.stylus,
+                    PointerDeviceKind.invertedStylus,
+                  },
                 ),
-                child: GestureDetector(
-                  onTap: () => onExpandPressed(index),
-                  child: LumosCard(
-                    variant: LumosCardVariant.filled,
-                    borderRadius: BorderRadii.xLarge,
-                    child: Stack(
-                      children: <Widget>[
-                        Center(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: FlashcardPreviewCarouselConst
-                                  .titleHorizontalPadding,
-                              vertical: FlashcardPreviewCarouselConst
-                                  .titleVerticalPadding,
+                child: PageView.builder(
+                  controller: pageController,
+                  itemCount: dotCount,
+                  onPageChanged: onPageChanged,
+                  itemBuilder: (BuildContext context, int index) {
+                    final FlashcardNode? item = _itemAt(index);
+                    final String title =
+                        item?.frontText ?? l10n.flashcardPreviewPlaceholder;
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: FlashcardPreviewCarouselConst.pageSpacing,
+                      ),
+                      child: LumosCard(
+                        variant: LumosCardVariant.filled,
+                        borderRadius: BorderRadii.xLarge,
+                        child: Stack(
+                          children: <Widget>[
+                            Center(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: FlashcardPreviewCarouselConst
+                                      .titleHorizontalPadding,
+                                  vertical: FlashcardPreviewCarouselConst
+                                      .titleVerticalPadding,
+                                ),
+                                child: LumosInlineText(
+                                  title,
+                                  align: TextAlign.center,
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium
+                                      ?.copyWith(
+                                        fontSize: FlashcardPreviewCarouselConst
+                                            .frontTextFontSize,
+                                        height: FlashcardPreviewCarouselConst
+                                            .frontTextHeight,
+                                        letterSpacing: AppTypographyConst
+                                            .titleMediumLetterSpacing,
+                                        fontWeight: AppTypographyConst
+                                            .kFontWeightSemiBold,
+                                      ),
+                                ),
+                              ),
                             ),
-                            child: LumosInlineText(
-                              title,
-                              align: TextAlign.center,
-                              maxLines: 3,
-                              overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.titleMedium,
+                            Positioned(
+                              right: FlashcardPreviewCarouselConst
+                                  .expandButtonInset,
+                              bottom: FlashcardPreviewCarouselConst
+                                  .expandButtonInset,
+                              child: LumosIconButton(
+                                onPressed: () => onExpandPressed(index),
+                                tooltip: l10n.flashcardExpandPreviewTooltip,
+                                icon: Icons.fullscreen_rounded,
+                                size:
+                                    FlashcardPreviewCarouselConst.expandIconSize,
+                                variant: LumosIconButtonVariant.tonal,
+                              ),
                             ),
-                          ),
+                          ],
                         ),
-                        Positioned(
-                          right:
-                              FlashcardPreviewCarouselConst.expandButtonInset,
-                          bottom:
-                              FlashcardPreviewCarouselConst.expandButtonInset,
-                          child: LumosIconButton(
-                            onPressed: () => onExpandPressed(index),
-                            tooltip: l10n.flashcardExpandPreviewTooltip,
-                            icon: Icons.fullscreen_rounded,
-                            size: FlashcardPreviewCarouselConst.expandIconSize,
-                            variant: LumosIconButtonVariant.tonal,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                      ),
+                    );
+                  },
                 ),
-              );
-            },
+              ),
+            ),
           ),
-        ),
-        const SizedBox(height: AppSpacing.sm),
-        _buildIndicator(
-          context: context,
-          dotCount: dotCount,
-          safePreviewIndex: safePreviewIndex,
-        ),
-      ],
+          const SizedBox(height: AppSpacing.sm),
+          _buildIndicator(
+            context: context,
+            dotCount: dotCount,
+            safePreviewIndex: safePreviewIndex,
+          ),
+        ],
+      ),
     );
   }
 
@@ -122,20 +165,33 @@ class FlashcardPreviewCarousel extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: List<Widget>.generate(dotCount, (int index) {
         final bool isActive = index == safePreviewIndex;
-        final double size = isActive
-            ? FlashcardPreviewCarouselConst.dotSize *
-                  FlashcardPreviewCarouselConst.activeDotScale
-            : FlashcardPreviewCarouselConst.dotSize;
-        return AnimatedContainer(
-          duration: MotionDurations.animationFast,
-          width: size,
-          height: size,
-          margin: const EdgeInsets.symmetric(
+        return Padding(
+          padding: const EdgeInsets.symmetric(
             horizontal: FlashcardPreviewCarouselConst.dotSpacing,
           ),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: isActive ? colorScheme.primary : colorScheme.outlineVariant,
+          child: SizedBox(
+            width: FlashcardPreviewCarouselConst.dotSize *
+                FlashcardPreviewCarouselConst.activeDotScale,
+            height: FlashcardPreviewCarouselConst.dotSize *
+                FlashcardPreviewCarouselConst.activeDotScale,
+            child: Center(
+              child: AnimatedScale(
+                duration: MotionDurations.animationFast,
+                scale: isActive
+                    ? FlashcardPreviewCarouselConst.activeDotScale
+                    : WidgetRatios.full,
+                child: Container(
+                  width: FlashcardPreviewCarouselConst.dotSize,
+                  height: FlashcardPreviewCarouselConst.dotSize,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: isActive
+                        ? colorScheme.primary
+                        : colorScheme.outlineVariant,
+                  ),
+                ),
+              ),
+            ),
           ),
         );
       }),
@@ -169,5 +225,55 @@ class FlashcardPreviewCarousel extends StatelessWidget {
       return 0;
     }
     return previewIndex;
+  }
+
+  void _handlePointerScroll({
+    required PointerScrollEvent event,
+    required int dotCount,
+  }) {
+    if (!pageController.hasClients) {
+      return;
+    }
+    final double horizontalDelta = event.scrollDelta.dx;
+    if (horizontalDelta == AppSpacing.none) {
+      return;
+    }
+
+    final int currentPage = pageController.page?.round() ?? previewIndex;
+    if (horizontalDelta > AppSpacing.none) {
+      final int nextPage = (currentPage + 1).clamp(0, dotCount - 1);
+      if (nextPage == currentPage) {
+        return;
+      }
+      pageController.animateToPage(
+        nextPage,
+        duration: MotionDurations.animationFast,
+        curve: Curves.easeOutCubic,
+      );
+      return;
+    }
+
+    final int previousPage = (currentPage - 1).clamp(0, dotCount - 1);
+    if (previousPage == currentPage) {
+      return;
+    }
+    pageController.animateToPage(
+      previousPage,
+      duration: MotionDurations.animationFast,
+      curve: Curves.easeOutCubic,
+    );
+  }
+
+  bool _isHorizontalScroll(PointerScrollEvent event) {
+    final double horizontalDelta = event.scrollDelta.dx.abs();
+    final double verticalDelta = event.scrollDelta.dy.abs();
+    if (horizontalDelta <
+        FlashcardPreviewCarouselConst.horizontalScrollActivationOffset) {
+      return false;
+    }
+    if (horizontalDelta <= verticalDelta) {
+      return false;
+    }
+    return true;
   }
 }
