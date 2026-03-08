@@ -8,8 +8,8 @@ abstract final class FlashcardStudyProgressSectionConst {
 
   static const double sectionSpacing = AppSpacing.lg;
   static const double itemSpacing = AppSpacing.md;
-  static const double progressRingSize = WidgetSizes.avatarLarge;
-  static const double actionIconSize = AppSpacing.xl;
+  static const double progressRingSize = WidgetSizes.avatarMedium;
+  static const double actionIconSize = IconSizes.iconSmall;
   static const double progressTextMaxValue = 1;
 }
 

@@ -12,7 +12,7 @@ import '../../../../l10n/app_localizations.dart';
 import '../../../shared/widgets/lumos_widgets.dart';
 import '../providers/flashcard_provider.dart';
 import '../providers/states/flashcard_state.dart';
-import 'flashcard_flip_study_screen.dart';
+import '../../study/screens/flashcard_flip_study_screen.dart';
 import 'widgets/blocks/flashcard_card_section_header.dart';
 import 'widgets/blocks/flashcard_preview_carousel.dart';
 import 'widgets/blocks/flashcard_set_metadata_section.dart';
@@ -34,8 +34,6 @@ abstract final class FlashcardContentConst {
   static const double progressMaskHeight = WidgetSizes.progressTrackHeight;
   static const double previewViewportFraction = 0.96;
   static const double screenVerticalPadding = AppSpacing.lg;
-  static const double bottomStudyBarHorizontalPadding = AppSpacing.lg;
-  static const double bottomStudyBarVerticalPadding = AppSpacing.md;
   static const int defaultLearningProgressCount = 0;
 }
 
@@ -110,10 +108,12 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
       child: Scaffold(
         appBar: LumosAppBar(
           title: title,
+          wrapActions: false,
           actions: <Widget>[
             LumosIconButton(
               onPressed: _toggleSearchVisibility,
               tooltip: l10n.flashcardToggleSearchTooltip,
+              size: IconSizes.iconMedium,
               icon: state.isSearchVisible
                   ? Icons.search_off_rounded
                   : Icons.search_rounded,
@@ -121,11 +121,13 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
             LumosIconButton(
               onPressed: () => _showSortSheet(context: context, l10n: l10n),
               tooltip: l10n.flashcardSortButtonTooltip,
+              size: IconSizes.iconMedium,
               icon: Icons.tune_rounded,
             ),
             LumosIconButton(
               onPressed: () => _openCreateDialog(context: context, l10n: l10n),
               tooltip: l10n.flashcardCreateButton,
+              size: IconSizes.iconMedium,
               icon: Icons.add_rounded,
             ),
           ],
@@ -146,11 +148,6 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
             _buildLoadingMask(isVisible: state.isRefreshing),
             _buildMutatingOverlay(isVisible: state.isMutating),
           ],
-        ),
-        bottomNavigationBar: _buildStudyBottomBar(
-          context: context,
-          l10n: l10n,
-          state: state,
         ),
       ),
     );
@@ -456,36 +453,6 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
         child: ColoredBox(
           color: Theme.of(context).colorScheme.scrim,
           child: const Center(child: LumosLoadingIndicator()),
-        ),
-      ),
-    );
-  }
-
-  Widget? _buildStudyBottomBar({
-    required BuildContext context,
-    required AppLocalizations l10n,
-    required FlashcardState state,
-  }) {
-    if (!state.hasItems) {
-      return null;
-    }
-    if (state.isMutating) {
-      return null;
-    }
-    return SafeArea(
-      top: false,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(
-          FlashcardContentConst.bottomStudyBarHorizontalPadding,
-          FlashcardContentConst.bottomStudyBarVerticalPadding,
-          FlashcardContentConst.bottomStudyBarHorizontalPadding,
-          FlashcardContentConst.bottomStudyBarVerticalPadding,
-        ),
-        child: LumosPrimaryButton(
-          onPressed: () =>
-              _openStudyScreen(initialIndex: widget.state.safePreviewIndex),
-          label: l10n.flashcardStudyDeckButton,
-          expanded: true,
         ),
       ),
     );

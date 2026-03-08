@@ -472,7 +472,7 @@
 - L964: `_FlashcardErrorBanner._FlashcardErrorBanner()` (constructor)
 - L968: `_FlashcardErrorBanner.build` (method)
 
-### `lib/presentation/features/flashcard/screens/flashcard_flip_study_screen.dart`
+### `lib/presentation/features/study/screens/flashcard_flip_study_screen.dart`
 - L38: `FlashcardFlipStudyRouteExtra.FlashcardFlipStudyRouteExtra()` (constructor)
 - L44: `FlashcardFlipStudyRouteExtra.FlashcardFlipStudyRouteExtra.fallback()` (constructor)
 - L55: `FlashcardFlipStudyScreen.FlashcardFlipStudyScreen()` (constructor)

@@ -9,8 +9,8 @@ import '../../../../core/utils/string_utils.dart';
 import '../../../../domain/entities/flashcard_models.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../shared/widgets/lumos_widgets.dart';
-import '../providers/flashcard_provider.dart';
-import '../providers/states/flashcard_state.dart';
+import '../../flashcard/providers/flashcard_provider.dart';
+import '../../flashcard/providers/states/flashcard_state.dart';
 
 abstract final class FlashcardFlipStudyConst {
   FlashcardFlipStudyConst._();
@@ -121,7 +121,14 @@ class _FlashcardFlipStudyScreenState
       return Theme(
         data: screenTheme,
         child: Scaffold(
-          appBar: LumosAppBar(title: title),
+          appBar: LumosAppBar(
+            title: title,
+            leading: LumosIconButton(
+              onPressed: () => context.pop(),
+              tooltip: l10n.flashcardCloseTooltip,
+              icon: Icons.arrow_back_rounded,
+            ),
+          ),
           body: Center(
             child: LumosEmptyState(
               title: l10n.flashcardEmptyTitle,
@@ -137,6 +144,7 @@ class _FlashcardFlipStudyScreenState
       child: Scaffold(
         appBar: LumosAppBar(
           title: title,
+          wrapActions: false,
           leading: LumosIconButton(
             onPressed: () => context.pop(),
             tooltip: l10n.flashcardCloseTooltip,
@@ -146,11 +154,13 @@ class _FlashcardFlipStudyScreenState
             LumosIconButton(
               onPressed: _onSharePressed,
               tooltip: l10n.flashcardShareButtonTooltip,
+              size: IconSizes.iconMedium,
               icon: Icons.ios_share_rounded,
             ),
             LumosIconButton(
               onPressed: _onMorePressed,
               tooltip: l10n.flashcardMoreButtonTooltip,
+              size: IconSizes.iconMedium,
               icon: Icons.more_vert_rounded,
             ),
           ],

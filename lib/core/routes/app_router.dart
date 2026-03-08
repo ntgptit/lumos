@@ -3,9 +3,9 @@ import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../core/constants/route_names.dart';
-import '../../presentation/features/home/screens/home_screen.dart';
-import '../../presentation/features/flashcard/screens/flashcard_flip_study_screen.dart';
 import '../../presentation/features/flashcard/screens/flashcard_screen.dart';
+import '../../presentation/features/home/screens/home_screen.dart';
+import '../../presentation/features/study/screens/flashcard_flip_study_screen.dart';
 
 part 'app_router.g.dart';
 
