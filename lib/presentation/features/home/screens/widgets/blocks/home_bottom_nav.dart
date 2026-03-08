@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../../../core/constants/route_names.dart';
 import '../../../../../../l10n/app_localizations.dart';
 import '../../../../../shared/widgets/lumos_widgets.dart';
 import '../../../providers/home_provider.dart';
@@ -17,6 +19,7 @@ class HomeBottomNav extends ConsumerWidget {
     final List<HomeNavigationItem> items = ref.watch(
       homeNavigationItemsProvider,
     );
+    final bool isOnHomeRoute = _isOnHomeRoute(context);
     return NavigationBar(
       selectedIndex: selectedIndex,
       onDestinationSelected: (int newIndex) {
@@ -27,6 +30,10 @@ class HomeBottomNav extends ConsumerWidget {
               newIndex: newIndex,
               tabId: selectedItem.tabId,
             );
+        if (isOnHomeRoute) {
+          return;
+        }
+        context.goNamed(AppRouteName.home);
       },
       destinations: items
           .map(
@@ -38,5 +45,14 @@ class HomeBottomNav extends ConsumerWidget {
           )
           .toList(),
     );
+  }
+
+  bool _isOnHomeRoute(BuildContext context) {
+    try {
+      final String currentPath = GoRouterState.of(context).uri.path;
+      return currentPath == AppRoutePath.home;
+    } catch (_) {
+      return true;
+    }
   }
 }

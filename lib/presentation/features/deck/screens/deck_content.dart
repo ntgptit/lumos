@@ -56,8 +56,9 @@ class DeckContent extends ConsumerWidget {
                 providerArgs: providerArgs,
                 visibleDecks: visibleDecks,
               ),
-              if (visibleDecks.isEmpty)
+              if (visibleDecks.isEmpty) ...<Widget>[
                 DeckEmptyView(isSearchResult: state.searchQuery.isNotEmpty),
+              ],
               const SizedBox(height: DeckContentConst.listBottomSpacing),
             ],
           ),

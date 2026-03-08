@@ -10,6 +10,7 @@ import '../../../../core/utils/string_utils.dart';
 import '../../../../domain/entities/flashcard_models.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../shared/widgets/lumos_widgets.dart';
+import '../../home/screens/widgets/blocks/home_bottom_nav.dart';
 import '../providers/flashcard_provider.dart';
 import '../providers/states/flashcard_state.dart';
 import '../../study/screens/flashcard_flip_study_screen.dart';
@@ -149,6 +150,9 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
             _buildMutatingOverlay(isVisible: state.isMutating),
           ],
         ),
+        bottomNavigationBar: context.deviceType == DeviceType.mobile
+            ? const HomeBottomNav()
+            : null,
       ),
     );
   }

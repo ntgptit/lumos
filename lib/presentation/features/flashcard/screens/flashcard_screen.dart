@@ -1,12 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../core/error/async_value_error_extensions.dart';
 import '../../../../core/error/failures.dart';
+import '../../../../core/utils/string_utils.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../shared/widgets/lumos_widgets.dart';
+import '../../home/screens/widgets/blocks/home_bottom_nav.dart';
 import '../providers/flashcard_provider.dart';
 import '../providers/states/flashcard_state.dart';
 import 'flashcard_content.dart';
+
+abstract final class FlashcardScreenConst {
+  FlashcardScreenConst._();
+
+  static const EdgeInsets loadingMaskPadding = EdgeInsets.fromLTRB(
+    AppSpacing.lg,
+    AppSpacing.sm,
+    AppSpacing.lg,
+    AppSpacing.none,
+  );
+  static const double loadingMaskHeight = WidgetSizes.progressTrackHeight;
+}
 
 class FlashcardScreen extends ConsumerWidget {
   const FlashcardScreen({
@@ -30,7 +46,7 @@ class FlashcardScreen extends ConsumerWidget {
       moveForward: true,
       child: flashcardAsync.whenWithLoading(
         loadingBuilder: (BuildContext context) {
-          return const Center(child: LumosLoadingIndicator());
+          return _FlashcardLoadingShell(deckName: deckName);
         },
         dataBuilder: (BuildContext context, FlashcardState state) {
           return FlashcardContent(state: state);
@@ -49,5 +65,53 @@ class FlashcardScreen extends ConsumerWidget {
         },
       ),
     );
+  }
+}
+
+class _FlashcardLoadingShell extends StatelessWidget {
+  const _FlashcardLoadingShell({required this.deckName});
+
+  final String deckName;
+
+  @override
+  Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
+    final String title = _displayTitle(
+      deckName: deckName,
+      fallbackTitle: l10n.flashcardTitle,
+    );
+    return Scaffold(
+      appBar: LumosAppBar(title: title),
+      body: SafeArea(
+        top: false,
+        child: Align(
+          alignment: Alignment.topCenter,
+          child: Padding(
+            padding: FlashcardScreenConst.loadingMaskPadding,
+            child: ClipRRect(
+              borderRadius: BorderRadii.medium,
+              child: const LumosLoadingIndicator(
+                isLinear: true,
+                size: FlashcardScreenConst.loadingMaskHeight,
+              ),
+            ),
+          ),
+        ),
+      ),
+      bottomNavigationBar: context.deviceType == DeviceType.mobile
+          ? const HomeBottomNav()
+          : null,
+    );
+  }
+
+  String _displayTitle({
+    required String deckName,
+    required String fallbackTitle,
+  }) {
+    final String normalizedDeckName = StringUtils.normalizeName(deckName);
+    if (normalizedDeckName.isEmpty) {
+      return fallbackTitle;
+    }
+    return normalizedDeckName;
   }
 }

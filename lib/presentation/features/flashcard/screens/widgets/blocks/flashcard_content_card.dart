@@ -9,12 +9,16 @@ import '../../../../../shared/widgets/lumos_widgets.dart';
 abstract final class FlashcardContentCardConst {
   FlashcardContentCardConst._();
 
-  static const double cardPadding = AppSpacing.lg;
-  static const double textGap = AppSpacing.sm;
+  static const EdgeInsets cardPadding = EdgeInsets.symmetric(
+    horizontal: AppSpacing.md,
+    vertical: AppSpacing.sm,
+  );
+  static const double textGap = AppSpacing.xs;
   static const double iconSpacing = AppSpacing.xs;
-  static const double actionIconSize = AppSpacing.xl;
-  static const int backTextMaxLines = 6;
-  static const int noteMaxLines = 4;
+  static const double actionIconSize = IconSizes.iconMedium;
+  static const double actionMenuPadding = AppSpacing.xs;
+  static const int backTextMaxLines = 4;
+  static const int noteMaxLines = 3;
   static const double cardRadius = AppSpacing.lg;
   static const String actionEdit = 'action-edit';
   static const String actionDelete = 'action-delete';
@@ -48,7 +52,7 @@ class FlashcardContentCard extends StatelessWidget {
       variant: LumosCardVariant.filled,
       borderRadius: BorderRadius.circular(FlashcardContentCardConst.cardRadius),
       child: Padding(
-        padding: const EdgeInsets.all(FlashcardContentCardConst.cardPadding),
+        padding: FlashcardContentCardConst.cardPadding,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -99,7 +103,9 @@ class FlashcardContentCard extends StatelessWidget {
                     ];
                   },
                   child: const Padding(
-                    padding: EdgeInsets.all(AppSpacing.sm),
+                    padding: EdgeInsets.all(
+                      FlashcardContentCardConst.actionMenuPadding,
+                    ),
                     child: LumosIcon(
                       Icons.more_vert_rounded,
                       size: FlashcardContentCardConst.actionIconSize,
