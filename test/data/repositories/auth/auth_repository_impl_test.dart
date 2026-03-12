@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lumos/core/constants/storage_keys.dart';
+import 'package:lumos/core/network/interceptors/retry_interceptor.dart';
+import 'package:lumos/core/network/interceptors/session_refresh_interceptor.dart';
 import 'package:lumos/data/repositories/auth/auth_repository_impl.dart';
 
 void main() {
@@ -26,44 +28,54 @@ void main() {
         StorageKeys.refreshToken: 'refresh-token',
       });
       final Dio dio = Dio();
+      bool sawBypassRetry = false;
+      bool sawBypassRefresh = false;
       dio.interceptors.add(
         InterceptorsWrapper(
-          onRequest: (RequestOptions options, RequestInterceptorHandler handler) {
-            if (options.path == AuthRepositoryImplConst.mePath) {
-              handler.reject(
-                DioException.badResponse(
-                  statusCode: 401,
-                  requestOptions: options,
-                  response: Response<dynamic>(
-                    requestOptions: options,
-                    statusCode: 401,
-                  ),
-                ),
-              );
-              return;
-            }
-            if (options.path == AuthRepositoryImplConst.refreshPath) {
-              handler.resolve(
-                Response<dynamic>(
-                  requestOptions: options,
-                  data: <String, dynamic>{
-                    'user': <String, dynamic>{
-                      'id': 7,
-                      'username': 'tester',
-                      'email': 'tester@mail.com',
-                      'accountStatus': 'ACTIVE',
-                    },
-                    'accessToken': 'new-access-token',
-                    'refreshToken': 'new-refresh-token',
-                    'expiresIn': 900,
-                    'authenticated': true,
-                  },
-                ),
-              );
-              return;
-            }
-            handler.next(options);
-          },
+          onRequest:
+              (RequestOptions options, RequestInterceptorHandler handler) {
+                if (options.path == AuthRepositoryImplConst.mePath) {
+                  handler.reject(
+                    DioException.badResponse(
+                      statusCode: 401,
+                      requestOptions: options,
+                      response: Response<dynamic>(
+                        requestOptions: options,
+                        statusCode: 401,
+                      ),
+                    ),
+                  );
+                  return;
+                }
+                if (options.path == AuthRepositoryImplConst.refreshPath) {
+                  sawBypassRetry =
+                      options.extra[RetryInterceptorConst.bypassRetryKey] ==
+                      true;
+                  sawBypassRefresh =
+                      options.extra[SessionRefreshInterceptorConst
+                          .bypassRefreshKey] ==
+                      true;
+                  handler.resolve(
+                    Response<dynamic>(
+                      requestOptions: options,
+                      data: <String, dynamic>{
+                        'user': <String, dynamic>{
+                          'id': 7,
+                          'username': 'tester',
+                          'email': 'tester@mail.com',
+                          'accountStatus': 'ACTIVE',
+                        },
+                        'accessToken': 'new-access-token',
+                        'refreshToken': 'new-refresh-token',
+                        'expiresIn': 900,
+                        'authenticated': true,
+                      },
+                    ),
+                  );
+                  return;
+                }
+                handler.next(options);
+              },
         ),
       );
       final FlutterSecureStorage storage = const FlutterSecureStorage();
@@ -76,7 +88,12 @@ void main() {
 
       expect(session, isNotNull);
       expect(session!.accessToken, 'new-access-token');
-      expect(await storage.read(key: StorageKeys.accessToken), 'new-access-token');
+      expect(
+        await storage.read(key: StorageKeys.accessToken),
+        'new-access-token',
+      );
+      expect(sawBypassRetry, isTrue);
+      expect(sawBypassRefresh, isTrue);
     });
 
     test('login register and logout persist session lifecycle', () async {
@@ -86,34 +103,35 @@ void main() {
       final Dio dio = Dio();
       dio.interceptors.add(
         InterceptorsWrapper(
-          onRequest: (RequestOptions options, RequestInterceptorHandler handler) {
-            final Map<String, dynamic> data = <String, dynamic>{
-              'user': <String, dynamic>{
-                'id': 7,
-                'username': 'tester',
-                'email': 'tester@mail.com',
-                'accountStatus': 'ACTIVE',
+          onRequest:
+              (RequestOptions options, RequestInterceptorHandler handler) {
+                final Map<String, dynamic> data = <String, dynamic>{
+                  'user': <String, dynamic>{
+                    'id': 7,
+                    'username': 'tester',
+                    'email': 'tester@mail.com',
+                    'accountStatus': 'ACTIVE',
+                  },
+                  'accessToken': 'access-token',
+                  'refreshToken': 'refresh-token',
+                  'expiresIn': 900,
+                  'authenticated': true,
+                };
+                if (options.path == AuthRepositoryImplConst.loginPath ||
+                    options.path == AuthRepositoryImplConst.registerPath) {
+                  handler.resolve(
+                    Response<dynamic>(requestOptions: options, data: data),
+                  );
+                  return;
+                }
+                if (options.path == AuthRepositoryImplConst.logoutPath) {
+                  handler.resolve(
+                    Response<dynamic>(requestOptions: options, statusCode: 204),
+                  );
+                  return;
+                }
+                handler.next(options);
               },
-              'accessToken': 'access-token',
-              'refreshToken': 'refresh-token',
-              'expiresIn': 900,
-              'authenticated': true,
-            };
-            if (options.path == AuthRepositoryImplConst.loginPath ||
-                options.path == AuthRepositoryImplConst.registerPath) {
-              handler.resolve(
-                Response<dynamic>(requestOptions: options, data: data),
-              );
-              return;
-            }
-            if (options.path == AuthRepositoryImplConst.logoutPath) {
-              handler.resolve(
-                Response<dynamic>(requestOptions: options, statusCode: 204),
-              );
-              return;
-            }
-            handler.next(options);
-          },
         ),
       );
       final FlutterSecureStorage storage = const FlutterSecureStorage();

@@ -6,6 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lumos/core/constants/storage_keys.dart';
 import 'package:lumos/core/network/interceptors/auth_token_interceptor.dart';
+import 'package:lumos/core/network/interceptors/retry_interceptor.dart';
 import 'package:lumos/core/network/interceptors/session_refresh_interceptor.dart';
 
 void main() {
@@ -35,6 +36,11 @@ void main() {
         expect(
           options.headers[AuthTokenInterceptorConst.authorizationHeader],
           '${AuthTokenInterceptorConst.bearerPrefix}fresh-access-token',
+        );
+        expect(options.extra[RetryInterceptorConst.bypassRetryKey], isTrue);
+        expect(
+          options.extra[SessionRefreshInterceptorConst.bypassRefreshKey],
+          isTrue,
         );
         return _jsonResponseBody(
           statusCode: 200,
@@ -162,6 +168,61 @@ void main() {
             '/api/v1/study/sessions/2',
           ]),
         );
+      },
+    );
+
+    test(
+      'does not re-enter retry loop when replay request fails with network error',
+      () async {
+        FlutterSecureStorage.setMockInitialValues(<String, String>{
+          StorageKeys.accessToken: 'expired-token',
+          StorageKeys.refreshToken: 'refresh-token',
+        });
+        final FlutterSecureStorage storage = const FlutterSecureStorage();
+        final Dio refreshDio = Dio();
+        int replayCallCount = 0;
+        refreshDio.httpClientAdapter = _CallbackHttpClientAdapter((
+          RequestOptions options,
+        ) async {
+          if (options.path == SessionRefreshInterceptorConst.refreshPath) {
+            return _jsonResponseBody(
+              statusCode: 200,
+              payload: <String, dynamic>{
+                'user': <String, dynamic>{'id': 7},
+                'accessToken': 'fresh-access-token',
+                'refreshToken': 'fresh-refresh-token',
+              },
+            );
+          }
+          replayCallCount += 1;
+          throw DioException.connectionError(
+            requestOptions: options,
+            reason: 'Network unavailable.',
+          );
+        });
+        final Dio dio = Dio();
+        int originalCallCount = 0;
+        dio.httpClientAdapter = _CallbackHttpClientAdapter((
+          RequestOptions options,
+        ) async {
+          originalCallCount += 1;
+          return _jsonResponseBody(
+            statusCode: 401,
+            payload: <String, dynamic>{},
+          );
+        });
+        dio.interceptors.add(RetryInterceptor(dio: dio));
+        dio.interceptors.add(
+          SessionRefreshInterceptor(storage: storage, refreshDio: refreshDio),
+        );
+
+        await expectLater(
+          dio.get<dynamic>('/api/v1/study/sessions'),
+          throwsA(isA<DioException>()),
+        );
+
+        expect(replayCallCount, 1);
+        expect(originalCallCount, 1);
       },
     );
   });

@@ -3,6 +3,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/constants/storage_keys.dart';
+import '../../../core/network/interceptors/retry_interceptor.dart';
+import '../../../core/network/interceptors/session_refresh_interceptor.dart';
 import '../../../core/network/providers/network_providers.dart';
 import '../../../domain/entities/auth/auth_models.dart';
 import '../../../domain/repositories/auth/auth_repository.dart';
@@ -138,6 +140,12 @@ class DioAuthRepository implements AuthRepository {
     final Response<dynamic> response = await _dio.post<dynamic>(
       AuthRepositoryImplConst.refreshPath,
       data: <String, dynamic>{'refreshToken': refreshToken},
+      options: Options(
+        extra: <String, dynamic>{
+          RetryInterceptorConst.bypassRetryKey: true,
+          SessionRefreshInterceptorConst.bypassRefreshKey: true,
+        },
+      ),
     );
     final AuthSession session = AuthSession.fromJson(_castMap(response.data));
     await _persistSession(session);

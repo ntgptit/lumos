@@ -5,6 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../constants/storage_keys.dart';
 import 'auth_token_interceptor.dart';
+import 'retry_interceptor.dart';
 
 abstract final class SessionRefreshInterceptorConst {
   SessionRefreshInterceptorConst._();
@@ -205,6 +206,7 @@ class SessionRefreshInterceptor extends Interceptor {
     final Map<String, dynamic> extra = <String, dynamic>{
       ...original.extra,
       SessionRefreshInterceptorConst.bypassRefreshKey: true,
+      RetryInterceptorConst.bypassRetryKey: true,
     };
     return RequestOptions(
       path: original.path,

@@ -22,7 +22,7 @@ public interface UserAccountRepository extends JpaRepository<UserAccount, Long> 
 
     @Query(value = """
             SELECT *
-            FROM user_account
+            FROM user_accounts
             WHERE deleted_at IS NULL
               AND (
                 LOWER(username) = LOWER(:identifier)
