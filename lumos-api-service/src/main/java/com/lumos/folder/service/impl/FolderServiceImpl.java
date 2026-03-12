@@ -28,9 +28,11 @@ import com.lumos.folder.repository.specification.FolderSpecifications;
 import com.lumos.folder.service.FolderService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class FolderServiceImpl implements FolderService {
 
     private final FolderRepository folderRepository;
@@ -47,22 +49,34 @@ public class FolderServiceImpl implements FolderService {
     @Transactional
     public FolderResponse createFolder(CreateFolderRequest request) {
 
-        final var normalizedName = StringUtils.trim(request.name());
-        final var normalizedDescription = this.normalizeDescription(request.description());
-        final var parent = this.resolveParent(request.parentId());
-        final var depth = this.resolveDepth(parent);
-        this.validateParentHasNoDecks(parent);
+        final var normalizedName = StringUtils
+                .trim(request
+                        .name());
+        final var normalizedDescription = this
+                .normalizeDescription(request
+                        .description());
+        final var parent = this
+                .resolveParent(request
+                        .parentId());
+        final var depth = this
+                .resolveDepth(parent);
+        this
+                .validateParentHasNoDecks(parent);
 
-        this.validateSiblingName(parent, normalizedName, null);
+        this
+                .validateSiblingName(parent, normalizedName, null);
 
-        final var folder = this.folderMapper.toFolderEntity(
-                normalizedName,
-                normalizedDescription,
-                FolderConstants.DEFAULT_COLOR_HEX,
-                parent,
-                depth);
-        final var savedFolder = this.folderRepository.save(folder);
-        return this.folderMapper.toFolderResponse(savedFolder);
+        final var folder = this.folderMapper
+                .toFolderEntity(
+                        normalizedName,
+                        normalizedDescription,
+                        FolderConstants.DEFAULT_COLOR_HEX,
+                        parent,
+                        depth);
+        final var savedFolder = this.folderRepository
+                .save(folder);
+        return this.folderMapper
+                .toFolderResponse(savedFolder);
     }
 
     /**
@@ -76,13 +90,22 @@ public class FolderServiceImpl implements FolderService {
     @Transactional
     public FolderResponse renameFolder(Long folderId, RenameFolderRequest request) {
 
-        final var folder = this.findActiveFolder(folderId);
-        final var normalizedName = StringUtils.trim(request.name());
+        final var folder = this
+                .findActiveFolder(folderId);
+        final var normalizedName = StringUtils
+                .trim(request
+                        .name());
 
-        this.validateSiblingName(folder.getParent(), normalizedName, folder.getId());
-        folder.setName(normalizedName);
+        this
+                .validateSiblingName(folder
+                        .getParent(), normalizedName,
+                        folder
+                                .getId());
+        folder
+                .setName(normalizedName);
 
-        return this.folderMapper.toFolderResponse(folder);
+        return this.folderMapper
+                .toFolderResponse(folder);
     }
 
     /**
@@ -96,15 +119,27 @@ public class FolderServiceImpl implements FolderService {
     @Transactional
     public FolderResponse updateFolder(Long folderId, UpdateFolderRequest request) {
 
-        final var folder = this.findActiveFolder(folderId);
-        final var normalizedName = StringUtils.trim(request.name());
-        final var normalizedDescription = this.normalizeDescription(request.description());
+        final var folder = this
+                .findActiveFolder(folderId);
+        final var normalizedName = StringUtils
+                .trim(request
+                        .name());
+        final var normalizedDescription = this
+                .normalizeDescription(request
+                        .description());
 
-        this.validateSiblingName(folder.getParent(), normalizedName, folder.getId());
-        folder.setName(normalizedName);
-        folder.setDescription(normalizedDescription);
+        this
+                .validateSiblingName(folder
+                        .getParent(), normalizedName,
+                        folder
+                                .getId());
+        folder
+                .setName(normalizedName);
+        folder
+                .setDescription(normalizedDescription);
 
-        return this.folderMapper.toFolderResponse(folder);
+        return this.folderMapper
+                .toFolderResponse(folder);
     }
 
     /**
@@ -116,11 +151,15 @@ public class FolderServiceImpl implements FolderService {
     @Transactional
     public void deleteFolder(Long folderId) {
 
-        this.findActiveFolder(folderId);
-        final var deletedAt = Instant.now();
+        this
+                .findActiveFolder(folderId);
+        final var deletedAt = Instant
+                .now();
 
-        this.deckRepository.softDeleteByFolderTree(folderId, deletedAt);
-        this.folderRepository.softDeleteFolderTree(folderId, deletedAt);
+        this.deckRepository
+                .softDeleteByFolderTree(folderId, deletedAt);
+        this.folderRepository
+                .softDeleteFolderTree(folderId, deletedAt);
     }
 
     /**
@@ -134,21 +173,36 @@ public class FolderServiceImpl implements FolderService {
     @Override
     @Transactional(readOnly = true)
     public List<FolderResponse> getFolders(Long parentId, SearchRequest searchRequest, Pageable pageable) {
-        final var specification = FolderSpecifications.byParentAndKeyword(parentId, searchRequest.searchQuery());
-        final var sortedPageable = FolderSpecifications.toSortedPageable(pageable, searchRequest.sortBy(),
-                searchRequest.sortType());
-        final var folderPage = this.folderRepository.findAll(specification, sortedPageable);
-        final var folders = folderPage.getContent();
-        final var childCountByParentId = this.resolveChildCountByParentId(folders);
-        return folders.stream().map(folder -> {
-            final var childFolderCount = childCountByParentId.getOrDefault(folder.getId(),
-                    FolderConstants.DEFAULT_CHILD_FOLDER_COUNT);
-            return this.folderMapper.toFolderResponse(folder, childFolderCount);
-        }).toList();
+        final var specification = FolderSpecifications
+                .byParentAndKeyword(parentId, searchRequest
+                        .searchQuery());
+        final var sortedPageable = FolderSpecifications
+                .toSortedPageable(pageable, searchRequest
+                        .sortBy(),
+                        searchRequest
+                                .sortType());
+        final var folderPage = this.folderRepository
+                .findAll(specification, sortedPageable);
+        final var folders = folderPage
+                .getContent();
+        final var childCountByParentId = this
+                .resolveChildCountByParentId(folders);
+        return folders
+                .stream()
+                .map(folder -> {
+                    final var childFolderCount = childCountByParentId
+                            .getOrDefault(folder
+                                    .getId(),
+                                    FolderConstants.DEFAULT_CHILD_FOLDER_COUNT);
+                    return this.folderMapper
+                            .toFolderResponse(folder, childFolderCount);
+                })
+                .toList();
     }
 
     private Folder findActiveFolder(Long folderId) {
-        return this.folderRepository.findByIdAndDeletedAtIsNull(folderId)
+        return this.folderRepository
+                .findByIdAndDeletedAtIsNull(folderId)
                 .orElseThrow(() -> new FolderNotFoundException(folderId));
     }
 
@@ -157,7 +211,8 @@ public class FolderServiceImpl implements FolderService {
         if (parentId == null) {
             return null;
         }
-        return this.findActiveFolder(parentId);
+        return this
+                .findActiveFolder(parentId);
     }
 
     private int resolveDepth(Folder parent) {
@@ -165,16 +220,19 @@ public class FolderServiceImpl implements FolderService {
         if (parent == null) {
             return FolderConstants.ROOT_FOLDER_DEPTH;
         }
-        return parent.getDepth() + 1;
+        return parent
+                .getDepth() + 1;
     }
 
     private void validateSiblingName(Folder parent, String name, Long excludeId) {
         Long parentId = null;
         // Use parent id scope only when a parent folder exists.
         if (parent != null) {
-            parentId = parent.getId();
+            parentId = parent
+                    .getId();
         }
-        final var exists = this.folderRepository.existsActiveSiblingName(parentId, name, excludeId);
+        final var exists = this.folderRepository
+                .existsActiveSiblingName(parentId, name, excludeId);
         // Reject duplicate folder name within the same parent scope.
         if (exists) {
             throw new FolderNameConflictException(name);
@@ -186,12 +244,15 @@ public class FolderServiceImpl implements FolderService {
         if (parent == null) {
             return;
         }
-        final var hasDecks = this.deckRepository.existsByFolderIdAndDeletedAtIsNull(parent.getId());
+        final var hasDecks = this.deckRepository
+                .existsByFolderIdAndDeletedAtIsNull(parent
+                        .getId());
         // Allow subfolder creation only when parent folder has no decks.
         if (!hasDecks) {
             return;
         }
-        throw new FolderHasDecksConflictException(parent.getId());
+        throw new FolderHasDecksConflictException(parent
+                .getId());
     }
 
     private String normalizeDescription(String description) {
@@ -199,17 +260,29 @@ public class FolderServiceImpl implements FolderService {
         if (description == null) {
             return FolderConstants.EMPTY_DESCRIPTION;
         }
-        return StringUtils.trim(description);
+        return StringUtils
+                .trim(description);
     }
 
     private Map<Long, Integer> resolveChildCountByParentId(List<Folder> folders) {
-        final var folderIds = folders.stream().map(Folder::getId).toList();
+        final var folderIds = folders
+                .stream()
+                .map(Folder::getId)
+                .toList();
         // Return early when folder list is empty to avoid unnecessary query.
-        if (folderIds.isEmpty()) {
-            return Map.of();
+        if (folderIds
+                .isEmpty()) {
+            return Map
+                    .of();
         }
-        return this.folderRepository.findChildCountByParentIds(folderIds).stream().collect(
-                Collectors.toMap(FolderChildCountProjection::getParentId, row -> row.getChildFolderCount().intValue()));
+        return this.folderRepository
+                .findChildCountByParentIds(folderIds)
+                .stream()
+                .collect(
+                        Collectors
+                                .toMap(FolderChildCountProjection::getParentId, row -> row
+                                        .getChildFolderCount()
+                                        .intValue()));
     }
 
 }
