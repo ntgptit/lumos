@@ -1,17 +1,21 @@
 abstract final class AppRoutePath {
   AppRoutePath._();
 
+  static const String launch = '/launch';
+  static const String auth = '/auth';
   static const String home = '/';
   static const String flashcard = '/flashcards/:deckId';
-  static const String flashcardStudy = '/flashcards/:deckId/study';
+  static const String studySession = '/flashcards/:deckId/study';
 }
 
 abstract final class AppRouteName {
   AppRouteName._();
 
+  static const String launch = 'launch';
+  static const String auth = 'auth';
   static const String home = 'home';
   static const String flashcard = 'flashcard';
-  static const String flashcardStudy = 'flashcardStudy';
+  static const String studySession = 'studySession';
 }
 
 abstract final class AppRouteParam {

@@ -26,6 +26,15 @@ import com.lumos.flashcard.exception.FlashcardNotFoundException;
 import com.lumos.folder.exception.FolderHasDecksConflictException;
 import com.lumos.folder.exception.FolderNameConflictException;
 import com.lumos.folder.exception.FolderNotFoundException;
+import com.lumos.auth.exception.AccountDisabledException;
+import com.lumos.auth.exception.DuplicateEmailException;
+import com.lumos.auth.exception.DuplicateUsernameException;
+import com.lumos.auth.exception.InvalidCredentialsException;
+import com.lumos.auth.exception.InvalidRefreshTokenException;
+import com.lumos.auth.exception.UnauthorizedAccessException;
+import com.lumos.study.exception.StudyCommandNotAllowedException;
+import com.lumos.study.exception.StudySessionNotFoundException;
+import com.lumos.study.exception.StudySessionUnavailableException;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
@@ -111,6 +120,105 @@ public class GlobalExceptionHandler {
             HttpServletRequest request) {
         return buildErrorResponse(
                 HttpStatus.NOT_FOUND,
+                resolveMessage(exception.getMessageKey(), exception.getMessageArgs()),
+                request.getRequestURI(),
+                Map.of());
+    }
+
+    @ExceptionHandler(DuplicateUsernameException.class)
+    public ResponseEntity<ApiErrorResponse> handleDuplicateUsername(
+            DuplicateUsernameException exception,
+            HttpServletRequest request) {
+        return buildErrorResponse(
+                HttpStatus.CONFLICT,
+                resolveMessage(exception.getMessageKey(), exception.getMessageArgs()),
+                request.getRequestURI(),
+                Map.of());
+    }
+
+    @ExceptionHandler(DuplicateEmailException.class)
+    public ResponseEntity<ApiErrorResponse> handleDuplicateEmail(
+            DuplicateEmailException exception,
+            HttpServletRequest request) {
+        return buildErrorResponse(
+                HttpStatus.CONFLICT,
+                resolveMessage(exception.getMessageKey(), exception.getMessageArgs()),
+                request.getRequestURI(),
+                Map.of());
+    }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<ApiErrorResponse> handleInvalidCredentials(
+            InvalidCredentialsException exception,
+            HttpServletRequest request) {
+        return buildErrorResponse(
+                HttpStatus.UNAUTHORIZED,
+                resolveMessage(exception.getMessageKey(), exception.getMessageArgs()),
+                request.getRequestURI(),
+                Map.of());
+    }
+
+    @ExceptionHandler(InvalidRefreshTokenException.class)
+    public ResponseEntity<ApiErrorResponse> handleInvalidRefreshToken(
+            InvalidRefreshTokenException exception,
+            HttpServletRequest request) {
+        return buildErrorResponse(
+                HttpStatus.UNAUTHORIZED,
+                resolveMessage(exception.getMessageKey(), exception.getMessageArgs()),
+                request.getRequestURI(),
+                Map.of());
+    }
+
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    public ResponseEntity<ApiErrorResponse> handleUnauthorizedAccess(
+            UnauthorizedAccessException exception,
+            HttpServletRequest request) {
+        return buildErrorResponse(
+                HttpStatus.UNAUTHORIZED,
+                resolveMessage(exception.getMessageKey(), exception.getMessageArgs()),
+                request.getRequestURI(),
+                Map.of());
+    }
+
+    @ExceptionHandler(AccountDisabledException.class)
+    public ResponseEntity<ApiErrorResponse> handleAccountDisabled(
+            AccountDisabledException exception,
+            HttpServletRequest request) {
+        return buildErrorResponse(
+                HttpStatus.FORBIDDEN,
+                resolveMessage(exception.getMessageKey(), exception.getMessageArgs()),
+                request.getRequestURI(),
+                Map.of());
+    }
+
+    @ExceptionHandler(StudySessionNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleStudySessionNotFound(
+            StudySessionNotFoundException exception,
+            HttpServletRequest request) {
+        return buildErrorResponse(
+                HttpStatus.NOT_FOUND,
+                resolveMessage(exception.getMessageKey(), exception.getMessageArgs()),
+                request.getRequestURI(),
+                Map.of());
+    }
+
+    @ExceptionHandler(StudySessionUnavailableException.class)
+    public ResponseEntity<ApiErrorResponse> handleStudySessionUnavailable(
+            StudySessionUnavailableException exception,
+            HttpServletRequest request) {
+        return buildErrorResponse(
+                HttpStatus.CONFLICT,
+                resolveMessage(exception.getMessageKey(), exception.getMessageArgs()),
+                request.getRequestURI(),
+                Map.of());
+    }
+
+    @ExceptionHandler(StudyCommandNotAllowedException.class)
+    public ResponseEntity<ApiErrorResponse> handleStudyCommandNotAllowed(
+            StudyCommandNotAllowedException exception,
+            HttpServletRequest request) {
+        return buildErrorResponse(
+                HttpStatus.CONFLICT,
                 resolveMessage(exception.getMessageKey(), exception.getMessageArgs()),
                 request.getRequestURI(),
                 Map.of());

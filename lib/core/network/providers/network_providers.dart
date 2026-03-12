@@ -15,6 +15,7 @@ import '../clients/api_client.dart';
 import '../interceptors/auth_token_interceptor.dart';
 import '../interceptors/network_error_interceptor.dart';
 import '../interceptors/retry_interceptor.dart';
+import '../interceptors/session_refresh_interceptor.dart';
 
 part 'network_providers.g.dart';
 
@@ -39,6 +40,25 @@ FlutterSecureStorage secureStorage(Ref ref) {
 AuthTokenInterceptor authTokenInterceptor(Ref ref) {
   final FlutterSecureStorage storage = ref.watch(secureStorageProvider);
   return AuthTokenInterceptor(storage: storage);
+}
+
+/// Provides a dedicated Dio instance used by token refresh and request replay.
+@Riverpod(keepAlive: true)
+Dio sessionRefreshDio(Ref ref) {
+  final BaseOptions options = ref.watch(dioBaseOptionsProvider);
+  final Dio dio = Dio(options);
+  if (kDebugMode) {
+    dio.interceptors.add(ref.watch(prettyDioLoggerProvider));
+  }
+  return dio;
+}
+
+/// Provides interceptor that refreshes expired access tokens once per burst.
+@Riverpod(keepAlive: true)
+SessionRefreshInterceptor sessionRefreshInterceptor(Ref ref) {
+  final FlutterSecureStorage storage = ref.watch(secureStorageProvider);
+  final Dio refreshDio = ref.watch(sessionRefreshDioProvider);
+  return SessionRefreshInterceptor(storage: storage, refreshDio: refreshDio);
 }
 
 /// Provides interceptor that normalizes network errors.
@@ -87,8 +107,9 @@ Dio dioClient(Ref ref) {
   final Dio dio = Dio(options);
 
   dio.interceptors.add(ref.watch(authTokenInterceptorProvider));
-  dio.interceptors.add(RetryInterceptor(dio: dio));
   dio.interceptors.add(ref.watch(networkErrorInterceptorProvider));
+  dio.interceptors.add(RetryInterceptor(dio: dio));
+  dio.interceptors.add(ref.watch(sessionRefreshInterceptorProvider));
   if (kDebugMode) {
     dio.interceptors.add(ref.watch(prettyDioLoggerProvider));
   }

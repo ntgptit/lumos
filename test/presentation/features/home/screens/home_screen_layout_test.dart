@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lumos/core/themes/foundation/app_foundation.dart';
+import 'package:lumos/data/repositories/auth/auth_repository_impl.dart';
 import 'package:lumos/l10n/app_localizations.dart';
 import 'package:lumos/presentation/features/home/screens/home_screen.dart';
+
+import '../../../../testkit/feature_fixtures.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -74,7 +77,12 @@ Future<void> _pumpHomeWithSize({
   addTearDown(tester.view.resetPhysicalSize);
 
   await tester.pumpWidget(
-    const ProviderScope(
+    ProviderScope(
+      overrides: [
+        authRepositoryProvider.overrideWithValue(
+          FakeAuthRepository(bootstrapResult: sampleAuthSession()),
+        ),
+      ],
       child: MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,

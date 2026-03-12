@@ -3,9 +3,11 @@ import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../core/constants/route_names.dart';
+import '../../presentation/features/auth/screens/auth_screen.dart';
+import '../../presentation/features/auth/screens/launch_screen.dart';
 import '../../presentation/features/flashcard/screens/flashcard_screen.dart';
 import '../../presentation/features/home/screens/home_screen.dart';
-import '../../presentation/features/study/screens/flashcard_flip_study_screen.dart';
+import '../../presentation/features/study/screens/study_session_screen.dart';
 
 part 'app_router.g.dart';
 
@@ -19,8 +21,22 @@ final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
 GoRouter appRouter(Ref ref) {
   return GoRouter(
     navigatorKey: _rootNavigatorKey,
-    initialLocation: AppRoutePath.home,
+    initialLocation: AppRoutePath.launch,
     routes: <RouteBase>[
+      GoRoute(
+        path: AppRoutePath.launch,
+        name: AppRouteName.launch,
+        builder: (BuildContext context, GoRouterState state) {
+          return const LaunchScreen();
+        },
+      ),
+      GoRoute(
+        path: AppRoutePath.auth,
+        name: AppRouteName.auth,
+        builder: (BuildContext context, GoRouterState state) {
+          return const AuthScreen();
+        },
+      ),
       GoRoute(
         path: AppRoutePath.home,
         name: AppRouteName.home,
@@ -38,18 +54,14 @@ GoRouter appRouter(Ref ref) {
         },
       ),
       GoRoute(
-        path: AppRoutePath.flashcardStudy,
-        name: AppRouteName.flashcardStudy,
+        path: AppRoutePath.studySession,
+        name: AppRouteName.studySession,
         builder: (BuildContext context, GoRouterState state) {
           final int deckId = _resolveDeckId(state);
           final String deckName = _resolveDeckName(state);
-          final FlashcardFlipStudyRouteExtra extra = _resolveStudyExtra(state);
-          return FlashcardFlipStudyScreen(
+          return StudySessionScreen(
             deckId: deckId,
             deckName: deckName,
-            items: extra.items,
-            initialIndex: extra.initialIndex,
-            initialStarredFlashcardIds: extra.starredFlashcardIds,
           );
         },
       ),
@@ -68,12 +80,4 @@ int _resolveDeckId(GoRouterState state) {
 
 String _resolveDeckName(GoRouterState state) {
   return state.uri.queryParameters[AppRouteQuery.deckName] ?? '';
-}
-
-FlashcardFlipStudyRouteExtra _resolveStudyExtra(GoRouterState state) {
-  final Object? extra = state.extra;
-  if (extra is FlashcardFlipStudyRouteExtra) {
-    return extra;
-  }
-  return const FlashcardFlipStudyRouteExtra.fallback();
 }

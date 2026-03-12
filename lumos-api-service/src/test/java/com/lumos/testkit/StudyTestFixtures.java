@@ -1,0 +1,86 @@
+package com.lumos.testkit;
+
+import java.util.List;
+import java.util.Map;
+
+import com.lumos.study.dto.request.StartStudySessionRequest;
+import com.lumos.study.dto.request.SubmitAnswerRequest;
+import com.lumos.study.dto.request.UpdateSpeechPreferenceRequest;
+import com.lumos.study.dto.response.ProgressSummaryResponse;
+import com.lumos.study.dto.response.ReminderRecommendationResponse;
+import com.lumos.study.dto.response.SpeechCapabilityResponse;
+import com.lumos.study.dto.response.SpeechPreferenceResponse;
+import com.lumos.study.dto.response.StudyAnalyticsOverviewResponse;
+import com.lumos.study.dto.response.StudyChoiceResponse;
+import com.lumos.study.dto.response.StudyReminderSummaryResponse;
+import com.lumos.study.dto.response.StudySessionItemResponse;
+import com.lumos.study.dto.response.StudySessionResponse;
+
+public final class StudyTestFixtures {
+
+    private StudyTestFixtures() {
+    }
+
+    public static StartStudySessionRequest startStudySessionRequest(Long deckId) {
+        return new StartStudySessionRequest(deckId);
+    }
+
+    public static SubmitAnswerRequest submitAnswerRequest(String answer) {
+        return new SubmitAnswerRequest(answer);
+    }
+
+    public static UpdateSpeechPreferenceRequest updateSpeechPreferenceRequest(
+            boolean enabled,
+            boolean autoPlay,
+            String voice,
+            Double speed) {
+        return new UpdateSpeechPreferenceRequest(enabled, autoPlay, voice, speed);
+    }
+
+    public static StudySessionResponse studySessionResponse(Long sessionId, Long deckId, String deckName) {
+        return new StudySessionResponse(
+                sessionId,
+                deckId,
+                deckName,
+                "FIRST_LEARNING",
+                "REVIEW",
+                "IN_PROGRESS",
+                List.of("REVIEW", "MATCH", "GUESS", "RECALL", "FILL"),
+                List.of("REVEAL_ANSWER", "MARK_REMEMBERED"),
+                new ProgressSummaryResponse(1, 2, 0, 5, 0.5D, 0.0D, 0.1D),
+                new StudySessionItemResponse(
+                        101L,
+                        "안녕하세요",
+                        "xin chao",
+                        "note",
+                        "annyeonghaseyo",
+                        "Reveal the answer, then confirm if you remembered it.",
+                        "",
+                        List.of(new StudyChoiceResponse("choice-0", "xin chao")),
+                        new SpeechCapabilityResponse(true, false, true, "ko-KR", "ko-KR-neutral", 1.0D, "안녕하세요")),
+                false);
+    }
+
+    public static StudyReminderSummaryResponse studyReminderSummaryResponse() {
+        return new StudyReminderSummaryResponse(
+                4L,
+                2L,
+                "LEVEL_1",
+                List.of("IN_APP_BADGE_DUE_LIST", "DUE_BASED_SESSION_RECOMMENDATION"),
+                new ReminderRecommendationResponse(10L, "Korean Basics", 4, 2, 1, "REVIEW"));
+    }
+
+    public static StudyAnalyticsOverviewResponse studyAnalyticsOverviewResponse() {
+        return new StudyAnalyticsOverviewResponse(
+                12L,
+                4L,
+                2L,
+                9L,
+                3L,
+                Map.of(1, 3L, 2, 4L, 3, 5L));
+    }
+
+    public static SpeechPreferenceResponse speechPreferenceResponse() {
+        return new SpeechPreferenceResponse(true, false, "ko-KR-neutral", 1.0D, "ko-KR");
+    }
+}

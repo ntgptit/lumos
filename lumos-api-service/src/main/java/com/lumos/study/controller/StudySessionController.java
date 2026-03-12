@@ -1,0 +1,199 @@
+package com.lumos.study.controller;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.lumos.study.dto.request.StartStudySessionRequest;
+import com.lumos.study.dto.request.SubmitAnswerRequest;
+import com.lumos.study.dto.request.UpdateSpeechPreferenceRequest;
+import com.lumos.study.dto.response.SpeechPreferenceResponse;
+import com.lumos.study.dto.response.StudyAnalyticsOverviewResponse;
+import com.lumos.study.dto.response.StudyReminderSummaryResponse;
+import com.lumos.study.dto.response.StudySessionResponse;
+import com.lumos.study.service.SpeechPreferenceService;
+import com.lumos.study.service.StudyInsightService;
+import com.lumos.study.service.StudySessionService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+
+/**
+ * Study session, reminder, analytics, and speech preference endpoints.
+ */
+@Validated
+@RestController
+@RequiredArgsConstructor
+@Tag(name = "Study", description = "Study session and spaced repetition APIs")
+public class StudySessionController {
+
+    private final StudySessionService studySessionService;
+    private final StudyInsightService studyInsightService;
+    private final SpeechPreferenceService speechPreferenceService;
+
+    /**
+     * Start a canonical study session for the selected deck.
+     *
+     * @param request session creation payload
+     * @return created study session response
+     */
+    @Operation(summary = "Start study session")
+    @PostMapping("/api/v1/study/sessions")
+    public ResponseEntity<StudySessionResponse> startSession(@Valid @RequestBody StartStudySessionRequest request) {
+        final StudySessionResponse response = this.studySessionService.startSession(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    /**
+     * Resume the specified study session.
+     *
+     * @param sessionId study session identifier
+     * @return resumed study session response
+     */
+    @Operation(summary = "Resume study session")
+    @GetMapping("/api/v1/study/sessions/{sessionId}")
+    public ResponseEntity<StudySessionResponse> resumeSession(@PathVariable Long sessionId) {
+        final StudySessionResponse response = this.studySessionService.resumeSession(sessionId);
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Submit an answer for the current session item.
+     *
+     * @param sessionId study session identifier
+     * @param request   answer submission payload
+     * @return updated study session response
+     */
+    @Operation(summary = "Submit study answer")
+    @PostMapping("/api/v1/study/sessions/{sessionId}/submit-answer")
+    public ResponseEntity<StudySessionResponse> submitAnswer(
+            @PathVariable Long sessionId,
+            @Valid @RequestBody SubmitAnswerRequest request) {
+        final StudySessionResponse response = this.studySessionService.submitAnswer(sessionId, request);
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Reveal the answer for the current session item.
+     *
+     * @param sessionId study session identifier
+     * @return updated study session response
+     */
+    @Operation(summary = "Reveal answer")
+    @PostMapping("/api/v1/study/sessions/{sessionId}/reveal-answer")
+    public ResponseEntity<StudySessionResponse> revealAnswer(@PathVariable Long sessionId) {
+        final StudySessionResponse response = this.studySessionService.revealAnswer(sessionId);
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Mark the current session item as remembered.
+     *
+     * @param sessionId study session identifier
+     * @return updated study session response
+     */
+    @Operation(summary = "Mark remembered")
+    @PostMapping("/api/v1/study/sessions/{sessionId}/mark-remembered")
+    public ResponseEntity<StudySessionResponse> markRemembered(@PathVariable Long sessionId) {
+        final StudySessionResponse response = this.studySessionService.markRemembered(sessionId);
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Move the current session item into the retry queue.
+     *
+     * @param sessionId study session identifier
+     * @return updated study session response
+     */
+    @Operation(summary = "Retry item")
+    @PostMapping("/api/v1/study/sessions/{sessionId}/retry-item")
+    public ResponseEntity<StudySessionResponse> retryItem(@PathVariable Long sessionId) {
+        final StudySessionResponse response = this.studySessionService.retryItem(sessionId);
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Advance the session to the next allowed item or mode.
+     *
+     * @param sessionId study session identifier
+     * @return updated study session response
+     */
+    @Operation(summary = "Go next")
+    @PostMapping("/api/v1/study/sessions/{sessionId}/next")
+    public ResponseEntity<StudySessionResponse> goNext(@PathVariable Long sessionId) {
+        final StudySessionResponse response = this.studySessionService.goNext(sessionId);
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Complete the current mode when all items satisfy the completion rule.
+     *
+     * @param sessionId study session identifier
+     * @return updated study session response
+     */
+    @Operation(summary = "Complete mode")
+    @PostMapping("/api/v1/study/sessions/{sessionId}/complete-mode")
+    public ResponseEntity<StudySessionResponse> completeMode(@PathVariable Long sessionId) {
+        final StudySessionResponse response = this.studySessionService.completeMode(sessionId);
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Return the reminder summary for the current user.
+     *
+     * @return reminder summary response
+     */
+    @Operation(summary = "Get reminder summary")
+    @GetMapping("/api/v1/study/reminders/summary")
+    public ResponseEntity<StudyReminderSummaryResponse> getReminderSummary() {
+        final StudyReminderSummaryResponse response = this.studyInsightService.getReminderSummary();
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Return the spaced repetition analytics overview for the current user.
+     *
+     * @return analytics overview response
+     */
+    @Operation(summary = "Get analytics overview")
+    @GetMapping("/api/v1/study/analytics/overview")
+    public ResponseEntity<StudyAnalyticsOverviewResponse> getAnalyticsOverview() {
+        final StudyAnalyticsOverviewResponse response = this.studyInsightService.getAnalyticsOverview();
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Return the current user's speech preference.
+     *
+     * @return speech preference response
+     */
+    @Operation(summary = "Get speech preference")
+    @GetMapping("/api/v1/profile/speech-preference")
+    public ResponseEntity<SpeechPreferenceResponse> getSpeechPreference() {
+        final SpeechPreferenceResponse response = this.speechPreferenceService.getSpeechPreference();
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Update the current user's speech preference.
+     *
+     * @param request speech preference update payload
+     * @return updated speech preference response
+     */
+    @Operation(summary = "Update speech preference")
+    @PutMapping("/api/v1/profile/speech-preference")
+    public ResponseEntity<SpeechPreferenceResponse> updateSpeechPreference(
+            @Valid @RequestBody UpdateSpeechPreferenceRequest request) {
+        final SpeechPreferenceResponse response = this.speechPreferenceService.updateSpeechPreference(request);
+        return ResponseEntity.ok(response);
+    }
+}

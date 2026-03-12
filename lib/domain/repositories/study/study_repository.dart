@@ -1,0 +1,30 @@
+import '../../entities/study/study_models.dart';
+
+abstract class StudyRepository {
+  Future<StudySessionData> startSession({required int deckId});
+
+  Future<StudySessionData> resumeSession({required int sessionId});
+
+  Future<StudySessionData> submitAnswer({
+    required int sessionId,
+    required String answer,
+  });
+
+  Future<StudySessionData> revealAnswer({required int sessionId});
+
+  Future<StudySessionData> markRemembered({required int sessionId});
+
+  Future<StudySessionData> retryItem({required int sessionId});
+
+  Future<StudySessionData> goNext({required int sessionId});
+
+  Future<StudyReminderSummary> getReminderSummary();
+
+  Future<StudyAnalyticsOverview> getAnalyticsOverview();
+
+  Future<SpeechPreference> getSpeechPreference();
+
+  Future<SpeechPreference> updateSpeechPreference({
+    required SpeechPreference preference,
+  });
+}

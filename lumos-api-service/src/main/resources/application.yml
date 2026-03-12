@@ -38,3 +38,8 @@ app:
       - Location
     allow-credentials: true
     max-age-seconds: 3600
+  security:
+    jwt:
+      secret: ${JWT_SECRET:lumos-demo-secret-key-lumos-demo-secret-key}
+      access-token-ttl-seconds: ${JWT_ACCESS_TOKEN_TTL_SECONDS:900}
+      refresh-token-ttl-seconds: ${JWT_REFRESH_TOKEN_TTL_SECONDS:2592000}

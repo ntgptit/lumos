@@ -13,7 +13,6 @@ import '../../../shared/widgets/lumos_widgets.dart';
 import '../../home/screens/widgets/blocks/home_bottom_nav.dart';
 import '../providers/flashcard_provider.dart';
 import '../providers/states/flashcard_state.dart';
-import '../../study/screens/flashcard_flip_study_screen.dart';
 import 'widgets/blocks/flashcard_card_section_header.dart';
 import 'widgets/blocks/flashcard_preview_carousel.dart';
 import 'widgets/blocks/flashcard_set_metadata_section.dart';
@@ -742,37 +741,13 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
       );
       return;
     }
-    final int safeIndex = _safeStudyIndex(
-      initialIndex: initialIndex,
-      itemCount: state.items.length,
-    );
-    final FlashcardFlipStudyRouteExtra extra = FlashcardFlipStudyRouteExtra(
-      items: state.items,
-      initialIndex: safeIndex,
-      starredFlashcardIds: state.starredFlashcardIds.toSet(),
-    );
     context.pushNamed(
-      AppRouteName.flashcardStudy,
+      AppRouteName.studySession,
       pathParameters: <String, String>{
         AppRouteParam.deckId: state.deckId.toString(),
       },
       queryParameters: <String, String>{AppRouteQuery.deckName: state.deckName},
-      extra: extra,
     );
-  }
-
-  int _safeStudyIndex({required int initialIndex, required int itemCount}) {
-    if (itemCount == 0) {
-      return FlashcardStateConst.firstPage;
-    }
-    final int maxIndex = itemCount - 1;
-    if (initialIndex < FlashcardStateConst.firstPage) {
-      return FlashcardStateConst.firstPage;
-    }
-    if (initialIndex > maxIndex) {
-      return maxIndex;
-    }
-    return initialIndex;
   }
 
   bool _starredStateForItem({

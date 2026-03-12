@@ -50,7 +50,7 @@ public class FolderServiceImpl implements FolderService {
     public FolderResponse createFolder(CreateFolderRequest request) {
 
         final var normalizedName = StringUtils
-                .trim(request
+                .strip(request
                         .name());
         final var normalizedDescription = this
                 .normalizeDescription(request
@@ -93,7 +93,7 @@ public class FolderServiceImpl implements FolderService {
         final var folder = this
                 .findActiveFolder(folderId);
         final var normalizedName = StringUtils
-                .trim(request
+                .strip(request
                         .name());
 
         this
@@ -122,7 +122,7 @@ public class FolderServiceImpl implements FolderService {
         final var folder = this
                 .findActiveFolder(folderId);
         final var normalizedName = StringUtils
-                .trim(request
+                .strip(request
                         .name());
         final var normalizedDescription = this
                 .normalizeDescription(request
@@ -261,7 +261,7 @@ public class FolderServiceImpl implements FolderService {
             return FolderConstants.EMPTY_DESCRIPTION;
         }
         return StringUtils
-                .trim(description);
+                .strip(description);
     }
 
     private Map<Long, Integer> resolveChildCountByParentId(List<Folder> folders) {

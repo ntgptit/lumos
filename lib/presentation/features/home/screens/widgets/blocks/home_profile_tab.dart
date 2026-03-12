@@ -5,6 +5,8 @@ import '../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../core/providers/theme_provider.dart';
 import '../../../../../../l10n/app_localizations.dart';
 import '../../../../../shared/widgets/lumos_widgets.dart';
+import '../../../../auth/providers/auth_session_provider.dart';
+import '../../../../study/providers/speech_preference_provider.dart';
 
 abstract final class HomeProfileTabConst {
   HomeProfileTabConst._();
@@ -47,6 +49,9 @@ class HomeProfileTab extends ConsumerWidget {
     required ThemeMode themeMode,
     required AppThemePreference selectedPreference,
   }) {
+    final AsyncValue<dynamic> speechAsync = ref.watch(
+      speechPreferenceControllerProvider,
+    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
@@ -55,6 +60,16 @@ class HomeProfileTab extends ConsumerWidget {
           l10n: l10n,
           themeMode: themeMode,
           selectedPreference: selectedPreference,
+        ),
+        const SizedBox(height: AppSpacing.lg),
+        _buildSpeechCard(ref: ref, speechAsync: speechAsync),
+        const SizedBox(height: AppSpacing.lg),
+        LumosDangerButton(
+          onPressed: () async {
+            await ref.read(authSessionControllerProvider.notifier).logout();
+          },
+          label: 'Logout',
+          icon: Icons.logout_rounded,
         ),
       ],
     );
@@ -158,5 +173,76 @@ class HomeProfileTab extends ConsumerWidget {
       ThemeMode.dark => l10n.profileThemeToggleToLight,
       _ => l10n.profileThemeToggleToDark,
     };
+  }
+
+  Widget _buildSpeechCard({
+    required WidgetRef ref,
+    required AsyncValue<dynamic> speechAsync,
+  }) {
+    return speechAsync.when(
+      loading: () => const LumosCard(
+        child: Padding(
+          padding: EdgeInsets.all(AppSpacing.lg),
+          child: LumosLoadingIndicator(),
+        ),
+      ),
+      error: (Object error, StackTrace stackTrace) {
+        return LumosCard(
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            child: LumosText(
+              error.toString(),
+              style: LumosTextStyle.bodySmall,
+            ),
+          ),
+        );
+      },
+      data: (dynamic preference) {
+        return LumosCard(
+          margin: EdgeInsets.zero,
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                const LumosText(
+                  'Speech preference',
+                  style: LumosTextStyle.titleLarge,
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                SwitchListTile.adaptive(
+                  contentPadding: EdgeInsets.zero,
+                  title: const LumosText(
+                    'Enable Korean speech',
+                    style: LumosTextStyle.bodyMedium,
+                  ),
+                  value: preference.enabled,
+                  onChanged: (bool enabled) {
+                    ref
+                        .read(speechPreferenceControllerProvider.notifier)
+                        .savePreference(preference.copyWith(enabled: enabled));
+                  },
+                ),
+                SwitchListTile.adaptive(
+                  contentPadding: EdgeInsets.zero,
+                  title: const LumosText(
+                    'Auto play current item',
+                    style: LumosTextStyle.bodyMedium,
+                  ),
+                  value: preference.autoPlay,
+                  onChanged: (bool autoPlay) {
+                    ref
+                        .read(speechPreferenceControllerProvider.notifier)
+                        .savePreference(
+                          preference.copyWith(autoPlay: autoPlay),
+                        );
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }
