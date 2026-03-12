@@ -1,5 +1,9 @@
 import 'dart:io';
 
+import 'guard_project_profile.dart';
+
+final GuardProjectProfile _projectProfile = GuardProjectProfile.load();
+
 class SharedWidgetOverrideGuardConst {
   const SharedWidgetOverrideGuardConst._();
 
@@ -66,7 +70,7 @@ const List<String> _forbiddenColorOverrideArguments = <String>[
 
 final List<_ForbiddenArgumentRule> _rules = <_ForbiddenArgumentRule>[
   _ForbiddenArgumentRule(
-    widgetPattern: RegExp(r'\bLumos[A-Z]\w*\s*\('),
+    widgetPattern: _projectProfile.widgetInvocationPattern(),
     forbiddenArgumentNames: _forbiddenColorOverrideArguments,
   ),
 ];
@@ -149,13 +153,13 @@ void _checkFile({
 }
 
 String _extractWidgetName(String sourceLine) {
-  final RegExpMatch? match = RegExp(
-    r'\b(Lumos[A-Z]\w*)\s*\(',
-  ).firstMatch(sourceLine);
+  final RegExpMatch? match = _projectProfile.widgetCapturePattern().firstMatch(
+    sourceLine,
+  );
   if (match == null) {
-    return 'LumosWidget';
+    return _projectProfile.widgetName('Widget');
   }
-  return match.group(1) ?? 'LumosWidget';
+  return match.group(1) ?? _projectProfile.widgetName('Widget');
 }
 
 String _collectCallExpression({

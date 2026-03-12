@@ -1,5 +1,9 @@
 import 'dart:io';
 
+import 'guard_project_profile.dart';
+
+final GuardProjectProfile _projectProfile = GuardProjectProfile.load();
+
 class SharedWidgetsM3CoverageConst {
   const SharedWidgetsM3CoverageConst._();
 
@@ -169,7 +173,10 @@ Future<Set<String>> _readManifest({required File file}) async {
     if (trimmed.startsWith('#')) {
       continue;
     }
-    entries.add(_normalizePath(trimmed));
+    final String resolvedEntry = _projectProfile.expandWidgetFilePrefixToken(
+      trimmed,
+    );
+    entries.add(_normalizePath(resolvedEntry));
   }
   return entries;
 }

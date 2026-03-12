@@ -19,6 +19,17 @@
 // - 1 => violations found
 import 'dart:io';
 
+import 'guard_project_profile.dart';
+
+final GuardProjectProfile _projectProfile = GuardProjectProfile.load();
+
+String _sharedWidgetCardPath(String suffix) {
+  return _projectProfile.widgetFilePath(
+    directory: 'lib/presentation/shared/widgets/cards',
+    suffix: suffix,
+  );
+}
+
 /// Central configuration constants for Common Widget Guard.
 class CommonWidgetGuardConst {
   const CommonWidgetGuardConst._();
@@ -43,7 +54,7 @@ class CommonWidgetGuardConst {
   ];
 
   /// Allowed StatefulWidget locations.
-  static const List<String> statefulWhitelist = <String>[
+  static final List<String> statefulWhitelist = <String>[
     'lib/core/widgets/animation/',
     'lib/core/widgets/navigation/',
     'lib/core/widgets/card/flashcard_flip.dart',
@@ -56,10 +67,10 @@ class CommonWidgetGuardConst {
     'lib/presentation/shared/widgets/input/password_text_box.dart',
     'lib/presentation/shared/widgets/loader/shimmer_box.dart',
     'lib/presentation/shared/widgets/buttons/app_expandable_fab.dart',
-    'lib/presentation/shared/widgets/cards/lumos_action_list_item_card.dart',
-    'lib/presentation/shared/widgets/cards/lumos_card.dart',
-    'lib/presentation/shared/widgets/cards/lumos_deck_card.dart',
-    'lib/presentation/shared/widgets/cards/lumos_entity_list_item_card.dart',
+    _sharedWidgetCardPath('action_list_item_card.dart'),
+    _sharedWidgetCardPath('card.dart'),
+    _sharedWidgetCardPath('deck_card.dart'),
+    _sharedWidgetCardPath('entity_list_item_card.dart'),
   ];
 }
 

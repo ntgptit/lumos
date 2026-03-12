@@ -1,0 +1,3 @@
+package_name: lumos
+widget_class_prefix: Lumos
+widget_file_prefix: lumos

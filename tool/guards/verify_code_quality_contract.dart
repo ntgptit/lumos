@@ -19,6 +19,10 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/source/line_info.dart';
 import 'package:yaml/yaml.dart';
 
+import 'guard_project_profile.dart';
+
+final GuardProjectProfile _projectProfile = GuardProjectProfile.load();
+
 class QualityContractConst {
   const QualityContractConst._();
 
@@ -456,8 +460,9 @@ Set<String> _extractInternalDependencies({
 }
 
 String? _resolveImportPath({required String fromPath, required String uri}) {
-  if (uri.startsWith('package:lumos/')) {
-    final String subPath = uri.replaceFirst('package:lumos/', '');
+  final String packageImportPrefix = _projectProfile.packageImportPrefix();
+  if (uri.startsWith(packageImportPrefix)) {
+    final String subPath = uri.replaceFirst(packageImportPrefix, '');
     return _normalizePath('lib/$subPath');
   }
   if (uri.startsWith('package:')) return null;

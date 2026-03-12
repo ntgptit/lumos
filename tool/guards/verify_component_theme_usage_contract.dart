@@ -1,5 +1,9 @@
 import 'dart:io';
 
+import 'guard_project_profile.dart';
+
+final GuardProjectProfile _projectProfile = GuardProjectProfile.load();
+
 class ComponentThemeGuardConst {
   const ComponentThemeGuardConst._();
 
@@ -26,10 +30,12 @@ class ComponentThemeGuardConst {
   static const String showModalBottomSheetMarker = 'showModalBottomSheet';
   static const String allowInlineOverrideMarker =
       'component-theme-guard: allow-inline-override';
-  static const String loadingWidgetName = 'LumosLoadingIndicator';
-  static const String directProgressIndicatorReason =
+  static final String loadingWidgetName = _projectProfile.widgetName(
+    'LoadingIndicator',
+  );
+  static final String directProgressIndicatorReason =
       'Direct ProgressIndicator usage in feature UI should be wrapped by shared loading widgets '
-      '(for example `LumosLoadingIndicator`) to keep app-wide behavior and theming consistent.';
+      '(for example `${ComponentThemeGuardConst.loadingWidgetName}`) to keep app-wide behavior and theming consistent.';
 }
 
 class ComponentThemeViolation {
@@ -174,7 +180,7 @@ _forbiddenPropertyRules = <_ForbiddenPropertyRule>[
     propertyNames: <String>['color', 'backgroundColor', 'valueColor'],
     reason:
         'ProgressIndicator colors in UI files should come from `ProgressIndicatorThemeData` '
-        'or shared loading widgets (for example `LumosLoadingIndicator`) to keep app-wide consistency.',
+        'or shared loading widgets (for example `${ComponentThemeGuardConst.loadingWidgetName}`) to keep app-wide consistency.',
   ),
   _ForbiddenPropertyRule(
     widgetName: 'Dialog',

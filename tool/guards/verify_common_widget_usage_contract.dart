@@ -1,5 +1,9 @@
 import 'dart:io';
 
+import 'guard_project_profile.dart';
+
+final GuardProjectProfile _projectProfile = GuardProjectProfile.load();
+
 class CommonWidgetUsageGuardConst {
   const CommonWidgetUsageGuardConst._();
 
@@ -208,89 +212,104 @@ List<_DisallowedWidgetRule> _disallowedRules() {
   return <_DisallowedWidgetRule>[
     _DisallowedWidgetRule(
       widgetName: 'AppBar',
-      replacement: 'LumosAppBar',
+      replacement: _projectProfile.widgetName('AppBar'),
       pattern: r'\bAppBar\s*\(',
     ),
     _DisallowedWidgetRule(
       widgetName: 'AlertDialog',
-      replacement: 'LumosDialog/LumosPromptDialog',
+      replacement: _projectProfile.widgetAlternatives(<String>[
+        'Dialog',
+        'PromptDialog',
+      ]),
       pattern: r'\bAlertDialog\s*\(',
     ),
     _DisallowedWidgetRule(
       widgetName: 'TextField',
-      replacement: 'LumosTextField/LumosTextBox/LumosTextArea/LumosSearchBar',
+      replacement: _projectProfile.widgetAlternatives(<String>[
+        'TextField',
+        'TextBox',
+        'TextArea',
+        'SearchBar',
+      ]),
       pattern: r'\bTextField\s*\(',
     ),
     _DisallowedWidgetRule(
       widgetName: 'TextFormField',
-      replacement: 'LumosTextField/LumosTextBox',
+      replacement: _projectProfile.widgetAlternatives(<String>[
+        'TextField',
+        'TextBox',
+      ]),
       pattern: r'\bTextFormField\s*\(',
     ),
     _DisallowedWidgetRule(
       widgetName: 'FilledButton',
-      replacement: 'LumosButton (primary/secondary)',
+      replacement:
+          '${_projectProfile.widgetName('Button')} (primary/secondary)',
       pattern: r'\bFilledButton(?:\.[A-Za-z0-9_]+)?\s*\(',
     ),
     _DisallowedWidgetRule(
       widgetName: 'ElevatedButton',
-      replacement: 'LumosButton (primary)',
+      replacement: '${_projectProfile.widgetName('Button')} (primary)',
       pattern: r'\bElevatedButton(?:\.[A-Za-z0-9_]+)?\s*\(',
     ),
     _DisallowedWidgetRule(
       widgetName: 'OutlinedButton',
-      replacement: 'LumosButton (outline)',
+      replacement: '${_projectProfile.widgetName('Button')} (outline)',
       pattern: r'\bOutlinedButton(?:\.[A-Za-z0-9_]+)?\s*\(',
     ),
     _DisallowedWidgetRule(
       widgetName: 'TextButton',
-      replacement: 'LumosButton (text)',
+      replacement: '${_projectProfile.widgetName('Button')} (text)',
       pattern: r'\bTextButton(?:\.[A-Za-z0-9_]+)?\s*\(',
     ),
     _DisallowedWidgetRule(
       widgetName: 'IconButton',
-      replacement: 'LumosIconButton',
+      replacement: _projectProfile.widgetName('IconButton'),
       pattern: r'\bIconButton(?:\.[A-Za-z0-9_]+)?\s*\(',
     ),
     _DisallowedWidgetRule(
       widgetName: 'FloatingActionButton',
-      replacement: 'LumosFloatingActionButton',
+      replacement: _projectProfile.widgetName('FloatingActionButton'),
       pattern: r'\bFloatingActionButton(?:\.[A-Za-z0-9_]+)?\s*\(',
     ),
     _DisallowedWidgetRule(
       widgetName: 'PopupMenuButton',
-      replacement: 'LumosPopupMenuButton',
+      replacement: _projectProfile.widgetName('PopupMenuButton'),
       pattern: r'\bPopupMenuButton(?:\.[A-Za-z0-9_]+)?\s*\(',
     ),
     _DisallowedWidgetRule(
       widgetName: 'ActionChip',
-      replacement: 'LumosActionChip',
+      replacement: _projectProfile.widgetName('ActionChip'),
       pattern: r'\bActionChip\s*\(',
     ),
     _DisallowedWidgetRule(
       widgetName: 'DropdownButtonFormField',
-      replacement: 'LumosDropdown',
+      replacement: _projectProfile.widgetName('Dropdown'),
       pattern: r'\bDropdownButtonFormField(?:\.[A-Za-z0-9_]+)?\s*\(',
     ),
     _DisallowedWidgetRule(
       widgetName: 'RadioListTile',
-      replacement: 'LumosRadioGroup',
+      replacement: _projectProfile.widgetName('RadioGroup'),
       pattern: r'\bRadioListTile(?:\.[A-Za-z0-9_]+)?\s*\(',
     ),
     _DisallowedWidgetRule(
       widgetName: 'Icon',
-      replacement: 'LumosIcon',
+      replacement: _projectProfile.widgetName('Icon'),
       pattern: r'\bIcon\s*\(',
       featureUiOnly: true,
     ),
     _DisallowedWidgetRule(
       widgetName: 'Text',
-      replacement: 'LumosText/LumosInlineText',
+      replacement: _projectProfile.widgetAlternatives(<String>[
+        'Text',
+        'InlineText',
+      ]),
       pattern: r'\bText\s*\(',
       featureUiOnly: true,
     ),
     _DisallowedWidgetRule(
       widgetName: 'ListTile',
-      replacement: 'LumosListTile',
+      replacement: _projectProfile.widgetName('ListTile'),
       pattern: r'\bListTile\s*\(',
       featureUiOnly: true,
     ),
