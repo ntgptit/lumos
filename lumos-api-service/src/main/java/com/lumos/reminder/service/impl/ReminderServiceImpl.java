@@ -1,4 +1,4 @@
-package com.lumos.study.service.impl;
+package com.lumos.reminder.service.impl;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -11,31 +11,27 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.lumos.auth.security.AuthenticatedUserProvider;
-import com.lumos.study.dto.response.ReminderRecommendationResponse;
-import com.lumos.study.dto.response.StudyAnalyticsOverviewResponse;
-import com.lumos.study.dto.response.StudyReminderSummaryResponse;
+import com.lumos.reminder.dto.response.ReminderRecommendationResponse;
+import com.lumos.reminder.dto.response.ReminderSummaryResponse;
+import com.lumos.reminder.enums.ReminderEscalationLevel;
+import com.lumos.reminder.enums.ReminderType;
+import com.lumos.reminder.mapper.ReminderResponseMapper;
+import com.lumos.reminder.service.ReminderService;
 import com.lumos.study.entity.LearningCardState;
-import com.lumos.study.enums.ReminderEscalationLevel;
-import com.lumos.study.enums.ReminderType;
-import com.lumos.study.enums.ReviewOutcome;
-import com.lumos.study.mapper.StudyInsightResponseMapper;
 import com.lumos.study.repository.LearningCardStateRepository;
-import com.lumos.study.repository.StudyAttemptRepository;
-import com.lumos.study.service.StudyInsightService;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class StudyInsightServiceImpl implements StudyInsightService {
+public class ReminderServiceImpl implements ReminderService {
 
     private static final long OVERDUE_THRESHOLD_SECONDS = 86400L;
     private static final int SESSION_MINUTES_DIVISOR = 4;
 
     private final AuthenticatedUserProvider authenticatedUserProvider;
     private final LearningCardStateRepository learningCardStateRepository;
-    private final StudyAttemptRepository studyAttemptRepository;
-    private final StudyInsightResponseMapper studyInsightResponseMapper;
+    private final ReminderResponseMapper reminderResponseMapper;
 
     /**
      * Return reminder counts, escalation level, and the recommended review session.
@@ -44,7 +40,7 @@ public class StudyInsightServiceImpl implements StudyInsightService {
      */
     @Override
     @Transactional(readOnly = true)
-    public StudyReminderSummaryResponse getReminderSummary() {
+    public ReminderSummaryResponse getReminderSummary() {
         final Long userId = this.authenticatedUserProvider.getCurrentUserId();
         final Instant now = Instant.now();
         final List<LearningCardState> states = this.learningCardStateRepository
@@ -63,46 +59,12 @@ public class StudyInsightServiceImpl implements StudyInsightService {
         final List<String> reminderTypes = resolveReminderTypes(dueStates.size(), overdueStates.size(), escalationLevel);
         final ReminderRecommendationResponse recommendation = resolveRecommendation(dueStates);
         // Return the reminder summary that drives badges, escalation level, and session recommendation.
-        return this.studyInsightResponseMapper.toStudyReminderSummaryResponse(
+        return this.reminderResponseMapper.toReminderSummaryResponse(
                 dueStates.size(),
                 overdueStates.size(),
                 escalationLevel,
                 reminderTypes,
                 recommendation);
-    }
-
-    /**
-     * Return the long-term spaced repetition analytics overview.
-     *
-     * @return analytics overview response
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public StudyAnalyticsOverviewResponse getAnalyticsOverview() {
-        final Long userId = this.authenticatedUserProvider.getCurrentUserId();
-        final Instant now = Instant.now();
-        final List<LearningCardState> states = this.learningCardStateRepository
-                .findAllByUserAccountIdAndDeletedAtIsNull(userId);
-        final Map<Integer, Long> boxDistribution = new HashMap<>();
-        // Count how many learned cards currently sit in each SRS box.
-        for (LearningCardState state : states) {
-            boxDistribution.merge(state.getBoxIndex(), 1L, Long::sum);
-        }
-        // Count cards that are already due according to their next-review timestamp.
-        final long dueCount = states.stream().filter(state -> !state.getNextReviewAt().isAfter(now)).count();
-        final long overdueCount = states
-                // Count cards that crossed the overdue threshold to measure backlog severity.
-                .stream()
-                .filter(state -> state.getNextReviewAt().isBefore(now.minusSeconds(OVERDUE_THRESHOLD_SECONDS)))
-                .count();
-        // Return the analytics overview consumed by the progress screen.
-        return this.studyInsightResponseMapper.toStudyAnalyticsOverviewResponse(
-                states.size(),
-                dueCount,
-                overdueCount,
-                this.studyAttemptRepository.countByStudySessionUserAccountIdAndReviewOutcome(userId, ReviewOutcome.PASSED),
-                this.studyAttemptRepository.countByStudySessionUserAccountIdAndReviewOutcome(userId, ReviewOutcome.FAILED),
-                boxDistribution);
     }
 
     private ReminderEscalationLevel resolveEscalationLevel(int overdueCount) {
@@ -170,7 +132,7 @@ public class StudyInsightServiceImpl implements StudyInsightService {
         final LearningCardState sample = bestEntry.getValue().get(0);
         final int estimatedSessionMinutes = Math.max(1, bestEntry.getValue().size() / SESSION_MINUTES_DIVISOR);
         // Return the deck-level recommendation used to steer the learner into the next review session.
-        return this.studyInsightResponseMapper.toReminderRecommendationResponse(
+        return this.reminderResponseMapper.toReminderRecommendationResponse(
                 bestEntry.getKey(),
                 sample.getFlashcard().getDeck().getName(),
                 bestEntry.getValue().size(),

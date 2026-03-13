@@ -2,8 +2,6 @@ package com.lumos.study.controller;
 
 import static com.lumos.testkit.StudyTestFixtures.speechPreferenceResponse;
 import static com.lumos.testkit.StudyTestFixtures.startStudySessionRequest;
-import static com.lumos.testkit.StudyTestFixtures.studyAnalyticsOverviewResponse;
-import static com.lumos.testkit.StudyTestFixtures.studyReminderSummaryResponse;
 import static com.lumos.testkit.StudyTestFixtures.studySessionResponse;
 import static com.lumos.testkit.StudyTestFixtures.submitAnswerRequest;
 import static com.lumos.testkit.StudyTestFixtures.updateSpeechPreferenceRequest;
@@ -18,7 +16,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.lumos.study.service.SpeechPreferenceService;
-import com.lumos.study.service.StudyInsightService;
 import com.lumos.study.service.StudySessionService;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,9 +26,6 @@ class StudySessionControllerTest {
 
     @Mock
     private StudySessionService studySessionService;
-
-    @Mock
-    private StudyInsightService studyInsightService;
 
     @Mock
     private SpeechPreferenceService speechPreferenceService;
@@ -124,28 +118,6 @@ class StudySessionControllerTest {
         when(this.studySessionService.completeMode(SESSION_ID)).thenReturn(response);
 
         final var entity = this.studySessionController.completeMode(SESSION_ID);
-
-        assertEquals(200, entity.getStatusCode().value());
-        assertEquals(response, entity.getBody());
-    }
-
-    @Test
-    void getReminderSummary_returnsOkResponse() {
-        final var response = studyReminderSummaryResponse();
-        when(this.studyInsightService.getReminderSummary()).thenReturn(response);
-
-        final var entity = this.studySessionController.getReminderSummary();
-
-        assertEquals(200, entity.getStatusCode().value());
-        assertEquals(response, entity.getBody());
-    }
-
-    @Test
-    void getAnalyticsOverview_returnsOkResponse() {
-        final var response = studyAnalyticsOverviewResponse();
-        when(this.studyInsightService.getAnalyticsOverview()).thenReturn(response);
-
-        final var entity = this.studySessionController.getAnalyticsOverview();
 
         assertEquals(200, entity.getStatusCode().value());
         assertEquals(response, entity.getBody());

@@ -1,4 +1,4 @@
-package com.lumos.study.enums;
+package com.lumos.reminder.enums;
 
 public enum ReminderEscalationLevel {
     NONE,

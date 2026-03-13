@@ -7,14 +7,14 @@ import com.lumos.study.dto.request.StartStudySessionRequest;
 import com.lumos.study.dto.request.SubmitAnswerRequest;
 import com.lumos.study.dto.request.StudyMatchPairRequest;
 import com.lumos.study.dto.request.UpdateSpeechPreferenceRequest;
+import com.lumos.reminder.dto.response.ReminderRecommendationResponse;
+import com.lumos.reminder.dto.response.ReminderSummaryResponse;
 import com.lumos.study.dto.response.ProgressSummaryResponse;
-import com.lumos.study.dto.response.ReminderRecommendationResponse;
 import com.lumos.study.dto.response.SpeechCapabilityResponse;
 import com.lumos.study.dto.response.SpeechPreferenceResponse;
 import com.lumos.study.dto.response.StudyAnalyticsOverviewResponse;
 import com.lumos.study.dto.response.StudyChoiceResponse;
 import com.lumos.study.dto.response.StudyMatchPairResponse;
-import com.lumos.study.dto.response.StudyReminderSummaryResponse;
 import com.lumos.study.dto.response.StudySessionItemResponse;
 import com.lumos.study.dto.response.StudySessionResponse;
 
@@ -84,9 +84,9 @@ public final class StudyTestFixtures {
                 false);
     }
 
-    public static StudyReminderSummaryResponse studyReminderSummaryResponse() {
+    public static ReminderSummaryResponse studyReminderSummaryResponse() {
         
-        return new StudyReminderSummaryResponse(
+        return new ReminderSummaryResponse(
                 4L,
                 2L,
                 "LEVEL_1",

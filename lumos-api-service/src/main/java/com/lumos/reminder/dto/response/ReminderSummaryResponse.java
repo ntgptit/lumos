@@ -1,8 +1,8 @@
-package com.lumos.study.dto.response;
+package com.lumos.reminder.dto.response;
 
 import java.util.List;
 
-public record StudyReminderSummaryResponse(
+public record ReminderSummaryResponse(
         long dueCount,
         long overdueCount,
         String escalationLevel,

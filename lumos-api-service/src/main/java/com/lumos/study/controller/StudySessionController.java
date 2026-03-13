@@ -14,11 +14,8 @@ import com.lumos.study.dto.request.StartStudySessionRequest;
 import com.lumos.study.dto.request.SubmitAnswerRequest;
 import com.lumos.study.dto.request.UpdateSpeechPreferenceRequest;
 import com.lumos.study.dto.response.SpeechPreferenceResponse;
-import com.lumos.study.dto.response.StudyAnalyticsOverviewResponse;
-import com.lumos.study.dto.response.StudyReminderSummaryResponse;
 import com.lumos.study.dto.response.StudySessionResponse;
 import com.lumos.study.service.SpeechPreferenceService;
-import com.lumos.study.service.StudyInsightService;
 import com.lumos.study.service.StudySessionService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,7 +24,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 /**
- * Study session, reminder, analytics, and speech preference endpoints.
+ * Study session and speech preference endpoints.
  */
 @Validated
 @RestController
@@ -36,7 +33,6 @@ import lombok.RequiredArgsConstructor;
 public class StudySessionController {
 
     private final StudySessionService studySessionService;
-    private final StudyInsightService studyInsightService;
     private final SpeechPreferenceService speechPreferenceService;
 
     /**
@@ -169,36 +165,6 @@ public class StudySessionController {
         final var response = this.studySessionService
                 .completeMode(sessionId);
         // Return the next-mode or completed-session snapshot after backend mode completion logic runs.
-        return ResponseEntity
-                .ok(response);
-    }
-
-    /**
-     * Return the reminder summary for the current user.
-     *
-     * @return reminder summary response
-     */
-    @Operation(summary = "Get reminder summary")
-    @GetMapping("/api/v1/study/reminders/summary")
-    public ResponseEntity<StudyReminderSummaryResponse> getReminderSummary() {
-        final var response = this.studyInsightService
-                .getReminderSummary();
-        // Return the reminder summary so the client can show due and overdue study prompts.
-        return ResponseEntity
-                .ok(response);
-    }
-
-    /**
-     * Return the spaced repetition analytics overview for the current user.
-     *
-     * @return analytics overview response
-     */
-    @Operation(summary = "Get analytics overview")
-    @GetMapping("/api/v1/study/analytics/overview")
-    public ResponseEntity<StudyAnalyticsOverviewResponse> getAnalyticsOverview() {
-        final var response = this.studyInsightService
-                .getAnalyticsOverview();
-        // Return the analytics overview so the progress UI can render SRS metrics.
         return ResponseEntity
                 .ok(response);
     }

@@ -1,4 +1,4 @@
-package com.lumos.study.dto.response;
+package com.lumos.reminder.dto.response;
 
 public record ReminderRecommendationResponse(
         Long deckId,

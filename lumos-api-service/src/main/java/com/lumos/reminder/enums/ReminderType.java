@@ -1,4 +1,4 @@
-package com.lumos.study.enums;
+package com.lumos.reminder.enums;
 
 public enum ReminderType {
     IN_APP_BADGE_DUE_LIST,
