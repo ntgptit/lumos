@@ -114,7 +114,7 @@ class StudySessionServiceImplTest {
                 StudyModeLifecycleState.INITIALIZED, 0, 0, false);
         savedSession.setId(SESSION_ID);
         savedSession.setModePlan("REVIEW,MATCH,GUESS,RECALL,FILL");
-        final StudySessionItem item = sessionItem(1L, savedSession, flashcard, 0, false, false, ReviewOutcome.SKIPPED);
+        final StudySessionItem item = sessionItem(1L, savedSession, flashcard, 0, false, false, null);
         when(this.authenticatedUserProvider.getCurrentUserId()).thenReturn(USER_ID);
         when(this.userAccountRepository.findByIdAndDeletedAtIsNull(USER_ID)).thenReturn(Optional.of(user));
         when(this.deckRepository.findByIdAndDeletedAtIsNull(DECK_ID)).thenReturn(Optional.of(deck));
@@ -137,7 +137,7 @@ class StudySessionServiceImplTest {
     @Test
     void resumeSession_returnsExistingSession() {
         final StudySession session = activeSession();
-        final StudySessionItem item = currentItem(session, ReviewOutcome.SKIPPED, false, false);
+        final StudySessionItem item = currentItem(session, null, false, false);
         when(this.authenticatedUserProvider.getCurrentUserId()).thenReturn(USER_ID);
         when(this.studySessionRepository.findByIdAndDeletedAtIsNull(SESSION_ID)).thenReturn(Optional.of(session));
         when(this.studySessionItemRepository.findAllByStudySessionIdAndDeletedAtIsNullOrderBySequenceIndexAsc(SESSION_ID))
@@ -152,8 +152,11 @@ class StudySessionServiceImplTest {
 
     @Test
     void submitAnswer_marksPassedAnswerWaitingFeedback() {
-        final StudySession session = activeSession();
-        final StudySessionItem item = currentItem(session, ReviewOutcome.SKIPPED, false, false);
+        final StudySession session = session(user(), deck(), StudySessionType.REVIEW, StudyMode.FILL,
+                StudyModeLifecycleState.IN_PROGRESS, 0, 0, false);
+        session.setId(SESSION_ID);
+        session.setModePlan("FILL");
+        final StudySessionItem item = currentItem(session, null, false, false);
         when(this.authenticatedUserProvider.getCurrentUserId()).thenReturn(USER_ID);
         when(this.studySessionRepository.findByIdAndDeletedAtIsNull(SESSION_ID)).thenReturn(Optional.of(session));
         when(this.studySessionItemRepository.findAllByStudySessionIdAndDeletedAtIsNullOrderBySequenceIndexAsc(SESSION_ID))
@@ -168,9 +171,12 @@ class StudySessionServiceImplTest {
     }
 
     @Test
-    void revealAnswer_marksRetryPendingAndWaitingFeedback() {
-        final StudySession session = activeSession();
-        final StudySessionItem item = currentItem(session, ReviewOutcome.SKIPPED, false, false);
+    void revealAnswer_keepsOutcomeEmptyAndMovesToWaitingFeedback() {
+        final StudySession session = session(user(), deck(), StudySessionType.FIRST_LEARNING, StudyMode.RECALL,
+                StudyModeLifecycleState.IN_PROGRESS, 3, 0, false);
+        session.setId(SESSION_ID);
+        session.setModePlan("REVIEW,MATCH,GUESS,RECALL,FILL");
+        final StudySessionItem item = currentItem(session, null, false, false);
         when(this.authenticatedUserProvider.getCurrentUserId()).thenReturn(USER_ID);
         when(this.studySessionRepository.findByIdAndDeletedAtIsNull(SESSION_ID)).thenReturn(Optional.of(session));
         when(this.studySessionItemRepository.findAllByStudySessionIdAndDeletedAtIsNullOrderBySequenceIndexAsc(SESSION_ID))
@@ -180,14 +186,14 @@ class StudySessionServiceImplTest {
         final var response = this.studySessionService.revealAnswer(SESSION_ID);
 
         assertEquals("WAITING_FEEDBACK", response.modeState());
-        assertEquals(ReviewOutcome.REVEALED_WITHOUT_PASS, item.getLastOutcome());
-        assertTrue(item.getRetryPending());
+        assertEquals(null, item.getLastOutcome());
+        assertFalse(item.getRetryPending());
     }
 
     @Test
     void markRemembered_marksCurrentItemAsCompleted() {
         final StudySession session = activeSession();
-        final StudySessionItem item = currentItem(session, ReviewOutcome.SKIPPED, false, false);
+        final StudySessionItem item = currentItem(session, null, false, false);
         when(this.authenticatedUserProvider.getCurrentUserId()).thenReturn(USER_ID);
         when(this.studySessionRepository.findByIdAndDeletedAtIsNull(SESSION_ID)).thenReturn(Optional.of(session));
         when(this.studySessionItemRepository.findAllByStudySessionIdAndDeletedAtIsNullOrderBySequenceIndexAsc(SESSION_ID))
@@ -203,7 +209,7 @@ class StudySessionServiceImplTest {
     @Test
     void retryItem_marksCurrentItemForRetry() {
         final StudySession session = activeSession();
-        final StudySessionItem item = currentItem(session, ReviewOutcome.SKIPPED, false, false);
+        final StudySessionItem item = currentItem(session, null, false, false);
         when(this.authenticatedUserProvider.getCurrentUserId()).thenReturn(USER_ID);
         when(this.studySessionRepository.findByIdAndDeletedAtIsNull(SESSION_ID)).thenReturn(Optional.of(session));
         when(this.studySessionItemRepository.findAllByStudySessionIdAndDeletedAtIsNullOrderBySequenceIndexAsc(SESSION_ID))
@@ -212,7 +218,7 @@ class StudySessionServiceImplTest {
 
         final var response = this.studySessionService.retryItem(SESSION_ID);
 
-        assertEquals("RETRY_PENDING", response.modeState());
+        assertEquals("WAITING_FEEDBACK", response.modeState());
         assertFalse(item.getCurrentModeCompleted());
         assertTrue(item.getRetryPending());
     }
@@ -222,7 +228,7 @@ class StudySessionServiceImplTest {
         final StudySession session = activeSession();
         final StudySessionItem firstItem = currentItem(session, ReviewOutcome.PASSED, true, false);
         final StudySessionItem secondItem = sessionItem(2L, session, flashcard(102L, session.getDeck(), "감사합니다", "cam on"),
-                1, false, false, ReviewOutcome.SKIPPED);
+                1, false, false, null);
         session.setModeState(StudyModeLifecycleState.WAITING_FEEDBACK);
         when(this.authenticatedUserProvider.getCurrentUserId()).thenReturn(USER_ID);
         when(this.studySessionRepository.findByIdAndDeletedAtIsNull(SESSION_ID)).thenReturn(Optional.of(session));

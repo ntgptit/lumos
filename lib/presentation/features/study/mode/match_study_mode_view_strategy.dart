@@ -8,10 +8,11 @@ class MatchStudyModeViewStrategy extends AbstractStudyModeViewStrategy {
 
   @override
   List<String> resolveActionOrder() {
-    return const <String>[
-      'REVEAL_ANSWER',
-      'RETRY_ITEM',
-      'GO_NEXT',
-    ];
+    return const <String>['GO_NEXT'];
+  }
+
+  @override
+  bool usesChoiceGrid() {
+    return true;
   }
 }

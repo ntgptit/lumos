@@ -22,9 +22,8 @@ class StudySessionActionBar extends StatelessWidget {
       runSpacing: AppSpacing.sm,
       children: actions
           .map(
-            (StudyModeActionViewModel action) => _buildActionButton(
-              action: action,
-            ),
+            (StudyModeActionViewModel action) =>
+                _buildActionButton(action: action),
           )
           .toList(growable: false),
     );

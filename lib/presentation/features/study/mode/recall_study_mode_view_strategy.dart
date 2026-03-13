@@ -15,4 +15,14 @@ class RecallStudyModeViewStrategy extends AbstractStudyModeViewStrategy {
       'GO_NEXT',
     ];
   }
+
+  @override
+  String resolveRevealActionLabel() {
+    return 'Show answer';
+  }
+
+  @override
+  String resolveRetryActionLabel() {
+    return 'Forgot it';
+  }
 }

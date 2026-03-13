@@ -19,6 +19,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class JwtTokenService {
 
+    private static final String AUTHORITIES_CLAIM = "authorities";
+    private static final String TOKEN_TYPE_ACCESS = "access";
+    private static final String TOKEN_TYPE_CLAIM = "token_type";
     private static final String USERNAME_CLAIM = "username";
 
     private final JwtProperties jwtProperties;
@@ -28,7 +31,9 @@ public class JwtTokenService {
         final Instant expiresAt = now.plusSeconds(this.jwtProperties.getAccessTokenTtlSeconds());
         return Jwts.builder()
                 .subject(String.valueOf(userAccount.getId()))
+                .claim(TOKEN_TYPE_CLAIM, TOKEN_TYPE_ACCESS)
                 .claim(USERNAME_CLAIM, userAccount.getUsername())
+                .claim(AUTHORITIES_CLAIM, java.util.List.of())
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(expiresAt))
                 .signWith(resolveSigningKey())

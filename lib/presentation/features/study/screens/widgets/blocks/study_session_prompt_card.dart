@@ -25,10 +25,7 @@ class StudySessionPromptCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            LumosText(
-              instruction,
-              style: LumosTextStyle.labelLarge,
-            ),
+            LumosText(instruction, style: LumosTextStyle.labelLarge),
             const SizedBox(height: AppSpacing.lg),
             LumosText(
               prompt,

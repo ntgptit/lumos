@@ -59,7 +59,7 @@ public class StudySessionItem extends AuditEntity {
     private String pronunciationSnapshot;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "last_outcome", nullable = false, length = 32)
+    @Column(name = "last_outcome", length = 32)
     private ReviewOutcome lastOutcome;
 
     @Column(name = "current_mode_completed", nullable = false)

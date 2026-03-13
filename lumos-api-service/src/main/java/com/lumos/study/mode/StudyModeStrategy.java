@@ -10,11 +10,17 @@ import com.lumos.study.enums.StudyMode;
 
 public interface StudyModeStrategy {
 
+    String ACTION_GO_NEXT = "GO_NEXT";
+    String ACTION_MARK_REMEMBERED = "MARK_REMEMBERED";
+    String ACTION_RETRY_ITEM = "RETRY_ITEM";
+    String ACTION_REVEAL_ANSWER = "REVEAL_ANSWER";
+    String ACTION_SUBMIT_ANSWER = "SUBMIT_ANSWER";
+
     StudyMode getStudyMode();
 
     ReviewOutcome evaluateAnswer(StudySessionItem currentItem, String submittedAnswer);
 
-    List<String> resolveAllowedActions(StudySession session);
+    List<String> resolveAllowedActions(StudySession session, StudySessionItem currentItem);
 
     String resolvePrompt(StudySessionItem currentItem);
 

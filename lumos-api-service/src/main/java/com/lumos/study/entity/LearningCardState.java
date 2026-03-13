@@ -56,7 +56,7 @@ public class LearningCardState extends AuditEntity {
     private Instant nextReviewAt;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "last_result", nullable = false, length = 32)
+    @Column(name = "last_result", length = 32)
     private ReviewOutcome lastResult;
 
     @Column(name = "consecutive_success_count", nullable = false)

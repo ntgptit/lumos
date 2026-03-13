@@ -8,10 +8,11 @@ class FillStudyModeViewStrategy extends AbstractStudyModeViewStrategy {
 
   @override
   List<String> resolveActionOrder() {
-    return const <String>[
-      'REVEAL_ANSWER',
-      'RETRY_ITEM',
-      'GO_NEXT',
-    ];
+    return const <String>['REVEAL_ANSWER', 'GO_NEXT'];
+  }
+
+  @override
+  String resolveRevealActionLabel() {
+    return 'Help';
   }
 }

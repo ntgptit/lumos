@@ -6,13 +6,13 @@ import '../../../../../shared/widgets/lumos_widgets.dart';
 class StudySessionHeader extends StatelessWidget {
   const StudySessionHeader({
     required this.sessionType,
-    required this.activeMode,
+    required this.modeLabel,
     required this.progressValue,
     super.key,
   });
 
   final String sessionType;
-  final String activeMode;
+  final String modeLabel;
   final double progressValue;
 
   @override
@@ -21,7 +21,7 @@ class StudySessionHeader extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         LumosText(
-          '$sessionType · $activeMode',
+          '$sessionType · $modeLabel',
           style: LumosTextStyle.titleLarge,
         ),
         const SizedBox(height: AppSpacing.sm),

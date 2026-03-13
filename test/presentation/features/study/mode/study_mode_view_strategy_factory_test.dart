@@ -20,57 +20,52 @@ void main() {
   );
 
   group('StudyModeViewStrategyFactory', () {
-    test('review strategy builds reveal-driven actions in configured order', () {
-      final session = _buildSession(
-        activeMode: 'REVIEW',
-        allowedActions: const <String>[
-          'REVEAL_ANSWER',
-          'MARK_REMEMBERED',
-          'RETRY_ITEM',
-        ],
-      );
+    test(
+      'review strategy builds self-assessment actions in configured order',
+      () {
+        final session = _buildSession(
+          activeMode: 'REVIEW',
+          allowedActions: const <String>['MARK_REMEMBERED', 'RETRY_ITEM'],
+        );
 
-      final viewModel = factory.resolve(session.activeMode).buildViewModel(
-            session: session,
-          );
+        final viewModel = factory
+            .resolve(session.activeMode)
+            .buildViewModel(session: session);
 
-      expect(
-        viewModel.actions.map((action) => action.actionId).toList(),
-        const <String>[
-          'REVEAL_ANSWER',
-          'MARK_REMEMBERED',
-          'RETRY_ITEM',
-        ],
-      );
-      expect(viewModel.showAnswerInput, isFalse);
-      expect(viewModel.showAnswer, isFalse);
-    });
+        expect(
+          viewModel.actions.map((action) => action.actionId).toList(),
+          const <String>['MARK_REMEMBERED', 'RETRY_ITEM'],
+        );
+        expect(viewModel.showAnswerInput, isFalse);
+        expect(viewModel.showAnswer, isTrue);
+      },
+    );
 
-    test('match strategy keeps choice-based interaction and hides answer input', () {
-      final session = _buildSession(
-        activeMode: 'MATCH',
-        allowedActions: const <String>[
-          'SUBMIT_ANSWER',
-          'REVEAL_ANSWER',
-          'RETRY_ITEM',
-        ],
-        choices: const <StudyChoice>[
-          StudyChoice(id: 'choice-0', label: 'xin chao'),
-          StudyChoice(id: 'choice-1', label: 'cam on'),
-        ],
-      );
+    test(
+      'match strategy keeps choice-based interaction and exposes next only after feedback',
+      () {
+        final session = _buildSession(
+          activeMode: 'MATCH',
+          allowedActions: const <String>['GO_NEXT'],
+          choices: const <StudyChoice>[
+            StudyChoice(id: 'choice-0', label: 'xin chao'),
+            StudyChoice(id: 'choice-1', label: 'cam on'),
+          ],
+        );
 
-      final viewModel = factory.resolve(session.activeMode).buildViewModel(
-            session: session,
-          );
+        final viewModel = factory
+            .resolve(session.activeMode)
+            .buildViewModel(session: session);
 
-      expect(viewModel.choices, hasLength(2));
-      expect(viewModel.showAnswerInput, isFalse);
-      expect(
-        viewModel.actions.map((action) => action.actionId).toList(),
-        const <String>['REVEAL_ANSWER', 'RETRY_ITEM'],
-      );
-    });
+        expect(viewModel.choices, hasLength(2));
+        expect(viewModel.showAnswerInput, isFalse);
+        expect(viewModel.useChoiceGrid, isTrue);
+        expect(
+          viewModel.actions.map((action) => action.actionId).toList(),
+          const <String>['GO_NEXT'],
+        );
+      },
+    );
 
     test('fill strategy enables answer input when submit is allowed', () {
       final session = _buildSession(
@@ -78,21 +73,21 @@ void main() {
         allowedActions: const <String>[
           'SUBMIT_ANSWER',
           'REVEAL_ANSWER',
-          'RETRY_ITEM',
           'GO_NEXT',
         ],
         inputPlaceholder: 'Type your answer',
       );
 
-      final viewModel = factory.resolve(session.activeMode).buildViewModel(
-            session: session,
-          );
+      final viewModel = factory
+          .resolve(session.activeMode)
+          .buildViewModel(session: session);
 
       expect(viewModel.showAnswerInput, isTrue);
       expect(viewModel.inputLabel, 'Type your answer');
+      expect(viewModel.submitLabel, 'Check');
       expect(
         viewModel.actions.map((action) => action.actionId).toList(),
-        const <String>['REVEAL_ANSWER', 'RETRY_ITEM', 'GO_NEXT'],
+        const <String>['REVEAL_ANSWER', 'GO_NEXT'],
       );
     });
   });

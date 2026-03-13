@@ -15,11 +15,13 @@ abstract class AbstractStudyModeViewStrategy implements StudyModeViewStrategy {
   static const String _actionRetryItem = 'RETRY_ITEM';
   static const String _actionSubmitAnswer = 'SUBMIT_ANSWER';
   static const String _defaultInputLabel = 'Answer';
+  static const String _defaultSubmitLabel = 'Check';
 
   @override
   StudyModeViewModel buildViewModel({required StudySessionData session}) {
     final StudySessionItemData currentItem = session.currentItem;
     return StudyModeViewModel(
+      modeLabel: resolveModeLabel(),
       instruction: currentItem.instruction,
       prompt: currentItem.prompt,
       answer: currentItem.answer,
@@ -29,6 +31,8 @@ abstract class AbstractStudyModeViewStrategy implements StudyModeViewStrategy {
         currentItem: currentItem,
       ),
       inputLabel: resolveInputLabel(currentItem: currentItem),
+      submitLabel: resolveSubmitLabel(),
+      useChoiceGrid: usesChoiceGrid(),
       choices: resolveChoices(currentItem: currentItem),
       actions: resolveActions(session: session),
     );
@@ -55,11 +59,37 @@ abstract class AbstractStudyModeViewStrategy implements StudyModeViewStrategy {
     return _defaultInputLabel;
   }
 
-  List<StudyChoice> resolveChoices({required StudySessionItemData currentItem}) {
+  String resolveSubmitLabel() {
+    return _defaultSubmitLabel;
+  }
+
+  List<StudyChoice> resolveChoices({
+    required StudySessionItemData currentItem,
+  }) {
     return currentItem.choices;
   }
 
+  bool usesChoiceGrid() {
+    return false;
+  }
+
   List<String> resolveActionOrder();
+
+  String resolveModeLabel() {
+    switch (supportedMode) {
+      case 'REVIEW':
+        return 'Xem lai';
+      case 'MATCH':
+        return 'Ghep doi';
+      case 'GUESS':
+        return 'Doan';
+      case 'RECALL':
+        return 'Nho lai';
+      case 'FILL':
+        return 'Dien';
+    }
+    return supportedMode;
+  }
 
   StudyModeActionViewModel? resolveActionViewModel({
     required String actionId,
@@ -67,21 +97,21 @@ abstract class AbstractStudyModeViewStrategy implements StudyModeViewStrategy {
   }) {
     switch (actionId) {
       case _actionRevealAnswer:
-        return const StudyModeActionViewModel(
+        return StudyModeActionViewModel(
           actionId: _actionRevealAnswer,
-          label: 'Reveal',
+          label: resolveRevealActionLabel(),
           style: StudyModeActionButtonStyle.secondary,
         );
       case _actionMarkRemembered:
-        return const StudyModeActionViewModel(
+        return StudyModeActionViewModel(
           actionId: _actionMarkRemembered,
-          label: 'Remembered',
+          label: resolveRememberedActionLabel(),
           style: StudyModeActionButtonStyle.secondary,
         );
       case _actionRetryItem:
-        return const StudyModeActionViewModel(
+        return StudyModeActionViewModel(
           actionId: _actionRetryItem,
-          label: 'Retry later',
+          label: resolveRetryActionLabel(),
           style: StudyModeActionButtonStyle.outline,
         );
       case _actionGoNext:
@@ -93,6 +123,18 @@ abstract class AbstractStudyModeViewStrategy implements StudyModeViewStrategy {
         );
     }
     return null;
+  }
+
+  String resolveRevealActionLabel() {
+    return 'Show answer';
+  }
+
+  String resolveRememberedActionLabel() {
+    return 'Remembered';
+  }
+
+  String resolveRetryActionLabel() {
+    return 'Need review';
   }
 
   List<StudyModeActionViewModel> resolveActions({

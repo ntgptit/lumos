@@ -34,26 +34,37 @@ class StudySessionContent extends StatelessWidget {
       children: <Widget>[
         StudySessionHeader(
           sessionType: session.sessionType,
-          activeMode: session.activeMode,
+          modeLabel: viewModel.modeLabel,
           progressValue: session.progress.sessionProgress,
         ),
         const SizedBox(height: AppSpacing.lg),
         StudySessionPromptCard(
           instruction: viewModel.instruction,
           prompt: viewModel.prompt,
-          showAnswer: viewModel.showAnswer,
-          answer: viewModel.answer,
+          showAnswer: false,
+          answer: '',
         ),
+        if (viewModel.showAnswer) ...<Widget>[
+          const SizedBox(height: AppSpacing.lg),
+          StudySessionPromptCard(
+            instruction: 'Answer',
+            prompt: viewModel.answer,
+            showAnswer: false,
+            answer: '',
+          ),
+        ],
         const SizedBox(height: AppSpacing.lg),
         if (viewModel.choices.isNotEmpty)
           StudySessionChoiceList(
             choices: viewModel.choices,
+            useGrid: viewModel.useChoiceGrid,
             onChoicePressed: onChoicePressed,
           ),
         if (viewModel.showAnswerInput)
           StudySessionAnswerInput(
             controller: answerController,
             label: viewModel.inputLabel,
+            submitLabel: viewModel.submitLabel,
             onSubmit: onSubmitTypedAnswer,
           ),
         const SizedBox(height: AppSpacing.md),

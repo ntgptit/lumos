@@ -151,6 +151,7 @@ public class StudySessionServiceImpl implements StudySessionService {
         final StudySession session = resolveSession(sessionId);
         final StudySessionItem currentItem = resolveCurrentItem(session);
         final StudyModeStrategy studyModeStrategy = resolveStudyModeStrategy(session.getActiveMode());
+        ensureActionAllowed(session, currentItem, StudyModeStrategy.ACTION_SUBMIT_ANSWER);
         final ReviewOutcome outcome = studyModeStrategy.evaluateAnswer(currentItem, request.answer());
         applyOutcome(session, currentItem, outcome, request.answer());
         return buildResponse(session);
@@ -167,9 +168,10 @@ public class StudySessionServiceImpl implements StudySessionService {
     public StudySessionResponse revealAnswer(Long sessionId) {
         final StudySession session = resolveSession(sessionId);
         final StudySessionItem currentItem = resolveCurrentItem(session);
-        currentItem.setLastOutcome(ReviewOutcome.REVEALED_WITHOUT_PASS);
+        ensureActionAllowed(session, currentItem, StudyModeStrategy.ACTION_REVEAL_ANSWER);
+        currentItem.setLastOutcome(null);
         currentItem.setCurrentModeCompleted(Boolean.FALSE);
-        currentItem.setRetryPending(Boolean.TRUE);
+        currentItem.setRetryPending(Boolean.FALSE);
         session.setModeState(StudyModeLifecycleState.WAITING_FEEDBACK);
         return buildResponse(session);
     }
@@ -185,6 +187,7 @@ public class StudySessionServiceImpl implements StudySessionService {
     public StudySessionResponse markRemembered(Long sessionId) {
         final StudySession session = resolveSession(sessionId);
         final StudySessionItem currentItem = resolveCurrentItem(session);
+        ensureActionAllowed(session, currentItem, StudyModeStrategy.ACTION_MARK_REMEMBERED);
         applyOutcome(session, currentItem, ReviewOutcome.PASSED, null);
         return buildResponse(session);
     }
@@ -200,8 +203,8 @@ public class StudySessionServiceImpl implements StudySessionService {
     public StudySessionResponse retryItem(Long sessionId) {
         final StudySession session = resolveSession(sessionId);
         final StudySessionItem currentItem = resolveCurrentItem(session);
+        ensureActionAllowed(session, currentItem, StudyModeStrategy.ACTION_RETRY_ITEM);
         applyOutcome(session, currentItem, ReviewOutcome.FAILED, null);
-        session.setModeState(StudyModeLifecycleState.RETRY_PENDING);
         return buildResponse(session);
     }
 
@@ -216,11 +219,7 @@ public class StudySessionServiceImpl implements StudySessionService {
     public StudySessionResponse goNext(Long sessionId) {
         final StudySession session = resolveSession(sessionId);
         final StudySessionItem currentItem = resolveCurrentItem(session);
-        // Persist the reveal-only outcome before moving away from the current item.
-        if (session.getModeState() == StudyModeLifecycleState.WAITING_FEEDBACK
-                && currentItem.getLastOutcome() == ReviewOutcome.REVEALED_WITHOUT_PASS) {
-            saveAttempt(session, currentItem, ReviewOutcome.REVEALED_WITHOUT_PASS, null);
-        }
+        ensureActionAllowed(session, currentItem, StudyModeStrategy.ACTION_GO_NEXT);
 
         final List<StudySessionItem> items = resolveSessionItems(session);
         final Integer nextSequenceIndex = findNextSequenceIndex(items, currentItem.getSequenceIndex());
@@ -341,7 +340,7 @@ public class StudySessionServiceImpl implements StudySessionService {
             item.setBackTextSnapshot(flashcard.getBackText());
             item.setNoteSnapshot(StringUtils.defaultString(flashcard.getNote()));
             item.setPronunciationSnapshot(StringUtils.defaultString(flashcard.getPronunciation()));
-            item.setLastOutcome(ReviewOutcome.SKIPPED);
+            item.setLastOutcome(null);
             item.setCurrentModeCompleted(Boolean.FALSE);
             item.setRetryPending(Boolean.FALSE);
             this.studySessionItemRepository.save(item);
@@ -428,7 +427,7 @@ public class StudySessionServiceImpl implements StudySessionService {
         for (StudySessionItem item : items) {
             item.setCurrentModeCompleted(Boolean.FALSE);
             item.setRetryPending(Boolean.FALSE);
-            item.setLastOutcome(ReviewOutcome.SKIPPED);
+            item.setLastOutcome(null);
         }
     }
 
@@ -446,6 +445,11 @@ public class StudySessionServiceImpl implements StudySessionService {
                 state.setBoxIndex(StudyConstants.MIN_BOX_INDEX);
                 state.setConsecutiveSuccessCount(0);
                 state.setLapseCount(0);
+                state.setLastReviewedAt(null);
+                state.setLastResult(null);
+                state.setNextReviewAt(Instant.now());
+                this.learningCardStateRepository.save(state);
+                continue;
             }
 
             final ReviewOutcome outcome = item.getLastOutcome();
@@ -493,8 +497,8 @@ public class StudySessionServiceImpl implements StudySessionService {
     }
 
     private Instant resolveNextReviewAt(int nextBoxIndex, ReviewOutcome outcome) {
-        // Schedule an immediate retry for failed or reveal-only outcomes.
-        if (outcome == ReviewOutcome.FAILED || outcome == ReviewOutcome.REVEALED_WITHOUT_PASS) {
+        // Schedule an immediate retry for failed outcomes.
+        if (outcome == ReviewOutcome.FAILED) {
             return Instant.now();
         }
         return Instant.now().plus(StudyConstants.intervalForBox(nextBoxIndex));
@@ -511,7 +515,9 @@ public class StudySessionServiceImpl implements StudySessionService {
                 session.getActiveMode().name(),
                 session.getModeState().name(),
                 parseModePlan(session.getModePlan()).stream().map(Enum::name).toList(),
-                resolveStudyModeStrategy(session.getActiveMode()).resolveAllowedActions(session),
+                currentItem == null
+                        ? List.of()
+                        : resolveStudyModeStrategy(session.getActiveMode()).resolveAllowedActions(session, currentItem),
                 buildProgress(session, items),
                 currentItem == null ? null : buildCurrentItemResponse(session, currentItem, items),
                 session.getSessionCompleted());
@@ -593,5 +599,15 @@ public class StudySessionServiceImpl implements StudySessionService {
 
     private StudyModeStrategy resolveStudyModeStrategy(StudyMode studyMode) {
         return this.studyModeStrategyFactory.getStrategy(studyMode);
+    }
+
+    private void ensureActionAllowed(StudySession session, StudySessionItem currentItem, String actionId) {
+        final StudyModeStrategy studyModeStrategy = resolveStudyModeStrategy(session.getActiveMode());
+        final List<String> allowedActions = studyModeStrategy.resolveAllowedActions(session, currentItem);
+        // Continue only when the requested command is currently exposed by the active mode.
+        if (allowedActions.stream().anyMatch(allowedAction -> StringUtils.equals(allowedAction, actionId))) {
+            return;
+        }
+        throw new StudyCommandNotAllowedException();
     }
 }

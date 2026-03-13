@@ -19,6 +19,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _identifierController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
   @override
   void dispose() {
     _usernameController.dispose();
@@ -33,9 +34,15 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     final AsyncValue<AuthViewState> authAsync = ref.watch(
       authSessionControllerProvider,
     );
-    final AuthScreenModeState mode = ref.watch(authScreenModeControllerProvider);
+    final AuthScreenModeState mode = ref.watch(
+      authScreenModeControllerProvider,
+    );
+    final bool passwordObscured = ref.watch(
+      authPasswordVisibilityControllerProvider,
+    );
     return authAsync.when(
-      loading: () => const Scaffold(body: Center(child: LumosLoadingIndicator())),
+      loading: () =>
+          const Scaffold(body: Center(child: LumosLoadingIndicator())),
       error: (Object error, StackTrace stackTrace) {
         return Scaffold(
           body: Center(
@@ -93,19 +100,23 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                                   ),
                                 ],
                             selected: <AuthScreenModeState>{mode},
-                            onSelectionChanged: (
-                              Set<AuthScreenModeState> nextValue,
-                            ) {
-                              ref
-                                  .read(
-                                    authScreenModeControllerProvider.notifier,
-                                  )
-                                  .setMode(nextValue.first);
-                            },
+                            onSelectionChanged:
+                                (Set<AuthScreenModeState> nextValue) {
+                                  ref
+                                      .read(
+                                        authScreenModeControllerProvider
+                                            .notifier,
+                                      )
+                                      .setMode(nextValue.first);
+                                },
                           ),
                           const SizedBox(height: AppSpacing.lg),
-                          ..._buildFields(mode: mode),
-                          if (authState.errorMessage case final String errorMessage) ...<Widget>[
+                          ..._buildFields(
+                            mode: mode,
+                            passwordObscured: passwordObscured,
+                          ),
+                          if (authState.errorMessage
+                              case final String errorMessage) ...<Widget>[
                             const SizedBox(height: AppSpacing.md),
                             LumosText(
                               errorMessage,
@@ -137,7 +148,10 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     );
   }
 
-  List<Widget> _buildFields({required AuthScreenModeState mode}) {
+  List<Widget> _buildFields({
+    required AuthScreenModeState mode,
+    required bool passwordObscured,
+  }) {
     if (mode == AuthScreenModeState.register) {
       return <Widget>[
         LumosTextField(controller: _usernameController, label: 'Username'),
@@ -146,8 +160,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
         const SizedBox(height: AppSpacing.md),
         LumosTextField(
           controller: _passwordController,
-          obscureText: true,
+          obscureText: passwordObscured,
           label: 'Password',
+          suffixIcon: _buildPasswordToggle(),
         ),
       ];
     }
@@ -159,10 +174,26 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
       const SizedBox(height: AppSpacing.md),
       LumosTextField(
         controller: _passwordController,
-        obscureText: true,
+        obscureText: passwordObscured,
         label: 'Password',
+        suffixIcon: _buildPasswordToggle(),
       ),
     ];
+  }
+
+  Widget _buildPasswordToggle() {
+    final bool passwordObscured = ref.watch(
+      authPasswordVisibilityControllerProvider,
+    );
+    return LumosIconButton(
+      onPressed: () {
+        ref.read(authPasswordVisibilityControllerProvider.notifier).toggle();
+      },
+      icon: Icons.visibility_rounded,
+      selectedIcon: Icons.visibility_off_rounded,
+      selected: !passwordObscured,
+      tooltip: passwordObscured ? 'Show password' : 'Hide password',
+    );
   }
 
   Future<void> _submit({required AuthScreenModeState mode}) async {

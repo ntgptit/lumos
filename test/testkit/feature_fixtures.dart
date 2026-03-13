@@ -39,8 +39,7 @@ StudySessionData sampleStudySession({
     modeState: modeState,
     modePlan: const <String>['REVIEW', 'MATCH', 'GUESS', 'RECALL', 'FILL'],
     allowedActions:
-        allowedActions ??
-        const <String>['REVEAL_ANSWER', 'MARK_REMEMBERED', 'RETRY_ITEM'],
+        allowedActions ?? const <String>['MARK_REMEMBERED', 'RETRY_ITEM'],
     progress: const StudyProgressSummary(
       completedItems: 1,
       totalItems: 2,
@@ -226,7 +225,7 @@ class FakeStudyRepository implements StudyRepository {
       sessionId: sessionId,
       activeMode: _session.activeMode,
       modeState: 'WAITING_FEEDBACK',
-      allowedActions: const <String>['GO_NEXT', 'RETRY_ITEM'],
+      allowedActions: const <String>['GO_NEXT'],
     );
   }
 
@@ -237,7 +236,7 @@ class FakeStudyRepository implements StudyRepository {
       sessionId: sessionId,
       activeMode: _session.activeMode,
       modeState: 'WAITING_FEEDBACK',
-      allowedActions: const <String>['GO_NEXT', 'RETRY_ITEM', 'MARK_REMEMBERED'],
+      allowedActions: const <String>['MARK_REMEMBERED', 'RETRY_ITEM'],
     );
   }
 
@@ -259,7 +258,7 @@ class FakeStudyRepository implements StudyRepository {
       sessionId: sessionId,
       activeMode: _session.activeMode,
       modeState: 'RETRY_PENDING',
-      allowedActions: const <String>['GO_NEXT', 'RETRY_ITEM'],
+      allowedActions: const <String>['GO_NEXT'],
     );
   }
 
@@ -270,7 +269,7 @@ class FakeStudyRepository implements StudyRepository {
       sessionId: sessionId,
       activeMode: 'MATCH',
       modeState: 'IN_PROGRESS',
-      allowedActions: const <String>['SUBMIT_ANSWER', 'REVEAL_ANSWER'],
+      allowedActions: const <String>['SUBMIT_ANSWER'],
     );
   }
 

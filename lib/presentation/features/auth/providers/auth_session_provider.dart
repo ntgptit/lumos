@@ -1,5 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../../core/error/error_mapper.dart';
+import '../../../../core/error/failures.dart';
 import '../../../../data/repositories/auth/auth_repository_impl.dart';
 import '../../../../domain/entities/auth/auth_models.dart';
 import '../../../../domain/repositories/auth/auth_repository.dart';
@@ -54,6 +56,19 @@ class AuthScreenModeController extends _$AuthScreenModeController {
 }
 
 enum AuthScreenModeState { login, register }
+
+@Riverpod(keepAlive: true)
+class AuthPasswordVisibilityController
+    extends _$AuthPasswordVisibilityController {
+  @override
+  bool build() {
+    return true;
+  }
+
+  void toggle() {
+    state = !state;
+  }
+}
 
 @Riverpod(keepAlive: true)
 class AuthSessionController extends _$AuthSessionController {
@@ -127,9 +142,25 @@ class AuthSessionController extends _$AuthSessionController {
       return true;
     } on Object catch (error) {
       state = AsyncData<AuthViewState>(
-        currentState.copyWith(isBusy: false, errorMessage: error.toString()),
+        currentState.copyWith(
+          isBusy: false,
+          errorMessage: _resolveErrorMessage(error),
+        ),
       );
       return false;
     }
+  }
+
+  String _resolveErrorMessage(Object error) {
+    final Failure failure = ErrorMapper.mapToFailure(error);
+    return switch (failure) {
+      NetworkFailure(:final message) => message,
+      UnauthorizedFailure(:final message) => message,
+      ForbiddenFailure(:final message) => message,
+      NotFoundFailure(:final message) => message,
+      ValidationFailure(:final message) => message,
+      ServerFailure(:final message) => message,
+      UnknownFailure(:final message) => message,
+    };
   }
 }

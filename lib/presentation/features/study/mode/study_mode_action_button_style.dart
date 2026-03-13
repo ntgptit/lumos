@@ -1,5 +1,1 @@
-enum StudyModeActionButtonStyle {
-  primary,
-  secondary,
-  outline,
-}
+enum StudyModeActionButtonStyle { primary, secondary, outline }

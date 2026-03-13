@@ -2,10 +2,8 @@ package com.lumos.study.mode;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -13,16 +11,10 @@ import com.lumos.study.dto.response.StudyChoiceResponse;
 import com.lumos.study.entity.StudySession;
 import com.lumos.study.entity.StudySessionItem;
 import com.lumos.study.enums.ReviewOutcome;
-import com.lumos.study.enums.StudyModeLifecycleState;
 
 public abstract class AbstractStudyModeStrategy implements StudyModeStrategy {
 
     private static final int CHOICE_LIMIT = 4;
-    private static final String ACTION_GO_NEXT = "GO_NEXT";
-    private static final String ACTION_MARK_REMEMBERED = "MARK_REMEMBERED";
-    private static final String ACTION_RETRY_ITEM = "RETRY_ITEM";
-    private static final String ACTION_REVEAL_ANSWER = "REVEAL_ANSWER";
-    private static final String ACTION_SUBMIT_ANSWER = "SUBMIT_ANSWER";
 
     @Override
     public ReviewOutcome evaluateAnswer(StudySessionItem currentItem, String submittedAnswer) {
@@ -36,32 +28,6 @@ public abstract class AbstractStudyModeStrategy implements StudyModeStrategy {
             return ReviewOutcome.PASSED;
         }
         return ReviewOutcome.FAILED;
-    }
-
-    @Override
-    public List<String> resolveAllowedActions(StudySession session) {
-        // Expose no further actions after the session has already completed.
-        if (Boolean.TRUE == session.getSessionCompleted()) {
-            return List.of();
-        }
-
-        // Restrict waiting-feedback state to acknowledgement and retry actions.
-        if (session.getModeState() == StudyModeLifecycleState.WAITING_FEEDBACK) {
-            return resolveWaitingFeedbackActions();
-        }
-
-        // Expose reveal-first actions for modes that require answer reveal before confirmation.
-        if (isRevealDrivenMode()) {
-            return List.of(
-                    ACTION_REVEAL_ANSWER,
-                    ACTION_MARK_REMEMBERED,
-                    ACTION_RETRY_ITEM);
-        }
-
-        return List.of(
-                ACTION_SUBMIT_ANSWER,
-                ACTION_REVEAL_ANSWER,
-                ACTION_RETRY_ITEM);
     }
 
     @Override
@@ -113,10 +79,6 @@ public abstract class AbstractStudyModeStrategy implements StudyModeStrategy {
         return "";
     }
 
-    protected boolean isRevealDrivenMode() {
-        return false;
-    }
-
     protected boolean usesChoiceOptions() {
         return false;
     }
@@ -125,15 +87,12 @@ public abstract class AbstractStudyModeStrategy implements StudyModeStrategy {
         return false;
     }
 
-    private List<String> resolveWaitingFeedbackActions() {
-        final Set<String> actions = new LinkedHashSet<>();
-        actions.add(ACTION_GO_NEXT);
-        actions.add(ACTION_RETRY_ITEM);
-        // Add remembered confirmation only for reveal-driven modes that support that follow-up action.
-        if (isRevealDrivenMode()) {
-            actions.add(ACTION_MARK_REMEMBERED);
+    protected List<String> resolveCompletedActions(StudySession session) {
+        // Expose no actions after the whole session has already completed.
+        if (Boolean.TRUE == session.getSessionCompleted()) {
+            return List.of();
         }
-        return List.copyOf(actions);
+        return null;
     }
 
     private String normalize(String value) {
