@@ -96,6 +96,65 @@ void main() {
       expect(sawBypassRefresh, isTrue);
     });
 
+    test(
+      'bootstrapSession preserves stored tokens when refresh fails with retryable error',
+      () async {
+        FlutterSecureStorage.setMockInitialValues(<String, String>{
+          StorageKeys.accessToken: 'expired-token',
+          StorageKeys.refreshToken: 'refresh-token',
+        });
+        final Dio dio = Dio();
+        dio.interceptors.add(
+          InterceptorsWrapper(
+            onRequest:
+                (RequestOptions options, RequestInterceptorHandler handler) {
+                  if (options.path == AuthRepositoryImplConst.mePath) {
+                    handler.reject(
+                      DioException.badResponse(
+                        statusCode: 401,
+                        requestOptions: options,
+                        response: Response<dynamic>(
+                          requestOptions: options,
+                          statusCode: 401,
+                        ),
+                      ),
+                    );
+                    return;
+                  }
+                  if (options.path == AuthRepositoryImplConst.refreshPath) {
+                    handler.reject(
+                      DioException.connectionError(
+                        requestOptions: options,
+                        reason: 'Network unavailable.',
+                      ),
+                    );
+                    return;
+                  }
+                  handler.next(options);
+                },
+          ),
+        );
+        final FlutterSecureStorage storage = const FlutterSecureStorage();
+        final DioAuthRepository repository = DioAuthRepository(
+          dio: dio,
+          storage: storage,
+        );
+
+        await expectLater(
+          repository.bootstrapSession(),
+          throwsA(isA<DioException>()),
+        );
+        expect(
+          await storage.read(key: StorageKeys.accessToken),
+          'expired-token',
+        );
+        expect(
+          await storage.read(key: StorageKeys.refreshToken),
+          'refresh-token',
+        );
+      },
+    );
+
     test('login register and logout persist session lifecycle', () async {
       FlutterSecureStorage.setMockInitialValues(<String, String>{
         StorageKeys.refreshToken: 'refresh-token',

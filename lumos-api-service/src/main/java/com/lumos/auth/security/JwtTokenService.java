@@ -58,9 +58,9 @@ public class JwtTokenService {
         return this.jwtProperties.getAccessTokenTtlSeconds();
     }
 
-    public long getRefreshTokenTtlSeconds() {
-        // Return the configured refresh-token lifetime for refresh-session persistence decisions.
-        return this.jwtProperties.getRefreshTokenTtlSeconds();
+    public long getRefreshSessionIdleTimeoutSeconds() {
+        // Return the configured idle-timeout window used by refresh-session persistence decisions.
+        return this.jwtProperties.getRefreshSessionIdleTimeoutSeconds();
     }
 
     private SecretKey resolveSigningKey() {

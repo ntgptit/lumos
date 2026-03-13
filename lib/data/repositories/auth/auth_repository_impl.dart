@@ -75,6 +75,12 @@ class DioAuthRepository implements AuthRepository {
           refreshToken: latestRefreshToken!,
         );
         return refreshedSession;
+      } on DioException catch (refreshError) {
+        if (_isUnauthorized(refreshError)) {
+          await _clearSession();
+          return null;
+        }
+        rethrow;
       } on Object {
         await _clearSession();
         return null;
@@ -142,8 +148,8 @@ class DioAuthRepository implements AuthRepository {
       data: <String, dynamic>{'refreshToken': refreshToken},
       options: Options(
         extra: <String, dynamic>{
-          RetryInterceptorConst.bypassRetryKey: true,
           SessionRefreshInterceptorConst.bypassRefreshKey: true,
+          RetryInterceptorConst.bypassRetryKey: true,
         },
       ),
     );
@@ -175,6 +181,10 @@ class DioAuthRepository implements AuthRepository {
       return rawValue.cast<String, dynamic>();
     }
     return <String, dynamic>{};
+  }
+
+  bool _isUnauthorized(DioException error) {
+    return error.response?.statusCode == 401;
   }
 }
 

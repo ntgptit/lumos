@@ -14,7 +14,7 @@ class JwtTokenServiceTest {
         final JwtProperties properties = new JwtProperties();
         properties.setSecret("lumos-demo-secret-key-lumos-demo-secret-key");
         properties.setAccessTokenTtlSeconds(900L);
-        properties.setRefreshTokenTtlSeconds(7200L);
+        properties.setRefreshSessionIdleTimeoutSeconds(1800L);
         final JwtTokenService jwtTokenService = new JwtTokenService(properties);
         final UserAccount user = new UserAccount();
         user.setId(10L);
@@ -27,6 +27,6 @@ class JwtTokenServiceTest {
         assertEquals(10L, claims.userId());
         assertEquals("tester", claims.username());
         assertEquals(900L, jwtTokenService.getAccessTokenTtlSeconds());
-        assertEquals(7200L, jwtTokenService.getRefreshTokenTtlSeconds());
+        assertEquals(1800L, jwtTokenService.getRefreshSessionIdleTimeoutSeconds());
     }
 }

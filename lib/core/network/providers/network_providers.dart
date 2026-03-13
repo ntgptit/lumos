@@ -11,6 +11,7 @@ import '../../constants/api_endpoints.dart';
 import '../../error/error_mapper.dart';
 import '../../error/exceptions.dart';
 import '../../logging/app_logger.dart';
+import '../../session/providers/session_invalidation_provider.dart';
 import '../clients/api_client.dart';
 import '../interceptors/auth_token_interceptor.dart';
 import '../interceptors/network_error_interceptor.dart';
@@ -58,7 +59,15 @@ Dio sessionRefreshDio(Ref ref) {
 SessionRefreshInterceptor sessionRefreshInterceptor(Ref ref) {
   final FlutterSecureStorage storage = ref.watch(secureStorageProvider);
   final Dio refreshDio = ref.watch(sessionRefreshDioProvider);
-  return SessionRefreshInterceptor(storage: storage, refreshDio: refreshDio);
+  return SessionRefreshInterceptor(
+    storage: storage,
+    refreshDio: refreshDio,
+    onSessionInvalidated: () {
+      ref
+          .read(sessionInvalidationControllerProvider.notifier)
+          .invalidateSession();
+    },
+  );
 }
 
 /// Provides interceptor that normalizes network errors.

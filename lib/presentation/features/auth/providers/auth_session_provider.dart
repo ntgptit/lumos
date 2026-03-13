@@ -2,6 +2,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/error/error_mapper.dart';
 import '../../../../core/error/failures.dart';
+import '../../../../core/session/providers/session_invalidation_provider.dart';
 import '../../../../data/repositories/auth/auth_repository_impl.dart';
 import '../../../../domain/entities/auth/auth_models.dart';
 import '../../../../domain/repositories/auth/auth_repository.dart';
@@ -74,6 +75,15 @@ class AuthPasswordVisibilityController
 class AuthSessionController extends _$AuthSessionController {
   @override
   Future<AuthViewState> build() async {
+    ref.listen<int>(sessionInvalidationControllerProvider, (
+      int? previous,
+      int next,
+    ) {
+      if (previous == next) {
+        return;
+      }
+      state = const AsyncData<AuthViewState>(AuthViewState.signedOut());
+    });
     final AuthRepository repository = ref.read(authRepositoryProvider);
     final AuthSession? session = await repository.bootstrapSession();
     if (session == null) {

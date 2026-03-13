@@ -24,6 +24,11 @@ void main() {
         RequestOptions options,
       ) async {
         if (options.path == SessionRefreshInterceptorConst.refreshPath) {
+          expect(options.extra[RetryInterceptorConst.bypassRetryKey], isTrue);
+          expect(
+            options.extra[SessionRefreshInterceptorConst.bypassRefreshKey],
+            isTrue,
+          );
           return _jsonResponseBody(
             statusCode: 200,
             payload: <String, dynamic>{
@@ -86,6 +91,7 @@ void main() {
       });
       final FlutterSecureStorage storage = const FlutterSecureStorage();
       final Dio refreshDio = Dio();
+      int invalidationCount = 0;
       refreshDio.httpClientAdapter = _CallbackHttpClientAdapter((
         RequestOptions options,
       ) async {
@@ -98,7 +104,13 @@ void main() {
         return _jsonResponseBody(statusCode: 401, payload: <String, dynamic>{});
       });
       dio.interceptors.add(
-        SessionRefreshInterceptor(storage: storage, refreshDio: refreshDio),
+        SessionRefreshInterceptor(
+          storage: storage,
+          refreshDio: refreshDio,
+          onSessionInvalidated: () {
+            invalidationCount += 1;
+          },
+        ),
       );
 
       await expectLater(
@@ -109,7 +121,56 @@ void main() {
       expect(await storage.read(key: StorageKeys.accessToken), isNull);
       expect(await storage.read(key: StorageKeys.refreshToken), isNull);
       expect(await storage.read(key: StorageKeys.userId), isNull);
+      expect(invalidationCount, 1);
     });
+
+    test(
+      'keeps the stored session when refresh fails with retryable network error',
+      () async {
+        FlutterSecureStorage.setMockInitialValues(<String, String>{
+          StorageKeys.accessToken: 'expired-token',
+          StorageKeys.refreshToken: 'refresh-token',
+          StorageKeys.userId: '7',
+        });
+        final FlutterSecureStorage storage = const FlutterSecureStorage();
+        final Dio refreshDio = Dio();
+        refreshDio.httpClientAdapter = _CallbackHttpClientAdapter((
+          RequestOptions options,
+        ) async {
+          throw DioException.connectionError(
+            requestOptions: options,
+            reason: 'Network unavailable.',
+          );
+        });
+        final Dio dio = Dio();
+        dio.httpClientAdapter = _CallbackHttpClientAdapter((
+          RequestOptions options,
+        ) async {
+          return _jsonResponseBody(
+            statusCode: 401,
+            payload: <String, dynamic>{},
+          );
+        });
+        dio.interceptors.add(
+          SessionRefreshInterceptor(storage: storage, refreshDio: refreshDio),
+        );
+
+        await expectLater(
+          dio.get<dynamic>('/api/v1/study/sessions'),
+          throwsA(isA<DioException>()),
+        );
+
+        expect(
+          await storage.read(key: StorageKeys.accessToken),
+          'expired-token',
+        );
+        expect(
+          await storage.read(key: StorageKeys.refreshToken),
+          'refresh-token',
+        );
+        expect(await storage.read(key: StorageKeys.userId), '7');
+      },
+    );
 
     test(
       'serializes concurrent refresh attempts into one refresh request',

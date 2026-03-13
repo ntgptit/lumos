@@ -18,18 +18,46 @@ abstract final class SessionRefreshInterceptorConst {
   static const String userIdField = 'id';
 }
 
+enum SessionRefreshFailureReason { invalidSession, retryable }
+
+class SessionRefreshResult {
+  const SessionRefreshResult._({
+    required this.accessToken,
+    required this.failureReason,
+    this.error,
+  });
+
+  const SessionRefreshResult.refreshed(String accessToken)
+    : this._(accessToken: accessToken, failureReason: null);
+
+  const SessionRefreshResult.failure({
+    required SessionRefreshFailureReason failureReason,
+    DioException? error,
+  }) : this._(accessToken: null, failureReason: failureReason, error: error);
+
+  final String? accessToken;
+  final SessionRefreshFailureReason? failureReason;
+  final DioException? error;
+
+  bool get refreshed => (accessToken ?? '').isNotEmpty;
+  bool get shouldClearSession =>
+      failureReason == SessionRefreshFailureReason.invalidSession;
+}
+
 /// Interceptor that refreshes expired access tokens and retries the request once.
 class SessionRefreshInterceptor extends Interceptor {
   SessionRefreshInterceptor({
     required FlutterSecureStorage storage,
     required Dio refreshDio,
+    this.onSessionInvalidated,
   }) : _storage = storage,
        _refreshDio = refreshDio;
 
   final FlutterSecureStorage _storage;
   final Dio _refreshDio;
+  final FutureOr<void> Function()? onSessionInvalidated;
 
-  Completer<String?>? _refreshCompleter;
+  Completer<SessionRefreshResult>? _refreshCompleter;
 
   @override
   Future<void> onError(
@@ -45,7 +73,7 @@ class SessionRefreshInterceptor extends Interceptor {
       return;
     }
     if (_isRefreshRequest(err.requestOptions)) {
-      await _clearSession();
+      await _clearSessionAndNotify();
       handler.next(err);
       return;
     }
@@ -54,17 +82,21 @@ class SessionRefreshInterceptor extends Interceptor {
       key: StorageKeys.refreshToken,
     );
     if ((refreshToken ?? '').isEmpty) {
-      await _clearSession();
+      await _clearSessionAndNotify();
       handler.next(err);
       return;
     }
 
-    final String? accessToken = await _refreshAccessToken(
+    final SessionRefreshResult refreshResult = await _refreshAccessToken(
       refreshToken: refreshToken!,
     );
-    if ((accessToken ?? '').isEmpty) {
-      await _clearSession();
+    if (refreshResult.shouldClearSession) {
+      await _clearSessionAndNotify();
       handler.next(err);
+      return;
+    }
+    if (!refreshResult.refreshed) {
+      handler.next(refreshResult.error ?? err);
       return;
     }
 
@@ -72,7 +104,7 @@ class SessionRefreshInterceptor extends Interceptor {
       final Response<dynamic> response = await _refreshDio.fetch<dynamic>(
         _cloneRequestOptions(
           original: err.requestOptions,
-          accessToken: accessToken!,
+          accessToken: refreshResult.accessToken!,
         ),
       );
       handler.resolve(response);
@@ -100,13 +132,16 @@ class SessionRefreshInterceptor extends Interceptor {
     return requestOptions.path == SessionRefreshInterceptorConst.refreshPath;
   }
 
-  Future<String?> _refreshAccessToken({required String refreshToken}) async {
-    final Completer<String?>? activeRefresh = _refreshCompleter;
+  Future<SessionRefreshResult> _refreshAccessToken({
+    required String refreshToken,
+  }) async {
+    final Completer<SessionRefreshResult>? activeRefresh = _refreshCompleter;
     if (activeRefresh != null) {
       return activeRefresh.future;
     }
 
-    final Completer<String?> refreshCompleter = Completer<String?>();
+    final Completer<SessionRefreshResult> refreshCompleter =
+        Completer<SessionRefreshResult>();
     _refreshCompleter = refreshCompleter;
     try {
       final Response<dynamic> response = await _refreshDio.post<dynamic>(
@@ -114,26 +149,55 @@ class SessionRefreshInterceptor extends Interceptor {
         data: <String, dynamic>{
           SessionRefreshInterceptorConst.refreshTokenField: refreshToken,
         },
+        options: Options(
+          extra: <String, dynamic>{
+            SessionRefreshInterceptorConst.bypassRefreshKey: true,
+            RetryInterceptorConst.bypassRetryKey: true,
+          },
+        ),
       );
       final Map<String, dynamic> payload = _castMap(response.data);
       final String accessToken = _readAccessToken(payload);
       if (accessToken.isEmpty) {
-        refreshCompleter.complete(null);
-        return null;
+        const SessionRefreshResult failureResult = SessionRefreshResult.failure(
+          failureReason: SessionRefreshFailureReason.invalidSession,
+        );
+        refreshCompleter.complete(failureResult);
+        return failureResult;
       }
 
       await _persistSession(
         payload: payload,
         currentRefreshToken: refreshToken,
       );
-      refreshCompleter.complete(accessToken);
-      return accessToken;
-    } on Object {
-      refreshCompleter.complete(null);
-      return null;
+      final SessionRefreshResult successResult = SessionRefreshResult.refreshed(
+        accessToken,
+      );
+      refreshCompleter.complete(successResult);
+      return successResult;
+    } on DioException catch (error) {
+      final SessionRefreshResult failureResult = SessionRefreshResult.failure(
+        failureReason: _isRefreshSessionInvalid(error)
+            ? SessionRefreshFailureReason.invalidSession
+            : SessionRefreshFailureReason.retryable,
+        error: error,
+      );
+      refreshCompleter.complete(failureResult);
+      return failureResult;
     } finally {
       _refreshCompleter = null;
     }
+  }
+
+  bool _isRefreshSessionInvalid(DioException error) {
+    final int? statusCode = error.response?.statusCode;
+    if (statusCode == 401) {
+      return true;
+    }
+    if (statusCode == 403) {
+      return true;
+    }
+    return false;
   }
 
   Future<void> _persistSession({
@@ -208,6 +272,7 @@ class SessionRefreshInterceptor extends Interceptor {
       SessionRefreshInterceptorConst.bypassRefreshKey: true,
       RetryInterceptorConst.bypassRetryKey: true,
     };
+    extra.remove(RetryInterceptorConst.retryAttemptKey);
     return RequestOptions(
       path: original.path,
       method: original.method,
@@ -236,6 +301,15 @@ class SessionRefreshInterceptor extends Interceptor {
     await _storage.delete(key: StorageKeys.accessToken);
     await _storage.delete(key: StorageKeys.refreshToken);
     await _storage.delete(key: StorageKeys.userId);
+  }
+
+  Future<void> _clearSessionAndNotify() async {
+    await _clearSession();
+    final FutureOr<void> Function()? callback = onSessionInvalidated;
+    if (callback == null) {
+      return;
+    }
+    await callback();
   }
 
   Map<String, dynamic> _castMap(dynamic rawValue) {

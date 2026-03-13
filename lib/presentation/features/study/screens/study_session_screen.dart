@@ -55,8 +55,18 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
       studyModeViewStrategyFactoryProvider,
     );
     final AppLocalizations l10n = AppLocalizations.of(context)!;
-    final StudySessionData? currentSession = _resolveVisibleSession(
-      sessionAsync: sessionAsync,
+    StudySessionData? currentSession;
+    sessionAsync.when(
+      data: (StudySessionData session) {
+        currentSession = session;
+        _lastResolvedSession = session;
+      },
+      error: (Object error, StackTrace stackTrace) {
+        currentSession = null;
+      },
+      loading: () {
+        currentSession = _lastResolvedSession;
+      },
     );
     final StudyModeViewModel? appBarViewModel = _buildModeViewModel(
       session: currentSession,
@@ -361,20 +371,6 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
       resolvedSession.activeMode,
     );
     return modeStrategy.buildViewModel(session: resolvedSession);
-  }
-
-  StudySessionData? _resolveVisibleSession({
-    required AsyncValue<StudySessionData> sessionAsync,
-  }) {
-    if (sessionAsync.hasValue) {
-      final StudySessionData session = sessionAsync.requireValue;
-      _lastResolvedSession = session;
-      return session;
-    }
-    if (sessionAsync.isLoading) {
-      return _lastResolvedSession;
-    }
-    return null;
   }
 
   Future<void> _showResetCurrentModeDialog(AppLocalizations l10n) async {

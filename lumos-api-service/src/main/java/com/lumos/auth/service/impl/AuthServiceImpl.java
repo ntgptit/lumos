@@ -105,11 +105,11 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public AuthResponse refreshToken(RefreshTokenRequest request) {
-        final RefreshToken refreshToken = resolveRefreshToken(request.refreshToken());
-        ensureRefreshTokenIsUsable(refreshToken);
-        final UserAccount userAccount = refreshToken.getUserAccount();
+        final RefreshToken currentRefreshToken = resolveRefreshToken(request.refreshToken());
+        ensureRefreshTokenIsUsable(currentRefreshToken);
+        final UserAccount userAccount = currentRefreshToken.getUserAccount();
         ensureAccountIsActive(userAccount);
-        rotateRefreshToken(refreshToken);
+        rotateRefreshToken(currentRefreshToken);
         // Return the rotated session payload after replacing the consumed refresh token.
         return issueAuthResponse(userAccount);
     }
@@ -183,7 +183,7 @@ public class AuthServiceImpl implements AuthService {
         refreshToken.setUserAccount(userAccount);
         refreshToken.setTokenHash(hashToken(refreshTokenValue));
         refreshToken.setTokenStatus(RefreshTokenStatus.ACTIVE);
-        refreshToken.setExpiresAt(Instant.now().plusSeconds(this.jwtTokenService.getRefreshTokenTtlSeconds()));
+        refreshToken.setExpiresAt(Instant.now().plusSeconds(this.jwtTokenService.getRefreshSessionIdleTimeoutSeconds()));
         this.refreshTokenRepository.save(refreshToken);
         // Return the full auth payload that the client needs to bootstrap or refresh the session.
         return this.authMapper.toAuthResponse(
@@ -216,9 +216,9 @@ public class AuthServiceImpl implements AuthService {
             // Stop refresh immediately because rotated, revoked, and expired tokens must not be reused.
             throw new InvalidRefreshTokenException();
         }
-        // Keep active tokens usable until their expiration timestamp is reached.
+        // Keep active tokens usable while the refresh session is still inside the idle-timeout window.
         if (refreshToken.getExpiresAt().isAfter(Instant.now())) {
-            // Return immediately because the active refresh token is still inside its valid lifetime.
+            // Return immediately because the active refresh token is still inside its idle-timeout window.
             return;
         }
         refreshToken.setTokenStatus(RefreshTokenStatus.EXPIRED);

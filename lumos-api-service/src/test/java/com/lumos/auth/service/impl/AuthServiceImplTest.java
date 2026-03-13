@@ -1,6 +1,7 @@
 package com.lumos.auth.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -28,6 +29,7 @@ import com.lumos.auth.entity.UserAccount;
 import com.lumos.auth.enums.AccountStatus;
 import com.lumos.auth.enums.RefreshTokenStatus;
 import com.lumos.auth.exception.InvalidCredentialsException;
+import com.lumos.auth.exception.InvalidRefreshTokenException;
 import com.lumos.auth.mapper.AuthMapper;
 import com.lumos.auth.repository.RefreshTokenRepository;
 import com.lumos.auth.repository.UserAccountRepository;
@@ -58,6 +60,9 @@ class AuthServiceImplTest {
     @InjectMocks
     private AuthServiceImpl authService;
 
+    private static final long ACCESS_TOKEN_TTL_SECONDS = 900L;
+    private static final long REFRESH_IDLE_TIMEOUT_SECONDS = 1800L;
+
     @Test
     void register_createsUserAndReturnsSession() {
         final RegisterRequest request = new RegisterRequest("Test.User", "USER@MAIL.COM", "password123");
@@ -67,8 +72,8 @@ class AuthServiceImplTest {
         when(this.passwordEncoder.encode("password123")).thenReturn("encoded-password");
         when(this.userAccountRepository.save(any(UserAccount.class))).thenReturn(savedUser);
         when(this.jwtTokenService.generateAccessToken(savedUser)).thenReturn("access-token");
-        when(this.jwtTokenService.getAccessTokenTtlSeconds()).thenReturn(900L);
-        when(this.jwtTokenService.getRefreshTokenTtlSeconds()).thenReturn(7200L);
+        when(this.jwtTokenService.getAccessTokenTtlSeconds()).thenReturn(ACCESS_TOKEN_TTL_SECONDS);
+        when(this.jwtTokenService.getRefreshSessionIdleTimeoutSeconds()).thenReturn(REFRESH_IDLE_TIMEOUT_SECONDS);
 
         final var response = this.authService.register(request);
 
@@ -101,14 +106,31 @@ class AuthServiceImplTest {
         final RefreshToken refreshToken = refreshToken(user, RefreshTokenStatus.ACTIVE, Instant.now().plusSeconds(60));
         when(this.refreshTokenRepository.findByTokenHashAndDeletedAtIsNull(any())).thenReturn(Optional.of(refreshToken));
         when(this.jwtTokenService.generateAccessToken(user)).thenReturn("access-token");
-        when(this.jwtTokenService.getAccessTokenTtlSeconds()).thenReturn(900L);
-        when(this.jwtTokenService.getRefreshTokenTtlSeconds()).thenReturn(7200L);
+        when(this.jwtTokenService.getAccessTokenTtlSeconds()).thenReturn(ACCESS_TOKEN_TTL_SECONDS);
+        when(this.jwtTokenService.getRefreshSessionIdleTimeoutSeconds()).thenReturn(REFRESH_IDLE_TIMEOUT_SECONDS);
+        final Instant beforeRefresh = Instant.now();
 
         final var response = this.authService.refreshToken(new RefreshTokenRequest("refresh-token"));
 
         assertEquals(RefreshTokenStatus.ROTATED, refreshToken.getTokenStatus());
         assertEquals("access-token", response.accessToken());
-        verify(this.refreshTokenRepository).save(any(RefreshToken.class));
+        final ArgumentCaptor<RefreshToken> refreshTokenCaptor = ArgumentCaptor.forClass(RefreshToken.class);
+        verify(this.refreshTokenRepository).save(refreshTokenCaptor.capture());
+        assertTrue(
+                refreshTokenCaptor.getValue().getExpiresAt()
+                        .isAfter(beforeRefresh.plusSeconds(REFRESH_IDLE_TIMEOUT_SECONDS - 5)));
+    }
+
+    @Test
+    void refreshToken_withExpiredIdleWindow_throwsInvalidRefreshTokenException() {
+        final UserAccount user = user(10L, "tester", "tester@mail.com");
+        final RefreshToken refreshToken = refreshToken(user, RefreshTokenStatus.ACTIVE, Instant.now().minusSeconds(1));
+        when(this.refreshTokenRepository.findByTokenHashAndDeletedAtIsNull(any())).thenReturn(Optional.of(refreshToken));
+
+        assertThrows(
+                InvalidRefreshTokenException.class,
+                () -> this.authService.refreshToken(new RefreshTokenRequest("refresh-token")));
+        assertEquals(RefreshTokenStatus.EXPIRED, refreshToken.getTokenStatus());
     }
 
     @Test
