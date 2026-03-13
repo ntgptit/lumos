@@ -89,9 +89,7 @@ class StudySessionModeContent extends StatelessWidget {
         return StudySessionRecallContent(
           session: session,
           viewModel: viewModel,
-          answerController: answerController,
           speechPlaybackState: speechPlaybackState,
-          onSubmitTypedAnswer: onSubmitTypedAnswer,
           onActionPressed: onActionPressed,
           onPlaySpeech: onPlaySpeech,
           onReplaySpeech: onReplaySpeech,

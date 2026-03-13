@@ -35,6 +35,7 @@ class StudySessionGuessPromptCard extends StatelessWidget {
     required this.speech,
     required this.playbackState,
     required this.onPlayPressed,
+    this.height,
     super.key,
   });
 
@@ -42,6 +43,7 @@ class StudySessionGuessPromptCard extends StatelessWidget {
   final SpeechCapability speech;
   final StudySpeechPlaybackState playbackState;
   final VoidCallback onPlayPressed;
+  final double? height;
 
   @override
   Widget build(BuildContext context) {
@@ -50,13 +52,15 @@ class StudySessionGuessPromptCard extends StatelessWidget {
     final bool isSpeechEnabled = speech.available && !playbackState.isBusy;
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        final double resolvedHeight = math.min(
-          _guessHeroCardMaxHeight,
-          math.max(
-            _guessHeroCardMinHeight,
-            constraints.maxWidth * _guessHeroCardHeightFactor,
-          ),
-        );
+        final double resolvedHeight =
+            height ??
+            math.min(
+              _guessHeroCardMaxHeight,
+              math.max(
+                _guessHeroCardMinHeight,
+                constraints.maxWidth * _guessHeroCardHeightFactor,
+              ),
+            );
         return LumosCard(
           margin: EdgeInsets.zero,
           borderRadius: BorderRadii.xLarge,

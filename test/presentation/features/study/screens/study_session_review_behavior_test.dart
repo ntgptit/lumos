@@ -27,7 +27,7 @@ void main() {
 
     expect(actions, isEmpty);
 
-    await tester.drag(find.text('xin chao'), const Offset(-600, 0));
+    await tester.drag(find.text('안녕하세요'), const Offset(-600, 0));
     await tester.pumpAndSettle();
 
     expect(actions, <String>[
@@ -59,7 +59,7 @@ void main() {
       },
     );
 
-    await tester.drag(find.text('xin chao'), const Offset(600, 0));
+    await tester.drag(find.text('안녕하세요'), const Offset(600, 0));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 300));
 

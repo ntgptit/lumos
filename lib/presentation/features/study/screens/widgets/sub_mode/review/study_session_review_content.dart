@@ -23,10 +23,14 @@ abstract final class StudySessionReviewContentConst {
   static const int nextPageIndex = 2;
   static const EdgeInsetsGeometry contentPadding = EdgeInsets.fromLTRB(
     AppSpacing.lg,
+    AppSpacing.md,
     AppSpacing.lg,
-    AppSpacing.lg,
-    AppSpacing.xxxl,
+    AppSpacing.xl,
   );
+  static const EdgeInsetsGeometry progressPadding = EdgeInsets.symmetric(
+    horizontal: AppSpacing.md,
+  );
+  static const double sectionSpacing = AppSpacing.lg;
 }
 
 class StudySessionReviewContent extends StatefulWidget {
@@ -89,10 +93,13 @@ class _StudySessionReviewContentState extends State<StudySessionReviewContent> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          StudySessionReviewProgressRow(
-            progressValue: widget.session.progress.sessionProgress,
+          Padding(
+            padding: StudySessionReviewContentConst.progressPadding,
+            child: StudySessionReviewProgressRow(
+              progressValue: widget.session.progress.sessionProgress,
+            ),
           ),
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: StudySessionReviewContentConst.sectionSpacing),
           Expanded(
             child: StudySessionReviewCardViewport(
               session: widget.session,

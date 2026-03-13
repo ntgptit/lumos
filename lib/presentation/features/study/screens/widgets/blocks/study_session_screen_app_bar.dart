@@ -38,7 +38,8 @@ class StudySessionScreenAppBar extends StatelessWidget
     final bool showsModeChrome =
         resolvedSession.activeMode == StudySessionSubModeConst.reviewMode ||
         resolvedSession.activeMode == StudySessionSubModeConst.matchMode ||
-        resolvedSession.activeMode == StudySessionSubModeConst.guessMode;
+        resolvedSession.activeMode == StudySessionSubModeConst.guessMode ||
+        resolvedSession.activeMode == StudySessionSubModeConst.recallMode;
     if (!showsModeChrome) {
       return LumosAppBar(
         title: deckName,

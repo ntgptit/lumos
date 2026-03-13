@@ -1,18 +1,33 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../../domain/entities/study/study_models.dart';
+import '../../../../mode/study_recall_layout_resolver.dart';
+import '../../../../mode/study_mode_action_view_model.dart';
 import '../../../../mode/study_mode_view_model.dart';
 import '../../../../providers/study_speech_playback_provider.dart';
-import '../widgets/study_session_answer_input.dart';
-import '../widgets/study_session_sub_mode_scaffold.dart';
+import 'widgets/study_session_recall_action_row.dart';
+import 'widgets/study_session_recall_answer_panel.dart';
+import 'widgets/study_session_recall_progress_row.dart';
+import 'widgets/study_session_recall_prompt_card.dart';
+
+const EdgeInsetsGeometry _recallContentPadding = EdgeInsets.fromLTRB(
+  AppSpacing.lg,
+  AppSpacing.md,
+  AppSpacing.lg,
+  AppSpacing.xl,
+);
+const EdgeInsetsGeometry _recallProgressPadding = EdgeInsets.symmetric(
+  horizontal: AppSpacing.md,
+);
+const double _recallSectionSpacing = AppSpacing.lg;
+const double _recallActionSpacing = AppSpacing.xl;
 
 class StudySessionRecallContent extends StatelessWidget {
   const StudySessionRecallContent({
     required this.session,
     required this.viewModel,
-    required this.answerController,
     required this.speechPlaybackState,
-    required this.onSubmitTypedAnswer,
     required this.onActionPressed,
     required this.onPlaySpeech,
     required this.onReplaySpeech,
@@ -21,34 +36,65 @@ class StudySessionRecallContent extends StatelessWidget {
 
   final StudySessionData session;
   final StudyModeViewModel viewModel;
-  final TextEditingController answerController;
   final StudySpeechPlaybackState speechPlaybackState;
-  final VoidCallback onSubmitTypedAnswer;
   final Future<void> Function(String) onActionPressed;
   final VoidCallback onPlaySpeech;
   final VoidCallback onReplaySpeech;
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> bodyChildren = <Widget>[];
-    if (viewModel.showAnswerInput) {
-      bodyChildren.add(
-        StudySessionAnswerInput(
-          controller: answerController,
-          label: viewModel.inputLabel,
-          submitLabel: viewModel.submitLabel,
-          onSubmit: onSubmitTypedAnswer,
-        ),
-      );
-    }
-    return StudySessionSubModeScaffold(
-      session: session,
+    final List<StudyModeActionViewModel> visibleActions =
+        StudyRecallLayoutResolver.resolveVisibleActions(
       viewModel: viewModel,
-      speechPlaybackState: speechPlaybackState,
-      onActionPressed: onActionPressed,
-      onPlaySpeech: onPlaySpeech,
-      onReplaySpeech: onReplaySpeech,
-      bodyChildren: bodyChildren,
+    );
+    return Padding(
+      padding: _recallContentPadding,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Padding(
+            padding: _recallProgressPadding,
+            child: StudySessionRecallProgressRow(
+              progressValue: session.progress.sessionProgress,
+            ),
+          ),
+          const SizedBox(height: _recallSectionSpacing),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Expanded(
+                  child: StudySessionRecallPromptCard(
+                    prompt: StudyRecallLayoutResolver.resolvePromptContent(
+                      session: session,
+                      viewModel: viewModel,
+                    ),
+                    speech: session.currentItem.speech,
+                    playbackState: speechPlaybackState,
+                    onPlayPressed: speechPlaybackState.isPlaying
+                        ? onReplaySpeech
+                        : onPlaySpeech,
+                  ),
+                ),
+                const SizedBox(height: _recallSectionSpacing),
+                Expanded(
+                  child: StudySessionRecallAnswerPanel(
+                    content: StudyRecallLayoutResolver.resolveAnswerContent(
+                      session: session,
+                    ),
+                    isRevealed: viewModel.showAnswer,
+                  ),
+                ),
+                const SizedBox(height: _recallActionSpacing),
+                StudySessionRecallActionRow(
+                  actions: visibleActions,
+                  onActionPressed: onActionPressed,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

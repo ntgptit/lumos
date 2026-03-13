@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../../../core/themes/extensions/theme_extensions.dart';
 import '../../../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../../../domain/entities/study/study_models.dart';
 import '../../../../../../../../l10n/app_localizations.dart';
-import '../../../../../../../shared/widgets/lumos_widgets.dart';
 import '../../../../../providers/study_speech_playback_provider.dart';
-import 'study_session_review_card.dart';
+import 'study_session_review_answer_card.dart';
+import 'study_session_review_prompt_card.dart';
+
+const double _reviewCardSpacing = AppSpacing.lg;
 
 class StudySessionReviewCardDeck extends StatelessWidget {
   const StudySessionReviewCardDeck({
@@ -29,28 +30,20 @@ class StudySessionReviewCardDeck extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         Expanded(
-          child: StudySessionReviewCard(
+          child: StudySessionReviewPromptCard(
             content: _buildPromptContent(session.currentItem),
-            textStyle: context.textTheme.headlineSmall,
-            trailing: const LumosIcon(Icons.edit_outlined),
           ),
         ),
-        const SizedBox(height: AppSpacing.lg),
+        const SizedBox(height: _reviewCardSpacing),
         Expanded(
-          child: StudySessionReviewCard(
+          child: StudySessionReviewAnswerCard(
             content: _buildAnswerContent(session.currentItem),
-            textStyle: context.textTheme.headlineMedium,
-            trailing: LumosIconButton(
-              icon: speechPlaybackState.isPlaying
-                  ? Icons.volume_off_rounded
-                  : Icons.volume_up_rounded,
-              tooltip: speechPlaybackState.isPlaying
-                  ? l10n.studySpeechReplayAction
-                  : l10n.flashcardPlayAudioTooltip,
-              onPressed: session.currentItem.speech.available
-                  ? _handleSpeechPressed
-                  : null,
-            ),
+            isSpeechAvailable: session.currentItem.speech.available,
+            isPlaying: speechPlaybackState.isPlaying,
+            tooltip: speechPlaybackState.isPlaying
+                ? l10n.studySpeechReplayAction
+                : l10n.flashcardPlayAudioTooltip,
+            onSpeechPressed: _handleSpeechPressed,
           ),
         ),
       ],
@@ -67,18 +60,18 @@ class StudySessionReviewCardDeck extends StatelessWidget {
 
   String _buildPromptContent(StudySessionItemData currentItem) {
     if (currentItem.note.isEmpty) {
-      return currentItem.prompt;
+      return currentItem.answer;
     }
-    if (currentItem.prompt.isEmpty) {
+    if (currentItem.answer.isEmpty) {
       return currentItem.note;
     }
-    return '${currentItem.prompt} / ${currentItem.note}';
+    return '${currentItem.answer} / ${currentItem.note}';
   }
 
   String _buildAnswerContent(StudySessionItemData currentItem) {
-    if (currentItem.answer.isNotEmpty) {
-      return currentItem.answer;
+    if (currentItem.prompt.isEmpty) {
+      return currentItem.pronunciation;
     }
-    return currentItem.pronunciation;
+    return currentItem.prompt;
   }
 }

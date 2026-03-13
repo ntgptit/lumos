@@ -5,7 +5,7 @@ import '../../../../../../../../domain/entities/study/study_models.dart';
 import '../../../../../providers/study_guess_selection_provider.dart';
 import 'study_session_guess_choice_card.dart';
 
-const double _guessChoiceGap = AppSpacing.sm;
+const double studySessionGuessChoiceGap = AppSpacing.sm;
 
 class StudySessionGuessChoiceList extends StatelessWidget {
   const StudySessionGuessChoiceList({
@@ -13,6 +13,7 @@ class StudySessionGuessChoiceList extends StatelessWidget {
     required this.selectionState,
     required this.isInteractive,
     required this.onChoicePressed,
+    this.cardHeight,
     super.key,
   });
 
@@ -20,6 +21,7 @@ class StudySessionGuessChoiceList extends StatelessWidget {
   final StudyGuessSelectionState selectionState;
   final bool isInteractive;
   final ValueChanged<String> onChoicePressed;
+  final double? cardHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -31,10 +33,11 @@ class StudySessionGuessChoiceList extends StatelessWidget {
         final bool isLastChoice = index == choiceCount - 1;
         return Padding(
           padding: EdgeInsets.only(
-            bottom: isLastChoice ? AppSpacing.none : _guessChoiceGap,
+            bottom: isLastChoice ? AppSpacing.none : studySessionGuessChoiceGap,
           ),
           child: StudySessionGuessChoiceCard(
             label: choice.label,
+            height: cardHeight,
             isSelected: selectionState.isChoiceSelected(choice.label),
             isSuccessFeedback: selectionState.isSuccessFeedbackFor(
               choice.label,

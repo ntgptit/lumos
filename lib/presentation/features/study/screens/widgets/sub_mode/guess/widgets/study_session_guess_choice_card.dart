@@ -5,13 +5,13 @@ import '../../../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../../../core/themes/extensions/theme_extensions.dart';
 import '../../../../../../../shared/widgets/lumos_widgets.dart';
 
-const double _guessChoiceCardMinHeight = 72;
+const double studySessionGuessChoiceCardDefaultHeight = 64;
 const double _guessChoiceLineHeight =
-    AppTypographyConst.titleMediumLineHeight /
-    AppTypographyConst.titleMediumFontSize;
-const int _guessChoiceMaxLines = 3;
+    AppTypographyConst.titleSmallLineHeight /
+    AppTypographyConst.titleSmallFontSize;
+const int _guessChoiceMaxLines = 2;
 const EdgeInsetsGeometry _guessChoiceCardPadding = EdgeInsets.symmetric(
-  horizontal: AppSpacing.xl,
+  horizontal: AppSpacing.md,
   vertical: AppSpacing.xs,
 );
 
@@ -19,6 +19,7 @@ class StudySessionGuessChoiceCard extends StatelessWidget {
   const StudySessionGuessChoiceCard({
     required this.label,
     required this.onPressed,
+    this.height,
     this.isSelected = false,
     this.isSuccessFeedback = false,
     this.isErrorFeedback = false,
@@ -28,6 +29,7 @@ class StudySessionGuessChoiceCard extends StatelessWidget {
 
   final String label;
   final VoidCallback onPressed;
+  final double? height;
   final bool isSelected;
   final bool isSuccessFeedback;
   final bool isErrorFeedback;
@@ -63,10 +65,8 @@ class StudySessionGuessChoiceCard extends StatelessWidget {
               : colorScheme.surface.withValues(alpha: AppOpacity.transparent),
           borderRadius: BorderRadii.xLarge,
         ),
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(
-            minHeight: _guessChoiceCardMinHeight,
-          ),
+        child: SizedBox(
+          height: height ?? studySessionGuessChoiceCardDefaultHeight,
           child: Padding(
             padding: _guessChoiceCardPadding,
             child: Center(
@@ -75,9 +75,9 @@ class StudySessionGuessChoiceCard extends StatelessWidget {
                 align: TextAlign.center,
                 maxLines: _guessChoiceMaxLines,
                 overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.titleMedium?.copyWith(
+                style: theme.textTheme.titleSmall?.copyWith(
                   color: textColor,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w400,
                   height: _guessChoiceLineHeight,
                 ),
               ),
