@@ -20,8 +20,6 @@ const EdgeInsetsGeometry _fillProgressPadding = EdgeInsets.symmetric(
 );
 const double _fillSectionSpacing = AppSpacing.lg;
 const double _fillActionSpacing = AppSpacing.xl;
-const int _fillPromptFlex = 4;
-const int _fillBodyFlex = 5;
 
 class StudySessionFillContent extends StatelessWidget {
   const StudySessionFillContent({
@@ -50,6 +48,8 @@ class StudySessionFillContent extends StatelessWidget {
     final bool showsAnswerPanel = viewModel.showAnswer;
     final bool showsInputPanel = viewModel.showAnswerInput;
     final bool showsActionRow = viewModel.actions.isNotEmpty;
+    final bool showsSubmitAction = showsInputPanel;
+    final bool showsBottomActions = showsActionRow || showsSubmitAction;
     return Padding(
       padding: _fillContentPadding,
       child: Column(
@@ -67,7 +67,6 @@ class StudySessionFillContent extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 Expanded(
-                  flex: _fillPromptFlex,
                   child: StudySessionFillPromptCard(
                     prompt: viewModel.prompt,
                     speech: session.currentItem.speech,
@@ -79,7 +78,6 @@ class StudySessionFillContent extends StatelessWidget {
                 ),
                 const SizedBox(height: _fillSectionSpacing),
                 Expanded(
-                  flex: _fillBodyFlex,
                   child: StudySessionFillBodyPanel(
                     viewModel: viewModel,
                     answerController: answerController,
@@ -88,10 +86,14 @@ class StudySessionFillContent extends StatelessWidget {
                     onSubmitTypedAnswer: onSubmitTypedAnswer,
                   ),
                 ),
-                if (showsActionRow) ...<Widget>[
+                if (showsBottomActions) ...<Widget>[
                   const SizedBox(height: _fillActionSpacing),
                   StudySessionFillActionRow(
                     actions: viewModel.actions,
+                    submitLabel: showsSubmitAction ? viewModel.submitLabel : null,
+                    onSubmitPressed: showsSubmitAction
+                        ? onSubmitTypedAnswer
+                        : null,
                     onActionPressed: (String actionId) {
                       onActionPressed(actionId);
                     },
