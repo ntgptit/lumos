@@ -31,6 +31,7 @@ lib/presentation/shared/widgets/gamification/{{widget_file_prefix}}_gamification
 lib/presentation/shared/widgets/inputs/{{widget_file_prefix}}_form_widgets.dart
 lib/presentation/shared/widgets/layout/{{widget_file_prefix}}_screen_frame.dart
 lib/presentation/shared/widgets/layout/{{widget_file_prefix}}_decorative_background.dart
+lib/presentation/shared/widgets/layout/{{widget_file_prefix}}_horizontal_pager.dart
 lib/presentation/shared/widgets/layout/{{widget_file_prefix}}_paged_sliver_list.dart
 lib/presentation/shared/widgets/learning/{{widget_file_prefix}}_learning_widgets.dart
 lib/presentation/shared/widgets/{{widget_file_prefix}}_models.dart

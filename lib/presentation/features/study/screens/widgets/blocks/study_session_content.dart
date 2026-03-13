@@ -11,6 +11,7 @@ import 'study_session_choice_list.dart';
 import 'study_session_header.dart';
 import 'study_session_match_pairs.dart';
 import 'study_session_prompt_card.dart';
+import 'study_session_review_content.dart';
 import 'study_session_speech_panel.dart';
 
 class StudySessionContent extends StatelessWidget {
@@ -47,6 +48,17 @@ class StudySessionContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (session.activeMode == StudySessionReviewContentConst.reviewMode) {
+      return StudySessionReviewContent(
+        session: session,
+        viewModel: viewModel,
+        speechPlaybackState: speechPlaybackState,
+        onGoNext: () =>
+            onActionPressed(StudySessionReviewContentConst.nextActionId),
+        onPlaySpeech: onPlaySpeech,
+        onReplaySpeech: onReplaySpeech,
+      );
+    }
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.lg),
       children: <Widget>[

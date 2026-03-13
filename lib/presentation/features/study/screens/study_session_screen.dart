@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../domain/entities/study/study_models.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../shared/widgets/lumos_widgets.dart';
 import '../mode/study_mode_view_model.dart';
 import '../mode/study_mode_view_strategy.dart';
@@ -11,6 +12,7 @@ import '../providers/study_speech_playback_provider.dart';
 import '../providers/study_mode_view_strategy_factory_provider.dart';
 import '../providers/study_session_provider.dart';
 import 'widgets/blocks/study_session_content.dart';
+import 'widgets/blocks/study_session_review_content.dart';
 
 class StudySessionScreen extends ConsumerStatefulWidget {
   const StudySessionScreen({
@@ -29,6 +31,8 @@ class StudySessionScreen extends ConsumerStatefulWidget {
 }
 
 class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
+  static const String _reviewMenuReplayAudio = 'REPLAY_AUDIO';
+
   final TextEditingController _answerController = TextEditingController();
 
   @override
@@ -44,6 +48,16 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
       studySessionControllerProvider(request),
     );
     final modeStrategyFactory = ref.watch(studyModeViewStrategyFactoryProvider);
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
+    StudySessionData? currentSession;
+    StudyModeViewModel? appBarViewModel;
+    sessionAsync.whenData((StudySessionData session) {
+      currentSession = session;
+      final StudyModeViewStrategy modeStrategy = modeStrategyFactory.resolve(
+        session.activeMode,
+      );
+      appBarViewModel = modeStrategy.buildViewModel(session: session);
+    });
     ref.listen<AsyncValue<StudySessionData>>(
       studySessionControllerProvider(request),
       (
@@ -72,7 +86,11 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
       },
     );
     return Scaffold(
-      appBar: LumosAppBar(title: widget.deckName),
+      appBar: _buildAppBar(
+        l10n: l10n,
+        session: currentSession,
+        viewModel: appBarViewModel,
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.none),
         child: sessionAsync.when(
@@ -117,6 +135,51 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
           },
         ),
       ),
+    );
+  }
+
+  PreferredSizeWidget _buildAppBar({
+    required AppLocalizations l10n,
+    required StudySessionData? session,
+    required StudyModeViewModel? viewModel,
+  }) {
+    if (session == null ||
+        session.activeMode != StudySessionReviewContentConst.reviewMode) {
+      return LumosAppBar(title: widget.deckName);
+    }
+    return LumosAppBar(
+      title: viewModel?.modeLabel ?? widget.deckName,
+      actions: <Widget>[
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: AppSpacing.xs),
+          child: LumosIcon(Icons.text_fields_rounded),
+        ),
+        LumosIconButton(
+          icon: Icons.volume_up_rounded,
+          tooltip: l10n.flashcardPlayAudioTooltip,
+          onPressed: session.currentItem.speech.available ? _playSpeech : null,
+        ),
+        PopupMenuButton<String>(
+          icon: const LumosIcon(Icons.more_vert_rounded),
+          onSelected: _handleReviewMenuSelection,
+          itemBuilder: (BuildContext context) {
+            final List<PopupMenuEntry<String>> items =
+                <PopupMenuEntry<String>>[];
+            if (session.currentItem.speech.available) {
+              items.add(
+                PopupMenuItem<String>(
+                  value: _reviewMenuReplayAudio,
+                  child: LumosText(
+                    l10n.studySpeechReplayAction,
+                    style: LumosTextStyle.bodyMedium,
+                  ),
+                ),
+              );
+            }
+            return items;
+          },
+        ),
+      ],
     );
   }
 
@@ -199,6 +262,14 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
           flashcardId: session.currentItem.flashcardId,
           speech: session.currentItem.speech,
         );
+  }
+
+  void _handleReviewMenuSelection(String actionId) {
+    if (actionId == _reviewMenuReplayAudio) {
+      _replaySpeech();
+      return;
+    }
+    _handleActionPressed(actionId);
   }
 
   StudySessionData _readCurrentSession() {

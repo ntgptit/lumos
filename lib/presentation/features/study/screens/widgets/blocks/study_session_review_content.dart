@@ -1,0 +1,298 @@
+import 'package:flutter/material.dart';
+
+import '../../../../../../core/themes/extensions/theme_extensions.dart';
+import '../../../../../../core/themes/foundation/app_foundation.dart';
+import '../../../../../../domain/entities/study/study_models.dart';
+import '../../../../../../l10n/app_localizations.dart';
+import '../../../../../shared/widgets/lumos_widgets.dart';
+import '../../../mode/study_mode_view_model.dart';
+import '../../../providers/study_speech_playback_provider.dart';
+
+abstract final class StudySessionReviewContentConst {
+  StudySessionReviewContentConst._();
+
+  static const String reviewMode = 'REVIEW';
+  static const String nextActionId = 'GO_NEXT';
+  static const int currentPageIndex = 0;
+  static const int nextPageIndex = 1;
+  static const int promptCardFlex = 1;
+  static const int answerCardFlex = 1;
+  static const double progressHeight = AppSpacing.sm;
+  static const EdgeInsetsGeometry contentPadding = EdgeInsets.fromLTRB(
+    AppSpacing.lg,
+    AppSpacing.lg,
+    AppSpacing.lg,
+    AppSpacing.xxxl,
+  );
+  static const EdgeInsetsGeometry cardPadding = EdgeInsets.fromLTRB(
+    AppSpacing.xl,
+    AppSpacing.lg,
+    AppSpacing.xl,
+    AppSpacing.xl,
+  );
+  static const EdgeInsetsGeometry cardTextPadding = EdgeInsets.symmetric(
+    horizontal: AppSpacing.md,
+  );
+}
+
+class StudySessionReviewContent extends StatefulWidget {
+  const StudySessionReviewContent({
+    required this.session,
+    required this.viewModel,
+    required this.speechPlaybackState,
+    required this.onGoNext,
+    required this.onPlaySpeech,
+    required this.onReplaySpeech,
+    super.key,
+  });
+
+  final StudySessionData session;
+  final StudyModeViewModel viewModel;
+  final StudySpeechPlaybackState speechPlaybackState;
+  final VoidCallback onGoNext;
+  final VoidCallback onPlaySpeech;
+  final VoidCallback onReplaySpeech;
+
+  @override
+  State<StudySessionReviewContent> createState() =>
+      _StudySessionReviewContentState();
+}
+
+class _StudySessionReviewContentState extends State<StudySessionReviewContent> {
+  late final PageController _pageController;
+  bool _isNavigatingNext = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(
+      initialPage: StudySessionReviewContentConst.currentPageIndex,
+    );
+  }
+
+  @override
+  void didUpdateWidget(covariant StudySessionReviewContent oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.session.currentItem.flashcardId ==
+        widget.session.currentItem.flashcardId) {
+      return;
+    }
+    _isNavigatingNext = false;
+    _jumpToCurrentPage();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
+    final bool canGoNext = widget.session.allowedActions.contains(
+      StudySessionReviewContentConst.nextActionId,
+    );
+    if (!canGoNext) {
+      return _StudySessionReviewPage(
+        session: widget.session,
+        speechPlaybackState: widget.speechPlaybackState,
+        onPlaySpeech: widget.onPlaySpeech,
+        onReplaySpeech: widget.onReplaySpeech,
+        l10n: l10n,
+      );
+    }
+    return LumosHorizontalPager(
+      controller: _pageController,
+      itemCount: StudySessionReviewContentConst.nextPageIndex + 1,
+      onPageChanged: _handlePageChanged,
+      itemBuilder: (BuildContext contextValue, int index) {
+        if (index == StudySessionReviewContentConst.currentPageIndex) {
+          return _StudySessionReviewPage(
+            session: widget.session,
+            speechPlaybackState: widget.speechPlaybackState,
+            onPlaySpeech: widget.onPlaySpeech,
+            onReplaySpeech: widget.onReplaySpeech,
+            l10n: l10n,
+          );
+        }
+        return const SizedBox.shrink();
+      },
+    );
+  }
+
+  void _handlePageChanged(int pageIndex) {
+    if (pageIndex != StudySessionReviewContentConst.nextPageIndex) {
+      return;
+    }
+    if (_isNavigatingNext) {
+      return;
+    }
+    _isNavigatingNext = true;
+    widget.onGoNext();
+  }
+
+  void _jumpToCurrentPage() {
+    if (!_pageController.hasClients) {
+      return;
+    }
+    _pageController.jumpToPage(StudySessionReviewContentConst.currentPageIndex);
+  }
+}
+
+class _StudySessionReviewPage extends StatelessWidget {
+  const _StudySessionReviewPage({
+    required this.session,
+    required this.speechPlaybackState,
+    required this.onPlaySpeech,
+    required this.onReplaySpeech,
+    required this.l10n,
+  });
+
+  final StudySessionData session;
+  final StudySpeechPlaybackState speechPlaybackState;
+  final VoidCallback onPlaySpeech;
+  final VoidCallback onReplaySpeech;
+  final AppLocalizations l10n;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: StudySessionReviewContentConst.contentPadding,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          _StudySessionReviewProgressRow(
+            progressValue: session.progress.sessionProgress,
+          ),
+          const SizedBox(height: AppSpacing.lg),
+          Expanded(
+            flex: StudySessionReviewContentConst.promptCardFlex,
+            child: _StudySessionReviewCard(
+              content: _buildPromptContent(session.currentItem),
+              textStyle: context.textTheme.headlineSmall,
+              trailing: const LumosIcon(Icons.edit_outlined),
+            ),
+          ),
+          const SizedBox(height: AppSpacing.lg),
+          Expanded(
+            flex: StudySessionReviewContentConst.answerCardFlex,
+            child: _StudySessionReviewCard(
+              content: _buildAnswerContent(session.currentItem),
+              textStyle: context.textTheme.headlineMedium,
+              trailing: LumosIconButton(
+                icon: speechPlaybackState.isPlaying
+                    ? Icons.volume_off_rounded
+                    : Icons.volume_up_rounded,
+                tooltip: speechPlaybackState.isPlaying
+                    ? l10n.studySpeechReplayAction
+                    : l10n.flashcardPlayAudioTooltip,
+                onPressed: session.currentItem.speech.available
+                    ? _handleSpeechPressed
+                    : null,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _handleSpeechPressed() {
+    if (speechPlaybackState.isPlaying) {
+      onReplaySpeech();
+      return;
+    }
+    onPlaySpeech();
+  }
+
+  String _buildPromptContent(StudySessionItemData currentItem) {
+    if (currentItem.note.isEmpty) {
+      return currentItem.prompt;
+    }
+    if (currentItem.prompt.isEmpty) {
+      return currentItem.note;
+    }
+    return '${currentItem.prompt} / ${currentItem.note}';
+  }
+
+  String _buildAnswerContent(StudySessionItemData currentItem) {
+    if (currentItem.answer.isNotEmpty) {
+      return currentItem.answer;
+    }
+    return currentItem.pronunciation;
+  }
+}
+
+class _StudySessionReviewProgressRow extends StatelessWidget {
+  const _StudySessionReviewProgressRow({required this.progressValue});
+
+  final double progressValue;
+
+  @override
+  Widget build(BuildContext context) {
+    final int progressPercent = (progressValue * 100).round();
+    final Color progressColor = context.appColors.success;
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: LumosProgressBar(
+            value: progressValue,
+            height: StudySessionReviewContentConst.progressHeight,
+          ),
+        ),
+        const SizedBox(width: AppSpacing.md),
+        LumosInlineText(
+          '$progressPercent%',
+          align: TextAlign.center,
+          style: context.textTheme.titleLarge?.copyWith(color: progressColor),
+        ),
+      ],
+    );
+  }
+}
+
+class _StudySessionReviewCard extends StatelessWidget {
+  const _StudySessionReviewCard({
+    required this.content,
+    required this.trailing,
+    this.textStyle,
+  });
+
+  final String content;
+  final Widget trailing;
+  final TextStyle? textStyle;
+
+  @override
+  Widget build(BuildContext context) {
+    return LumosCard(
+      margin: EdgeInsets.zero,
+      padding: EdgeInsets.zero,
+      child: Padding(
+        padding: StudySessionReviewContentConst.cardPadding,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Align(alignment: Alignment.topRight, child: trailing),
+            Expanded(
+              child: Center(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: StudySessionReviewContentConst.cardTextPadding,
+                    child: LumosInlineText(
+                      content,
+                      align: TextAlign.center,
+                      style: textStyle?.copyWith(
+                        color: context.colorScheme.onSurface,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

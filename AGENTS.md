@@ -50,6 +50,13 @@ Repo-specific rules for Flutter:
 - For wireframe-driven UI work, AI must analyze the wireframe first and write a UI Contract before any code.
 - For wireframe-driven UI work, AI must convert the wireframe into a UI Section Table before writing hierarchy or code.
 - For wireframe-driven UI work, the UI Section Table must start with these columns: `Section`, `Position`, `Responsibility`, `Data Source`.
+- For wireframe-driven UI work, AI must analyze all interactions first, split Frontend versus Backend responsibility, explain why each interaction belongs to FE or BE, and identify logic that must not be placed in Flutter UI.
+- For wireframe-driven UI work, AI must write an Interaction Contract table with: `Interaction`, `FE Responsibility`, `BE Responsibility`, `Reason`.
+- For wireframe-driven UI work, AI must classify responsibilities into `Presentation`, `Application`, `Domain`, and `Infrastructure` before code generation.
+- For wireframe-driven UI work, AI must define API contracts before code generation.
+- For wireframe-driven UI work, AI must describe frontend ViewModel state binding before code generation.
+- For wireframe-driven UI work, AI must write an implementation plan for backend (`Controller`, `Service`, `Repository`) and frontend (`Screen`, `Widgets`, `ViewModel`) before code generation.
+- For wireframe-driven UI work, AI must preserve the architecture flow `Flutter UI -> ViewModel -> Repository -> API -> Backend service`.
 - For wireframe-driven UI work, AI must write the Widget Tree first before implementing code.
 - For wireframe-driven UI work, the Widget Tree order must match the wireframe exactly.
 - For wireframe-driven UI work, after generating the Widget Tree AI must validate it against the wireframe: compare it, confirm all sections exist, confirm order is identical, and confirm no section is missing.
