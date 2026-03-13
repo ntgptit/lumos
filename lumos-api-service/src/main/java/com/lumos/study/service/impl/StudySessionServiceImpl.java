@@ -1,17 +1,12 @@
 package com.lumos.study.service.impl;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -40,6 +35,8 @@ import com.lumos.study.entity.StudyAttempt;
 import com.lumos.study.entity.StudySession;
 import com.lumos.study.entity.StudySessionItem;
 import com.lumos.study.entity.UserSpeechPreference;
+import com.lumos.study.mode.StudyModeStrategy;
+import com.lumos.study.mode.StudyModeStrategyFactory;
 import com.lumos.study.enums.ReviewOutcome;
 import com.lumos.study.enums.StudyMode;
 import com.lumos.study.enums.StudyModeLifecycleState;
@@ -61,18 +58,6 @@ import lombok.RequiredArgsConstructor;
 public class StudySessionServiceImpl implements StudySessionService {
 
     private static final int FIRST_MODE_INDEX = 0;
-    private static final int CHOICE_LIMIT = 4;
-    private static final String ACTION_GO_NEXT = "GO_NEXT";
-    private static final String ACTION_MARK_REMEMBERED = "MARK_REMEMBERED";
-    private static final String ACTION_RETRY_ITEM = "RETRY_ITEM";
-    private static final String ACTION_REVEAL_ANSWER = "REVEAL_ANSWER";
-    private static final String ACTION_SUBMIT_ANSWER = "SUBMIT_ANSWER";
-    private static final String FILL_INPUT_PLACEHOLDER = "Type your answer";
-    private static final String INSTRUCTION_FILL = "Type the exact answer to complete the review.";
-    private static final String INSTRUCTION_GUESS = "Choose the matching prompt.";
-    private static final String INSTRUCTION_MATCH = "Pick the matching answer.";
-    private static final String INSTRUCTION_RECALL = "Think of the answer before revealing it.";
-    private static final String INSTRUCTION_REVIEW = "Reveal the answer, then confirm if you remembered it.";
     private static final String MODE_PLAN_SEPARATOR = ",";
 
     private final AuthenticatedUserProvider authenticatedUserProvider;
@@ -84,6 +69,7 @@ public class StudySessionServiceImpl implements StudySessionService {
     private final StudyAttemptRepository studyAttemptRepository;
     private final LearningCardStateRepository learningCardStateRepository;
     private final UserSpeechPreferenceRepository userSpeechPreferenceRepository;
+    private final StudyModeStrategyFactory studyModeStrategyFactory;
 
     /**
      * Start a canonical study session for the requested deck.
@@ -164,11 +150,8 @@ public class StudySessionServiceImpl implements StudySessionService {
     public StudySessionResponse submitAnswer(Long sessionId, SubmitAnswerRequest request) {
         final StudySession session = resolveSession(sessionId);
         final StudySessionItem currentItem = resolveCurrentItem(session);
-        final String normalizedAnswer = normalize(request.answer());
-        final String expectedAnswer = expectedAnswer(session.getActiveMode(), currentItem);
-        final ReviewOutcome outcome = StringUtils.compareIgnoreCase(normalizedAnswer, normalize(expectedAnswer)) == 0
-                ? ReviewOutcome.PASSED
-                : ReviewOutcome.FAILED;
+        final StudyModeStrategy studyModeStrategy = resolveStudyModeStrategy(session.getActiveMode());
+        final ReviewOutcome outcome = studyModeStrategy.evaluateAnswer(currentItem, request.answer());
         applyOutcome(session, currentItem, outcome, request.answer());
         return buildResponse(session);
     }
@@ -528,7 +511,7 @@ public class StudySessionServiceImpl implements StudySessionService {
                 session.getActiveMode().name(),
                 session.getModeState().name(),
                 parseModePlan(session.getModePlan()).stream().map(Enum::name).toList(),
-                resolveAllowedActions(session),
+                resolveStudyModeStrategy(session.getActiveMode()).resolveAllowedActions(session),
                 buildProgress(session, items),
                 currentItem == null ? null : buildCurrentItemResponse(session, currentItem, items),
                 session.getSessionCompleted());
@@ -543,37 +526,6 @@ public class StudySessionServiceImpl implements StudySessionService {
                 .filter(item -> Objects.deepEquals(item.getSequenceIndex(), session.getCurrentItemIndex()))
                 .findFirst()
                 .orElse(items.get(FIRST_MODE_INDEX));
-    }
-
-    private List<String> resolveAllowedActions(StudySession session) {
-        // Expose no actions after the entire session has completed.
-        if (session.getSessionCompleted()) {
-            return List.of();
-        }
-
-        final Set<String> actions = new LinkedHashSet<>();
-        // Restrict waiting-feedback state to acknowledgement and retry actions.
-        if (session.getModeState() == StudyModeLifecycleState.WAITING_FEEDBACK) {
-            actions.add(ACTION_GO_NEXT);
-            actions.add(ACTION_RETRY_ITEM);
-            // Allow remembered confirmation only in review-style modes.
-            if (isRevealDrivenMode(session.getActiveMode())) {
-                actions.add(ACTION_MARK_REMEMBERED);
-            }
-            return List.copyOf(actions);
-        }
-        // Expose reveal-driven actions for review and recall modes.
-        if (isRevealDrivenMode(session.getActiveMode())) {
-            actions.add(ACTION_REVEAL_ANSWER);
-            actions.add(ACTION_MARK_REMEMBERED);
-            actions.add(ACTION_RETRY_ITEM);
-            return List.copyOf(actions);
-        }
-
-        actions.add(ACTION_SUBMIT_ANSWER);
-        actions.add(ACTION_REVEAL_ANSWER);
-        actions.add(ACTION_RETRY_ITEM);
-        return List.copyOf(actions);
     }
 
     private ProgressSummaryResponse buildProgress(StudySession session, List<StudySessionItem> items) {
@@ -600,9 +552,10 @@ public class StudySessionServiceImpl implements StudySessionService {
             StudySession session,
             StudySessionItem currentItem,
             List<StudySessionItem> items) {
-        final String prompt = resolvePrompt(session.getActiveMode(), currentItem);
-        final String answer = expectedAnswer(session.getActiveMode(), currentItem);
-        final List<StudyChoiceResponse> choices = resolveChoices(session.getActiveMode(), currentItem, items);
+        final StudyModeStrategy studyModeStrategy = resolveStudyModeStrategy(session.getActiveMode());
+        final String prompt = studyModeStrategy.resolvePrompt(currentItem);
+        final String answer = studyModeStrategy.resolveExpectedAnswer(currentItem);
+        final List<StudyChoiceResponse> choices = studyModeStrategy.resolveChoices(currentItem, items);
         final UserSpeechPreference speechPreference = resolveSpeechPreference();
         final SpeechCapabilityResponse speechCapability = new SpeechCapabilityResponse(
                 speechPreference.getEnabled(),
@@ -618,8 +571,8 @@ public class StudySessionServiceImpl implements StudySessionService {
                 answer,
                 currentItem.getNoteSnapshot(),
                 currentItem.getPronunciationSnapshot(),
-                resolveInstruction(session.getActiveMode()),
-                resolveInputPlaceholder(session.getActiveMode()),
+                studyModeStrategy.resolveInstruction(),
+                studyModeStrategy.resolveInputPlaceholder(),
                 choices,
                 speechCapability);
     }
@@ -638,70 +591,7 @@ public class StudySessionServiceImpl implements StudySessionService {
                 });
     }
 
-    private String resolvePrompt(StudyMode studyMode, StudySessionItem currentItem) {
-        return switch (studyMode) {
-            case GUESS -> currentItem.getBackTextSnapshot();
-            default -> currentItem.getFrontTextSnapshot();
-        };
-    }
-
-    private String expectedAnswer(StudyMode studyMode, StudySessionItem currentItem) {
-        return switch (studyMode) {
-            case GUESS -> currentItem.getFrontTextSnapshot();
-            default -> currentItem.getBackTextSnapshot();
-        };
-    }
-
-    private List<StudyChoiceResponse> resolveChoices(
-            StudyMode studyMode,
-            StudySessionItem currentItem,
-            List<StudySessionItem> items) {
-        // Skip multiple-choice generation for non-choice-based modes.
-        if (studyMode != StudyMode.MATCH && studyMode != StudyMode.GUESS) {
-            return List.of();
-        }
-
-        final List<String> values = new ArrayList<>();
-        values.add(expectedAnswer(studyMode, currentItem));
-        for (StudySessionItem item : items) {
-            // Skip the current item so each distractor comes from another flashcard.
-            if (Objects.deepEquals(item.getId(), currentItem.getId())) {
-                continue;
-            }
-            values.add(expectedAnswer(studyMode, item));
-        }
-
-        final List<String> uniqueValues = values.stream().distinct().limit(CHOICE_LIMIT).toList();
-        final List<StudyChoiceResponse> choices = new ArrayList<>();
-        for (int index = 0; index < uniqueValues.size(); index++) {
-            choices.add(new StudyChoiceResponse("choice-" + index, uniqueValues.get(index)));
-        }
-        Collections.rotate(choices, currentItem.getSequenceIndex() % Math.max(1, choices.size()));
-        return choices;
-    }
-
-    private String resolveInstruction(StudyMode studyMode) {
-        return switch (studyMode) {
-            case REVIEW -> INSTRUCTION_REVIEW;
-            case MATCH -> INSTRUCTION_MATCH;
-            case GUESS -> INSTRUCTION_GUESS;
-            case RECALL -> INSTRUCTION_RECALL;
-            case FILL -> INSTRUCTION_FILL;
-        };
-    }
-
-    private String resolveInputPlaceholder(StudyMode studyMode) {
-        return switch (studyMode) {
-            case FILL, RECALL -> FILL_INPUT_PLACEHOLDER;
-            default -> "";
-        };
-    }
-
-    private boolean isRevealDrivenMode(StudyMode studyMode) {
-        return studyMode == StudyMode.REVIEW || studyMode == StudyMode.RECALL;
-    }
-
-    private String normalize(String value) {
-        return StringUtils.trimToEmpty(value).toLowerCase(Locale.ROOT);
+    private StudyModeStrategy resolveStudyModeStrategy(StudyMode studyMode) {
+        return this.studyModeStrategyFactory.getStrategy(studyMode);
     }
 }

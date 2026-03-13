@@ -11,10 +11,10 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -36,6 +36,12 @@ import com.lumos.study.enums.ReviewOutcome;
 import com.lumos.study.enums.StudyMode;
 import com.lumos.study.enums.StudyModeLifecycleState;
 import com.lumos.study.enums.StudySessionType;
+import com.lumos.study.mode.FillStudyModeStrategy;
+import com.lumos.study.mode.GuessStudyModeStrategy;
+import com.lumos.study.mode.MatchStudyModeStrategy;
+import com.lumos.study.mode.RecallStudyModeStrategy;
+import com.lumos.study.mode.ReviewStudyModeStrategy;
+import com.lumos.study.mode.StudyModeStrategyFactory;
 import com.lumos.study.repository.LearningCardStateRepository;
 import com.lumos.study.repository.StudyAttemptRepository;
 import com.lumos.study.repository.StudySessionItemRepository;
@@ -76,8 +82,28 @@ class StudySessionServiceImplTest {
     @Mock
     private UserSpeechPreferenceRepository userSpeechPreferenceRepository;
 
-    @InjectMocks
     private StudySessionServiceImpl studySessionService;
+
+    @BeforeEach
+    void setUp() {
+        final StudyModeStrategyFactory studyModeStrategyFactory = new StudyModeStrategyFactory(List.of(
+                new ReviewStudyModeStrategy(),
+                new MatchStudyModeStrategy(),
+                new GuessStudyModeStrategy(),
+                new RecallStudyModeStrategy(),
+                new FillStudyModeStrategy()));
+        this.studySessionService = new StudySessionServiceImpl(
+                this.authenticatedUserProvider,
+                this.userAccountRepository,
+                this.deckRepository,
+                this.flashcardRepository,
+                this.studySessionRepository,
+                this.studySessionItemRepository,
+                this.studyAttemptRepository,
+                this.learningCardStateRepository,
+                this.userSpeechPreferenceRepository,
+                studyModeStrategyFactory);
+    }
 
     @Test
     void startSession_createsFirstLearningSessionForNewFlashcards() {
