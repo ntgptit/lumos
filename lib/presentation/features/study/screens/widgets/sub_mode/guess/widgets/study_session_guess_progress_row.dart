@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../../shared/widgets/lumos_widgets.dart';
 
-const double _guessProgressBarHeight = AppSpacing.lg;
+const double _guessProgressBarHeight = AppSpacing.md;
 
 class StudySessionGuessProgressRow extends StatelessWidget {
   const StudySessionGuessProgressRow({

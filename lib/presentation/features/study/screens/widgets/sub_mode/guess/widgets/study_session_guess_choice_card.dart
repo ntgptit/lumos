@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../../../../core/constants/text_styles.dart';
 import '../../../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../../shared/widgets/lumos_widgets.dart';
 
-const double _guessChoiceCardMinHeight = 120;
+const double _guessChoiceCardMinHeight = 72;
+const double _guessChoiceLineHeight =
+    AppTypographyConst.titleMediumLineHeight /
+    AppTypographyConst.titleMediumFontSize;
+const int _guessChoiceMaxLines = 3;
 const EdgeInsetsGeometry _guessChoiceCardPadding = EdgeInsets.symmetric(
   horizontal: AppSpacing.xl,
-  vertical: AppSpacing.xl,
+  vertical: AppSpacing.xs,
 );
 
 class StudySessionGuessChoiceCard extends StatelessWidget {
@@ -38,10 +43,12 @@ class StudySessionGuessChoiceCard extends StatelessWidget {
             child: LumosInlineText(
               label,
               align: TextAlign.center,
-              style: theme.textTheme.titleLarge?.copyWith(
+              maxLines: _guessChoiceMaxLines,
+              overflow: TextOverflow.ellipsis,
+              style: theme.textTheme.titleMedium?.copyWith(
                 color: colorScheme.onSurfaceVariant,
                 fontWeight: FontWeight.w500,
-                height: 1.25,
+                height: _guessChoiceLineHeight,
               ),
             ),
           ),

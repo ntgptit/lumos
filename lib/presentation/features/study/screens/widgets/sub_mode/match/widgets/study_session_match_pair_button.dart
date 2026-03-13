@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../../../../core/constants/text_styles.dart';
 import '../../../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../../../core/themes/extensions/theme_extensions.dart';
 import '../../../../../../../shared/widgets/lumos_widgets.dart';
 
-const double _matchCardMinHeight = WidgetSizes.minTouchTarget * 3.5;
-const int _matchMeaningMaxLines = 6;
+const int _matchMeaningMaxLines = 5;
 const int _matchWordMaxLines = 2;
-const Duration _matchDisappearAnimationDuration = AppDurations.medium;
-const EdgeInsetsGeometry _matchCardContentPadding = EdgeInsets.all(
-  AppSpacing.lg,
+const Duration _matchDisappearAnimationDuration = AppMotion.verySlow;
+const double _matchMeaningLineHeight =
+    AppTypographyConst.titleMediumLineHeight /
+    AppTypographyConst.titleMediumFontSize;
+const double _matchTermLineHeight =
+    AppTypographyConst.titleLargeLineHeight /
+    AppTypographyConst.titleLargeFontSize;
+const EdgeInsetsGeometry _matchCardContentPadding = EdgeInsets.symmetric(
+  horizontal: AppSpacing.xl,
+  vertical: AppSpacing.xl,
 );
 
 class StudySessionMatchPairButton extends StatelessWidget {
@@ -56,12 +63,14 @@ class StudySessionMatchPairButton extends StatelessWidget {
         : colorScheme.onSurface;
     final TextStyle? textStyle =
         (isMeaningCard
-                ? theme.textTheme.titleMedium
-                : theme.textTheme.headlineSmall)
+                ? theme.textTheme.titleLarge
+                : theme.textTheme.titleMedium)
             ?.copyWith(
               color: textColor,
-              fontWeight: isMeaningCard ? FontWeight.w500 : FontWeight.w600,
-              height: isMeaningCard ? 1.3 : 1.15,
+              fontWeight: isMeaningCard ? FontWeight.w500 : FontWeight.w300,
+              height: isMeaningCard
+                  ? _matchTermLineHeight
+                  : _matchMeaningLineHeight,
             );
     return AnimatedSlide(
       duration: _matchDisappearAnimationDuration,
@@ -91,19 +100,23 @@ class StudySessionMatchPairButton extends StatelessWidget {
                 color:
                     isSuccessFeedback || isErrorFeedback
                     ? backgroundColor
-                    : Colors.transparent,
+                    : colorScheme.surface.withValues(
+                        alpha: AppOpacity.transparent,
+                      ),
                 borderRadius: BorderRadii.xLarge,
               ),
               padding: _matchCardContentPadding,
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(minHeight: _matchCardMinHeight),
-                child: Center(
+              child: Center(
+                child: Align(
+                  alignment: isMeaningCard
+                      ? Alignment.center
+                      : Alignment.centerLeft,
                   child: LumosInlineText(
                     label,
-                    align: TextAlign.center,
+                    align: isMeaningCard ? TextAlign.center : TextAlign.left,
                     maxLines: isMeaningCard
-                        ? _matchMeaningMaxLines
-                        : _matchWordMaxLines,
+                        ? _matchWordMaxLines
+                        : _matchMeaningMaxLines,
                     overflow: TextOverflow.ellipsis,
                     style: textStyle,
                   ),

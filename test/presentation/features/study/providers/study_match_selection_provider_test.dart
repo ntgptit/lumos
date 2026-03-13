@@ -56,14 +56,14 @@ void main() {
         expect(state.matchedPairs, isEmpty);
         expect(state.canSubmit, isFalse);
 
-        await tester.pump(const Duration(milliseconds: 600));
+        await tester.pump(const Duration(milliseconds: 610));
 
         state = container.read(studyMatchSelectionControllerProvider(33));
         expect(state.isFeedbackSuccess, isTrue);
         expect(state.isFeedbackDisappearing, isTrue);
         expect(state.matchedPairs, isEmpty);
 
-        await tester.pump(const Duration(milliseconds: 200));
+        await tester.pump(const Duration(milliseconds: 510));
 
         state = container.read(studyMatchSelectionControllerProvider(33));
         expect(state.matchedPairs, hasLength(1));
@@ -85,10 +85,10 @@ void main() {
 
         controller.selectLeft('left-faith');
         controller.selectRight('right-faith');
-        await tester.pump(const Duration(milliseconds: 800));
+        await tester.pump(const Duration(milliseconds: 1120));
         controller.selectLeft('left-night');
         controller.selectRight('right-night');
-        await tester.pump(const Duration(milliseconds: 800));
+        await tester.pump(const Duration(milliseconds: 1120));
 
         final StudyMatchSelectionState state = container.read(
           studyMatchSelectionControllerProvider(33),

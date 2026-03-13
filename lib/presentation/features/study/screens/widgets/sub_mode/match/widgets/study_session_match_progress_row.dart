@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../../shared/widgets/lumos_widgets.dart';
 
-const double _matchProgressBarHeight = AppSpacing.lg;
+const double _matchProgressBarHeight = AppSpacing.md;
 
 class StudySessionMatchProgressRow extends StatelessWidget {
   const StudySessionMatchProgressRow({required this.progressValue, super.key});

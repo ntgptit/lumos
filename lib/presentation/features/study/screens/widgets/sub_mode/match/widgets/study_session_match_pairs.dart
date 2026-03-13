@@ -6,6 +6,8 @@ import '../../../../../mode/study_match_pair_layout_resolver.dart';
 import '../../../../../providers/study_match_selection_provider.dart';
 import 'study_session_match_pair_row.dart';
 
+const double _matchRowGap = AppSpacing.md;
+
 class StudySessionMatchPairs extends StatelessWidget {
   const StudySessionMatchPairs({
     required this.pairs,
@@ -64,7 +66,7 @@ class StudySessionMatchPairs extends StatelessWidget {
             return row;
           }
           return Padding(
-            padding: const EdgeInsets.only(bottom: AppSpacing.md),
+            padding: const EdgeInsets.only(bottom: _matchRowGap),
             child: row,
           );
         }),

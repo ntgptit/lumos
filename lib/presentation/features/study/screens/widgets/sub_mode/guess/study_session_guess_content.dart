@@ -5,7 +5,6 @@ import '../../../../../../../domain/entities/study/study_models.dart';
 import '../../../../mode/study_mode_view_model.dart';
 import '../../../../providers/study_speech_playback_provider.dart';
 import '../widgets/study_session_action_bar.dart';
-import 'widgets/study_session_guess_answer_card.dart';
 import 'widgets/study_session_guess_choice_list.dart';
 import 'widgets/study_session_guess_progress_row.dart';
 import 'widgets/study_session_guess_prompt_card.dart';
@@ -13,13 +12,15 @@ import 'widgets/study_session_guess_prompt_card.dart';
 const String _submitAnswerActionId = 'SUBMIT_ANSWER';
 const EdgeInsetsGeometry _guessContentPadding = EdgeInsets.fromLTRB(
   AppSpacing.lg,
-  AppSpacing.lg,
+  AppSpacing.md,
   AppSpacing.lg,
   AppSpacing.xl,
 );
 const EdgeInsetsGeometry _guessProgressPadding = EdgeInsets.symmetric(
-  horizontal: AppSpacing.lg,
+  horizontal: AppSpacing.md,
 );
+const double _guessSectionSpacing = AppSpacing.md;
+const double _guessBottomSpacing = AppSpacing.xxl;
 
 class StudySessionGuessContent extends StatelessWidget {
   const StudySessionGuessContent({
@@ -46,6 +47,9 @@ class StudySessionGuessContent extends StatelessWidget {
     final bool canSubmitChoice = session.allowedActions.contains(
       _submitAnswerActionId,
     );
+    final ScrollBehavior scrollBehavior = ScrollConfiguration.of(
+      context,
+    ).copyWith(scrollbars: false);
     return Padding(
       padding: _guessContentPadding,
       child: Column(
@@ -57,40 +61,39 @@ class StudySessionGuessContent extends StatelessWidget {
               progressValue: session.progress.sessionProgress,
             ),
           ),
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: _guessSectionSpacing),
           Expanded(
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: <Widget>[
-                StudySessionGuessPromptCard(
-                  prompt: viewModel.prompt,
-                  speech: session.currentItem.speech,
-                  playbackState: speechPlaybackState,
-                  onPlayPressed: speechPlaybackState.isPlaying
-                      ? onReplaySpeech
-                      : onPlaySpeech,
-                ),
-                if (viewModel.showAnswer) ...<Widget>[
-                  const SizedBox(height: AppSpacing.lg),
-                  StudySessionGuessAnswerCard(answer: viewModel.answer),
-                ],
-                if (viewModel.choices.isNotEmpty) ...<Widget>[
-                  const SizedBox(height: AppSpacing.lg),
-                  StudySessionGuessChoiceList(
-                    choices: viewModel.choices,
-                    isInteractive: canSubmitChoice,
-                    onChoicePressed: onChoicePressed,
+            child: ScrollConfiguration(
+              behavior: scrollBehavior,
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: <Widget>[
+                  StudySessionGuessPromptCard(
+                    prompt: viewModel.prompt,
+                    speech: session.currentItem.speech,
+                    playbackState: speechPlaybackState,
+                    onPlayPressed: speechPlaybackState.isPlaying
+                        ? onReplaySpeech
+                        : onPlaySpeech,
                   ),
+                  if (viewModel.choices.isNotEmpty) ...<Widget>[
+                    const SizedBox(height: _guessSectionSpacing),
+                    StudySessionGuessChoiceList(
+                      choices: viewModel.choices,
+                      isInteractive: canSubmitChoice,
+                      onChoicePressed: onChoicePressed,
+                    ),
+                  ],
+                  if (viewModel.actions.isNotEmpty) ...<Widget>[
+                    const SizedBox(height: _guessSectionSpacing),
+                    StudySessionActionBar(
+                      actions: viewModel.actions,
+                      onActionPressed: onActionPressed,
+                    ),
+                  ],
+                  const SizedBox(height: _guessBottomSpacing),
                 ],
-                if (viewModel.actions.isNotEmpty) ...<Widget>[
-                  const SizedBox(height: AppSpacing.lg),
-                  StudySessionActionBar(
-                    actions: viewModel.actions,
-                    onActionPressed: onActionPressed,
-                  ),
-                ],
-                const SizedBox(height: AppSpacing.xl),
-              ],
+              ),
             ),
           ),
         ],

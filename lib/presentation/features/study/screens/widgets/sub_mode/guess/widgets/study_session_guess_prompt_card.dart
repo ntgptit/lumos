@@ -1,13 +1,25 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
+import '../../../../../../../../core/constants/text_styles.dart';
 import '../../../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../../../domain/entities/study/study_models.dart';
 import '../../../../../providers/study_speech_playback_provider.dart';
 import '../../../../../../../shared/widgets/lumos_widgets.dart';
 
-const double _guessHeroCardMinHeight = 300;
-const double _guessHeroIconSize = IconSizes.iconLarge;
-const EdgeInsetsGeometry _guessHeroCardPadding = EdgeInsets.all(AppSpacing.xl);
+const double _guessHeroCardMinHeight = 184;
+const double _guessHeroCardMaxHeight = 240;
+const double _guessHeroCardHeightFactor = 0.58;
+const double _guessHeroIconSize = IconSizes.iconMedium;
+const double _guessHeroPromptLineHeight =
+    AppTypographyConst.headlineLargeLineHeight /
+    AppTypographyConst.headlineLargeFontSize;
+const int _guessHeroPromptMaxLines = 2;
+const EdgeInsetsGeometry _guessHeroCardPadding = EdgeInsets.symmetric(
+  horizontal: AppSpacing.xl,
+  vertical: AppSpacing.xl,
+);
 const EdgeInsetsGeometry _guessHeroTopIconPadding = EdgeInsets.only(
   top: AppSpacing.lg,
   right: AppSpacing.lg,
@@ -36,49 +48,65 @@ class StudySessionGuessPromptCard extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colorScheme = theme.colorScheme;
     final bool isSpeechEnabled = speech.available && !playbackState.isBusy;
-    return LumosCard(
-      margin: EdgeInsets.zero,
-      borderRadius: BorderRadii.xLarge,
-      padding: EdgeInsets.zero,
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(minHeight: _guessHeroCardMinHeight),
-        child: Stack(
-          children: <Widget>[
-            const Align(
-              alignment: Alignment.topRight,
-              child: Padding(
-                padding: _guessHeroTopIconPadding,
-                child: LumosIcon(Icons.edit_outlined, size: _guessHeroIconSize),
-              ),
-            ),
-            Padding(
-              padding: _guessHeroCardPadding,
-              child: Center(
-                child: LumosInlineText(
-                  prompt,
-                  align: TextAlign.center,
-                  style: theme.textTheme.displaySmall?.copyWith(
-                    color: colorScheme.onSurface,
-                    fontWeight: FontWeight.w500,
-                    height: 1.15,
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final double resolvedHeight = math.min(
+          _guessHeroCardMaxHeight,
+          math.max(
+            _guessHeroCardMinHeight,
+            constraints.maxWidth * _guessHeroCardHeightFactor,
+          ),
+        );
+        return LumosCard(
+          margin: EdgeInsets.zero,
+          borderRadius: BorderRadii.xLarge,
+          padding: EdgeInsets.zero,
+          child: SizedBox(
+            height: resolvedHeight,
+            child: Stack(
+              children: <Widget>[
+                const Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: _guessHeroTopIconPadding,
+                    child: LumosIcon(
+                      Icons.edit_outlined,
+                      size: _guessHeroIconSize,
+                    ),
                   ),
                 ),
-              ),
-            ),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: Padding(
-                padding: _guessHeroBottomIconPadding,
-                child: LumosIconButton(
-                  icon: Icons.volume_up_rounded,
-                  tooltip: speech.available ? speech.speechText : null,
-                  onPressed: isSpeechEnabled ? onPlayPressed : null,
+                Padding(
+                  padding: _guessHeroCardPadding,
+                  child: Center(
+                    child: LumosInlineText(
+                      prompt,
+                      align: TextAlign.center,
+                      maxLines: _guessHeroPromptMaxLines,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.headlineLarge?.copyWith(
+                        color: colorScheme.onSurface,
+                        fontWeight: FontWeight.w500,
+                        height: _guessHeroPromptLineHeight,
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Padding(
+                    padding: _guessHeroBottomIconPadding,
+                    child: LumosIconButton(
+                      icon: Icons.volume_up_rounded,
+                      tooltip: speech.available ? speech.speechText : null,
+                      onPressed: isSpeechEnabled ? onPlayPressed : null,
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

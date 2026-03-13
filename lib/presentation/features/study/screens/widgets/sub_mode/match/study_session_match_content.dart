@@ -9,13 +9,15 @@ import 'widgets/study_session_match_progress_row.dart';
 
 const EdgeInsetsGeometry _matchContentPadding = EdgeInsets.fromLTRB(
   AppSpacing.lg,
-  AppSpacing.lg,
+  AppSpacing.md,
   AppSpacing.lg,
   AppSpacing.xl,
 );
 const EdgeInsetsGeometry _matchProgressPadding = EdgeInsets.symmetric(
-  horizontal: AppSpacing.lg,
+  horizontal: AppSpacing.md,
 );
+const double _matchSectionSpacing = AppSpacing.lg;
+const double _matchBottomSpacing = AppSpacing.xxl;
 
 class StudySessionMatchContent extends StatelessWidget {
   const StudySessionMatchContent({
@@ -35,6 +37,9 @@ class StudySessionMatchContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ScrollBehavior scrollBehavior = ScrollConfiguration.of(
+      context,
+    ).copyWith(scrollbars: false);
     return Padding(
       padding: _matchContentPadding,
       child: Column(
@@ -46,20 +51,23 @@ class StudySessionMatchContent extends StatelessWidget {
               progressValue: session.progress.sessionProgress,
             ),
           ),
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: _matchSectionSpacing),
           Expanded(
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: <Widget>[
-                StudySessionMatchPairs(
-                  pairs: viewModel.matchPairs,
-                  selectionState: matchSelectionState,
-                  onSelectLeft: onSelectMatchLeft,
-                  onSelectRight: onSelectMatchRight,
-                  shuffleSeed: session.currentItem.flashcardId,
-                ),
-                const SizedBox(height: AppSpacing.xl),
-              ],
+            child: ScrollConfiguration(
+              behavior: scrollBehavior,
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: <Widget>[
+                  StudySessionMatchPairs(
+                    pairs: viewModel.matchPairs,
+                    selectionState: matchSelectionState,
+                    onSelectLeft: onSelectMatchLeft,
+                    onSelectRight: onSelectMatchRight,
+                    shuffleSeed: session.currentItem.flashcardId,
+                  ),
+                  const SizedBox(height: _matchBottomSpacing),
+                ],
+              ),
             ),
           ),
         ],
