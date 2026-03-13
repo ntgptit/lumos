@@ -8,6 +8,7 @@ import '../../../../l10n/app_localizations.dart';
 import '../../../shared/widgets/lumos_widgets.dart';
 import '../mode/study_mode_view_model.dart';
 import '../mode/study_mode_view_strategy.dart';
+import '../mode/study_mode_view_strategy_factory.dart';
 import '../providers/study_match_selection_provider.dart';
 import '../providers/study_speech_playback_provider.dart';
 import '../providers/study_mode_view_strategy_factory_provider.dart';
@@ -36,6 +37,7 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
   static const String _resetCurrentModeActionId = 'RESET_CURRENT_MODE';
 
   final TextEditingController _answerController = TextEditingController();
+  StudySessionData? _lastResolvedSession;
 
   @override
   void dispose() {
@@ -49,17 +51,17 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
     final AsyncValue<StudySessionData> sessionAsync = ref.watch(
       studySessionControllerProvider(request),
     );
-    final modeStrategyFactory = ref.watch(studyModeViewStrategyFactoryProvider);
+    final StudyModeViewStrategyFactory modeStrategyFactory = ref.watch(
+      studyModeViewStrategyFactoryProvider,
+    );
     final AppLocalizations l10n = AppLocalizations.of(context)!;
-    StudySessionData? currentSession;
-    StudyModeViewModel? appBarViewModel;
-    sessionAsync.whenData((StudySessionData session) {
-      currentSession = session;
-      final StudyModeViewStrategy modeStrategy = modeStrategyFactory.resolve(
-        session.activeMode,
-      );
-      appBarViewModel = modeStrategy.buildViewModel(session: session);
-    });
+    final StudySessionData? currentSession = _resolveVisibleSession(
+      sessionAsync: sessionAsync,
+    );
+    final StudyModeViewModel? appBarViewModel = _buildModeViewModel(
+      session: currentSession,
+      modeStrategyFactory: modeStrategyFactory,
+    );
     ref.listen<AsyncValue<StudySessionData>>(
       studySessionControllerProvider(request),
       (
@@ -67,6 +69,7 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
         AsyncValue<StudySessionData> next,
       ) {
         next.whenData((StudySessionData session) {
+          _lastResolvedSession = session;
           ref
               .read(
                 studyMatchSelectionControllerProvider(
@@ -95,48 +98,59 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.none),
-        child: sessionAsync.when(
-          loading: () => const Center(child: LumosLoadingIndicator()),
-          error: (Object error, StackTrace stackTrace) {
-            return Center(
-              child: LumosErrorState(
-                errorMessage: error.toString(),
-                onRetry: () {
-                  ref.invalidate(studySessionControllerProvider(request));
-                },
-              ),
-            );
-          },
-          data: (StudySessionData session) {
-            final StudyModeViewStrategy modeStrategy = modeStrategyFactory
-                .resolve(session.activeMode);
-            final StudyModeViewModel viewModel = modeStrategy.buildViewModel(
-              session: session,
-            );
-            final StudyMatchSelectionState matchSelectionState = ref.watch(
-              studyMatchSelectionControllerProvider(session.sessionId),
-            );
-            final StudySpeechPlaybackState speechPlaybackState = ref.watch(
-              studySpeechPlaybackControllerProvider(session.sessionId),
-            );
-            return StudySessionContent(
-              session: session,
-              viewModel: viewModel,
-              answerController: _answerController,
-              matchSelectionState: matchSelectionState,
-              speechPlaybackState: speechPlaybackState,
-              onSubmitTypedAnswer: _submitTypedAnswer,
-              onSubmitMatchedPairs: _submitMatchedPairs,
-              onChoicePressed: _submitChoice,
-              onSelectMatchLeft: _selectMatchLeft,
-              onSelectMatchRight: _selectMatchRight,
-              onActionPressed: _handleActionPressed,
-              onPlaySpeech: _playSpeech,
-              onReplaySpeech: _replaySpeech,
-            );
-          },
+        child: _buildSessionBody(
+          request: request,
+          sessionAsync: sessionAsync,
+          session: currentSession,
+          modeStrategyFactory: modeStrategyFactory,
         ),
       ),
+    );
+  }
+
+  Widget _buildSessionBody({
+    required StudySessionLaunchRequest request,
+    required AsyncValue<StudySessionData> sessionAsync,
+    required StudySessionData? session,
+    required StudyModeViewStrategyFactory modeStrategyFactory,
+  }) {
+    if (sessionAsync.hasError) {
+      return Center(
+        child: LumosErrorState(
+          errorMessage: sessionAsync.error.toString(),
+          onRetry: () {
+            ref.invalidate(studySessionControllerProvider(request));
+          },
+        ),
+      );
+    }
+    if (session == null) {
+      return const Center(child: LumosLoadingIndicator());
+    }
+    final StudyModeViewModel viewModel = _buildModeViewModel(
+      session: session,
+      modeStrategyFactory: modeStrategyFactory,
+    )!;
+    final StudyMatchSelectionState matchSelectionState = ref.watch(
+      studyMatchSelectionControllerProvider(session.sessionId),
+    );
+    final StudySpeechPlaybackState speechPlaybackState = ref.watch(
+      studySpeechPlaybackControllerProvider(session.sessionId),
+    );
+    return StudySessionContent(
+      session: session,
+      viewModel: viewModel,
+      answerController: _answerController,
+      matchSelectionState: matchSelectionState,
+      speechPlaybackState: speechPlaybackState,
+      onSubmitTypedAnswer: _submitTypedAnswer,
+      onSubmitMatchedPairs: _submitMatchedPairs,
+      onChoicePressed: _submitChoice,
+      onSelectMatchLeft: _selectMatchLeft,
+      onSelectMatchRight: _selectMatchRight,
+      onActionPressed: _handleActionPressed,
+      onPlaySpeech: _playSpeech,
+      onReplaySpeech: _replaySpeech,
     );
   }
 
@@ -333,6 +347,34 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
       deckId: widget.deckId,
       sessionId: widget.sessionId,
     );
+  }
+
+  StudyModeViewModel? _buildModeViewModel({
+    required StudySessionData? session,
+    required StudyModeViewStrategyFactory modeStrategyFactory,
+  }) {
+    final StudySessionData? resolvedSession = session;
+    if (resolvedSession == null) {
+      return null;
+    }
+    final StudyModeViewStrategy modeStrategy = modeStrategyFactory.resolve(
+      resolvedSession.activeMode,
+    );
+    return modeStrategy.buildViewModel(session: resolvedSession);
+  }
+
+  StudySessionData? _resolveVisibleSession({
+    required AsyncValue<StudySessionData> sessionAsync,
+  }) {
+    if (sessionAsync.hasValue) {
+      final StudySessionData session = sessionAsync.requireValue;
+      _lastResolvedSession = session;
+      return session;
+    }
+    if (sessionAsync.isLoading) {
+      return _lastResolvedSession;
+    }
+    return null;
   }
 
   Future<void> _showResetCurrentModeDialog(AppLocalizations l10n) async {

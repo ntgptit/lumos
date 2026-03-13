@@ -95,31 +95,18 @@ class _StudySessionReviewContentState extends State<StudySessionReviewContent> {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
-    if (!_canSwipeHorizontally()) {
-      return _StudySessionReviewPage(
-        session: widget.session,
-        speechPlaybackState: widget.speechPlaybackState,
-        onPlaySpeech: widget.onPlaySpeech,
-        onReplaySpeech: widget.onReplaySpeech,
-        l10n: l10n,
-      );
-    }
-    return LumosHorizontalPager(
-      controller: _pageController,
-      itemCount: StudySessionReviewContentConst.nextPageIndex + 1,
-      onPageChanged: _handlePageChanged,
-      itemBuilder: (BuildContext contextValue, int index) {
-        if (index == StudySessionReviewContentConst.currentPageIndex) {
-          return _StudySessionReviewPage(
-            session: widget.session,
-            speechPlaybackState: widget.speechPlaybackState,
-            onPlaySpeech: widget.onPlaySpeech,
-            onReplaySpeech: widget.onReplaySpeech,
-            l10n: l10n,
-          );
-        }
-        return const SizedBox.shrink();
-      },
+    return Padding(
+      padding: StudySessionReviewContentConst.contentPadding,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          _StudySessionReviewProgressRow(
+            progressValue: widget.session.progress.sessionProgress,
+          ),
+          const SizedBox(height: AppSpacing.lg),
+          Expanded(child: _buildCardViewport(l10n: l10n)),
+        ],
+      ),
     );
   }
 
@@ -149,6 +136,7 @@ class _StudySessionReviewContentState extends State<StudySessionReviewContent> {
       return;
     }
     _isPerformingSwipeAction = true;
+    _jumpToCurrentPage();
     try {
       await _submitSwipeAction(actionId);
     } finally {
@@ -191,10 +179,34 @@ class _StudySessionReviewContentState extends State<StudySessionReviewContent> {
     }
     await widget.onActionPressed(StudySessionReviewContentConst.nextActionId);
   }
+
+  Widget _buildCardViewport({required AppLocalizations l10n}) {
+    final Widget cards = _StudySessionReviewCardDeck(
+      session: widget.session,
+      speechPlaybackState: widget.speechPlaybackState,
+      onPlaySpeech: widget.onPlaySpeech,
+      onReplaySpeech: widget.onReplaySpeech,
+      l10n: l10n,
+    );
+    if (!_canSwipeHorizontally()) {
+      return cards;
+    }
+    return LumosHorizontalPager(
+      controller: _pageController,
+      itemCount: StudySessionReviewContentConst.nextPageIndex + 1,
+      onPageChanged: _handlePageChanged,
+      itemBuilder: (BuildContext contextValue, int index) {
+        if (index == StudySessionReviewContentConst.currentPageIndex) {
+          return cards;
+        }
+        return const SizedBox.shrink();
+      },
+    );
+  }
 }
 
-class _StudySessionReviewPage extends StatelessWidget {
-  const _StudySessionReviewPage({
+class _StudySessionReviewCardDeck extends StatelessWidget {
+  const _StudySessionReviewCardDeck({
     required this.session,
     required this.speechPlaybackState,
     required this.onPlaySpeech,
@@ -210,44 +222,37 @@ class _StudySessionReviewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: StudySessionReviewContentConst.contentPadding,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          _StudySessionReviewProgressRow(
-            progressValue: session.progress.sessionProgress,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        Expanded(
+          flex: StudySessionReviewContentConst.promptCardFlex,
+          child: _StudySessionReviewCard(
+            content: _buildPromptContent(session.currentItem),
+            textStyle: context.textTheme.headlineSmall,
+            trailing: const LumosIcon(Icons.edit_outlined),
           ),
-          const SizedBox(height: AppSpacing.lg),
-          Expanded(
-            flex: StudySessionReviewContentConst.promptCardFlex,
-            child: _StudySessionReviewCard(
-              content: _buildPromptContent(session.currentItem),
-              textStyle: context.textTheme.headlineSmall,
-              trailing: const LumosIcon(Icons.edit_outlined),
+        ),
+        const SizedBox(height: AppSpacing.lg),
+        Expanded(
+          flex: StudySessionReviewContentConst.answerCardFlex,
+          child: _StudySessionReviewCard(
+            content: _buildAnswerContent(session.currentItem),
+            textStyle: context.textTheme.headlineMedium,
+            trailing: LumosIconButton(
+              icon: speechPlaybackState.isPlaying
+                  ? Icons.volume_off_rounded
+                  : Icons.volume_up_rounded,
+              tooltip: speechPlaybackState.isPlaying
+                  ? l10n.studySpeechReplayAction
+                  : l10n.flashcardPlayAudioTooltip,
+              onPressed: session.currentItem.speech.available
+                  ? _handleSpeechPressed
+                  : null,
             ),
           ),
-          const SizedBox(height: AppSpacing.lg),
-          Expanded(
-            flex: StudySessionReviewContentConst.answerCardFlex,
-            child: _StudySessionReviewCard(
-              content: _buildAnswerContent(session.currentItem),
-              textStyle: context.textTheme.headlineMedium,
-              trailing: LumosIconButton(
-                icon: speechPlaybackState.isPlaying
-                    ? Icons.volume_off_rounded
-                    : Icons.volume_up_rounded,
-                tooltip: speechPlaybackState.isPlaying
-                    ? l10n.studySpeechReplayAction
-                    : l10n.flashcardPlayAudioTooltip,
-                onPressed: session.currentItem.speech.available
-                    ? _handleSpeechPressed
-                    : null,
-              ),
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

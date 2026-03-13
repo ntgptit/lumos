@@ -200,6 +200,7 @@ class FakeStudyRepository implements StudyRepository {
     StudyReminderSummary? reminder,
     StudyAnalyticsOverview? analytics,
     SpeechPreference? preference,
+    this.actionDelay = Duration.zero,
   }) : _session = session ?? sampleStudySession(),
        _reminder = reminder ?? sampleReminderSummary(),
        _analytics = analytics ?? sampleAnalyticsOverview(),
@@ -209,6 +210,7 @@ class FakeStudyRepository implements StudyRepository {
   final StudyReminderSummary _reminder;
   final StudyAnalyticsOverview _analytics;
   SpeechPreference _preference;
+  final Duration actionDelay;
 
   int? lastDeckId;
   int? lastSessionId;
@@ -239,6 +241,7 @@ class FakeStudyRepository implements StudyRepository {
     required int sessionId,
     required String answer,
   }) async {
+    await _delayAction();
     lastSessionId = sessionId;
     lastAnswer = answer;
     return _session = sampleStudySession(
@@ -254,6 +257,7 @@ class FakeStudyRepository implements StudyRepository {
     required int sessionId,
     required List<StudyMatchSubmission> matchedPairs,
   }) async {
+    await _delayAction();
     lastSessionId = sessionId;
     return _session = sampleStudySession(
       sessionId: sessionId,
@@ -265,6 +269,7 @@ class FakeStudyRepository implements StudyRepository {
 
   @override
   Future<StudySessionData> revealAnswer({required int sessionId}) async {
+    await _delayAction();
     lastSessionId = sessionId;
     return _session = sampleStudySession(
       sessionId: sessionId,
@@ -276,6 +281,7 @@ class FakeStudyRepository implements StudyRepository {
 
   @override
   Future<StudySessionData> markRemembered({required int sessionId}) async {
+    await _delayAction();
     lastSessionId = sessionId;
     return _session = sampleStudySession(
       sessionId: sessionId,
@@ -287,6 +293,7 @@ class FakeStudyRepository implements StudyRepository {
 
   @override
   Future<StudySessionData> retryItem({required int sessionId}) async {
+    await _delayAction();
     lastSessionId = sessionId;
     return _session = sampleStudySession(
       sessionId: sessionId,
@@ -298,6 +305,7 @@ class FakeStudyRepository implements StudyRepository {
 
   @override
   Future<StudySessionData> goNext({required int sessionId}) async {
+    await _delayAction();
     lastSessionId = sessionId;
     return _session = sampleStudySession(
       sessionId: sessionId,
@@ -309,6 +317,7 @@ class FakeStudyRepository implements StudyRepository {
 
   @override
   Future<StudySessionData> resetCurrentMode({required int sessionId}) async {
+    await _delayAction();
     lastSessionId = sessionId;
     resetCurrentModeCallCount += 1;
     return _session = sampleStudySession(
@@ -351,5 +360,12 @@ class FakeStudyRepository implements StudyRepository {
     lastPreference = preference;
     _preference = preference;
     return _preference;
+  }
+
+  Future<void> _delayAction() async {
+    if (actionDelay <= Duration.zero) {
+      return;
+    }
+    await Future<void>.delayed(actionDelay);
   }
 }

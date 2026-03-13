@@ -39,10 +39,10 @@ class StudySessionController extends _$StudySessionController {
   }
 
   Future<void> submitAnswer(String answer) async {
-    final StudySessionData current = state.asData!.value;
-    final StudyRepository repository = ref.read(studyRepositoryProvider);
-    state = const AsyncLoading<StudySessionData>();
-    state = await AsyncValue.guard<StudySessionData>(() {
+    await _runSessionMutation((
+      StudyRepository repository,
+      StudySessionData current,
+    ) {
       return repository.submitAnswer(
         sessionId: current.sessionId,
         answer: answer,
@@ -53,10 +53,10 @@ class StudySessionController extends _$StudySessionController {
   Future<void> submitMatchedPairs(
     List<StudyMatchSubmission> matchedPairs,
   ) async {
-    final StudySessionData current = state.asData!.value;
-    final StudyRepository repository = ref.read(studyRepositoryProvider);
-    state = const AsyncLoading<StudySessionData>();
-    state = await AsyncValue.guard<StudySessionData>(() {
+    await _runSessionMutation((
+      StudyRepository repository,
+      StudySessionData current,
+    ) {
       return repository.submitMatchedPairs(
         sessionId: current.sessionId,
         matchedPairs: matchedPairs,
@@ -65,47 +65,63 @@ class StudySessionController extends _$StudySessionController {
   }
 
   Future<void> revealAnswer() async {
-    final StudySessionData current = state.asData!.value;
-    final StudyRepository repository = ref.read(studyRepositoryProvider);
-    state = const AsyncLoading<StudySessionData>();
-    state = await AsyncValue.guard<StudySessionData>(() {
+    await _runSessionMutation((
+      StudyRepository repository,
+      StudySessionData current,
+    ) {
       return repository.revealAnswer(sessionId: current.sessionId);
     });
   }
 
   Future<void> markRemembered() async {
-    final StudySessionData current = state.asData!.value;
-    final StudyRepository repository = ref.read(studyRepositoryProvider);
-    state = const AsyncLoading<StudySessionData>();
-    state = await AsyncValue.guard<StudySessionData>(() {
+    await _runSessionMutation((
+      StudyRepository repository,
+      StudySessionData current,
+    ) {
       return repository.markRemembered(sessionId: current.sessionId);
     });
   }
 
   Future<void> retryItem() async {
-    final StudySessionData current = state.asData!.value;
-    final StudyRepository repository = ref.read(studyRepositoryProvider);
-    state = const AsyncLoading<StudySessionData>();
-    state = await AsyncValue.guard<StudySessionData>(() {
+    await _runSessionMutation((
+      StudyRepository repository,
+      StudySessionData current,
+    ) {
       return repository.retryItem(sessionId: current.sessionId);
     });
   }
 
   Future<void> goNext() async {
-    final StudySessionData current = state.asData!.value;
-    final StudyRepository repository = ref.read(studyRepositoryProvider);
-    state = const AsyncLoading<StudySessionData>();
-    state = await AsyncValue.guard<StudySessionData>(() {
+    await _runSessionMutation((
+      StudyRepository repository,
+      StudySessionData current,
+    ) {
       return repository.goNext(sessionId: current.sessionId);
     });
   }
 
   Future<void> resetCurrentMode() async {
-    final StudySessionData current = state.asData!.value;
+    await _runSessionMutation((
+      StudyRepository repository,
+      StudySessionData current,
+    ) {
+      return repository.resetCurrentMode(sessionId: current.sessionId);
+    });
+  }
+
+  Future<void> _runSessionMutation(
+    Future<StudySessionData> Function(
+      StudyRepository repository,
+      StudySessionData current,
+    )
+    mutation,
+  ) async {
+    final AsyncValue<StudySessionData> previousState = state;
+    final StudySessionData current = previousState.requireValue;
     final StudyRepository repository = ref.read(studyRepositoryProvider);
     state = const AsyncLoading<StudySessionData>();
     state = await AsyncValue.guard<StudySessionData>(() {
-      return repository.resetCurrentMode(sessionId: current.sessionId);
+      return mutation(repository, current);
     });
   }
 }
