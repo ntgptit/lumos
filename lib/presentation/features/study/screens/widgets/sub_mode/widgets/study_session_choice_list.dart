@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../core/themes/foundation/app_foundation.dart';
-import '../../../../../../domain/entities/study/study_models.dart';
-import '../../../../../shared/widgets/lumos_widgets.dart';
+import '../../../../../../../core/themes/foundation/app_foundation.dart';
+import '../../../../../../../domain/entities/study/study_models.dart';
+import '../../../../../../shared/widgets/lumos_widgets.dart';
 
 class StudySessionChoiceList extends StatelessWidget {
   const StudySessionChoiceList({

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../core/themes/foundation/app_foundation.dart';
-import '../../../../../shared/widgets/lumos_widgets.dart';
+import '../../../../../../../core/themes/foundation/app_foundation.dart';
+import '../../../../../../shared/widgets/lumos_widgets.dart';
 
 class StudySessionAnswerInput extends StatelessWidget {
   const StudySessionAnswerInput({

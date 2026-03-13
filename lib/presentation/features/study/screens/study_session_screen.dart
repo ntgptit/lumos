@@ -13,8 +13,8 @@ import '../providers/study_match_selection_provider.dart';
 import '../providers/study_speech_playback_provider.dart';
 import '../providers/study_mode_view_strategy_factory_provider.dart';
 import '../providers/study_session_provider.dart';
-import 'widgets/blocks/study_session_content.dart';
-import 'widgets/blocks/study_session_review_content.dart';
+import 'widgets/blocks/study_session_screen_app_bar.dart';
+import 'widgets/blocks/study_session_screen_body.dart';
 
 class StudySessionScreen extends ConsumerStatefulWidget {
   const StudySessionScreen({
@@ -33,9 +33,6 @@ class StudySessionScreen extends ConsumerStatefulWidget {
 }
 
 class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
-  static const String _reviewMenuReplayAudio = 'REPLAY_AUDIO';
-  static const String _resetCurrentModeActionId = 'RESET_CURRENT_MODE';
-
   final TextEditingController _answerController = TextEditingController();
   StudySessionData? _lastResolvedSession;
 
@@ -54,7 +51,6 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
     final StudyModeViewStrategyFactory modeStrategyFactory = ref.watch(
       studyModeViewStrategyFactoryProvider,
     );
-    final AppLocalizations l10n = AppLocalizations.of(context)!;
     StudySessionData? currentSession;
     sessionAsync.when(
       data: (StudySessionData session) {
@@ -72,172 +68,34 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
       session: currentSession,
       modeStrategyFactory: modeStrategyFactory,
     );
-    ref.listen<AsyncValue<StudySessionData>>(
-      studySessionControllerProvider(request),
-      (
-        AsyncValue<StudySessionData>? previous,
-        AsyncValue<StudySessionData> next,
-      ) {
-        next.whenData((StudySessionData session) {
-          _lastResolvedSession = session;
-          ref
-              .read(
-                studyMatchSelectionControllerProvider(
-                  session.sessionId,
-                ).notifier,
-              )
-              .syncPairs(session.currentItem.matchPairs);
-          ref
-              .read(
-                studySpeechPlaybackControllerProvider(
-                  session.sessionId,
-                ).notifier,
-              )
-              .syncCurrentItem(
-                flashcardId: session.currentItem.flashcardId,
-                speech: session.currentItem.speech,
-              );
-        });
-      },
-    );
+    _listenSessionUpdates(request);
     return Scaffold(
-      appBar: _buildAppBar(
-        l10n: l10n,
+      appBar: StudySessionScreenAppBar(
+        deckName: widget.deckName,
         session: currentSession,
         viewModel: appBarViewModel,
+        onPlaySpeech: _playSpeech,
+        onStudyMenuSelected: _handleStudyMenuSelection,
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.none),
-        child: _buildSessionBody(
+        child: StudySessionScreenBody(
           request: request,
           sessionAsync: sessionAsync,
-          session: currentSession,
+          cachedSession: currentSession,
           modeStrategyFactory: modeStrategyFactory,
+          answerController: _answerController,
+          onSubmitTypedAnswer: _submitTypedAnswer,
+          onSubmitMatchedPairs: _submitMatchedPairs,
+          onChoicePressed: _submitChoice,
+          onSelectMatchLeft: _selectMatchLeft,
+          onSelectMatchRight: _selectMatchRight,
+          onActionPressed: _handleActionPressed,
+          onPlaySpeech: _playSpeech,
+          onReplaySpeech: _replaySpeech,
         ),
       ),
     );
-  }
-
-  Widget _buildSessionBody({
-    required StudySessionLaunchRequest request,
-    required AsyncValue<StudySessionData> sessionAsync,
-    required StudySessionData? session,
-    required StudyModeViewStrategyFactory modeStrategyFactory,
-  }) {
-    if (sessionAsync.hasError) {
-      return Center(
-        child: LumosErrorState(
-          errorMessage: sessionAsync.error.toString(),
-          onRetry: () {
-            ref.invalidate(studySessionControllerProvider(request));
-          },
-        ),
-      );
-    }
-    if (session == null) {
-      return const Center(child: LumosLoadingIndicator());
-    }
-    final StudyModeViewModel viewModel = _buildModeViewModel(
-      session: session,
-      modeStrategyFactory: modeStrategyFactory,
-    )!;
-    final StudyMatchSelectionState matchSelectionState = ref.watch(
-      studyMatchSelectionControllerProvider(session.sessionId),
-    );
-    final StudySpeechPlaybackState speechPlaybackState = ref.watch(
-      studySpeechPlaybackControllerProvider(session.sessionId),
-    );
-    return StudySessionContent(
-      session: session,
-      viewModel: viewModel,
-      answerController: _answerController,
-      matchSelectionState: matchSelectionState,
-      speechPlaybackState: speechPlaybackState,
-      onSubmitTypedAnswer: _submitTypedAnswer,
-      onSubmitMatchedPairs: _submitMatchedPairs,
-      onChoicePressed: _submitChoice,
-      onSelectMatchLeft: _selectMatchLeft,
-      onSelectMatchRight: _selectMatchRight,
-      onActionPressed: _handleActionPressed,
-      onPlaySpeech: _playSpeech,
-      onReplaySpeech: _replaySpeech,
-    );
-  }
-
-  PreferredSizeWidget _buildAppBar({
-    required AppLocalizations l10n,
-    required StudySessionData? session,
-    required StudyModeViewModel? viewModel,
-  }) {
-    if (session == null) {
-      return LumosAppBar(title: widget.deckName);
-    }
-    if (session.activeMode != StudySessionReviewContentConst.reviewMode) {
-      return LumosAppBar(
-        title: widget.deckName,
-        actions: _buildStudyMenuActions(l10n: l10n, session: session),
-      );
-    }
-    return LumosAppBar(
-      title: viewModel?.modeLabel ?? widget.deckName,
-      actions: <Widget>[
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: AppSpacing.xs),
-          child: LumosIcon(Icons.text_fields_rounded),
-        ),
-        LumosIconButton(
-          icon: Icons.volume_up_rounded,
-          tooltip: l10n.flashcardPlayAudioTooltip,
-          onPressed: session.currentItem.speech.available ? _playSpeech : null,
-        ),
-        ..._buildStudyMenuActions(l10n: l10n, session: session),
-      ],
-    );
-  }
-
-  List<Widget> _buildStudyMenuActions({
-    required AppLocalizations l10n,
-    required StudySessionData session,
-  }) {
-    final List<PopupMenuEntry<String>> items = <PopupMenuEntry<String>>[];
-    if (session.activeMode == StudySessionReviewContentConst.reviewMode &&
-        session.currentItem.speech.available) {
-      items.add(
-        PopupMenuItem<String>(
-          value: _reviewMenuReplayAudio,
-          child: LumosText(
-            l10n.studySpeechReplayAction,
-            style: LumosTextStyle.bodyMedium,
-          ),
-        ),
-      );
-    }
-    if (session.allowedActions.contains(_resetCurrentModeActionId)) {
-      if (items.isNotEmpty) {
-        items.add(const PopupMenuDivider());
-      }
-      items.add(
-        PopupMenuItem<String>(
-          value: _resetCurrentModeActionId,
-          child: LumosText(
-            l10n.studyResetCurrentModeAction,
-            style: LumosTextStyle.bodyMedium,
-          ),
-        ),
-      );
-    }
-    if (items.isEmpty) {
-      return const <Widget>[];
-    }
-    return <Widget>[
-      PopupMenuButton<String>(
-        icon: const LumosIcon(Icons.more_vert_rounded),
-        onSelected: (String actionId) {
-          _handleStudyMenuSelection(actionId, l10n);
-        },
-        itemBuilder: (BuildContext context) => items,
-      ),
-    ];
   }
 
   Future<void> _submitTypedAnswer() async {
@@ -280,7 +138,7 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
         _answerController.clear();
         await notifier.goNext();
         return;
-      case _resetCurrentModeActionId:
+      case StudySessionScreenAppBarConst.resetCurrentModeActionId:
         _answerController.clear();
         await notifier.resetCurrentMode();
         return;
@@ -325,16 +183,47 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
         );
   }
 
-  void _handleStudyMenuSelection(String actionId, AppLocalizations l10n) {
-    if (actionId == _reviewMenuReplayAudio) {
+  void _handleStudyMenuSelection(String actionId) {
+    if (actionId == StudySessionScreenAppBarConst.reviewMenuReplayAudio) {
       _replaySpeech();
       return;
     }
-    if (actionId == _resetCurrentModeActionId) {
-      _showResetCurrentModeDialog(l10n);
+    if (actionId == StudySessionScreenAppBarConst.resetCurrentModeActionId) {
+      _showResetCurrentModeDialog();
       return;
     }
     _handleActionPressed(actionId);
+  }
+
+  void _listenSessionUpdates(StudySessionLaunchRequest request) {
+    ref.listen<AsyncValue<StudySessionData>>(
+      studySessionControllerProvider(request),
+      (
+        AsyncValue<StudySessionData>? previous,
+        AsyncValue<StudySessionData> next,
+      ) {
+        next.whenData((StudySessionData session) {
+          _lastResolvedSession = session;
+          ref
+              .read(
+                studyMatchSelectionControllerProvider(
+                  session.sessionId,
+                ).notifier,
+              )
+              .syncPairs(session.currentItem.matchPairs);
+          ref
+              .read(
+                studySpeechPlaybackControllerProvider(
+                  session.sessionId,
+                ).notifier,
+              )
+              .syncCurrentItem(
+                flashcardId: session.currentItem.flashcardId,
+                speech: session.currentItem.speech,
+              );
+        });
+      },
+    );
   }
 
   StudySessionData _readCurrentSession() {
@@ -373,7 +262,8 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
     return modeStrategy.buildViewModel(session: resolvedSession);
   }
 
-  Future<void> _showResetCurrentModeDialog(AppLocalizations l10n) async {
+  Future<void> _showResetCurrentModeDialog() async {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     await showDialog<void>(
       context: context,
       builder: (BuildContext dialogContext) {
@@ -387,7 +277,9 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
           },
           onConfirm: () {
             dialogContext.pop();
-            _handleActionPressed(_resetCurrentModeActionId);
+            _handleActionPressed(
+              StudySessionScreenAppBarConst.resetCurrentModeActionId,
+            );
           },
         );
       },

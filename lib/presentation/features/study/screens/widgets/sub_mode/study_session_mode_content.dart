@@ -1,0 +1,105 @@
+import 'package:flutter/material.dart';
+
+import '../../../../../../domain/entities/study/study_models.dart';
+import '../../../mode/study_mode_view_model.dart';
+import '../../../providers/study_match_selection_provider.dart';
+import '../../../providers/study_speech_playback_provider.dart';
+import 'fill/study_session_fill_content.dart';
+import 'guess/study_session_guess_content.dart';
+import 'match/study_session_match_content.dart';
+import 'recall/study_session_recall_content.dart';
+import 'review/study_session_review_content.dart';
+import 'study_session_sub_mode_const.dart';
+
+class StudySessionModeContent extends StatelessWidget {
+  const StudySessionModeContent({
+    required this.session,
+    required this.viewModel,
+    required this.answerController,
+    required this.matchSelectionState,
+    required this.speechPlaybackState,
+    required this.onSubmitTypedAnswer,
+    required this.onSubmitMatchedPairs,
+    required this.onChoicePressed,
+    required this.onSelectMatchLeft,
+    required this.onSelectMatchRight,
+    required this.onActionPressed,
+    required this.onPlaySpeech,
+    required this.onReplaySpeech,
+    super.key,
+  });
+
+  final StudySessionData session;
+  final StudyModeViewModel viewModel;
+  final TextEditingController answerController;
+  final StudyMatchSelectionState matchSelectionState;
+  final StudySpeechPlaybackState speechPlaybackState;
+  final VoidCallback onSubmitTypedAnswer;
+  final VoidCallback onSubmitMatchedPairs;
+  final ValueChanged<String> onChoicePressed;
+  final ValueChanged<String> onSelectMatchLeft;
+  final ValueChanged<String> onSelectMatchRight;
+  final Future<void> Function(String) onActionPressed;
+  final VoidCallback onPlaySpeech;
+  final VoidCallback onReplaySpeech;
+
+  @override
+  Widget build(BuildContext context) {
+    switch (session.activeMode) {
+      case StudySessionSubModeConst.reviewMode:
+        return StudySessionReviewContent(
+          session: session,
+          speechPlaybackState: speechPlaybackState,
+          onActionPressed: onActionPressed,
+          onPlaySpeech: onPlaySpeech,
+          onReplaySpeech: onReplaySpeech,
+        );
+      case StudySessionSubModeConst.fillMode:
+        return StudySessionFillContent(
+          session: session,
+          viewModel: viewModel,
+          answerController: answerController,
+          speechPlaybackState: speechPlaybackState,
+          onSubmitTypedAnswer: onSubmitTypedAnswer,
+          onActionPressed: onActionPressed,
+          onPlaySpeech: onPlaySpeech,
+          onReplaySpeech: onReplaySpeech,
+        );
+      case StudySessionSubModeConst.guessMode:
+        return StudySessionGuessContent(
+          session: session,
+          viewModel: viewModel,
+          speechPlaybackState: speechPlaybackState,
+          onChoicePressed: onChoicePressed,
+          onActionPressed: onActionPressed,
+          onPlaySpeech: onPlaySpeech,
+          onReplaySpeech: onReplaySpeech,
+        );
+      case StudySessionSubModeConst.matchMode:
+        return StudySessionMatchContent(
+          session: session,
+          viewModel: viewModel,
+          matchSelectionState: matchSelectionState,
+          speechPlaybackState: speechPlaybackState,
+          onSubmitMatchedPairs: onSubmitMatchedPairs,
+          onSelectMatchLeft: onSelectMatchLeft,
+          onSelectMatchRight: onSelectMatchRight,
+          onActionPressed: onActionPressed,
+          onPlaySpeech: onPlaySpeech,
+          onReplaySpeech: onReplaySpeech,
+        );
+      case StudySessionSubModeConst.recallMode:
+        return StudySessionRecallContent(
+          session: session,
+          viewModel: viewModel,
+          answerController: answerController,
+          speechPlaybackState: speechPlaybackState,
+          onSubmitTypedAnswer: onSubmitTypedAnswer,
+          onActionPressed: onActionPressed,
+          onPlaySpeech: onPlaySpeech,
+          onReplaySpeech: onReplaySpeech,
+        );
+    }
+    throw UnsupportedError('Unsupported study mode: ${session.activeMode}');
+  }
+}

@@ -24,6 +24,13 @@ class UiLogicSeparationGuardConst {
   static const String allowLineMarker =
       'ui-logic-separation-guard: allow-inline-logic';
   static const String allowFileMarker = 'ui-logic-separation-guard: allow-file';
+  static const String buildMethodName = 'build';
+
+  static const List<String> widgetFactoryReturnTypePatterns = <String>[
+    r'\bWidget\b',
+    r'\bPreferredSizeWidget\b',
+    r'\bList<\s*Widget\s*>\b',
+  ];
 
   static const List<String> forbiddenImportUriFragments = <String>[
     '/data/',
@@ -178,6 +185,7 @@ Future<void> main() async {
       violations: violations,
     );
     resolvedUiUnit.unit.accept(visitor);
+    visitor.reportFileLevelViolations();
   }
 
   if (violations.isEmpty) {
@@ -288,6 +296,7 @@ class _UiLogicSemanticVisitor extends RecursiveAstVisitor<void> {
   final List<String> lines;
   final LineInfo lineInfo;
   final List<UiLogicSeparationViolation> violations;
+  final List<ClassDeclaration> publicWidgetClasses = <ClassDeclaration>[];
 
   @override
   void visitAnnotation(Annotation node) {
@@ -304,6 +313,10 @@ class _UiLogicSemanticVisitor extends RecursiveAstVisitor<void> {
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
+    if (_isPublicWidgetClass(node)) {
+      publicWidgetClasses.add(node);
+    }
+
     final ExtendsClause? extendsClause = node.extendsClause;
     if (extendsClause == null) {
       super.visitClassDeclaration(node);
@@ -358,6 +371,11 @@ class _UiLogicSemanticVisitor extends RecursiveAstVisitor<void> {
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
     final String methodName = node.name.lexeme;
+    _checkWidgetFactoryDeclaration(
+      node: node,
+      declarationName: methodName,
+      returnTypeSource: node.returnType?.toSource() ?? '',
+    );
     if (_isDerivedMethodName(methodName)) {
       final String returnTypeSource = node.returnType?.toSource() ?? 'dynamic';
       if (!_isAllowedUiDerivedReturnType(returnTypeSource)) {
@@ -369,6 +387,16 @@ class _UiLogicSemanticVisitor extends RecursiveAstVisitor<void> {
       }
     }
     super.visitMethodDeclaration(node);
+  }
+
+  @override
+  void visitFunctionDeclaration(FunctionDeclaration node) {
+    _checkWidgetFactoryDeclaration(
+      node: node,
+      declarationName: node.name.lexeme,
+      returnTypeSource: node.returnType?.toSource() ?? '',
+    );
+    super.visitFunctionDeclaration(node);
   }
 
   @override
@@ -512,6 +540,38 @@ class _UiLogicSemanticVisitor extends RecursiveAstVisitor<void> {
       ),
     );
   }
+
+  void _checkWidgetFactoryDeclaration({
+    required AstNode node,
+    required String declarationName,
+    required String returnTypeSource,
+  }) {
+    if (declarationName == UiLogicSeparationGuardConst.buildMethodName) {
+      return;
+    }
+    if (!_looksLikeWidgetFactoryReturnTypeSource(returnTypeSource)) {
+      return;
+    }
+    _addViolation(
+      node: node,
+      reason:
+          'Methods returning Widget, List<Widget>, or PreferredSizeWidget outside build() must be extracted into a separate widget file.',
+    );
+  }
+
+  void reportFileLevelViolations() {
+    if (publicWidgetClasses.length <= 1) {
+      return;
+    }
+
+    for (final ClassDeclaration declaration in publicWidgetClasses.skip(1)) {
+      _addViolation(
+        node: declaration,
+        reason:
+            'UI files under lib/presentation/features/** must contain only one public widget class. Extract additional public widgets into separate files. Companion State classes are allowed.',
+      );
+    }
+  }
 }
 
 bool _isForbiddenImportUri(String uri) {
@@ -542,6 +602,24 @@ bool _looksLikeProviderTypeText(String source) {
   return providerPattern.hasMatch(source);
 }
 
+bool _isPublicWidgetClass(ClassDeclaration node) {
+  final String className = node.name.lexeme;
+  if (className.startsWith('_')) {
+    return false;
+  }
+
+  final DartType? superType = node.extendsClause?.superclass.type;
+  if (!_isWidgetLikeType(superType)) {
+    return false;
+  }
+
+  if (_isFlutterStateSubclass(superType)) {
+    return false;
+  }
+
+  return true;
+}
+
 bool _isDerivedMethodName(String methodName) {
   if (!methodName.startsWith('_')) {
     return false;
@@ -558,6 +636,21 @@ bool _isDerivedMethodName(String methodName) {
     if (RegExp(r'[A-Z]').hasMatch(nextChar)) {
       return true;
     }
+  }
+  return false;
+}
+
+bool _looksLikeWidgetFactoryReturnTypeSource(String returnTypeSource) {
+  final String normalized = returnTypeSource.trim();
+  if (normalized.isEmpty || normalized == 'dynamic') {
+    return false;
+  }
+  for (final String pattern
+      in UiLogicSeparationGuardConst.widgetFactoryReturnTypePatterns) {
+    if (!RegExp(pattern).hasMatch(normalized)) {
+      continue;
+    }
+    return true;
   }
   return false;
 }
@@ -652,6 +745,64 @@ String _elementName(Element? element) {
     return '';
   }
   return element.name ?? '';
+}
+
+bool _isWidgetLikeType(DartType? type) {
+  if (type == null) {
+    return false;
+  }
+  if (type is! InterfaceType) {
+    return false;
+  }
+
+  final String typeName = type.element.name ?? '';
+  if (typeName == 'Widget' || typeName == 'PreferredSizeWidget') {
+    return true;
+  }
+  if (_isWidgetCollectionType(type)) {
+    return true;
+  }
+
+  for (final InterfaceType superType in type.allSupertypes) {
+    final String superTypeName = superType.element.name ?? '';
+    if (superTypeName == 'Widget' || superTypeName == 'PreferredSizeWidget') {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool _isFlutterStateSubclass(DartType? type) {
+  if (type == null) {
+    return false;
+  }
+  if (type is! InterfaceType) {
+    return false;
+  }
+
+  final String typeName = type.element.name ?? '';
+  if (typeName == 'State') {
+    return true;
+  }
+
+  for (final InterfaceType superType in type.allSupertypes) {
+    final String superTypeName = superType.element.name ?? '';
+    if (superTypeName == 'State') {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool _isWidgetCollectionType(InterfaceType type) {
+  final String typeName = type.element.name ?? '';
+  if (typeName != 'List' && typeName != 'Iterable' && typeName != 'Set') {
+    return false;
+  }
+  if (type.typeArguments.isEmpty) {
+    return false;
+  }
+  return _isWidgetLikeType(type.typeArguments.first);
 }
 
 Element? _expressionElement(Expression expression) {

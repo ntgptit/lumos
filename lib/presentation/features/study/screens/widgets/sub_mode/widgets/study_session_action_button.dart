@@ -1,35 +1,21 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../core/themes/foundation/app_foundation.dart';
-import '../../../../../shared/widgets/lumos_widgets.dart';
-import '../../../mode/study_mode_action_button_style.dart';
-import '../../../mode/study_mode_action_view_model.dart';
+import '../../../../../../shared/widgets/lumos_widgets.dart';
+import '../../../../mode/study_mode_action_button_style.dart';
+import '../../../../mode/study_mode_action_view_model.dart';
 
-class StudySessionActionBar extends StatelessWidget {
-  const StudySessionActionBar({
-    required this.actions,
+class StudySessionActionButton extends StatelessWidget {
+  const StudySessionActionButton({
+    required this.action,
     required this.onActionPressed,
     super.key,
   });
 
-  final List<StudyModeActionViewModel> actions;
+  final StudyModeActionViewModel action;
   final ValueChanged<String> onActionPressed;
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      spacing: AppSpacing.sm,
-      runSpacing: AppSpacing.sm,
-      children: actions
-          .map(
-            (StudyModeActionViewModel action) =>
-                _buildActionButton(action: action),
-          )
-          .toList(growable: false),
-    );
-  }
-
-  Widget _buildActionButton({required StudyModeActionViewModel action}) {
     switch (action.style) {
       case StudyModeActionButtonStyle.primary:
         return LumosPrimaryButton(

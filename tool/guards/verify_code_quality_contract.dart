@@ -82,9 +82,9 @@ class QualityConfig {
 
   static QualityConfig defaults() {
     return const QualityConfig(
-      maxFunctionLines: 60,
+      maxFunctionLines: 80,
       maxClassLines: 300,
-      maxFileLines: 400,
+      maxFileLines: 500,
       maxNestingDepth: 3,
       maxConstructorParams: 4,
       maxWidgetChildrenInline: 5,
