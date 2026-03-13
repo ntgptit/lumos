@@ -1,10 +1,25 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../../domain/entities/study/study_models.dart';
 import '../../../../mode/study_mode_view_model.dart';
 import '../../../../providers/study_speech_playback_provider.dart';
-import '../widgets/study_session_choice_list.dart';
-import '../widgets/study_session_sub_mode_scaffold.dart';
+import '../widgets/study_session_action_bar.dart';
+import 'widgets/study_session_guess_answer_card.dart';
+import 'widgets/study_session_guess_choice_list.dart';
+import 'widgets/study_session_guess_progress_row.dart';
+import 'widgets/study_session_guess_prompt_card.dart';
+
+const String _submitAnswerActionId = 'SUBMIT_ANSWER';
+const EdgeInsetsGeometry _guessContentPadding = EdgeInsets.fromLTRB(
+  AppSpacing.lg,
+  AppSpacing.lg,
+  AppSpacing.lg,
+  AppSpacing.xl,
+);
+const EdgeInsetsGeometry _guessProgressPadding = EdgeInsets.symmetric(
+  horizontal: AppSpacing.lg,
+);
 
 class StudySessionGuessContent extends StatelessWidget {
   const StudySessionGuessContent({
@@ -28,24 +43,58 @@ class StudySessionGuessContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> bodyChildren = <Widget>[];
-    if (viewModel.choices.isNotEmpty) {
-      bodyChildren.add(
-        StudySessionChoiceList(
-          choices: viewModel.choices,
-          useGrid: viewModel.useChoiceGrid,
-          onChoicePressed: onChoicePressed,
-        ),
-      );
-    }
-    return StudySessionSubModeScaffold(
-      session: session,
-      viewModel: viewModel,
-      speechPlaybackState: speechPlaybackState,
-      onActionPressed: onActionPressed,
-      onPlaySpeech: onPlaySpeech,
-      onReplaySpeech: onReplaySpeech,
-      bodyChildren: bodyChildren,
+    final bool canSubmitChoice = session.allowedActions.contains(
+      _submitAnswerActionId,
+    );
+    return Padding(
+      padding: _guessContentPadding,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Padding(
+            padding: _guessProgressPadding,
+            child: StudySessionGuessProgressRow(
+              progressValue: session.progress.sessionProgress,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.lg),
+          Expanded(
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: <Widget>[
+                StudySessionGuessPromptCard(
+                  prompt: viewModel.prompt,
+                  speech: session.currentItem.speech,
+                  playbackState: speechPlaybackState,
+                  onPlayPressed: speechPlaybackState.isPlaying
+                      ? onReplaySpeech
+                      : onPlaySpeech,
+                ),
+                if (viewModel.showAnswer) ...<Widget>[
+                  const SizedBox(height: AppSpacing.lg),
+                  StudySessionGuessAnswerCard(answer: viewModel.answer),
+                ],
+                if (viewModel.choices.isNotEmpty) ...<Widget>[
+                  const SizedBox(height: AppSpacing.lg),
+                  StudySessionGuessChoiceList(
+                    choices: viewModel.choices,
+                    isInteractive: canSubmitChoice,
+                    onChoicePressed: onChoicePressed,
+                  ),
+                ],
+                if (viewModel.actions.isNotEmpty) ...<Widget>[
+                  const SizedBox(height: AppSpacing.lg),
+                  StudySessionActionBar(
+                    actions: viewModel.actions,
+                    onActionPressed: onActionPressed,
+                  ),
+                ],
+                const SizedBox(height: AppSpacing.xl),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

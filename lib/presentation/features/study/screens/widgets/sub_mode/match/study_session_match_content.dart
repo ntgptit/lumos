@@ -53,9 +53,7 @@ class StudySessionMatchContent extends StatelessWidget {
               children: <Widget>[
                 StudySessionMatchPairs(
                   pairs: viewModel.matchPairs,
-                  matchedPairs: matchSelectionState.matchedPairs,
-                  selectedLeftId: matchSelectionState.selectedLeftId,
-                  selectedRightId: matchSelectionState.selectedRightId,
+                  selectionState: matchSelectionState,
                   onSelectLeft: onSelectMatchLeft,
                   onSelectRight: onSelectMatchRight,
                   shuffleSeed: session.currentItem.flashcardId,

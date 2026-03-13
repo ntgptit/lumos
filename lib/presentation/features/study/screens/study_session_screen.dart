@@ -72,6 +72,7 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
       modeStrategyFactory: modeStrategyFactory,
     );
     _listenSessionUpdates(request);
+    _listenMatchSelectionUpdates(currentSession?.sessionId);
     return Scaffold(
       appBar: StudySessionScreenAppBar(
         deckName: widget.deckName,
@@ -251,6 +252,28 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
                 speech: session.currentItem.speech,
               );
         });
+      },
+    );
+  }
+
+  void _listenMatchSelectionUpdates(int? sessionId) {
+    final int? resolvedSessionId = sessionId;
+    if (resolvedSessionId == null) {
+      return;
+    }
+    ref.listen<StudyMatchSelectionState>(
+      studyMatchSelectionControllerProvider(resolvedSessionId),
+      (
+        StudyMatchSelectionState? previous,
+        StudyMatchSelectionState next,
+      ) {
+        if (previous?.canSubmit == true) {
+          return;
+        }
+        if (!next.canSubmit) {
+          return;
+        }
+        unawaited(_maybeCompleteMatchMode(resolvedSessionId));
       },
     );
   }
