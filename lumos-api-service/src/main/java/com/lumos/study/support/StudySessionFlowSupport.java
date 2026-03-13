@@ -32,6 +32,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class StudySessionFlowSupport {
 
+    private static final int INITIAL_INCORRECT_ATTEMPT_COUNT = 0;
+
     private final AuthenticatedUserProvider authenticatedUserProvider;
     private final StudySessionRepository studySessionRepository;
     private final StudySessionItemRepository studySessionItemRepository;
@@ -80,6 +82,7 @@ public class StudySessionFlowSupport {
             item.setLastOutcome(outcome);
             item.setCurrentModeCompleted(isPassed);
             item.setRetryPending(!isPassed);
+            item.setIncorrectAttemptCount(resolveIncorrectAttemptCount(item, outcome));
         }
         session.setModeState(StudyModeLifecycleState.WAITING_FEEDBACK);
         saveAttempts(session, affectedItems, outcome, submittedAnswer);
@@ -89,6 +92,7 @@ public class StudySessionFlowSupport {
         currentItem.setLastOutcome(ReviewOutcome.SKIPPED);
         currentItem.setCurrentModeCompleted(Boolean.TRUE);
         currentItem.setRetryPending(Boolean.FALSE);
+        currentItem.setIncorrectAttemptCount(resolveIncorrectAttemptCount(currentItem, ReviewOutcome.SKIPPED));
         session.setModeState(StudyModeLifecycleState.WAITING_FEEDBACK);
         saveAttempts(session, List.of(currentItem), ReviewOutcome.SKIPPED, null);
     }
@@ -127,6 +131,7 @@ public class StudySessionFlowSupport {
             item.setCurrentModeCompleted(Boolean.FALSE);
             item.setRetryPending(Boolean.FALSE);
             item.setLastOutcome(null);
+            item.setIncorrectAttemptCount(INITIAL_INCORRECT_ATTEMPT_COUNT);
         }
     }
 
@@ -138,6 +143,7 @@ public class StudySessionFlowSupport {
             item.setCurrentModeCompleted(Boolean.FALSE);
             item.setRetryPending(Boolean.FALSE);
             item.setLastOutcome(null);
+            item.setIncorrectAttemptCount(INITIAL_INCORRECT_ATTEMPT_COUNT);
         }
     }
 
@@ -206,5 +212,14 @@ public class StudySessionFlowSupport {
             attempt.setSubmittedAnswer(submittedAnswer);
             this.studyAttemptRepository.save(attempt);
         }
+    }
+
+    private int resolveIncorrectAttemptCount(StudySessionItem item, ReviewOutcome outcome) {
+        final Integer persistedCount = item.getIncorrectAttemptCount();
+        final int currentCount = persistedCount == null ? INITIAL_INCORRECT_ATTEMPT_COUNT : persistedCount;
+        if (outcome != ReviewOutcome.FAILED) {
+            return currentCount;
+        }
+        return currentCount + 1;
     }
 }

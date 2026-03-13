@@ -92,6 +92,7 @@ public class StudySessionSetupSupport {
             item.setLastOutcome(null);
             item.setCurrentModeCompleted(Boolean.FALSE);
             item.setRetryPending(Boolean.FALSE);
+            item.setIncorrectAttemptCount(0);
             this.studySessionItemRepository.save(item);
         }
     }

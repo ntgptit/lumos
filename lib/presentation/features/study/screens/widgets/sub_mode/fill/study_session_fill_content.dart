@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../../domain/entities/study/study_models.dart';
+import '../../../../mode/study_fill_content_state.dart';
+import '../../../../mode/study_mode_action_view_model.dart';
 import '../../../../mode/study_mode_view_model.dart';
+import '../../../../providers/study_fill_selection_provider.dart';
 import '../../../../providers/study_speech_playback_provider.dart';
 import 'widgets/study_session_fill_action_row.dart';
 import 'widgets/study_session_fill_body_panel.dart';
@@ -25,10 +28,13 @@ class StudySessionFillContent extends StatelessWidget {
   const StudySessionFillContent({
     required this.session,
     required this.viewModel,
+    required this.fillSelectionState,
     required this.answerController,
     required this.speechPlaybackState,
     required this.onSubmitTypedAnswer,
     required this.onActionPressed,
+    required this.onInputChanged,
+    required this.onRetryInputPressed,
     required this.onPlaySpeech,
     required this.onReplaySpeech,
     super.key,
@@ -36,20 +42,24 @@ class StudySessionFillContent extends StatelessWidget {
 
   final StudySessionData session;
   final StudyModeViewModel viewModel;
+  final StudyFillSelectionState fillSelectionState;
   final TextEditingController answerController;
   final StudySpeechPlaybackState speechPlaybackState;
   final VoidCallback onSubmitTypedAnswer;
   final Future<void> Function(String) onActionPressed;
+  final ValueChanged<String> onInputChanged;
+  final VoidCallback onRetryInputPressed;
   final VoidCallback onPlaySpeech;
   final VoidCallback onReplaySpeech;
 
   @override
   Widget build(BuildContext context) {
-    final bool showsAnswerPanel = viewModel.showAnswer;
-    final bool showsInputPanel = viewModel.showAnswerInput;
-    final bool showsActionRow = viewModel.actions.isNotEmpty;
-    final bool showsSubmitAction = showsInputPanel;
-    final bool showsBottomActions = showsActionRow || showsSubmitAction;
+    final StudyFillContentState contentState = StudyFillContentState.resolve(
+      viewModel: viewModel,
+      fillSelectionState: fillSelectionState,
+    );
+    final StudyModeActionViewModel? secondaryAction =
+        contentState.secondaryAction;
     return Padding(
       padding: _fillContentPadding,
       child: Column(
@@ -80,18 +90,28 @@ class StudySessionFillContent extends StatelessWidget {
                 Expanded(
                   child: StudySessionFillBodyPanel(
                     viewModel: viewModel,
+                    fillSelectionState: fillSelectionState,
                     answerController: answerController,
-                    showsAnswerPanel: showsAnswerPanel,
-                    showsInputPanel: showsInputPanel,
+                    showsAnswerPanel: contentState.showsAnswerPanel,
+                    showsInputPanel: contentState.showsInputPanel,
+                    onInputChanged: onInputChanged,
                     onSubmitTypedAnswer: onSubmitTypedAnswer,
                   ),
                 ),
-                if (showsBottomActions) ...<Widget>[
+                if (contentState.showsBottomActions) ...<Widget>[
                   const SizedBox(height: _fillActionSpacing),
                   StudySessionFillActionRow(
-                    actions: viewModel.actions,
-                    submitLabel: showsSubmitAction ? viewModel.submitLabel : null,
-                    onSubmitPressed: showsSubmitAction
+                    actions: const <StudyModeActionViewModel>[],
+                    secondaryLabel: secondaryAction?.label,
+                    onSecondaryPressed: secondaryAction != null
+                        ? () {
+                            onActionPressed(secondaryAction.actionId);
+                          }
+                        : null,
+                    primaryLabel: contentState.primaryLabel,
+                    onPrimaryPressed: contentState.showsRetryAction
+                        ? onRetryInputPressed
+                        : contentState.showsInputPanel
                         ? onSubmitTypedAnswer
                         : null,
                     onActionPressed: (String actionId) {

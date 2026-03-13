@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../../../domain/entities/study/study_models.dart';
 import '../../../mode/study_mode_view_model.dart';
+import '../../../providers/study_fill_selection_provider.dart';
 import '../../../providers/study_guess_selection_provider.dart';
 import '../../../providers/study_match_selection_provider.dart';
 import '../../../providers/study_recall_selection_provider.dart';
@@ -18,6 +19,7 @@ class StudySessionModeContent extends StatelessWidget {
     required this.session,
     required this.viewModel,
     required this.answerController,
+    required this.fillSelectionState,
     required this.guessSelectionState,
     required this.matchSelectionState,
     required this.recallSelectionState,
@@ -27,6 +29,8 @@ class StudySessionModeContent extends StatelessWidget {
     required this.onSelectMatchLeft,
     required this.onSelectMatchRight,
     required this.onActionPressed,
+    required this.onFillInputChanged,
+    required this.onRetryInputPressed,
     required this.onPlaySpeech,
     required this.onReplaySpeech,
     super.key,
@@ -35,6 +39,7 @@ class StudySessionModeContent extends StatelessWidget {
   final StudySessionData session;
   final StudyModeViewModel viewModel;
   final TextEditingController answerController;
+  final StudyFillSelectionState fillSelectionState;
   final StudyGuessSelectionState guessSelectionState;
   final StudyMatchSelectionState matchSelectionState;
   final StudyRecallSelectionState recallSelectionState;
@@ -44,6 +49,8 @@ class StudySessionModeContent extends StatelessWidget {
   final ValueChanged<String> onSelectMatchLeft;
   final ValueChanged<String> onSelectMatchRight;
   final Future<void> Function(String) onActionPressed;
+  final ValueChanged<String> onFillInputChanged;
+  final VoidCallback onRetryInputPressed;
   final VoidCallback onPlaySpeech;
   final VoidCallback onReplaySpeech;
 
@@ -62,10 +69,13 @@ class StudySessionModeContent extends StatelessWidget {
         return StudySessionFillContent(
           session: session,
           viewModel: viewModel,
+          fillSelectionState: fillSelectionState,
           answerController: answerController,
           speechPlaybackState: speechPlaybackState,
           onSubmitTypedAnswer: onSubmitTypedAnswer,
           onActionPressed: onActionPressed,
+          onInputChanged: onFillInputChanged,
+          onRetryInputPressed: onRetryInputPressed,
           onPlaySpeech: onPlaySpeech,
           onReplaySpeech: onReplaySpeech,
         );

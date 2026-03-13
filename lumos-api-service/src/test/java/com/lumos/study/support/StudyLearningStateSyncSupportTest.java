@@ -70,6 +70,7 @@ class StudyLearningStateSyncSupportTest {
         item.setStudySession(session);
         item.setFlashcard(createFlashcard());
         item.setLastOutcome(outcome);
+        item.setIncorrectAttemptCount(0);
         return item;
     }
 

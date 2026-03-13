@@ -19,6 +19,8 @@ class StudySessionScreenBody extends ConsumerWidget {
     required this.onSelectMatchLeft,
     required this.onSelectMatchRight,
     required this.onActionPressed,
+    required this.onFillInputChanged,
+    required this.onRetryInputPressed,
     required this.onPlaySpeech,
     required this.onReplaySpeech,
     super.key,
@@ -34,6 +36,8 @@ class StudySessionScreenBody extends ConsumerWidget {
   final ValueChanged<String> onSelectMatchLeft;
   final ValueChanged<String> onSelectMatchRight;
   final Future<void> Function(String) onActionPressed;
+  final ValueChanged<String> onFillInputChanged;
+  final VoidCallback onRetryInputPressed;
   final VoidCallback onPlaySpeech;
   final VoidCallback onReplaySpeech;
 
@@ -50,6 +54,8 @@ class StudySessionScreenBody extends ConsumerWidget {
           onSelectMatchLeft: onSelectMatchLeft,
           onSelectMatchRight: onSelectMatchRight,
           onActionPressed: onActionPressed,
+          onFillInputChanged: onFillInputChanged,
+          onRetryInputPressed: onRetryInputPressed,
           onPlaySpeech: onPlaySpeech,
           onReplaySpeech: onReplaySpeech,
         );
@@ -78,6 +84,8 @@ class StudySessionScreenBody extends ConsumerWidget {
           onSelectMatchLeft: onSelectMatchLeft,
           onSelectMatchRight: onSelectMatchRight,
           onActionPressed: onActionPressed,
+          onFillInputChanged: onFillInputChanged,
+          onRetryInputPressed: onRetryInputPressed,
           onPlaySpeech: onPlaySpeech,
           onReplaySpeech: onReplaySpeech,
         );

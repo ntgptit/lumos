@@ -227,6 +227,8 @@ class StudySessionFlashcardCleanupSupportTest {
                 .setRetryPending(retryPending);
         studySessionItem
                 .setLastOutcome(lastOutcome);
+        studySessionItem
+                .setIncorrectAttemptCount(0);
         return studySessionItem;
     }
 

@@ -540,6 +540,7 @@
   },
   "onboardingCompleteTestAction": "Complete test",
   "formAnswerHint": "Type your answer",
+  "studyFillAnswerRequiredValidation": "Answer is required.",
   "formTapToSpeakAction": "Tap to speak",
   "formFillBlankHint": "Fill the blank"
 }

@@ -169,12 +169,24 @@ public class StudySessionServiceImpl implements StudySessionService {
         final List<StudySessionItem> items = this.studySessionFlowSupport.resolveSessionItems(session);
         final StudySessionItem currentItem = this.studySessionFlowSupport.resolveCurrentItem(session, items);
         this.studySessionFlowSupport.ensureActionAllowed(session, currentItem, StudyModeStrategy.ACTION_REVEAL_ANSWER);
+        // Count fill help as an incorrect attempt so the learner must re-enter the same word before continuing.
+        if (session.getActiveMode() == FILL_MODE) {
+            this.studySessionFlowSupport.applyOutcome(
+                    session,
+                    currentItem,
+                    items,
+                    ReviewOutcome.FAILED,
+                    null);
+
+            // Return the retryable fill snapshot after help has already counted as an incorrect attempt.
+            return this.studySessionResponseFactory.buildResponse(session);
+        }
         currentItem.setLastOutcome(null);
         currentItem.setCurrentModeCompleted(Boolean.FALSE);
         currentItem.setRetryPending(Boolean.FALSE);
         session.setModeState(StudyModeLifecycleState.WAITING_FEEDBACK);
 
-        // Return the waiting-feedback snapshot after exposing the answer for the current item.
+        // Return the waiting-feedback snapshot after exposing the answer for reveal-first modes.
         return this.studySessionResponseFactory.buildResponse(session);
     }
 

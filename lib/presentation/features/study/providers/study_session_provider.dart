@@ -38,8 +38,8 @@ class StudySessionController extends _$StudySessionController {
     return repository.startSession(deckId: request.deckId);
   }
 
-  Future<void> submitAnswer(String answer) async {
-    await _runSessionMutation((
+  Future<StudySessionData> submitAnswer(String answer) async {
+    return _runSessionMutation((
       StudyRepository repository,
       StudySessionData current,
     ) {
@@ -50,10 +50,10 @@ class StudySessionController extends _$StudySessionController {
     });
   }
 
-  Future<void> submitMatchedPairs(
+  Future<StudySessionData> submitMatchedPairs(
     List<StudyMatchSubmission> matchedPairs,
   ) async {
-    await _runSessionMutation((
+    return _runSessionMutation((
       StudyRepository repository,
       StudySessionData current,
     ) {
@@ -64,8 +64,8 @@ class StudySessionController extends _$StudySessionController {
     });
   }
 
-  Future<void> revealAnswer() async {
-    await _runSessionMutation((
+  Future<StudySessionData> revealAnswer() async {
+    return _runSessionMutation((
       StudyRepository repository,
       StudySessionData current,
     ) {
@@ -73,8 +73,8 @@ class StudySessionController extends _$StudySessionController {
     });
   }
 
-  Future<void> markRemembered() async {
-    await _runSessionMutation((
+  Future<StudySessionData> markRemembered() async {
+    return _runSessionMutation((
       StudyRepository repository,
       StudySessionData current,
     ) {
@@ -82,8 +82,8 @@ class StudySessionController extends _$StudySessionController {
     });
   }
 
-  Future<void> retryItem() async {
-    await _runSessionMutation((
+  Future<StudySessionData> retryItem() async {
+    return _runSessionMutation((
       StudyRepository repository,
       StudySessionData current,
     ) {
@@ -91,8 +91,8 @@ class StudySessionController extends _$StudySessionController {
     });
   }
 
-  Future<void> goNext() async {
-    await _runSessionMutation((
+  Future<StudySessionData> goNext() async {
+    return _runSessionMutation((
       StudyRepository repository,
       StudySessionData current,
     ) {
@@ -100,8 +100,8 @@ class StudySessionController extends _$StudySessionController {
     });
   }
 
-  Future<void> resetCurrentMode() async {
-    await _runSessionMutation((
+  Future<StudySessionData> resetCurrentMode() async {
+    return _runSessionMutation((
       StudyRepository repository,
       StudySessionData current,
     ) {
@@ -109,7 +109,7 @@ class StudySessionController extends _$StudySessionController {
     });
   }
 
-  Future<void> _runSessionMutation(
+  Future<StudySessionData> _runSessionMutation(
     Future<StudySessionData> Function(
       StudyRepository repository,
       StudySessionData current,
@@ -120,8 +120,11 @@ class StudySessionController extends _$StudySessionController {
     final StudySessionData current = previousState.requireValue;
     final StudyRepository repository = ref.read(studyRepositoryProvider);
     state = const AsyncLoading<StudySessionData>();
-    state = await AsyncValue.guard<StudySessionData>(() {
-      return mutation(repository, current);
-    });
+    final AsyncValue<StudySessionData> nextState =
+        await AsyncValue.guard<StudySessionData>(() {
+          return mutation(repository, current);
+        });
+    state = nextState;
+    return nextState.requireValue;
   }
 }

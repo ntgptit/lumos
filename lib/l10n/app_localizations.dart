@@ -1709,6 +1709,12 @@ abstract class AppLocalizations {
   /// **'Type your answer'**
   String get formAnswerHint;
 
+  /// No description provided for @studyFillAnswerRequiredValidation.
+  ///
+  /// In en, this message translates to:
+  /// **'Answer is required.'**
+  String get studyFillAnswerRequiredValidation;
+
   /// No description provided for @formTapToSpeakAction.
   ///
   /// In en, this message translates to:

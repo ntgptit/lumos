@@ -20,6 +20,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.times;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.time.Instant;
@@ -53,6 +54,7 @@ import com.lumos.study.mode.GuessStudyModeStrategy;
 import com.lumos.study.mode.MatchStudyModeStrategy;
 import com.lumos.study.mode.RecallStudyModeStrategy;
 import com.lumos.study.mode.ReviewStudyModeStrategy;
+import com.lumos.study.mode.StudyModeStrategy;
 import com.lumos.study.mode.StudyModeStrategyFactory;
 import com.lumos.study.repository.LearningCardStateRepository;
 import com.lumos.study.repository.StudyAttemptRepository;
@@ -91,12 +93,13 @@ class StudySessionServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        final StudyModeStrategyFactory studyModeStrategyFactory = new StudyModeStrategyFactory(List.of(
-                new ReviewStudyModeStrategy(),
-                new MatchStudyModeStrategy(),
-                new GuessStudyModeStrategy(),
-                new RecallStudyModeStrategy(),
-                new FillStudyModeStrategy()));
+        final List<StudyModeStrategy> strategies = new ArrayList<>();
+        strategies.add(new ReviewStudyModeStrategy());
+        strategies.add(new MatchStudyModeStrategy());
+        strategies.add(new GuessStudyModeStrategy());
+        strategies.add(new RecallStudyModeStrategy());
+        strategies.add(new FillStudyModeStrategy());
+        final StudyModeStrategyFactory studyModeStrategyFactory = new StudyModeStrategyFactory(strategies);
         final StudySessionSetupSupport studySessionSetupSupport = new StudySessionSetupSupport(
                 this.flashcardRepository,
                 this.studySessionItemRepository);
@@ -301,10 +304,84 @@ class StudySessionServiceImplTest {
         when(this.studySessionItemRepository.findAllByStudySessionIdAndDeletedAtIsNullOrderBySequenceIndexAsc(SESSION_ID))
                 .thenReturn(List.of(item));
         when(this.userSpeechPreferenceRepository.findByUserAccountIdAndDeletedAtIsNull(USER_ID)).thenReturn(Optional.empty());
-        final var response = this.studySessionService.submitAnswer(SESSION_ID, new SubmitAnswerRequest("xin chao"));
+        final var response = this.studySessionService.submitAnswer(SESSION_ID, new SubmitAnswerRequest("안녕하세요"));
         verify(this.studyAttemptRepository).save(any(StudyAttempt.class));
         assertEquals("WAITING_FEEDBACK", response.modeState());
         assertTrue(item.getCurrentModeCompleted());
+        assertTrue(response.allowedActions().stream()
+                .anyMatch(action -> Strings.CS.equals(action, "GO_NEXT")));
+        assertFalse(response.allowedActions().stream()
+                .anyMatch(action -> Strings.CS.equals(action, "SUBMIT_ANSWER")));
+    }
+
+    @Test
+    void submitAnswer_wrongFillAnswerKeepsItemOnSameCardForRetry() {
+        final StudySession session = session(
+                user(),
+                deck(),
+                StudySessionType.REVIEW,
+                StudyMode.FILL,
+                StudyModeLifecycleState.IN_PROGRESS,
+                0,
+                0,
+                false);
+        session.setId(SESSION_ID);
+        session.setModePlan("FILL");
+        final StudySessionItem item = currentItem(session, null, false, false);
+        when(this.authenticatedUserProvider.getCurrentUserId()).thenReturn(USER_ID);
+        when(this.studySessionRepository.findByIdAndDeletedAtIsNull(SESSION_ID)).thenReturn(Optional.of(session));
+        when(this.studySessionItemRepository.findAllByStudySessionIdAndDeletedAtIsNullOrderBySequenceIndexAsc(SESSION_ID))
+                .thenReturn(List.of(item));
+        when(this.userSpeechPreferenceRepository.findByUserAccountIdAndDeletedAtIsNull(USER_ID)).thenReturn(Optional.empty());
+
+        final var response = this.studySessionService.submitAnswer(SESSION_ID, new SubmitAnswerRequest("sai"));
+
+        assertEquals("WAITING_FEEDBACK", response.modeState());
+        assertEquals(0, session.getCurrentItemIndex());
+        assertEquals(ReviewOutcome.FAILED, item.getLastOutcome());
+        assertFalse(item.getCurrentModeCompleted());
+        assertTrue(item.getRetryPending());
+        assertEquals(1, item.getIncorrectAttemptCount());
+        assertTrue(response.allowedActions().stream()
+                .anyMatch(action -> Strings.CS.equals(action, "REVEAL_ANSWER")));
+        assertTrue(response.allowedActions().stream()
+                .anyMatch(action -> Strings.CS.equals(action, "SUBMIT_ANSWER")));
+        assertFalse(response.allowedActions().stream()
+                .anyMatch(action -> Strings.CS.equals(action, "GO_NEXT")));
+    }
+
+    @Test
+    void submitAnswer_correctFillRetryAfterRevealAllowsGoNextAndKeepsModeScopedWrongCount() {
+        final StudySession session = session(
+                user(),
+                deck(),
+                StudySessionType.REVIEW,
+                StudyMode.FILL,
+                StudyModeLifecycleState.WAITING_FEEDBACK,
+                0,
+                0,
+                false);
+        session.setId(SESSION_ID);
+        session.setModePlan("FILL");
+        final StudySessionItem item = currentItem(session, ReviewOutcome.FAILED, false, true);
+        item.setIncorrectAttemptCount(1);
+        when(this.authenticatedUserProvider.getCurrentUserId()).thenReturn(USER_ID);
+        when(this.studySessionRepository.findByIdAndDeletedAtIsNull(SESSION_ID)).thenReturn(Optional.of(session));
+        when(this.studySessionItemRepository.findAllByStudySessionIdAndDeletedAtIsNullOrderBySequenceIndexAsc(SESSION_ID))
+                .thenReturn(List.of(item));
+        when(this.userSpeechPreferenceRepository.findByUserAccountIdAndDeletedAtIsNull(USER_ID)).thenReturn(Optional.empty());
+
+        final var response = this.studySessionService.submitAnswer(SESSION_ID, new SubmitAnswerRequest("안녕하세요"));
+
+        assertEquals("WAITING_FEEDBACK", response.modeState());
+        assertEquals(ReviewOutcome.PASSED, item.getLastOutcome());
+        assertTrue(item.getCurrentModeCompleted());
+        assertFalse(item.getRetryPending());
+        assertEquals(1, item.getIncorrectAttemptCount());
+        assertTrue(response.allowedActions().stream()
+                .anyMatch(action -> Strings.CS.equals(action, "GO_NEXT")));
+        assertFalse(response.allowedActions().stream()
+                .anyMatch(action -> Strings.CS.equals(action, "SUBMIT_ANSWER")));
     }
 
     @Test
@@ -424,6 +501,44 @@ class StudySessionServiceImplTest {
     }
 
     @Test
+    void revealAnswer_fillModeCountsAsFailedAttemptAndAllowsRetryInput() {
+        final StudySession session = session(
+                user(),
+                deck(),
+                StudySessionType.FIRST_LEARNING,
+                StudyMode.FILL,
+                StudyModeLifecycleState.IN_PROGRESS,
+                4,
+                0,
+                false);
+        session.setId(SESSION_ID);
+        session.setModePlan("REVIEW,MATCH,GUESS,RECALL,FILL");
+        final StudySessionItem item = currentItem(session, null, false, false);
+        when(this.authenticatedUserProvider.getCurrentUserId()).thenReturn(USER_ID);
+        when(this.studySessionRepository.findByIdAndDeletedAtIsNull(SESSION_ID)).thenReturn(Optional.of(session));
+        when(this.studySessionItemRepository.findAllByStudySessionIdAndDeletedAtIsNullOrderBySequenceIndexAsc(SESSION_ID))
+                .thenReturn(List.of(item));
+        when(this.userSpeechPreferenceRepository.findByUserAccountIdAndDeletedAtIsNull(USER_ID)).thenReturn(Optional.empty());
+
+        final var response = this.studySessionService.revealAnswer(SESSION_ID);
+        final ArgumentCaptor<StudyAttempt> attemptCaptor = ArgumentCaptor.forClass(StudyAttempt.class);
+
+        verify(this.studyAttemptRepository).save(attemptCaptor.capture());
+        assertEquals("WAITING_FEEDBACK", response.modeState());
+        assertEquals(ReviewOutcome.FAILED, item.getLastOutcome());
+        assertFalse(item.getCurrentModeCompleted());
+        assertTrue(item.getRetryPending());
+        assertEquals(1, item.getIncorrectAttemptCount());
+        assertEquals(ReviewOutcome.FAILED, attemptCaptor.getValue().getReviewOutcome());
+        assertTrue(response.allowedActions().stream()
+                .anyMatch(action -> Strings.CS.equals(action, "REVEAL_ANSWER")));
+        assertTrue(response.allowedActions().stream()
+                .anyMatch(action -> Strings.CS.equals(action, "SUBMIT_ANSWER")));
+        assertFalse(response.allowedActions().stream()
+                .anyMatch(action -> Strings.CS.equals(action, "GO_NEXT")));
+    }
+
+    @Test
     void markRemembered_marksCurrentItemAsCompleted() {
         final StudySession session = activeSession();
         final StudySessionItem item = currentItem(session, null, false, false);
@@ -485,47 +600,6 @@ class StudySessionServiceImplTest {
                 StudyMode.RECALL,
                 StudyModeLifecycleState.WAITING_FEEDBACK,
                 3,
-                0,
-                false);
-        session.setId(SESSION_ID);
-        session.setModePlan("REVIEW,MATCH,GUESS,RECALL,FILL");
-        final StudySessionItem firstItem = currentItem(session, null, false, false);
-        final StudySessionItem secondItem = sessionItem(
-                2L,
-                session,
-                flashcard(102L, session.getDeck(), "감사합니다", "cam on"),
-                1,
-                false,
-                false,
-                null);
-        when(this.authenticatedUserProvider.getCurrentUserId()).thenReturn(USER_ID);
-        when(this.studySessionRepository.findByIdAndDeletedAtIsNull(SESSION_ID)).thenReturn(Optional.of(session));
-        when(this.studySessionItemRepository.findAllByStudySessionIdAndDeletedAtIsNullOrderBySequenceIndexAsc(SESSION_ID))
-                .thenReturn(List.of(firstItem, secondItem));
-        when(this.userSpeechPreferenceRepository.findByUserAccountIdAndDeletedAtIsNull(USER_ID)).thenReturn(Optional.empty());
-
-        final var response = this.studySessionService.goNext(SESSION_ID);
-        final ArgumentCaptor<StudyAttempt> attemptCaptor = ArgumentCaptor.forClass(StudyAttempt.class);
-
-        verify(this.studyAttemptRepository).save(attemptCaptor.capture());
-        assertEquals(ReviewOutcome.SKIPPED, firstItem.getLastOutcome());
-        assertTrue(firstItem.getCurrentModeCompleted());
-        assertFalse(firstItem.getRetryPending());
-        assertEquals(ReviewOutcome.SKIPPED, attemptCaptor.getValue().getReviewOutcome());
-        assertEquals("IN_PROGRESS", response.modeState());
-        assertEquals(1, session.getCurrentItemIndex());
-        assertEquals(102L, response.currentItem().flashcardId());
-    }
-
-    @Test
-    void goNext_fillHelpMarksCurrentItemSkippedBeforeMovingToNextItem() {
-        final StudySession session = session(
-                user(),
-                deck(),
-                StudySessionType.FIRST_LEARNING,
-                StudyMode.FILL,
-                StudyModeLifecycleState.WAITING_FEEDBACK,
-                4,
                 0,
                 false);
         session.setId(SESSION_ID);

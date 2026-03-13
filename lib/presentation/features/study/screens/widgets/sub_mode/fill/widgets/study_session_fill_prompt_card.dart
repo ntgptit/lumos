@@ -8,9 +8,9 @@ import '../../../../../../../shared/widgets/lumos_widgets.dart';
 
 const double _fillHeroIconSize = IconSizes.iconMedium;
 const double _fillHeroPromptLineHeight =
-    AppTypographyConst.headlineLargeLineHeight /
-    AppTypographyConst.headlineLargeFontSize;
-const int _fillHeroPromptMaxLines = 2;
+    AppTypographyConst.titleMediumLineHeight /
+    AppTypographyConst.titleMediumFontSize;
+const int _fillHeroPromptMaxLines = 3;
 const EdgeInsetsGeometry _fillHeroCardPadding = EdgeInsets.symmetric(
   horizontal: AppSpacing.xl,
   vertical: AppSpacing.xl,
@@ -51,10 +51,7 @@ class StudySessionFillPromptCard extends StatelessWidget {
           alignment: Alignment.topRight,
           child: Padding(
             padding: _fillHeroTopIconPadding,
-            child: LumosIcon(
-              Icons.edit_outlined,
-              size: _fillHeroIconSize,
-            ),
+            child: LumosIcon(Icons.edit_outlined, size: _fillHeroIconSize),
           ),
         ),
         Padding(
@@ -66,7 +63,7 @@ class StudySessionFillPromptCard extends StatelessWidget {
                 align: TextAlign.center,
                 maxLines: _fillHeroPromptMaxLines,
                 overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.headlineLarge?.copyWith(
+                style: theme.textTheme.titleMedium?.copyWith(
                   color: colorScheme.onSurface,
                   fontWeight: FontWeight.w500,
                   height: _fillHeroPromptLineHeight,

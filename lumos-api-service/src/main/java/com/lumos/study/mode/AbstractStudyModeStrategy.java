@@ -29,8 +29,7 @@ public abstract class AbstractStudyModeStrategy implements StudyModeStrategy {
         final var isMatched = StringUtils
                 .compareIgnoreCase(
                         normalizedSubmittedAnswer,
-                        normalizedExpectedAnswer)
-                == 0;
+                        normalizedExpectedAnswer) == 0;
         // Return a passed outcome only when the submitted answer matches the expected
         // answer.
         if (isMatched) {
@@ -102,8 +101,11 @@ public abstract class AbstractStudyModeStrategy implements StudyModeStrategy {
                             .resolveExpectedAnswer(item));
         }
 
-        // Keep distinct choice labels and cap the list to the supported multiple-choice size.
-        final var uniqueValues = values.stream()
+        // Keep distinct choice labels and cap the list to the supported multiple-choice
+        // size.
+        final var uniqueValues = values
+                // Stream the collected values so duplicate distractors collapse before the choice cap.
+                .stream()
                 .distinct()
                 .limit(CHOICE_LIMIT)
                 .toList();

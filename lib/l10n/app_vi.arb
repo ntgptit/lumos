@@ -537,6 +537,7 @@
   },
   "onboardingCompleteTestAction": "Hoàn thành bài kiểm tra",
   "formAnswerHint": "Nhập câu trả lời",
+  "studyFillAnswerRequiredValidation": "Câu trả lời là bắt buộc.",
   "formTapToSpeakAction": "Chạm để nói",
   "formFillBlankHint": "Điền vào chỗ trống"
 }

@@ -116,6 +116,7 @@ final class StudySessionServiceTestDataFactory {
         item.setCurrentModeCompleted(completed);
         item.setRetryPending(retryPending);
         item.setLastOutcome(outcome);
+        item.setIncorrectAttemptCount(0);
         return item;
     }
 }

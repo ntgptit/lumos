@@ -5,12 +5,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/themes/foundation/app_foundation.dart';
+import '../../../../core/utils/string_utils.dart';
 import '../../../../domain/entities/study/study_models.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../shared/widgets/lumos_widgets.dart';
 import '../mode/study_mode_view_model.dart';
 import '../mode/study_mode_view_strategy.dart';
 import '../mode/study_mode_view_strategy_factory.dart';
+import '../providers/study_fill_selection_provider.dart';
 import '../providers/study_guess_selection_provider.dart';
 import '../providers/study_match_selection_provider.dart';
 import '../providers/study_recall_selection_provider.dart';
@@ -19,6 +21,7 @@ import '../providers/study_mode_view_strategy_factory_provider.dart';
 import '../providers/study_session_provider.dart';
 import 'widgets/blocks/study_session_screen_app_bar.dart';
 import 'widgets/blocks/study_session_screen_body.dart';
+import 'widgets/sub_mode/study_session_sub_mode_const.dart';
 
 class StudySessionScreen extends ConsumerStatefulWidget {
   const StudySessionScreen({
@@ -101,6 +104,8 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
           onSelectMatchLeft: _selectMatchLeft,
           onSelectMatchRight: _selectMatchRight,
           onActionPressed: _handleActionPressed,
+          onFillInputChanged: _handleFillInputChanged,
+          onRetryInputPressed: _retryFillInput,
           onPlaySpeech: _playSpeech,
           onReplaySpeech: _replaySpeech,
         ),
@@ -109,9 +114,68 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
   }
 
   Future<void> _submitTypedAnswer() async {
-    await ref
-        .read(studySessionControllerProvider(_request).notifier)
-        .submitAnswer(_answerController.text);
+    final StudySessionData session = _readCurrentSession();
+    if (session.activeMode != StudySessionSubModeConst.fillMode) {
+      final String submittedAnswer = _answerController.text;
+      await ref
+          .read(studySessionControllerProvider(_request).notifier)
+          .submitAnswer(submittedAnswer);
+      return;
+    }
+    final StudyFillSelectionController fillSelectionController = ref.read(
+      studyFillSelectionControllerProvider(session.sessionId).notifier,
+    );
+    final String submittedAnswer = StringUtils.normalizeName(
+      _answerController.text,
+    );
+    if (submittedAnswer.isEmpty) {
+      fillSelectionController.showRequiredInputError();
+      return;
+    }
+    fillSelectionController.clearRequiredInputError();
+    final bool isCorrectSubmission = fillSelectionController.evaluateSubmission(
+      submittedAnswer: submittedAnswer,
+      expectedAnswer: session.currentItem.prompt,
+    );
+    final StudySessionController sessionController = ref.read(
+      studySessionControllerProvider(_request).notifier,
+    );
+    try {
+      final StudySessionData updatedSession = await sessionController
+          .submitAnswer(submittedAnswer);
+      if (!isCorrectSubmission) {
+        return;
+      }
+      if (!updatedSession.allowedActions.contains('GO_NEXT')) {
+        return;
+      }
+      await sessionController.goNext();
+      _answerController.clear();
+    } catch (_) {
+      fillSelectionController.resetResult();
+      rethrow;
+    }
+  }
+
+  void _retryFillInput() {
+    final StudySessionData session = _readCurrentSession();
+    ref
+        .read(studyFillSelectionControllerProvider(session.sessionId).notifier)
+        .startRetryInput();
+    _answerController.clear();
+  }
+
+  void _handleFillInputChanged(String value) {
+    final AsyncValue<StudySessionData> sessionState = ref.read(
+      studySessionControllerProvider(_request),
+    );
+    final StudySessionData? session = sessionState.asData?.value;
+    if (session == null) {
+      return;
+    }
+    ref
+        .read(studyFillSelectionControllerProvider(session.sessionId).notifier)
+        .clearRequiredInputError();
   }
 
   void _selectGuessChoice(String answer) {
@@ -144,8 +208,21 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
     final StudySessionController notifier = ref.read(
       studySessionControllerProvider(_request).notifier,
     );
+    final StudySessionData session = _readCurrentSession();
     switch (actionId) {
       case 'REVEAL_ANSWER':
+        if (session.activeMode == StudySessionSubModeConst.fillMode) {
+          ref
+              .read(
+                studyFillSelectionControllerProvider(
+                  session.sessionId,
+                ).notifier,
+              )
+              .markRevealAsIncorrect(
+                submittedAnswer: _answerController.text,
+                expectedAnswer: session.currentItem.prompt,
+              );
+        }
         await notifier.revealAnswer();
         return;
       case 'MARK_REMEMBERED':
@@ -161,6 +238,20 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
       case StudySessionScreenAppBarConst.resetCurrentModeActionId:
         _answerController.clear();
         await notifier.resetCurrentMode();
+        final AsyncValue<StudySessionData> updatedSessionState = ref.read(
+          studySessionControllerProvider(_request),
+        );
+        final StudySessionData? updatedSession =
+            updatedSessionState.asData?.value;
+        if (updatedSession != null) {
+          ref
+              .read(
+                studyFillSelectionControllerProvider(
+                  updatedSession.sessionId,
+                ).notifier,
+              )
+              .resetResult();
+        }
         return;
     }
     throw UnsupportedError('Unsupported study action: $actionId');
@@ -356,6 +447,14 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
         _lastResolvedSession = session;
         ref
             .read(
+              studyFillSelectionControllerProvider(session.sessionId).notifier,
+            )
+            .syncCurrentItem(
+              itemKey:
+                  '${session.activeMode}:${session.currentItem.flashcardId}',
+            );
+        ref
+            .read(
               studyGuessSelectionControllerProvider(session.sessionId).notifier,
             )
             .syncCurrentItem(
@@ -369,7 +468,9 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
             .syncPairs(session.currentItem.matchPairs);
         ref
             .read(
-              studyRecallSelectionControllerProvider(session.sessionId).notifier,
+              studyRecallSelectionControllerProvider(
+                session.sessionId,
+              ).notifier,
             )
             .syncCurrentItem(
               itemKey:
@@ -481,14 +582,18 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
   void _queueRecallAction(String actionId) {
     final StudySessionData session = _readCurrentSession();
     ref
-        .read(studyRecallSelectionControllerProvider(session.sessionId).notifier)
+        .read(
+          studyRecallSelectionControllerProvider(session.sessionId).notifier,
+        )
         .selectAction(actionId: actionId);
   }
 
   void _queueRecallReveal() {
     final StudySessionData session = _readCurrentSession();
     ref
-        .read(studyRecallSelectionControllerProvider(session.sessionId).notifier)
+        .read(
+          studyRecallSelectionControllerProvider(session.sessionId).notifier,
+        )
         .queueManualReveal();
   }
 

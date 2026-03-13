@@ -23,6 +23,11 @@ class LumosTextField extends StatelessWidget {
     this.textInputAction,
     this.prefixIcon,
     this.suffixIcon,
+    this.expands = false,
+    this.textAlign = TextAlign.start,
+    this.textAlignVertical,
+    this.textStyle,
+    this.decoration,
   });
 
   final String? label;
@@ -40,16 +45,24 @@ class LumosTextField extends StatelessWidget {
   final TextInputAction? textInputAction;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
+  final bool expands;
+  final TextAlign textAlign;
+  final TextAlignVertical? textAlignVertical;
+  final TextStyle? textStyle;
+  final InputDecoration? decoration;
 
   @override
   Widget build(BuildContext context) {
-    final InputDecoration decoration = InputDecoration(
-      labelText: label,
-      hintText: hint,
-      prefixIcon: prefixIcon,
-      suffixIcon: suffixIcon,
-      alignLabelWithHint: maxLines != 1,
-    );
+    final int? resolvedMaxLines = expands ? null : maxLines;
+    final InputDecoration resolvedDecoration =
+        decoration ??
+        InputDecoration(
+          labelText: label,
+          hintText: hint,
+          prefixIcon: prefixIcon,
+          suffixIcon: suffixIcon,
+          alignLabelWithHint: expands || resolvedMaxLines != 1,
+        );
     return TextFormField(
       initialValue: initialValue,
       controller: controller,
@@ -57,12 +70,16 @@ class LumosTextField extends StatelessWidget {
       validator: validator,
       obscureText: obscureText,
       keyboardType: keyboardType,
-      maxLines: maxLines,
+      maxLines: resolvedMaxLines,
+      expands: expands,
       enabled: enabled,
       autofocus: autofocus,
       onFieldSubmitted: onSubmitted,
       textInputAction: textInputAction,
-      decoration: decoration,
+      textAlign: textAlign,
+      textAlignVertical: textAlignVertical,
+      style: textStyle,
+      decoration: resolvedDecoration,
     );
   }
 }

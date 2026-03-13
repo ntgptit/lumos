@@ -92,11 +92,7 @@ void main() {
     test('fill strategy enables answer input when submit is allowed', () {
       final session = _buildSession(
         activeMode: 'FILL',
-        allowedActions: const <String>[
-          'SUBMIT_ANSWER',
-          'REVEAL_ANSWER',
-          'GO_NEXT',
-        ],
+        allowedActions: const <String>['SUBMIT_ANSWER', 'REVEAL_ANSWER'],
         inputPlaceholder: 'Type your answer',
       );
 
@@ -105,11 +101,32 @@ void main() {
           .buildViewModel(session: session);
 
       expect(viewModel.showAnswerInput, isTrue);
+      expect(viewModel.prompt, 'xin chao');
+      expect(viewModel.answer, '안녕하세요');
       expect(viewModel.inputLabel, 'Type your answer');
       expect(viewModel.submitLabel, 'Kiểm tra');
       expect(
         viewModel.actions.map((action) => action.actionId).toList(),
-        const <String>['REVEAL_ANSWER', 'GO_NEXT'],
+        const <String>['REVEAL_ANSWER'],
+      );
+    });
+
+    test('fill strategy keeps retry input available after failed feedback', () {
+      final session = _buildSession(
+        activeMode: 'FILL',
+        modeState: 'WAITING_FEEDBACK',
+        allowedActions: const <String>['SUBMIT_ANSWER', 'REVEAL_ANSWER'],
+      );
+
+      final viewModel = factory
+          .resolve(session.activeMode)
+          .buildViewModel(session: session);
+
+      expect(viewModel.showAnswer, isTrue);
+      expect(viewModel.showAnswerInput, isTrue);
+      expect(
+        viewModel.actions.map((action) => action.actionId).toList(),
+        const <String>['REVEAL_ANSWER'],
       );
     });
 
@@ -144,6 +161,7 @@ void main() {
 StudySessionData _buildSession({
   required String activeMode,
   required List<String> allowedActions,
+  String modeState = 'IN_PROGRESS',
   List<StudyChoice> choices = const <StudyChoice>[],
   List<StudyMatchPair> matchPairs = const <StudyMatchPair>[],
   String inputPlaceholder = '',
@@ -154,7 +172,7 @@ StudySessionData _buildSession({
     deckName: 'Korean Basics',
     sessionType: 'FIRST_LEARNING',
     activeMode: activeMode,
-    modeState: 'IN_PROGRESS',
+    modeState: modeState,
     modePlan: const <String>['REVIEW', 'MATCH', 'GUESS', 'RECALL', 'FILL'],
     allowedActions: allowedActions,
     progress: const StudyProgressSummary(

@@ -892,6 +892,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get formAnswerHint => 'Nhập câu trả lời';
 
   @override
+  String get studyFillAnswerRequiredValidation => 'Câu trả lời là bắt buộc.';
+
+  @override
   String get formTapToSpeakAction => 'Chạm để nói';
 
   @override

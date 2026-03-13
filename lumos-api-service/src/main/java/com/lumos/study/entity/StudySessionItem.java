@@ -68,6 +68,9 @@ public class StudySessionItem extends AuditEntity {
     @Column(name = "retry_pending", nullable = false)
     private Boolean retryPending;
 
+    @Column(name = "incorrect_attempt_count", nullable = false)
+    private Integer incorrectAttemptCount;
+
     @Version
     @Column(name = "version", nullable = false)
     private Long version;

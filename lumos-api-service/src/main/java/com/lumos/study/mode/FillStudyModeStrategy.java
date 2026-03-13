@@ -2,10 +2,13 @@ package com.lumos.study.mode;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.springframework.stereotype.Component;
 
 import com.lumos.study.entity.StudySession;
 import com.lumos.study.entity.StudySessionItem;
+import com.lumos.study.enums.ReviewOutcome;
 import com.lumos.study.enums.StudyModeLifecycleState;
 import com.lumos.study.enums.StudyMode;
 
@@ -22,6 +25,22 @@ public class FillStudyModeStrategy extends AbstractStudyModeStrategy {
     }
 
     @Override
+    public ReviewOutcome evaluateAnswer(StudySessionItem currentItem, String submittedAnswer) {
+        final String normalizedSubmittedAnswer = StringUtils.trimToEmpty(submittedAnswer);
+        final String normalizedExpectedAnswer = StringUtils.trimToEmpty(currentItem.getFrontTextSnapshot());
+        final boolean isMatched = Strings.CI.equals(
+                normalizedSubmittedAnswer,
+                normalizedExpectedAnswer);
+        // Return a passed outcome only when the learner re-enters the term side that fill mode expects.
+        if (isMatched) {
+            // Return pass so fill retries can promote the current item and unlock next.
+            return ReviewOutcome.PASSED;
+        }
+        // Return fail so fill mode keeps the learner on the same item until the term is entered correctly.
+        return ReviewOutcome.FAILED;
+    }
+
+    @Override
     public List<String> resolveAllowedActions(StudySession session, StudySessionItem currentItem) {
         final List<String> completedActions = resolveCompletedActions(session);
         // Return immediately when the session has already finished.
@@ -29,20 +48,22 @@ public class FillStudyModeStrategy extends AbstractStudyModeStrategy {
             // Return the completed-state action set so finished sessions cannot restart fill input.
             return completedActions;
         }
-        // Switch to feedback-specific actions after help or answer submission.
-        if (session.getModeState() == StudyModeLifecycleState.WAITING_FEEDBACK) {
-            // Advance directly once the learner has chosen to reveal the answer as a help hint.
-            if (currentItem.getLastOutcome() == null) {
-                // Return next-only so the client can continue without re-showing a revealed answer input form.
-                return withResetCurrentModeAction(List.of(ACTION_GO_NEXT));
-            }
-            // Return next-only because the fill outcome has already been recorded.
+        // Return the default input actions while the fill item has not entered feedback yet.
+        if (session.getModeState() != StudyModeLifecycleState.WAITING_FEEDBACK) {
+            // Return the default fill actions so the user can answer directly or ask for help first.
+            return withResetCurrentModeAction(List.of(
+                    ACTION_SUBMIT_ANSWER,
+                    ACTION_REVEAL_ANSWER));
+        }
+        // Return next-only after a correct fill retry has already completed the current item.
+        if (currentItem.getLastOutcome() == ReviewOutcome.PASSED) {
+            // Return next-only after the learner eventually gets the same item right.
             return withResetCurrentModeAction(List.of(ACTION_GO_NEXT));
         }
-        // Return the default fill actions so the user can answer directly or ask for help first.
+        // Keep help available during fill retries because difficult terms may need multiple reveals before recall stabilizes.
         return withResetCurrentModeAction(List.of(
-                ACTION_SUBMIT_ANSWER,
-                ACTION_REVEAL_ANSWER));
+                ACTION_REVEAL_ANSWER,
+                ACTION_SUBMIT_ANSWER));
     }
 
     @Override

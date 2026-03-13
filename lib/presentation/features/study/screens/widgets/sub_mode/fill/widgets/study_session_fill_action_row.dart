@@ -15,6 +15,10 @@ class StudySessionFillActionRow extends StatelessWidget {
     required this.onActionPressed,
     this.submitLabel,
     this.onSubmitPressed,
+    this.secondaryLabel,
+    this.onSecondaryPressed,
+    this.primaryLabel,
+    this.onPrimaryPressed,
     super.key,
   });
 
@@ -22,10 +26,86 @@ class StudySessionFillActionRow extends StatelessWidget {
   final ValueChanged<String> onActionPressed;
   final String? submitLabel;
   final VoidCallback? onSubmitPressed;
+  final String? secondaryLabel;
+  final VoidCallback? onSecondaryPressed;
+  final String? primaryLabel;
+  final VoidCallback? onPrimaryPressed;
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> actionButtons = _buildActionButtons();
+    final String? resolvedPrimaryLabel = primaryLabel;
+    final VoidCallback? resolvedPrimaryPressed = onPrimaryPressed;
+    final String? resolvedSecondaryLabel = secondaryLabel;
+    final VoidCallback? resolvedSecondaryPressed = onSecondaryPressed;
+    final bool hasPrimaryOverride =
+        resolvedPrimaryLabel != null && resolvedPrimaryPressed != null;
+    final bool hasSecondaryOverride =
+        resolvedSecondaryLabel != null && resolvedSecondaryPressed != null;
+    final String? resolvedSubmitLabel = submitLabel;
+    final VoidCallback? resolvedSubmitPressed = onSubmitPressed;
+    final bool showsSubmitAction =
+        resolvedSubmitLabel != null && resolvedSubmitPressed != null;
+    List<Widget> actionButtons = <Widget>[];
+    if (hasPrimaryOverride && hasSecondaryOverride) {
+      actionButtons = <Widget>[
+        LumosSecondaryButton(
+          label: resolvedSecondaryLabel,
+          onPressed: resolvedSecondaryPressed,
+          size: LumosButtonSize.large,
+          expanded: true,
+        ),
+        LumosPrimaryButton(
+          label: resolvedPrimaryLabel,
+          onPressed: resolvedPrimaryPressed,
+          size: LumosButtonSize.large,
+          expanded: true,
+        ),
+      ];
+    }
+    if (actionButtons.isEmpty && hasPrimaryOverride) {
+      actionButtons = <Widget>[
+        LumosPrimaryButton(
+          label: resolvedPrimaryLabel,
+          onPressed: resolvedPrimaryPressed,
+          size: LumosButtonSize.large,
+          expanded: true,
+        ),
+      ];
+    }
+    if (actionButtons.isEmpty && showsSubmitAction && actions.isEmpty) {
+      actionButtons = <Widget>[
+        LumosPrimaryButton(
+          label: resolvedSubmitLabel,
+          onPressed: resolvedSubmitPressed,
+          size: LumosButtonSize.large,
+          expanded: true,
+        ),
+      ];
+    }
+    if (actionButtons.isEmpty && showsSubmitAction) {
+      actionButtons = <Widget>[
+        StudySessionFillActionButton(
+          action: actions.first,
+          onActionPressed: onActionPressed,
+        ),
+        LumosPrimaryButton(
+          label: resolvedSubmitLabel,
+          onPressed: resolvedSubmitPressed,
+          size: LumosButtonSize.large,
+          expanded: true,
+        ),
+      ];
+    }
+    if (actionButtons.isEmpty) {
+      actionButtons = actions
+          .map(
+            (StudyModeActionViewModel action) => StudySessionFillActionButton(
+              action: action,
+              onActionPressed: onActionPressed,
+            ),
+          )
+          .toList(growable: false);
+    }
     if (actionButtons.isEmpty) {
       return const SizedBox.shrink();
     }
@@ -50,44 +130,5 @@ class StudySessionFillActionRow extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  List<Widget> _buildActionButtons() {
-    final String? resolvedSubmitLabel = submitLabel;
-    final VoidCallback? resolvedSubmitPressed = onSubmitPressed;
-    final bool showsSubmitAction =
-        resolvedSubmitLabel != null && resolvedSubmitPressed != null;
-    if (showsSubmitAction) {
-      if (actions.isEmpty) {
-        return <Widget>[
-          LumosPrimaryButton(
-            label: resolvedSubmitLabel,
-            onPressed: resolvedSubmitPressed,
-            size: LumosButtonSize.large,
-            expanded: true,
-          ),
-        ];
-      }
-      return <Widget>[
-        StudySessionFillActionButton(
-          action: actions.first,
-          onActionPressed: onActionPressed,
-        ),
-        LumosPrimaryButton(
-          label: resolvedSubmitLabel,
-          onPressed: resolvedSubmitPressed,
-          size: LumosButtonSize.large,
-          expanded: true,
-        ),
-      ];
-    }
-    return actions
-        .map(
-          (StudyModeActionViewModel action) => StudySessionFillActionButton(
-            action: action,
-            onActionPressed: onActionPressed,
-          ),
-        )
-        .toList(growable: false);
   }
 }

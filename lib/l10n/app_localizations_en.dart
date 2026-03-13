@@ -892,6 +892,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get formAnswerHint => 'Type your answer';
 
   @override
+  String get studyFillAnswerRequiredValidation => 'Answer is required.';
+
+  @override
   String get formTapToSpeakAction => 'Tap to speak';
 
   @override

@@ -5,6 +5,7 @@ import '../../../../../../domain/entities/study/study_models.dart';
 import '../../../mode/study_mode_view_model.dart';
 import '../../../mode/study_mode_view_strategy.dart';
 import '../../../mode/study_mode_view_strategy_factory.dart';
+import '../../../providers/study_fill_selection_provider.dart';
 import '../../../providers/study_guess_selection_provider.dart';
 import '../../../providers/study_match_selection_provider.dart';
 import '../../../providers/study_recall_selection_provider.dart';
@@ -21,6 +22,8 @@ class StudySessionResolvedBodyContent extends ConsumerWidget {
     required this.onSelectMatchLeft,
     required this.onSelectMatchRight,
     required this.onActionPressed,
+    required this.onFillInputChanged,
+    required this.onRetryInputPressed,
     required this.onPlaySpeech,
     required this.onReplaySpeech,
     super.key,
@@ -34,12 +37,17 @@ class StudySessionResolvedBodyContent extends ConsumerWidget {
   final ValueChanged<String> onSelectMatchLeft;
   final ValueChanged<String> onSelectMatchRight;
   final Future<void> Function(String) onActionPressed;
+  final ValueChanged<String> onFillInputChanged;
+  final VoidCallback onRetryInputPressed;
   final VoidCallback onPlaySpeech;
   final VoidCallback onReplaySpeech;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final StudyModeViewModel viewModel = _buildModeViewModel(session);
+    final StudyFillSelectionState fillSelectionState = ref.watch(
+      studyFillSelectionControllerProvider(session.sessionId),
+    );
     final StudyGuessSelectionState guessSelectionState = ref.watch(
       studyGuessSelectionControllerProvider(session.sessionId),
     );
@@ -56,6 +64,7 @@ class StudySessionResolvedBodyContent extends ConsumerWidget {
       session: session,
       viewModel: viewModel,
       answerController: answerController,
+      fillSelectionState: fillSelectionState,
       guessSelectionState: guessSelectionState,
       matchSelectionState: matchSelectionState,
       recallSelectionState: recallSelectionState,
@@ -65,6 +74,8 @@ class StudySessionResolvedBodyContent extends ConsumerWidget {
       onSelectMatchLeft: onSelectMatchLeft,
       onSelectMatchRight: onSelectMatchRight,
       onActionPressed: onActionPressed,
+      onFillInputChanged: onFillInputChanged,
+      onRetryInputPressed: onRetryInputPressed,
       onPlaySpeech: onPlaySpeech,
       onReplaySpeech: onReplaySpeech,
     );
