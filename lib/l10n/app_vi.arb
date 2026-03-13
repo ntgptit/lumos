@@ -279,5 +279,232 @@
   "profileThemeLight": "Sáng",
   "profileThemeDark": "Tối",
   "profileThemeToggleToLight": "Chuyển nhanh sang chế độ sáng",
-  "profileThemeToggleToDark": "Chuyển nhanh sang chế độ tối"
+  "profileThemeToggleToDark": "Chuyển nhanh sang chế độ tối",
+  "commonLogout": "Đăng xuất",
+  "commonContinue": "Tiếp tục",
+  "commonSubmit": "Gửi",
+  "commonCheck": "Kiểm tra",
+  "commonReplay": "Phát lại",
+  "authTitle": "Lumos",
+  "authSubtitle": "Xác thực trước, sau đó tiếp tục học theo trạng thái chuẩn từ backend.",
+  "authLoginTab": "Đăng nhập",
+  "authRegisterTab": "Đăng ký",
+  "authSignInAction": "Đăng nhập",
+  "authCreateAccountAction": "Tạo tài khoản",
+  "authUsernameLabel": "Tên người dùng",
+  "authEmailLabel": "Email",
+  "authPasswordLabel": "Mật khẩu",
+  "authUsernameOrEmailLabel": "Tên người dùng hoặc email",
+  "authShowPasswordTooltip": "Hiện mật khẩu",
+  "authHidePasswordTooltip": "Ẩn mật khẩu",
+  "profileSpeechSectionTitle": "Tùy chọn giọng đọc",
+  "profileSpeechEnabledLabel": "Bật giọng đọc tiếng Hàn",
+  "profileSpeechAutoPlayLabel": "Tự phát mục hiện tại",
+  "profileSpeechVoiceLabel": "Giọng đọc",
+  "profileSpeechSpeedLabel": "Tốc độ",
+  "studyProgressMomentumTitle": "Nhịp độ học tập",
+  "studyProgressMomentumSummary": "Đến hạn {dueCount} | Quá hạn {overdueCount} | Leo thang {escalationLevel}",
+  "@studyProgressMomentumSummary": {
+    "placeholders": {
+      "dueCount": {
+        "type": "int"
+      },
+      "overdueCount": {
+        "type": "int"
+      },
+      "escalationLevel": {}
+    }
+  },
+  "studyProgressRecommendedReviewTitle": "Ôn tập được đề xuất",
+  "studyProgressRecommendedReviewSummary": "{deckName} · {dueCount} thẻ đến hạn",
+  "@studyProgressRecommendedReviewSummary": {
+    "placeholders": {
+      "deckName": {},
+      "dueCount": {
+        "type": "int"
+      }
+    }
+  },
+  "studyProgressStartReviewAction": "Bắt đầu ôn tập",
+  "studyProgressBoxDistributionTitle": "Phân bố 7 hộp",
+  "studyProgressBoxLabel": "Hộp {boxIndex}",
+  "@studyProgressBoxLabel": {
+    "placeholders": {
+      "boxIndex": {
+        "type": "int"
+      }
+    }
+  },
+  "studyMatchCheckAction": "Kiểm tra",
+  "studyMatchCompletedItemLabel": "Đã ghép · {label}",
+  "@studyMatchCompletedItemLabel": {
+    "placeholders": {
+      "label": {}
+    }
+  },
+  "studySpeechPanelTitle": "Chuyển văn bản thành giọng nói · {locale}",
+  "@studySpeechPanelTitle": {
+    "placeholders": {
+      "locale": {}
+    }
+  },
+  "studySpeechPanelVoiceSummary": "Giọng: {voice} · Tốc độ: {speed}x",
+  "@studySpeechPanelVoiceSummary": {
+    "placeholders": {
+      "voice": {},
+      "speed": {}
+    }
+  },
+  "studySpeechPlayAction": "Nghe",
+  "studySpeechPlayingAction": "Đang phát",
+  "studySpeechReplayAction": "Phát lại",
+  "deckEditTooltip": "Sửa deck",
+  "deckDeleteTooltip": "Xóa deck",
+  "flashcardAgainAction": "Học lại",
+  "flashcardKnownAction": "Đã biết",
+  "exerciseMatchPairsTitle": "Ghép cặp",
+  "exerciseCompletedLabel": "Hoàn thành",
+  "exerciseSubmitMatchesLabel": "Gửi cặp ghép",
+  "exerciseReorderWordsTitle": "Sắp xếp từ",
+  "exerciseCheckOrderLabel": "Kiểm tra thứ tự",
+  "exerciseListeningTitle": "Bài nghe",
+  "feedbackGreatJob": "Làm tốt lắm!",
+  "feedbackResultSummaryCorrect": "{correctCount} / {totalCount} câu đúng",
+  "@feedbackResultSummaryCorrect": {
+    "placeholders": {
+      "correctCount": {
+        "type": "int"
+      },
+      "totalCount": {
+        "type": "int"
+      }
+    }
+  },
+  "feedbackResultSummaryXpEarned": "XP nhận được: {xpEarned}",
+  "@feedbackResultSummaryXpEarned": {
+    "placeholders": {
+      "xpEarned": {
+        "type": "int"
+      }
+    }
+  },
+  "feedbackResultSummaryStreakBonus": "Thưởng chuỗi ngày: +{streakBonus} XP",
+  "@feedbackResultSummaryStreakBonus": {
+    "placeholders": {
+      "streakBonus": {
+        "type": "int"
+      }
+    }
+  },
+  "gamificationLevelLabel": "Cấp {level}",
+  "@gamificationLevelLabel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "gamificationXpLabel": "{xp} XP",
+  "@gamificationXpLabel": {
+    "placeholders": {
+      "xp": {
+        "type": "int"
+      }
+    }
+  },
+  "gamificationDailyGoalTitle": "Mục tiêu hằng ngày",
+  "gamificationDailyGoalProgress": "{current}/{goal} {unit}",
+  "@gamificationDailyGoalProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "goal": {
+        "type": "int"
+      },
+      "unit": {}
+    }
+  },
+  "learningReviewProgressLabel": "{completed} / {total} đã ôn",
+  "@learningReviewProgressLabel": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "learningEstimateMinutesLeft": "Còn {minutes} phút",
+  "@learningEstimateMinutesLeft": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "learningStatisticsTitle": "Thống kê",
+  "learningStatisticsTotal": "Tổng: {count}",
+  "@learningStatisticsTotal": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "learningStatisticsMastered": "Đã thành thạo: {count}",
+  "@learningStatisticsMastered": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "learningStatisticsLearning": "Đang học: {count}",
+  "@learningStatisticsLearning": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "learningStatisticsDue": "Đến hạn: {count}",
+  "@learningStatisticsDue": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "learningReviewQueueDueToday": "Đến hạn hôm nay: {count}",
+  "@learningReviewQueueDueToday": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "learningReviewQueueSize": "Kích thước hàng đợi: {count}",
+  "@learningReviewQueueSize": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "learningStartReviewAction": "Bắt đầu ôn tập",
+  "onboardingPlacementTestTitle": "Bài kiểm tra xếp lớp",
+  "onboardingQuestionCount": "{count} câu hỏi",
+  "@onboardingQuestionCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "onboardingCompleteTestAction": "Hoàn thành bài kiểm tra",
+  "formAnswerHint": "Nhập câu trả lời",
+  "formTapToSpeakAction": "Chạm để nói",
+  "formFillBlankHint": "Điền vào chỗ trống"
 }

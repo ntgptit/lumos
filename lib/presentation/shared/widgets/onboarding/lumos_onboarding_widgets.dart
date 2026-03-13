@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/themes/foundation/app_foundation.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../buttons/lumos_buttons.dart';
 import '../cards/lumos_card.dart';
 import '../lumos_models.dart';
@@ -18,19 +19,23 @@ class LumosLevelTest extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     return LumosCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          const LumosText('Placement Test', style: LumosTextStyle.titleLarge),
+          LumosText(
+            l10n.onboardingPlacementTestTitle,
+            style: LumosTextStyle.titleLarge,
+          ),
           const SizedBox(height: AppSpacing.sm),
           LumosText(
-            '${questions.length} questions',
+            l10n.onboardingQuestionCount(questions.length),
             style: LumosTextStyle.bodySmall,
           ),
           const SizedBox(height: AppSpacing.md),
           LumosPrimaryButton(
-            label: 'Complete test',
+            label: l10n.onboardingCompleteTestAction,
             onPressed: () {
               onComplete(
                 TestResult(

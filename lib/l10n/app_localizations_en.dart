@@ -567,4 +567,256 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profileThemeToggleToDark => 'Quick switch to dark mode';
+
+  @override
+  String get commonLogout => 'Logout';
+
+  @override
+  String get commonContinue => 'Continue';
+
+  @override
+  String get commonSubmit => 'Submit';
+
+  @override
+  String get commonCheck => 'Check';
+
+  @override
+  String get commonReplay => 'Replay';
+
+  @override
+  String get authTitle => 'Lumos';
+
+  @override
+  String get authSubtitle => 'Authenticate first, then resume study from canonical backend state.';
+
+  @override
+  String get authLoginTab => 'Login';
+
+  @override
+  String get authRegisterTab => 'Register';
+
+  @override
+  String get authSignInAction => 'Sign in';
+
+  @override
+  String get authCreateAccountAction => 'Create account';
+
+  @override
+  String get authUsernameLabel => 'Username';
+
+  @override
+  String get authEmailLabel => 'Email';
+
+  @override
+  String get authPasswordLabel => 'Password';
+
+  @override
+  String get authUsernameOrEmailLabel => 'Username or email';
+
+  @override
+  String get authShowPasswordTooltip => 'Show password';
+
+  @override
+  String get authHidePasswordTooltip => 'Hide password';
+
+  @override
+  String get profileSpeechSectionTitle => 'Speech preference';
+
+  @override
+  String get profileSpeechEnabledLabel => 'Enable Korean speech';
+
+  @override
+  String get profileSpeechAutoPlayLabel => 'Auto play current item';
+
+  @override
+  String get profileSpeechVoiceLabel => 'Voice';
+
+  @override
+  String get profileSpeechSpeedLabel => 'Speed';
+
+  @override
+  String get studyProgressMomentumTitle => 'Study momentum';
+
+  @override
+  String studyProgressMomentumSummary(int dueCount, int overdueCount, Object escalationLevel) {
+    return 'Due $dueCount | Overdue $overdueCount | Escalation $escalationLevel';
+  }
+
+  @override
+  String get studyProgressRecommendedReviewTitle => 'Recommended review';
+
+  @override
+  String studyProgressRecommendedReviewSummary(Object deckName, int dueCount) {
+    return '$deckName · $dueCount due items';
+  }
+
+  @override
+  String get studyProgressStartReviewAction => 'Start review';
+
+  @override
+  String get studyProgressBoxDistributionTitle => '7-box distribution';
+
+  @override
+  String studyProgressBoxLabel(int boxIndex) {
+    return 'Box $boxIndex';
+  }
+
+  @override
+  String get studyMatchCheckAction => 'Check';
+
+  @override
+  String studyMatchCompletedItemLabel(Object label) {
+    return 'Matched · $label';
+  }
+
+  @override
+  String studySpeechPanelTitle(Object locale) {
+    return 'Text to speech · $locale';
+  }
+
+  @override
+  String studySpeechPanelVoiceSummary(Object voice, Object speed) {
+    return 'Voice: $voice · Speed: ${speed}x';
+  }
+
+  @override
+  String get studySpeechPlayAction => 'Listen';
+
+  @override
+  String get studySpeechPlayingAction => 'Playing';
+
+  @override
+  String get studySpeechReplayAction => 'Replay';
+
+  @override
+  String get deckEditTooltip => 'Edit deck';
+
+  @override
+  String get deckDeleteTooltip => 'Delete deck';
+
+  @override
+  String get flashcardAgainAction => 'Again';
+
+  @override
+  String get flashcardKnownAction => 'Known';
+
+  @override
+  String get exerciseMatchPairsTitle => 'Match pairs';
+
+  @override
+  String get exerciseCompletedLabel => 'Completed';
+
+  @override
+  String get exerciseSubmitMatchesLabel => 'Submit matches';
+
+  @override
+  String get exerciseReorderWordsTitle => 'Reorder words';
+
+  @override
+  String get exerciseCheckOrderLabel => 'Check order';
+
+  @override
+  String get exerciseListeningTitle => 'Listening exercise';
+
+  @override
+  String get feedbackGreatJob => 'Great job!';
+
+  @override
+  String feedbackResultSummaryCorrect(int correctCount, int totalCount) {
+    return '$correctCount / $totalCount correct';
+  }
+
+  @override
+  String feedbackResultSummaryXpEarned(int xpEarned) {
+    return 'XP earned: $xpEarned';
+  }
+
+  @override
+  String feedbackResultSummaryStreakBonus(int streakBonus) {
+    return 'Streak bonus: +$streakBonus XP';
+  }
+
+  @override
+  String gamificationLevelLabel(int level) {
+    return 'Level $level';
+  }
+
+  @override
+  String gamificationXpLabel(int xp) {
+    return '$xp XP';
+  }
+
+  @override
+  String get gamificationDailyGoalTitle => 'Daily Goal';
+
+  @override
+  String gamificationDailyGoalProgress(int current, int goal, Object unit) {
+    return '$current/$goal $unit';
+  }
+
+  @override
+  String learningReviewProgressLabel(int completed, int total) {
+    return '$completed / $total reviewed';
+  }
+
+  @override
+  String learningEstimateMinutesLeft(int minutes) {
+    return '$minutes min left';
+  }
+
+  @override
+  String get learningStatisticsTitle => 'Statistics';
+
+  @override
+  String learningStatisticsTotal(int count) {
+    return 'Total: $count';
+  }
+
+  @override
+  String learningStatisticsMastered(int count) {
+    return 'Mastered: $count';
+  }
+
+  @override
+  String learningStatisticsLearning(int count) {
+    return 'Learning: $count';
+  }
+
+  @override
+  String learningStatisticsDue(int count) {
+    return 'Due: $count';
+  }
+
+  @override
+  String learningReviewQueueDueToday(int count) {
+    return 'Due today: $count';
+  }
+
+  @override
+  String learningReviewQueueSize(int count) {
+    return 'Queue size: $count';
+  }
+
+  @override
+  String get learningStartReviewAction => 'Start review';
+
+  @override
+  String get onboardingPlacementTestTitle => 'Placement Test';
+
+  @override
+  String onboardingQuestionCount(int count) {
+    return '$count questions';
+  }
+
+  @override
+  String get onboardingCompleteTestAction => 'Complete test';
+
+  @override
+  String get formAnswerHint => 'Type your answer';
+
+  @override
+  String get formTapToSpeakAction => 'Tap to speak';
+
+  @override
+  String get formFillBlankHint => 'Fill the blank';
 }

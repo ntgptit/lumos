@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../domain/entities/study/study_models.dart';
+import '../../../../../../l10n/app_localizations.dart';
 import '../../../../../shared/widgets/lumos_widgets.dart';
 
 class StudySessionMatchPairs extends StatelessWidget {
@@ -28,21 +29,26 @@ class StudySessionMatchPairs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Expanded(child: _buildColumn(isLeftColumn: true)),
+            Expanded(
+              child: _buildColumn(context: context, isLeftColumn: true),
+            ),
             const SizedBox(width: AppSpacing.sm),
-            Expanded(child: _buildColumn(isLeftColumn: false)),
+            Expanded(
+              child: _buildColumn(context: context, isLeftColumn: false),
+            ),
           ],
         ),
         const SizedBox(height: AppSpacing.md),
         LumosPrimaryButton(
           onPressed: submitEnabled ? onSubmit : null,
-          label: 'Kiểm tra',
+          label: l10n.studyMatchCheckAction,
           icon: Icons.check_rounded,
           expanded: true,
         ),
@@ -50,7 +56,10 @@ class StudySessionMatchPairs extends StatelessWidget {
     );
   }
 
-  Widget _buildColumn({required bool isLeftColumn}) {
+  Widget _buildColumn({
+    required BuildContext context,
+    required bool isLeftColumn,
+  }) {
     final Iterable<Widget> tiles = pairs.map((StudyMatchPair pair) {
       final String itemId = isLeftColumn ? pair.leftId : pair.rightId;
       final String label = isLeftColumn ? pair.leftLabel : pair.rightLabel;
@@ -67,6 +76,7 @@ class StudySessionMatchPairs extends StatelessWidget {
       return Padding(
         padding: const EdgeInsets.only(bottom: AppSpacing.sm),
         child: _buildPairButton(
+          context: context,
           label: label,
           isMatched: isMatched,
           isSelected: isSelected,
@@ -80,15 +90,17 @@ class StudySessionMatchPairs extends StatelessWidget {
   }
 
   Widget _buildPairButton({
+    required BuildContext context,
     required String label,
     required bool isMatched,
     required bool isSelected,
     required VoidCallback onPressed,
   }) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     if (isMatched) {
       return LumosSecondaryButton(
         onPressed: null,
-        label: 'Đã ghép · $label',
+        label: l10n.studyMatchCompletedItemLabel(label),
         expanded: true,
       );
     }

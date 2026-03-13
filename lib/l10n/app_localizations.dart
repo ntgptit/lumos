@@ -1150,6 +1150,426 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Quick switch to dark mode'**
   String get profileThemeToggleToDark;
+
+  /// No description provided for @commonLogout.
+  ///
+  /// In en, this message translates to:
+  /// **'Logout'**
+  String get commonLogout;
+
+  /// No description provided for @commonContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get commonContinue;
+
+  /// No description provided for @commonSubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit'**
+  String get commonSubmit;
+
+  /// No description provided for @commonCheck.
+  ///
+  /// In en, this message translates to:
+  /// **'Check'**
+  String get commonCheck;
+
+  /// No description provided for @commonReplay.
+  ///
+  /// In en, this message translates to:
+  /// **'Replay'**
+  String get commonReplay;
+
+  /// No description provided for @authTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Lumos'**
+  String get authTitle;
+
+  /// No description provided for @authSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Authenticate first, then resume study from canonical backend state.'**
+  String get authSubtitle;
+
+  /// No description provided for @authLoginTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Login'**
+  String get authLoginTab;
+
+  /// No description provided for @authRegisterTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Register'**
+  String get authRegisterTab;
+
+  /// No description provided for @authSignInAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in'**
+  String get authSignInAction;
+
+  /// No description provided for @authCreateAccountAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Create account'**
+  String get authCreateAccountAction;
+
+  /// No description provided for @authUsernameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Username'**
+  String get authUsernameLabel;
+
+  /// No description provided for @authEmailLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get authEmailLabel;
+
+  /// No description provided for @authPasswordLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get authPasswordLabel;
+
+  /// No description provided for @authUsernameOrEmailLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Username or email'**
+  String get authUsernameOrEmailLabel;
+
+  /// No description provided for @authShowPasswordTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Show password'**
+  String get authShowPasswordTooltip;
+
+  /// No description provided for @authHidePasswordTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide password'**
+  String get authHidePasswordTooltip;
+
+  /// No description provided for @profileSpeechSectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Speech preference'**
+  String get profileSpeechSectionTitle;
+
+  /// No description provided for @profileSpeechEnabledLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Korean speech'**
+  String get profileSpeechEnabledLabel;
+
+  /// No description provided for @profileSpeechAutoPlayLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto play current item'**
+  String get profileSpeechAutoPlayLabel;
+
+  /// No description provided for @profileSpeechVoiceLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice'**
+  String get profileSpeechVoiceLabel;
+
+  /// No description provided for @profileSpeechSpeedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Speed'**
+  String get profileSpeechSpeedLabel;
+
+  /// No description provided for @studyProgressMomentumTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Study momentum'**
+  String get studyProgressMomentumTitle;
+
+  /// No description provided for @studyProgressMomentumSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Due {dueCount} | Overdue {overdueCount} | Escalation {escalationLevel}'**
+  String studyProgressMomentumSummary(int dueCount, int overdueCount, Object escalationLevel);
+
+  /// No description provided for @studyProgressRecommendedReviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended review'**
+  String get studyProgressRecommendedReviewTitle;
+
+  /// No description provided for @studyProgressRecommendedReviewSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'{deckName} · {dueCount} due items'**
+  String studyProgressRecommendedReviewSummary(Object deckName, int dueCount);
+
+  /// No description provided for @studyProgressStartReviewAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Start review'**
+  String get studyProgressStartReviewAction;
+
+  /// No description provided for @studyProgressBoxDistributionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'7-box distribution'**
+  String get studyProgressBoxDistributionTitle;
+
+  /// No description provided for @studyProgressBoxLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Box {boxIndex}'**
+  String studyProgressBoxLabel(int boxIndex);
+
+  /// No description provided for @studyMatchCheckAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Check'**
+  String get studyMatchCheckAction;
+
+  /// No description provided for @studyMatchCompletedItemLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Matched · {label}'**
+  String studyMatchCompletedItemLabel(Object label);
+
+  /// No description provided for @studySpeechPanelTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Text to speech · {locale}'**
+  String studySpeechPanelTitle(Object locale);
+
+  /// No description provided for @studySpeechPanelVoiceSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice: {voice} · Speed: {speed}x'**
+  String studySpeechPanelVoiceSummary(Object voice, Object speed);
+
+  /// No description provided for @studySpeechPlayAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Listen'**
+  String get studySpeechPlayAction;
+
+  /// No description provided for @studySpeechPlayingAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Playing'**
+  String get studySpeechPlayingAction;
+
+  /// No description provided for @studySpeechReplayAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Replay'**
+  String get studySpeechReplayAction;
+
+  /// No description provided for @deckEditTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit deck'**
+  String get deckEditTooltip;
+
+  /// No description provided for @deckDeleteTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete deck'**
+  String get deckDeleteTooltip;
+
+  /// No description provided for @flashcardAgainAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Again'**
+  String get flashcardAgainAction;
+
+  /// No description provided for @flashcardKnownAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Known'**
+  String get flashcardKnownAction;
+
+  /// No description provided for @exerciseMatchPairsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Match pairs'**
+  String get exerciseMatchPairsTitle;
+
+  /// No description provided for @exerciseCompletedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get exerciseCompletedLabel;
+
+  /// No description provided for @exerciseSubmitMatchesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit matches'**
+  String get exerciseSubmitMatchesLabel;
+
+  /// No description provided for @exerciseReorderWordsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reorder words'**
+  String get exerciseReorderWordsTitle;
+
+  /// No description provided for @exerciseCheckOrderLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Check order'**
+  String get exerciseCheckOrderLabel;
+
+  /// No description provided for @exerciseListeningTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Listening exercise'**
+  String get exerciseListeningTitle;
+
+  /// No description provided for @feedbackGreatJob.
+  ///
+  /// In en, this message translates to:
+  /// **'Great job!'**
+  String get feedbackGreatJob;
+
+  /// No description provided for @feedbackResultSummaryCorrect.
+  ///
+  /// In en, this message translates to:
+  /// **'{correctCount} / {totalCount} correct'**
+  String feedbackResultSummaryCorrect(int correctCount, int totalCount);
+
+  /// No description provided for @feedbackResultSummaryXpEarned.
+  ///
+  /// In en, this message translates to:
+  /// **'XP earned: {xpEarned}'**
+  String feedbackResultSummaryXpEarned(int xpEarned);
+
+  /// No description provided for @feedbackResultSummaryStreakBonus.
+  ///
+  /// In en, this message translates to:
+  /// **'Streak bonus: +{streakBonus} XP'**
+  String feedbackResultSummaryStreakBonus(int streakBonus);
+
+  /// No description provided for @gamificationLevelLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Level {level}'**
+  String gamificationLevelLabel(int level);
+
+  /// No description provided for @gamificationXpLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{xp} XP'**
+  String gamificationXpLabel(int xp);
+
+  /// No description provided for @gamificationDailyGoalTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Goal'**
+  String get gamificationDailyGoalTitle;
+
+  /// No description provided for @gamificationDailyGoalProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'{current}/{goal} {unit}'**
+  String gamificationDailyGoalProgress(int current, int goal, Object unit);
+
+  /// No description provided for @learningReviewProgressLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{completed} / {total} reviewed'**
+  String learningReviewProgressLabel(int completed, int total);
+
+  /// No description provided for @learningEstimateMinutesLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min left'**
+  String learningEstimateMinutesLeft(int minutes);
+
+  /// No description provided for @learningStatisticsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics'**
+  String get learningStatisticsTitle;
+
+  /// No description provided for @learningStatisticsTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Total: {count}'**
+  String learningStatisticsTotal(int count);
+
+  /// No description provided for @learningStatisticsMastered.
+  ///
+  /// In en, this message translates to:
+  /// **'Mastered: {count}'**
+  String learningStatisticsMastered(int count);
+
+  /// No description provided for @learningStatisticsLearning.
+  ///
+  /// In en, this message translates to:
+  /// **'Learning: {count}'**
+  String learningStatisticsLearning(int count);
+
+  /// No description provided for @learningStatisticsDue.
+  ///
+  /// In en, this message translates to:
+  /// **'Due: {count}'**
+  String learningStatisticsDue(int count);
+
+  /// No description provided for @learningReviewQueueDueToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Due today: {count}'**
+  String learningReviewQueueDueToday(int count);
+
+  /// No description provided for @learningReviewQueueSize.
+  ///
+  /// In en, this message translates to:
+  /// **'Queue size: {count}'**
+  String learningReviewQueueSize(int count);
+
+  /// No description provided for @learningStartReviewAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Start review'**
+  String get learningStartReviewAction;
+
+  /// No description provided for @onboardingPlacementTestTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Placement Test'**
+  String get onboardingPlacementTestTitle;
+
+  /// No description provided for @onboardingQuestionCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} questions'**
+  String onboardingQuestionCount(int count);
+
+  /// No description provided for @onboardingCompleteTestAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete test'**
+  String get onboardingCompleteTestAction;
+
+  /// No description provided for @formAnswerHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Type your answer'**
+  String get formAnswerHint;
+
+  /// No description provided for @formTapToSpeakAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to speak'**
+  String get formTapToSpeakAction;
+
+  /// No description provided for @formFillBlankHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill the blank'**
+  String get formFillBlankHint;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

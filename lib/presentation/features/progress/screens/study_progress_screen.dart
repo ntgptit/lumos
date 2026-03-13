@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/route_names.dart';
 import '../../../../core/themes/foundation/app_foundation.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../shared/widgets/lumos_widgets.dart';
 import '../providers/study_overview_provider.dart';
 
@@ -12,6 +13,7 @@ class StudyProgressScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     final AsyncValue<StudyOverviewData> overviewAsync = ref.watch(
       studyOverviewProvider,
     );
@@ -37,13 +39,17 @@ class StudyProgressScreen extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    const LumosText(
-                      'Study momentum',
+                    LumosText(
+                      l10n.studyProgressMomentumTitle,
                       style: LumosTextStyle.headlineSmall,
                     ),
                     const SizedBox(height: AppSpacing.sm),
                     LumosText(
-                      'Due ${data.reminder.dueCount} | Overdue ${data.reminder.overdueCount} | Escalation ${data.reminder.escalationLevel}',
+                      l10n.studyProgressMomentumSummary(
+                        data.reminder.dueCount,
+                        data.reminder.overdueCount,
+                        data.reminder.escalationLevel,
+                      ),
                       style: LumosTextStyle.bodyMedium,
                     ),
                     const SizedBox(height: AppSpacing.md),
@@ -65,13 +71,16 @@ class StudyProgressScreen extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      const LumosText(
-                        'Recommended review',
+                      LumosText(
+                        l10n.studyProgressRecommendedReviewTitle,
                         style: LumosTextStyle.titleLarge,
                       ),
                       const SizedBox(height: AppSpacing.sm),
                       LumosText(
-                        '${recommendation.deckName} · ${recommendation.dueCount} due items',
+                        l10n.studyProgressRecommendedReviewSummary(
+                          recommendation.deckName,
+                          recommendation.dueCount,
+                        ),
                         style: LumosTextStyle.bodyMedium,
                       ),
                       const SizedBox(height: AppSpacing.md),
@@ -88,7 +97,7 @@ class StudyProgressScreen extends ConsumerWidget {
                             },
                           );
                         },
-                        label: 'Start review',
+                        label: l10n.studyProgressStartReviewAction,
                         icon: Icons.play_arrow_rounded,
                       ),
                     ],
@@ -102,8 +111,8 @@ class StudyProgressScreen extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    const LumosText(
-                      '7-box distribution',
+                    LumosText(
+                      l10n.studyProgressBoxDistributionTitle,
                       style: LumosTextStyle.titleLarge,
                     ),
                     const SizedBox(height: AppSpacing.md),
@@ -114,7 +123,7 @@ class StudyProgressScreen extends ConsumerWidget {
                           children: <Widget>[
                             Expanded(
                               child: LumosText(
-                                'Box ${entry.key}',
+                                l10n.studyProgressBoxLabel(entry.key),
                                 style: LumosTextStyle.bodyMedium,
                               ),
                             ),

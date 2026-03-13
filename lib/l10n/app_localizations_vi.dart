@@ -567,4 +567,256 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get profileThemeToggleToDark => 'Chuyển nhanh sang chế độ tối';
+
+  @override
+  String get commonLogout => 'Đăng xuất';
+
+  @override
+  String get commonContinue => 'Tiếp tục';
+
+  @override
+  String get commonSubmit => 'Gửi';
+
+  @override
+  String get commonCheck => 'Kiểm tra';
+
+  @override
+  String get commonReplay => 'Phát lại';
+
+  @override
+  String get authTitle => 'Lumos';
+
+  @override
+  String get authSubtitle => 'Xác thực trước, sau đó tiếp tục học theo trạng thái chuẩn từ backend.';
+
+  @override
+  String get authLoginTab => 'Đăng nhập';
+
+  @override
+  String get authRegisterTab => 'Đăng ký';
+
+  @override
+  String get authSignInAction => 'Đăng nhập';
+
+  @override
+  String get authCreateAccountAction => 'Tạo tài khoản';
+
+  @override
+  String get authUsernameLabel => 'Tên người dùng';
+
+  @override
+  String get authEmailLabel => 'Email';
+
+  @override
+  String get authPasswordLabel => 'Mật khẩu';
+
+  @override
+  String get authUsernameOrEmailLabel => 'Tên người dùng hoặc email';
+
+  @override
+  String get authShowPasswordTooltip => 'Hiện mật khẩu';
+
+  @override
+  String get authHidePasswordTooltip => 'Ẩn mật khẩu';
+
+  @override
+  String get profileSpeechSectionTitle => 'Tùy chọn giọng đọc';
+
+  @override
+  String get profileSpeechEnabledLabel => 'Bật giọng đọc tiếng Hàn';
+
+  @override
+  String get profileSpeechAutoPlayLabel => 'Tự phát mục hiện tại';
+
+  @override
+  String get profileSpeechVoiceLabel => 'Giọng đọc';
+
+  @override
+  String get profileSpeechSpeedLabel => 'Tốc độ';
+
+  @override
+  String get studyProgressMomentumTitle => 'Nhịp độ học tập';
+
+  @override
+  String studyProgressMomentumSummary(int dueCount, int overdueCount, Object escalationLevel) {
+    return 'Đến hạn $dueCount | Quá hạn $overdueCount | Leo thang $escalationLevel';
+  }
+
+  @override
+  String get studyProgressRecommendedReviewTitle => 'Ôn tập được đề xuất';
+
+  @override
+  String studyProgressRecommendedReviewSummary(Object deckName, int dueCount) {
+    return '$deckName · $dueCount thẻ đến hạn';
+  }
+
+  @override
+  String get studyProgressStartReviewAction => 'Bắt đầu ôn tập';
+
+  @override
+  String get studyProgressBoxDistributionTitle => 'Phân bố 7 hộp';
+
+  @override
+  String studyProgressBoxLabel(int boxIndex) {
+    return 'Hộp $boxIndex';
+  }
+
+  @override
+  String get studyMatchCheckAction => 'Kiểm tra';
+
+  @override
+  String studyMatchCompletedItemLabel(Object label) {
+    return 'Đã ghép · $label';
+  }
+
+  @override
+  String studySpeechPanelTitle(Object locale) {
+    return 'Chuyển văn bản thành giọng nói · $locale';
+  }
+
+  @override
+  String studySpeechPanelVoiceSummary(Object voice, Object speed) {
+    return 'Giọng: $voice · Tốc độ: ${speed}x';
+  }
+
+  @override
+  String get studySpeechPlayAction => 'Nghe';
+
+  @override
+  String get studySpeechPlayingAction => 'Đang phát';
+
+  @override
+  String get studySpeechReplayAction => 'Phát lại';
+
+  @override
+  String get deckEditTooltip => 'Sửa deck';
+
+  @override
+  String get deckDeleteTooltip => 'Xóa deck';
+
+  @override
+  String get flashcardAgainAction => 'Học lại';
+
+  @override
+  String get flashcardKnownAction => 'Đã biết';
+
+  @override
+  String get exerciseMatchPairsTitle => 'Ghép cặp';
+
+  @override
+  String get exerciseCompletedLabel => 'Hoàn thành';
+
+  @override
+  String get exerciseSubmitMatchesLabel => 'Gửi cặp ghép';
+
+  @override
+  String get exerciseReorderWordsTitle => 'Sắp xếp từ';
+
+  @override
+  String get exerciseCheckOrderLabel => 'Kiểm tra thứ tự';
+
+  @override
+  String get exerciseListeningTitle => 'Bài nghe';
+
+  @override
+  String get feedbackGreatJob => 'Làm tốt lắm!';
+
+  @override
+  String feedbackResultSummaryCorrect(int correctCount, int totalCount) {
+    return '$correctCount / $totalCount câu đúng';
+  }
+
+  @override
+  String feedbackResultSummaryXpEarned(int xpEarned) {
+    return 'XP nhận được: $xpEarned';
+  }
+
+  @override
+  String feedbackResultSummaryStreakBonus(int streakBonus) {
+    return 'Thưởng chuỗi ngày: +$streakBonus XP';
+  }
+
+  @override
+  String gamificationLevelLabel(int level) {
+    return 'Cấp $level';
+  }
+
+  @override
+  String gamificationXpLabel(int xp) {
+    return '$xp XP';
+  }
+
+  @override
+  String get gamificationDailyGoalTitle => 'Mục tiêu hằng ngày';
+
+  @override
+  String gamificationDailyGoalProgress(int current, int goal, Object unit) {
+    return '$current/$goal $unit';
+  }
+
+  @override
+  String learningReviewProgressLabel(int completed, int total) {
+    return '$completed / $total đã ôn';
+  }
+
+  @override
+  String learningEstimateMinutesLeft(int minutes) {
+    return 'Còn $minutes phút';
+  }
+
+  @override
+  String get learningStatisticsTitle => 'Thống kê';
+
+  @override
+  String learningStatisticsTotal(int count) {
+    return 'Tổng: $count';
+  }
+
+  @override
+  String learningStatisticsMastered(int count) {
+    return 'Đã thành thạo: $count';
+  }
+
+  @override
+  String learningStatisticsLearning(int count) {
+    return 'Đang học: $count';
+  }
+
+  @override
+  String learningStatisticsDue(int count) {
+    return 'Đến hạn: $count';
+  }
+
+  @override
+  String learningReviewQueueDueToday(int count) {
+    return 'Đến hạn hôm nay: $count';
+  }
+
+  @override
+  String learningReviewQueueSize(int count) {
+    return 'Kích thước hàng đợi: $count';
+  }
+
+  @override
+  String get learningStartReviewAction => 'Bắt đầu ôn tập';
+
+  @override
+  String get onboardingPlacementTestTitle => 'Bài kiểm tra xếp lớp';
+
+  @override
+  String onboardingQuestionCount(int count) {
+    return '$count câu hỏi';
+  }
+
+  @override
+  String get onboardingCompleteTestAction => 'Hoàn thành bài kiểm tra';
+
+  @override
+  String get formAnswerHint => 'Nhập câu trả lời';
+
+  @override
+  String get formTapToSpeakAction => 'Chạm để nói';
+
+  @override
+  String get formFillBlankHint => 'Điền vào chỗ trống';
 }

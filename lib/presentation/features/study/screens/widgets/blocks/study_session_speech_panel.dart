@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../domain/entities/study/study_models.dart';
+import '../../../../../../l10n/app_localizations.dart';
 import '../../../../../shared/widgets/lumos_widgets.dart';
 import '../../../providers/study_speech_playback_provider.dart';
 
@@ -21,6 +22,7 @@ class StudySessionSpeechPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     if (!speech.available) {
       return const SizedBox.shrink();
     }
@@ -38,12 +40,15 @@ class StudySessionSpeechPanel extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             LumosText(
-              'Text to speech · ${speech.locale}',
+              l10n.studySpeechPanelTitle(speech.locale),
               style: LumosTextStyle.labelLarge,
             ),
             const SizedBox(height: AppSpacing.xs),
             LumosText(
-              'Voice: ${speech.voice} · Speed: ${speech.speed.toStringAsFixed(1)}x',
+              l10n.studySpeechPanelVoiceSummary(
+                speech.voice,
+                speech.speed.toStringAsFixed(1),
+              ),
               style: LumosTextStyle.bodySmall,
             ),
             const SizedBox(height: AppSpacing.md),
@@ -55,14 +60,16 @@ class StudySessionSpeechPanel extends StatelessWidget {
                   onPressed: playbackState.isBusy || !canPlay
                       ? null
                       : onPlayPressed,
-                  label: playbackState.isPlaying ? 'Đang phát' : 'Nghe',
+                  label: playbackState.isPlaying
+                      ? l10n.studySpeechPlayingAction
+                      : l10n.studySpeechPlayAction,
                   icon: Icons.volume_up_rounded,
                 ),
                 LumosOutlineButton(
                   onPressed: playbackState.isBusy || !canReplay
                       ? null
                       : onReplayPressed,
-                  label: 'Phát lại',
+                  label: l10n.studySpeechReplayAction,
                   icon: Icons.replay_rounded,
                 ),
               ],

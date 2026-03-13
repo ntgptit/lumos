@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/themes/foundation/app_foundation.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../buttons/lumos_buttons.dart';
 import '../inputs/lumos_form_widgets.dart';
 import '../lumos_models.dart';
@@ -22,10 +23,14 @@ class LumosMatchPairs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        const LumosText('Match pairs', style: LumosTextStyle.titleMedium),
+        LumosText(
+          l10n.exerciseMatchPairsTitle,
+          style: LumosTextStyle.titleMedium,
+        ),
         const SizedBox(height: AppSpacing.md),
         Wrap(
           spacing: AppSpacing.sm,
@@ -44,7 +49,9 @@ class LumosMatchPairs extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.md),
         LumosPrimaryButton(
-          label: isCompleted ? 'Completed' : 'Submit matches',
+          label: isCompleted
+              ? l10n.exerciseCompletedLabel
+              : l10n.exerciseSubmitMatchesLabel,
           onPressed: () {
             onMatchComplete(const <MatchedPair>[]);
           },
@@ -69,10 +76,14 @@ class LumosReorderWords extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        const LumosText('Reorder words', style: LumosTextStyle.titleMedium),
+        LumosText(
+          l10n.exerciseReorderWordsTitle,
+          style: LumosTextStyle.titleMedium,
+        ),
         const SizedBox(height: AppSpacing.md),
         Wrap(
           spacing: AppSpacing.sm,
@@ -83,7 +94,7 @@ class LumosReorderWords extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.md),
         LumosPrimaryButton(
-          label: 'Check order',
+          label: l10n.exerciseCheckOrderLabel,
           onPressed: () {
             final String candidate = words.join(' ');
             onSubmitted(candidate == correctOrder);
@@ -111,11 +122,12 @@ class LumosListeningExercise extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        const LumosText(
-          'Listening exercise',
+        LumosText(
+          l10n.exerciseListeningTitle,
           style: LumosTextStyle.titleMedium,
         ),
         const SizedBox(height: AppSpacing.sm),

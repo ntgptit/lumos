@@ -8,6 +8,7 @@ import 'guards/verify_common_widget_usage_contract.dart'
 import 'guards/verify_component_theme_usage_contract.dart'
     as component_theme_guard;
 import 'guards/verify_feature_surface_contract.dart' as feature_surface_guard;
+import 'guards/verify_l10n_usage_contract.dart' as l10n_usage_guard;
 import 'guards/verify_navigation_go_router_contract.dart' as navigation_guard;
 import 'guards/verify_opacity_constants_contract.dart' as opacity_guard;
 import 'guards/verify_riverpod_annotation.dart' as riverpod_annotation_guard;
@@ -169,6 +170,11 @@ List<_GuardTask> _buildDefaultTasks() {
       id: 'ui-logic-separation',
       fileName: 'guards/verify_ui_logic_separation_contract.dart',
       run: ui_logic_separation_guard.main,
+    ),
+    _GuardTask(
+      id: 'l10n-usage',
+      fileName: 'guards/verify_l10n_usage_contract.dart',
+      run: l10n_usage_guard.main,
     ),
     _GuardTask(
       id: 'navigation',

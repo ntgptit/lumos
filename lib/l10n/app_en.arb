@@ -282,5 +282,232 @@
   "profileThemeLight": "Light",
   "profileThemeDark": "Dark",
   "profileThemeToggleToLight": "Quick switch to light mode",
-  "profileThemeToggleToDark": "Quick switch to dark mode"
+  "profileThemeToggleToDark": "Quick switch to dark mode",
+  "commonLogout": "Logout",
+  "commonContinue": "Continue",
+  "commonSubmit": "Submit",
+  "commonCheck": "Check",
+  "commonReplay": "Replay",
+  "authTitle": "Lumos",
+  "authSubtitle": "Authenticate first, then resume study from canonical backend state.",
+  "authLoginTab": "Login",
+  "authRegisterTab": "Register",
+  "authSignInAction": "Sign in",
+  "authCreateAccountAction": "Create account",
+  "authUsernameLabel": "Username",
+  "authEmailLabel": "Email",
+  "authPasswordLabel": "Password",
+  "authUsernameOrEmailLabel": "Username or email",
+  "authShowPasswordTooltip": "Show password",
+  "authHidePasswordTooltip": "Hide password",
+  "profileSpeechSectionTitle": "Speech preference",
+  "profileSpeechEnabledLabel": "Enable Korean speech",
+  "profileSpeechAutoPlayLabel": "Auto play current item",
+  "profileSpeechVoiceLabel": "Voice",
+  "profileSpeechSpeedLabel": "Speed",
+  "studyProgressMomentumTitle": "Study momentum",
+  "studyProgressMomentumSummary": "Due {dueCount} | Overdue {overdueCount} | Escalation {escalationLevel}",
+  "@studyProgressMomentumSummary": {
+    "placeholders": {
+      "dueCount": {
+        "type": "int"
+      },
+      "overdueCount": {
+        "type": "int"
+      },
+      "escalationLevel": {}
+    }
+  },
+  "studyProgressRecommendedReviewTitle": "Recommended review",
+  "studyProgressRecommendedReviewSummary": "{deckName} · {dueCount} due items",
+  "@studyProgressRecommendedReviewSummary": {
+    "placeholders": {
+      "deckName": {},
+      "dueCount": {
+        "type": "int"
+      }
+    }
+  },
+  "studyProgressStartReviewAction": "Start review",
+  "studyProgressBoxDistributionTitle": "7-box distribution",
+  "studyProgressBoxLabel": "Box {boxIndex}",
+  "@studyProgressBoxLabel": {
+    "placeholders": {
+      "boxIndex": {
+        "type": "int"
+      }
+    }
+  },
+  "studyMatchCheckAction": "Check",
+  "studyMatchCompletedItemLabel": "Matched · {label}",
+  "@studyMatchCompletedItemLabel": {
+    "placeholders": {
+      "label": {}
+    }
+  },
+  "studySpeechPanelTitle": "Text to speech · {locale}",
+  "@studySpeechPanelTitle": {
+    "placeholders": {
+      "locale": {}
+    }
+  },
+  "studySpeechPanelVoiceSummary": "Voice: {voice} · Speed: {speed}x",
+  "@studySpeechPanelVoiceSummary": {
+    "placeholders": {
+      "voice": {},
+      "speed": {}
+    }
+  },
+  "studySpeechPlayAction": "Listen",
+  "studySpeechPlayingAction": "Playing",
+  "studySpeechReplayAction": "Replay",
+  "deckEditTooltip": "Edit deck",
+  "deckDeleteTooltip": "Delete deck",
+  "flashcardAgainAction": "Again",
+  "flashcardKnownAction": "Known",
+  "exerciseMatchPairsTitle": "Match pairs",
+  "exerciseCompletedLabel": "Completed",
+  "exerciseSubmitMatchesLabel": "Submit matches",
+  "exerciseReorderWordsTitle": "Reorder words",
+  "exerciseCheckOrderLabel": "Check order",
+  "exerciseListeningTitle": "Listening exercise",
+  "feedbackGreatJob": "Great job!",
+  "feedbackResultSummaryCorrect": "{correctCount} / {totalCount} correct",
+  "@feedbackResultSummaryCorrect": {
+    "placeholders": {
+      "correctCount": {
+        "type": "int"
+      },
+      "totalCount": {
+        "type": "int"
+      }
+    }
+  },
+  "feedbackResultSummaryXpEarned": "XP earned: {xpEarned}",
+  "@feedbackResultSummaryXpEarned": {
+    "placeholders": {
+      "xpEarned": {
+        "type": "int"
+      }
+    }
+  },
+  "feedbackResultSummaryStreakBonus": "Streak bonus: +{streakBonus} XP",
+  "@feedbackResultSummaryStreakBonus": {
+    "placeholders": {
+      "streakBonus": {
+        "type": "int"
+      }
+    }
+  },
+  "gamificationLevelLabel": "Level {level}",
+  "@gamificationLevelLabel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "gamificationXpLabel": "{xp} XP",
+  "@gamificationXpLabel": {
+    "placeholders": {
+      "xp": {
+        "type": "int"
+      }
+    }
+  },
+  "gamificationDailyGoalTitle": "Daily Goal",
+  "gamificationDailyGoalProgress": "{current}/{goal} {unit}",
+  "@gamificationDailyGoalProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "goal": {
+        "type": "int"
+      },
+      "unit": {}
+    }
+  },
+  "learningReviewProgressLabel": "{completed} / {total} reviewed",
+  "@learningReviewProgressLabel": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "learningEstimateMinutesLeft": "{minutes} min left",
+  "@learningEstimateMinutesLeft": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "learningStatisticsTitle": "Statistics",
+  "learningStatisticsTotal": "Total: {count}",
+  "@learningStatisticsTotal": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "learningStatisticsMastered": "Mastered: {count}",
+  "@learningStatisticsMastered": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "learningStatisticsLearning": "Learning: {count}",
+  "@learningStatisticsLearning": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "learningStatisticsDue": "Due: {count}",
+  "@learningStatisticsDue": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "learningReviewQueueDueToday": "Due today: {count}",
+  "@learningReviewQueueDueToday": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "learningReviewQueueSize": "Queue size: {count}",
+  "@learningReviewQueueSize": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "learningStartReviewAction": "Start review",
+  "onboardingPlacementTestTitle": "Placement Test",
+  "onboardingQuestionCount": "{count} questions",
+  "@onboardingQuestionCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "onboardingCompleteTestAction": "Complete test",
+  "formAnswerHint": "Type your answer",
+  "formTapToSpeakAction": "Tap to speak",
+  "formFillBlankHint": "Fill the blank"
 }

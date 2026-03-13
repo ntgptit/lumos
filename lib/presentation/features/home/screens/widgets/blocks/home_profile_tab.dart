@@ -69,13 +69,13 @@ class HomeProfileTab extends ConsumerWidget {
           selectedPreference: selectedPreference,
         ),
         const SizedBox(height: AppSpacing.lg),
-        _buildSpeechCard(ref: ref, speechAsync: speechAsync),
+        _buildSpeechCard(ref: ref, l10n: l10n, speechAsync: speechAsync),
         const SizedBox(height: AppSpacing.lg),
         LumosDangerButton(
           onPressed: () async {
             await ref.read(authSessionControllerProvider.notifier).logout();
           },
-          label: 'Logout',
+          label: l10n.commonLogout,
           icon: Icons.logout_rounded,
         ),
       ],
@@ -184,6 +184,7 @@ class HomeProfileTab extends ConsumerWidget {
 
   Widget _buildSpeechCard({
     required WidgetRef ref,
+    required AppLocalizations l10n,
     required AsyncValue<SpeechPreference> speechAsync,
   }) {
     return speechAsync.when(
@@ -209,15 +210,15 @@ class HomeProfileTab extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                const LumosText(
-                  'Speech preference',
+                LumosText(
+                  l10n.profileSpeechSectionTitle,
                   style: LumosTextStyle.titleLarge,
                 ),
                 const SizedBox(height: AppSpacing.sm),
                 SwitchListTile.adaptive(
                   contentPadding: EdgeInsets.zero,
-                  title: const LumosText(
-                    'Enable Korean speech',
+                  title: LumosText(
+                    l10n.profileSpeechEnabledLabel,
                     style: LumosTextStyle.bodyMedium,
                   ),
                   value: preference.enabled,
@@ -229,8 +230,8 @@ class HomeProfileTab extends ConsumerWidget {
                 ),
                 SwitchListTile.adaptive(
                   contentPadding: EdgeInsets.zero,
-                  title: const LumosText(
-                    'Auto play current item',
+                  title: LumosText(
+                    l10n.profileSpeechAutoPlayLabel,
                     style: LumosTextStyle.bodyMedium,
                   ),
                   value: preference.autoPlay,
@@ -245,7 +246,7 @@ class HomeProfileTab extends ConsumerWidget {
                 const SizedBox(height: AppSpacing.sm),
                 LumosDropdown<String>(
                   value: preference.voice,
-                  label: 'Voice',
+                  label: l10n.profileSpeechVoiceLabel,
                   items: HomeProfileTabConst.speechVoices
                       .map(
                         (String voice) => DropdownMenuItem<String>(
@@ -270,7 +271,7 @@ class HomeProfileTab extends ConsumerWidget {
                 const SizedBox(height: AppSpacing.md),
                 LumosDropdown<double>(
                   value: preference.speed,
-                  label: 'Speed',
+                  label: l10n.profileSpeechSpeedLabel,
                   items: HomeProfileTabConst.speechSpeeds
                       .map(
                         (double speed) => DropdownMenuItem<double>(
