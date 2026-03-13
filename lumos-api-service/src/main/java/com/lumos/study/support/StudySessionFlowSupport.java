@@ -85,6 +85,14 @@ public class StudySessionFlowSupport {
         saveAttempts(session, affectedItems, outcome, submittedAnswer);
     }
 
+    public void applySkippedOutcome(StudySession session, StudySessionItem currentItem) {
+        currentItem.setLastOutcome(ReviewOutcome.SKIPPED);
+        currentItem.setCurrentModeCompleted(Boolean.TRUE);
+        currentItem.setRetryPending(Boolean.FALSE);
+        session.setModeState(StudyModeLifecycleState.WAITING_FEEDBACK);
+        saveAttempts(session, List.of(currentItem), ReviewOutcome.SKIPPED, null);
+    }
+
     public Integer findNextSequenceIndex(List<StudySessionItem> items, int currentSequenceIndex) {
         return items.stream()
                 .filter(item -> item.getSequenceIndex() > currentSequenceIndex)

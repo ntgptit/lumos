@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../mode/study_mode_action_view_model.dart';
+import '../../../../../providers/study_recall_selection_provider.dart';
 import 'study_session_recall_action_button.dart';
 
 const double _recallSingleActionWidthFactor = 0.42;
@@ -11,11 +12,13 @@ const double _recallActionRowHeight = 64;
 class StudySessionRecallActionRow extends StatelessWidget {
   const StudySessionRecallActionRow({
     required this.actions,
+    required this.selectionState,
     required this.onActionPressed,
     super.key,
   });
 
   final List<StudyModeActionViewModel> actions;
+  final StudyRecallSelectionState selectionState;
   final ValueChanged<String> onActionPressed;
 
   @override
@@ -31,6 +34,7 @@ class StudySessionRecallActionRow extends StatelessWidget {
             widthFactor: _recallSingleActionWidthFactor,
             child: StudySessionRecallActionButton(
               action: actions.first,
+              selectionState: selectionState,
               onActionPressed: onActionPressed,
             ),
           ),
@@ -45,6 +49,7 @@ class StudySessionRecallActionRow extends StatelessWidget {
             Expanded(
               child: StudySessionRecallActionButton(
                 action: actions.first,
+                selectionState: selectionState,
                 onActionPressed: onActionPressed,
               ),
             ),
@@ -52,6 +57,7 @@ class StudySessionRecallActionRow extends StatelessWidget {
             Expanded(
               child: StudySessionRecallActionButton(
                 action: actions.last,
+                selectionState: selectionState,
                 onActionPressed: onActionPressed,
               ),
             ),
@@ -67,6 +73,7 @@ class StudySessionRecallActionRow extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: AppSpacing.sm),
               child: StudySessionRecallActionButton(
                 action: action,
+                selectionState: selectionState,
                 onActionPressed: onActionPressed,
               ),
             ),

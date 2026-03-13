@@ -7,6 +7,7 @@ import '../../../mode/study_mode_view_strategy.dart';
 import '../../../mode/study_mode_view_strategy_factory.dart';
 import '../../../providers/study_guess_selection_provider.dart';
 import '../../../providers/study_match_selection_provider.dart';
+import '../../../providers/study_recall_selection_provider.dart';
 import '../../../providers/study_speech_playback_provider.dart';
 import '../sub_mode/study_session_mode_content.dart';
 
@@ -45,6 +46,9 @@ class StudySessionResolvedBodyContent extends ConsumerWidget {
     final StudyMatchSelectionState matchSelectionState = ref.watch(
       studyMatchSelectionControllerProvider(session.sessionId),
     );
+    final StudyRecallSelectionState recallSelectionState = ref.watch(
+      studyRecallSelectionControllerProvider(session.sessionId),
+    );
     final StudySpeechPlaybackState speechPlaybackState = ref.watch(
       studySpeechPlaybackControllerProvider(session.sessionId),
     );
@@ -54,6 +58,7 @@ class StudySessionResolvedBodyContent extends ConsumerWidget {
       answerController: answerController,
       guessSelectionState: guessSelectionState,
       matchSelectionState: matchSelectionState,
+      recallSelectionState: recallSelectionState,
       speechPlaybackState: speechPlaybackState,
       onSubmitTypedAnswer: onSubmitTypedAnswer,
       onChoicePressed: onChoicePressed,

@@ -617,6 +617,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get commonContinue => 'Continue';
 
   @override
+  String get commonNext => 'Next';
+
+  @override
   String get commonSubmit => 'Submit';
 
   @override

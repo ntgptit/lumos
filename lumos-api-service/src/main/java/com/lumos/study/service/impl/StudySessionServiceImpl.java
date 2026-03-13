@@ -43,6 +43,9 @@ import lombok.RequiredArgsConstructor;
 public class StudySessionServiceImpl implements StudySessionService {
 
     private static final int FIRST_MODE_INDEX = 0;
+    private static final StudyMode FILL_MODE = StudyMode.FILL;
+    private static final StudyMode RECALL_MODE = StudyMode.RECALL;
+    private static final StudyModeLifecycleState WAITING_FEEDBACK_STATE = StudyModeLifecycleState.WAITING_FEEDBACK;
 
     private final AuthenticatedUserProvider authenticatedUserProvider;
     private final UserAccountRepository userAccountRepository;
@@ -236,6 +239,10 @@ public class StudySessionServiceImpl implements StudySessionService {
         final List<StudySessionItem> items = this.studySessionFlowSupport.resolveSessionItems(session);
         final StudySessionItem currentItem = this.studySessionFlowSupport.resolveCurrentItem(session, items);
         this.studySessionFlowSupport.ensureActionAllowed(session, currentItem, StudyModeStrategy.ACTION_GO_NEXT);
+        // Persist a skipped recall outcome before advancing when the answer was revealed without self-assessment.
+        if (shouldSkipRevealedItem(session, currentItem)) {
+            this.studySessionFlowSupport.applySkippedOutcome(session, currentItem);
+        }
         final Integer nextSequenceIndex = this.studySessionFlowSupport.findNextSequenceIndex(
                 items,
                 currentItem.getSequenceIndex());
@@ -283,6 +290,26 @@ public class StudySessionServiceImpl implements StudySessionService {
 
         // Return the reset mode snapshot after clearing current-mode progress and attempts.
         return this.studySessionResponseFactory.buildResponse(session);
+    }
+
+    private boolean shouldSkipRevealedItem(StudySession session, StudySessionItem currentItem) {
+        // Stop early when the active mode is not one of the reveal-first flows that support skip-next.
+        if (!isRevealSkipMode(session.getActiveMode())) {
+            // Return false because other modes already own explicit submit or feedback outcomes.
+            return false;
+        }
+        // Stop early when the mode is not waiting for feedback because unrevealed items cannot be skipped yet.
+        if (session.getModeState() != WAITING_FEEDBACK_STATE) {
+            // Return false because skip-next applies only after the answer has been revealed.
+            return false;
+        }
+        // Return true only when the revealed item still has no recorded outcome.
+        return currentItem.getLastOutcome() == null;
+    }
+
+    private boolean isRevealSkipMode(StudyMode activeMode) {
+        // Return true only for reveal-driven modes where nexting after help should record a skipped outcome.
+        return activeMode == RECALL_MODE || activeMode == FILL_MODE;
     }
 
     /**

@@ -617,6 +617,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get commonContinue => 'Tiếp tục';
 
   @override
+  String get commonNext => 'Tiếp theo';
+
+  @override
   String get commonSubmit => 'Gửi';
 
   @override

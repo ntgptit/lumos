@@ -112,6 +112,32 @@ void main() {
         const <String>['REVEAL_ANSWER', 'GO_NEXT'],
       );
     });
+
+    test('recall strategy exposes next action for timeout branch', () {
+      final session = _buildSession(
+        activeMode: 'RECALL',
+        allowedActions: const <String>[
+          'REVEAL_ANSWER',
+          'MARK_REMEMBERED',
+          'RETRY_ITEM',
+          'GO_NEXT',
+        ],
+      );
+
+      final viewModel = factory
+          .resolve(session.activeMode)
+          .buildViewModel(session: session);
+
+      expect(
+        viewModel.actions.map((action) => action.actionId).toList(),
+        const <String>[
+          'REVEAL_ANSWER',
+          'MARK_REMEMBERED',
+          'RETRY_ITEM',
+          'GO_NEXT',
+        ],
+      );
+    });
   });
 }
 

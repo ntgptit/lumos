@@ -477,6 +477,88 @@ class StudySessionServiceImplTest {
     }
 
     @Test
+    void goNext_recallTimeoutMarksCurrentItemSkippedBeforeMovingToNextItem() {
+        final StudySession session = session(
+                user(),
+                deck(),
+                StudySessionType.FIRST_LEARNING,
+                StudyMode.RECALL,
+                StudyModeLifecycleState.WAITING_FEEDBACK,
+                3,
+                0,
+                false);
+        session.setId(SESSION_ID);
+        session.setModePlan("REVIEW,MATCH,GUESS,RECALL,FILL");
+        final StudySessionItem firstItem = currentItem(session, null, false, false);
+        final StudySessionItem secondItem = sessionItem(
+                2L,
+                session,
+                flashcard(102L, session.getDeck(), "감사합니다", "cam on"),
+                1,
+                false,
+                false,
+                null);
+        when(this.authenticatedUserProvider.getCurrentUserId()).thenReturn(USER_ID);
+        when(this.studySessionRepository.findByIdAndDeletedAtIsNull(SESSION_ID)).thenReturn(Optional.of(session));
+        when(this.studySessionItemRepository.findAllByStudySessionIdAndDeletedAtIsNullOrderBySequenceIndexAsc(SESSION_ID))
+                .thenReturn(List.of(firstItem, secondItem));
+        when(this.userSpeechPreferenceRepository.findByUserAccountIdAndDeletedAtIsNull(USER_ID)).thenReturn(Optional.empty());
+
+        final var response = this.studySessionService.goNext(SESSION_ID);
+        final ArgumentCaptor<StudyAttempt> attemptCaptor = ArgumentCaptor.forClass(StudyAttempt.class);
+
+        verify(this.studyAttemptRepository).save(attemptCaptor.capture());
+        assertEquals(ReviewOutcome.SKIPPED, firstItem.getLastOutcome());
+        assertTrue(firstItem.getCurrentModeCompleted());
+        assertFalse(firstItem.getRetryPending());
+        assertEquals(ReviewOutcome.SKIPPED, attemptCaptor.getValue().getReviewOutcome());
+        assertEquals("IN_PROGRESS", response.modeState());
+        assertEquals(1, session.getCurrentItemIndex());
+        assertEquals(102L, response.currentItem().flashcardId());
+    }
+
+    @Test
+    void goNext_fillHelpMarksCurrentItemSkippedBeforeMovingToNextItem() {
+        final StudySession session = session(
+                user(),
+                deck(),
+                StudySessionType.FIRST_LEARNING,
+                StudyMode.FILL,
+                StudyModeLifecycleState.WAITING_FEEDBACK,
+                4,
+                0,
+                false);
+        session.setId(SESSION_ID);
+        session.setModePlan("REVIEW,MATCH,GUESS,RECALL,FILL");
+        final StudySessionItem firstItem = currentItem(session, null, false, false);
+        final StudySessionItem secondItem = sessionItem(
+                2L,
+                session,
+                flashcard(102L, session.getDeck(), "감사합니다", "cam on"),
+                1,
+                false,
+                false,
+                null);
+        when(this.authenticatedUserProvider.getCurrentUserId()).thenReturn(USER_ID);
+        when(this.studySessionRepository.findByIdAndDeletedAtIsNull(SESSION_ID)).thenReturn(Optional.of(session));
+        when(this.studySessionItemRepository.findAllByStudySessionIdAndDeletedAtIsNullOrderBySequenceIndexAsc(SESSION_ID))
+                .thenReturn(List.of(firstItem, secondItem));
+        when(this.userSpeechPreferenceRepository.findByUserAccountIdAndDeletedAtIsNull(USER_ID)).thenReturn(Optional.empty());
+
+        final var response = this.studySessionService.goNext(SESSION_ID);
+        final ArgumentCaptor<StudyAttempt> attemptCaptor = ArgumentCaptor.forClass(StudyAttempt.class);
+
+        verify(this.studyAttemptRepository).save(attemptCaptor.capture());
+        assertEquals(ReviewOutcome.SKIPPED, firstItem.getLastOutcome());
+        assertTrue(firstItem.getCurrentModeCompleted());
+        assertFalse(firstItem.getRetryPending());
+        assertEquals(ReviewOutcome.SKIPPED, attemptCaptor.getValue().getReviewOutcome());
+        assertEquals("IN_PROGRESS", response.modeState());
+        assertEquals(1, session.getCurrentItemIndex());
+        assertEquals(102L, response.currentItem().flashcardId());
+    }
+
+    @Test
     void goNext_matchModeMovesToNextModeWhenVisibleGridAlreadyCompleted() {
         final StudySession session = session(
                 user(),

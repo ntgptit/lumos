@@ -35,10 +35,11 @@ public class RecallStudyModeStrategy extends AbstractStudyModeStrategy {
                 // Return next-only because the user has already judged recall success or failure.
                 return withResetCurrentModeAction(List.of(ACTION_GO_NEXT));
             }
-            // Return the self-assessment actions shown immediately after the answer is revealed.
+            // Return self-assessment plus next so timeout-driven FE can skip this item without blocking flow.
             return withResetCurrentModeAction(List.of(
                     ACTION_MARK_REMEMBERED,
-                    ACTION_RETRY_ITEM));
+                    ACTION_RETRY_ITEM,
+                    ACTION_GO_NEXT));
         }
         // Return reveal-only so the learner must attempt recall mentally before seeing the answer.
         return withResetCurrentModeAction(List.of(ACTION_REVEAL_ANSWER));

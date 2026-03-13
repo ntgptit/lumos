@@ -13,6 +13,7 @@ import '../mode/study_mode_view_strategy.dart';
 import '../mode/study_mode_view_strategy_factory.dart';
 import '../providers/study_guess_selection_provider.dart';
 import '../providers/study_match_selection_provider.dart';
+import '../providers/study_recall_selection_provider.dart';
 import '../providers/study_speech_playback_provider.dart';
 import '../providers/study_mode_view_strategy_factory_provider.dart';
 import '../providers/study_session_provider.dart';
@@ -40,6 +41,8 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
   StudySessionData? _lastResolvedSession;
   bool _isCompletingGuessMode = false;
   bool _isCompletingMatchMode = false;
+  bool _isCompletingRecallMode = false;
+  bool _isRevealingRecallMode = false;
 
   @override
   void dispose() {
@@ -76,6 +79,7 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
     _listenSessionUpdates(request);
     _listenGuessSelectionUpdates(currentSession?.sessionId);
     _listenMatchSelectionUpdates(currentSession?.sessionId);
+    _listenRecallSelectionUpdates(currentSession?.sessionId);
     return Scaffold(
       appBar: StudySessionScreenAppBar(
         deckName: widget.deckName,
@@ -129,6 +133,14 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
   }
 
   Future<void> _handleActionPressed(String actionId) async {
+    if (_shouldHandleRecallRevealLocally(actionId)) {
+      _queueRecallReveal();
+      return;
+    }
+    if (_shouldHandleRecallFeedbackLocally(actionId)) {
+      _queueRecallAction(actionId);
+      return;
+    }
     final StudySessionController notifier = ref.read(
       studySessionControllerProvider(_request).notifier,
     );
@@ -232,6 +244,72 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
     }
   }
 
+  Future<void> _maybeCompleteRecallMode(int sessionId) async {
+    if (_isCompletingRecallMode) {
+      return;
+    }
+    final StudyRecallSelectionState selectionState = ref.read(
+      studyRecallSelectionControllerProvider(sessionId),
+    );
+    if (!selectionState.canSubmit) {
+      return;
+    }
+    final String actionId = selectionState.pendingSubmittedActionId!;
+    _isCompletingRecallMode = true;
+    try {
+      final StudySessionController notifier = ref.read(
+        studySessionControllerProvider(_request).notifier,
+      );
+      if (actionId == StudyRecallSelectionController.rememberedActionId) {
+        await notifier.markRemembered();
+      }
+      if (actionId == StudyRecallSelectionController.retryActionId) {
+        await notifier.retryItem();
+      }
+      final StudySessionData updatedSession = _readCurrentSession();
+      if (!updatedSession.allowedActions.contains('GO_NEXT')) {
+        ref
+            .read(studyRecallSelectionControllerProvider(sessionId).notifier)
+            .reset();
+        return;
+      }
+      _answerController.clear();
+      await notifier.goNext();
+    } catch (_) {
+      ref
+          .read(studyRecallSelectionControllerProvider(sessionId).notifier)
+          .reset();
+      rethrow;
+    } finally {
+      _isCompletingRecallMode = false;
+    }
+  }
+
+  Future<void> _maybeRevealRecallMode(int sessionId) async {
+    if (_isRevealingRecallMode) {
+      return;
+    }
+    final StudyRecallSelectionState selectionState = ref.read(
+      studyRecallSelectionControllerProvider(sessionId),
+    );
+    if (!selectionState.hasPendingReveal) {
+      return;
+    }
+    _isRevealingRecallMode = true;
+    try {
+      await ref
+          .read(studySessionControllerProvider(_request).notifier)
+          .revealAnswer();
+    } catch (_) {
+      ref
+          .read(studyRecallSelectionControllerProvider(sessionId).notifier)
+          .restartRevealCountdown();
+      rethrow;
+    } finally {
+      _isRevealingRecallMode = false;
+    }
+  }
+
   Future<void> _playSpeech() async {
     final StudySessionData session = _readCurrentSession();
     await ref
@@ -291,6 +369,19 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
             .syncPairs(session.currentItem.matchPairs);
         ref
             .read(
+              studyRecallSelectionControllerProvider(session.sessionId).notifier,
+            )
+            .syncCurrentItem(
+              itemKey:
+                  '${session.activeMode}:${session.currentItem.flashcardId}',
+              shouldStartRevealCountdown:
+                  session.activeMode == 'RECALL' &&
+                  session.allowedActions.contains(
+                    StudyRecallSelectionController.revealActionId,
+                  ),
+            );
+        ref
+            .read(
               studySpeechPlaybackControllerProvider(session.sessionId).notifier,
             )
             .syncCurrentItem(
@@ -337,6 +428,68 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
         unawaited(_maybeCompleteMatchMode(resolvedSessionId));
       },
     );
+  }
+
+  void _listenRecallSelectionUpdates(int? sessionId) {
+    final int? resolvedSessionId = sessionId;
+    if (resolvedSessionId == null) {
+      return;
+    }
+    ref.listen<StudyRecallSelectionState>(
+      studyRecallSelectionControllerProvider(resolvedSessionId),
+      (StudyRecallSelectionState? previous, StudyRecallSelectionState next) {
+        if (previous?.hasPendingReveal != true && next.hasPendingReveal) {
+          unawaited(_maybeRevealRecallMode(resolvedSessionId));
+        }
+        if (previous?.canSubmit == true) {
+          return;
+        }
+        if (!next.canSubmit) {
+          return;
+        }
+        unawaited(_maybeCompleteRecallMode(resolvedSessionId));
+      },
+    );
+  }
+
+  bool _shouldHandleRecallActionLocally(String actionId) {
+    final AsyncValue<StudySessionData> sessionState = ref.read(
+      studySessionControllerProvider(_request),
+    );
+    final StudySessionData? session = sessionState.asData?.value;
+    if (session == null) {
+      return false;
+    }
+    if (session.activeMode != 'RECALL') {
+      return false;
+    }
+    return actionId == StudyRecallSelectionController.revealActionId ||
+        actionId == StudyRecallSelectionController.rememberedActionId ||
+        actionId == StudyRecallSelectionController.retryActionId;
+  }
+
+  bool _shouldHandleRecallRevealLocally(String actionId) {
+    return _shouldHandleRecallActionLocally(actionId) &&
+        actionId == StudyRecallSelectionController.revealActionId;
+  }
+
+  bool _shouldHandleRecallFeedbackLocally(String actionId) {
+    return _shouldHandleRecallActionLocally(actionId) &&
+        actionId != StudyRecallSelectionController.revealActionId;
+  }
+
+  void _queueRecallAction(String actionId) {
+    final StudySessionData session = _readCurrentSession();
+    ref
+        .read(studyRecallSelectionControllerProvider(session.sessionId).notifier)
+        .selectAction(actionId: actionId);
+  }
+
+  void _queueRecallReveal() {
+    final StudySessionData session = _readCurrentSession();
+    ref
+        .read(studyRecallSelectionControllerProvider(session.sessionId).notifier)
+        .queueManualReveal();
   }
 
   StudySessionData _readCurrentSession() {

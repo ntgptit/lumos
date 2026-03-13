@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../../domain/entities/study/study_models.dart';
+import '../../../../../../../l10n/app_localizations.dart';
 import '../../../../mode/study_recall_layout_resolver.dart';
+import '../../../../mode/study_mode_action_button_style.dart';
 import '../../../../mode/study_mode_action_view_model.dart';
 import '../../../../mode/study_mode_view_model.dart';
+import '../../../../providers/study_recall_selection_provider.dart';
 import '../../../../providers/study_speech_playback_provider.dart';
 import 'widgets/study_session_recall_action_row.dart';
 import 'widgets/study_session_recall_answer_panel.dart';
@@ -27,6 +30,7 @@ class StudySessionRecallContent extends StatelessWidget {
   const StudySessionRecallContent({
     required this.session,
     required this.viewModel,
+    required this.recallSelectionState,
     required this.speechPlaybackState,
     required this.onActionPressed,
     required this.onPlaySpeech,
@@ -36,6 +40,7 @@ class StudySessionRecallContent extends StatelessWidget {
 
   final StudySessionData session;
   final StudyModeViewModel viewModel;
+  final StudyRecallSelectionState recallSelectionState;
   final StudySpeechPlaybackState speechPlaybackState;
   final Future<void> Function(String) onActionPressed;
   final VoidCallback onPlaySpeech;
@@ -43,10 +48,18 @@ class StudySessionRecallContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     final List<StudyModeActionViewModel> visibleActions =
         StudyRecallLayoutResolver.resolveVisibleActions(
-      viewModel: viewModel,
-    );
+          viewModel: viewModel,
+          showsNextActionOnly: recallSelectionState.showsNextActionOnly,
+          fallbackNextAction: StudyModeActionViewModel(
+            actionId: 'GO_NEXT',
+            label: l10n.commonNext,
+            style: StudyModeActionButtonStyle.primary,
+            icon: Icons.navigate_next_rounded,
+          ),
+        );
     return Padding(
       padding: _recallContentPadding,
       child: Column(
@@ -88,6 +101,7 @@ class StudySessionRecallContent extends StatelessWidget {
                 const SizedBox(height: _recallActionSpacing),
                 StudySessionRecallActionRow(
                   actions: visibleActions,
+                  selectionState: recallSelectionState,
                   onActionPressed: onActionPressed,
                 ),
               ],

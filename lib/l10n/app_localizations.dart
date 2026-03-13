@@ -1247,6 +1247,12 @@ abstract class AppLocalizations {
   /// **'Continue'**
   String get commonContinue;
 
+  /// No description provided for @commonNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get commonNext;
+
   /// No description provided for @commonSubmit.
   ///
   /// In en, this message translates to:

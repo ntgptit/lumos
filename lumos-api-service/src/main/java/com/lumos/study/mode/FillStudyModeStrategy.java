@@ -31,10 +31,10 @@ public class FillStudyModeStrategy extends AbstractStudyModeStrategy {
         }
         // Switch to feedback-specific actions after help or answer submission.
         if (session.getModeState() == StudyModeLifecycleState.WAITING_FEEDBACK) {
-            // Keep answer submission available after showing a help hint.
+            // Advance directly once the learner has chosen to reveal the answer as a help hint.
             if (currentItem.getLastOutcome() == null) {
-                // Return submit-only so the user can still answer after seeing a hint.
-                return withResetCurrentModeAction(List.of(ACTION_SUBMIT_ANSWER));
+                // Return next-only so the client can continue without re-showing a revealed answer input form.
+                return withResetCurrentModeAction(List.of(ACTION_GO_NEXT));
             }
             // Return next-only because the fill outcome has already been recorded.
             return withResetCurrentModeAction(List.of(ACTION_GO_NEXT));

@@ -4,6 +4,7 @@ import '../../../../../../domain/entities/study/study_models.dart';
 import '../../../mode/study_mode_view_model.dart';
 import '../../../providers/study_guess_selection_provider.dart';
 import '../../../providers/study_match_selection_provider.dart';
+import '../../../providers/study_recall_selection_provider.dart';
 import '../../../providers/study_speech_playback_provider.dart';
 import 'fill/study_session_fill_content.dart';
 import 'guess/study_session_guess_content.dart';
@@ -19,6 +20,7 @@ class StudySessionModeContent extends StatelessWidget {
     required this.answerController,
     required this.guessSelectionState,
     required this.matchSelectionState,
+    required this.recallSelectionState,
     required this.speechPlaybackState,
     required this.onSubmitTypedAnswer,
     required this.onChoicePressed,
@@ -35,6 +37,7 @@ class StudySessionModeContent extends StatelessWidget {
   final TextEditingController answerController;
   final StudyGuessSelectionState guessSelectionState;
   final StudyMatchSelectionState matchSelectionState;
+  final StudyRecallSelectionState recallSelectionState;
   final StudySpeechPlaybackState speechPlaybackState;
   final VoidCallback onSubmitTypedAnswer;
   final ValueChanged<String> onChoicePressed;
@@ -89,6 +92,7 @@ class StudySessionModeContent extends StatelessWidget {
         return StudySessionRecallContent(
           session: session,
           viewModel: viewModel,
+          recallSelectionState: recallSelectionState,
           speechPlaybackState: speechPlaybackState,
           onActionPressed: onActionPressed,
           onPlaySpeech: onPlaySpeech,

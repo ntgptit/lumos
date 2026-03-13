@@ -8,9 +8,12 @@ abstract final class StudyRecallLayoutResolver {
   static const String _revealActionId = 'REVEAL_ANSWER';
   static const String _rememberedActionId = 'MARK_REMEMBERED';
   static const String _retryActionId = 'RETRY_ITEM';
+  static const String _nextActionId = 'GO_NEXT';
 
   static List<StudyModeActionViewModel> resolveVisibleActions({
     required StudyModeViewModel viewModel,
+    required bool showsNextActionOnly,
+    StudyModeActionViewModel? fallbackNextAction,
   }) {
     if (!viewModel.showAnswer) {
       final StudyModeActionViewModel? revealAction = _findAction(
@@ -21,6 +24,19 @@ abstract final class StudyRecallLayoutResolver {
         return <StudyModeActionViewModel>[revealAction];
       }
       return viewModel.actions;
+    }
+    if (showsNextActionOnly) {
+      final StudyModeActionViewModel? nextAction = _findAction(
+        actions: viewModel.actions,
+        actionId: _nextActionId,
+      );
+      if (nextAction != null) {
+        return <StudyModeActionViewModel>[nextAction];
+      }
+      if (fallbackNextAction != null) {
+        return <StudyModeActionViewModel>[fallbackNextAction];
+      }
+      return const <StudyModeActionViewModel>[];
     }
     final List<StudyModeActionViewModel> feedbackActions =
         <StudyModeActionViewModel>[];
