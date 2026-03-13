@@ -18,6 +18,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.times;
 
 import java.util.List;
 import java.util.Optional;
@@ -307,6 +308,97 @@ class StudySessionServiceImplTest {
     }
 
     @Test
+    void submitAnswer_matchSubmissionMarksEntireSessionCompleted() {
+        final StudySession session = session(
+                user(),
+                deck(),
+                StudySessionType.FIRST_LEARNING,
+                StudyMode.MATCH,
+                StudyModeLifecycleState.IN_PROGRESS,
+                1,
+                0,
+                false);
+        session.setId(SESSION_ID);
+        session.setModePlan("REVIEW,MATCH,GUESS,RECALL,FILL");
+        final StudySessionItem firstItem = sessionItem(
+                1L,
+                session,
+                flashcard(101L, session.getDeck(), "faith", "신뢰"),
+                0,
+                false,
+                false,
+                null);
+        final StudySessionItem secondItem = sessionItem(
+                2L,
+                session,
+                flashcard(102L, session.getDeck(), "night", "야간"),
+                1,
+                false,
+                false,
+                null);
+        final StudySessionItem thirdItem = sessionItem(
+                3L,
+                session,
+                flashcard(103L, session.getDeck(), "researcher", "연구자"),
+                2,
+                false,
+                false,
+                null);
+        final StudySessionItem fourthItem = sessionItem(
+                4L,
+                session,
+                flashcard(104L, session.getDeck(), "deep sleep", "숙면"),
+                3,
+                false,
+                false,
+                null);
+        final StudySessionItem fifthItem = sessionItem(
+                5L,
+                session,
+                flashcard(105L, session.getDeck(), "missing person", "실종자"),
+                4,
+                false,
+                false,
+                null);
+        final StudySessionItem sixthItem = sessionItem(
+                6L,
+                session,
+                flashcard(106L, session.getDeck(), "deep trust", "신임"),
+                5,
+                false,
+                false,
+                null);
+        final List<StudySessionItem> items = List.of(firstItem, secondItem, thirdItem, fourthItem, fifthItem, sixthItem);
+        when(this.authenticatedUserProvider.getCurrentUserId()).thenReturn(USER_ID);
+        when(this.studySessionRepository.findByIdAndDeletedAtIsNull(SESSION_ID)).thenReturn(Optional.of(session));
+        when(this.studySessionItemRepository.findAllByStudySessionIdAndDeletedAtIsNullOrderBySequenceIndexAsc(SESSION_ID))
+                .thenReturn(items);
+        when(this.userSpeechPreferenceRepository.findByUserAccountIdAndDeletedAtIsNull(USER_ID)).thenReturn(Optional.empty());
+
+        final var response = this.studySessionService.submitAnswer(
+                SESSION_ID,
+                new SubmitAnswerRequest(
+                        "match",
+                        List.of(
+                                new com.lumos.study.dto.request.StudyMatchPairRequest("left-101", "right-101"),
+                                new com.lumos.study.dto.request.StudyMatchPairRequest("left-102", "right-102"),
+                                new com.lumos.study.dto.request.StudyMatchPairRequest("left-103", "right-103"),
+                                new com.lumos.study.dto.request.StudyMatchPairRequest("left-104", "right-104"),
+                                new com.lumos.study.dto.request.StudyMatchPairRequest("left-105", "right-105"),
+                                new com.lumos.study.dto.request.StudyMatchPairRequest("left-106", "right-106"))));
+
+        assertEquals("WAITING_FEEDBACK", response.modeState());
+        assertEquals(6, response.progress().completedItems());
+        assertTrue(firstItem.getCurrentModeCompleted());
+        assertTrue(secondItem.getCurrentModeCompleted());
+        assertTrue(thirdItem.getCurrentModeCompleted());
+        assertTrue(fourthItem.getCurrentModeCompleted());
+        assertTrue(fifthItem.getCurrentModeCompleted());
+        assertTrue(sixthItem.getCurrentModeCompleted());
+        verify(this.studyAttemptRepository, times(6)).save(any(StudyAttempt.class));
+    }
+
+    @Test
     void revealAnswer_keepsOutcomeEmptyAndMovesToWaitingFeedback() {
         final StudySession session = session(
                 user(),
@@ -382,6 +474,66 @@ class StudySessionServiceImplTest {
         assertEquals("IN_PROGRESS", response.modeState());
         assertEquals(1, session.getCurrentItemIndex());
         assertEquals(102L, response.currentItem().flashcardId());
+    }
+
+    @Test
+    void goNext_matchModeMovesToNextModeWhenVisibleGridAlreadyCompleted() {
+        final StudySession session = session(
+                user(),
+                deck(),
+                StudySessionType.FIRST_LEARNING,
+                StudyMode.MATCH,
+                StudyModeLifecycleState.WAITING_FEEDBACK,
+                1,
+                0,
+                false);
+        session.setId(SESSION_ID);
+        session.setModePlan("REVIEW,MATCH,GUESS,RECALL,FILL");
+        final StudySessionItem firstItem = sessionItem(
+                1L,
+                session,
+                flashcard(101L, session.getDeck(), "faith", "신뢰"),
+                0,
+                true,
+                false,
+                ReviewOutcome.PASSED);
+        final StudySessionItem secondItem = sessionItem(
+                2L,
+                session,
+                flashcard(102L, session.getDeck(), "night", "야간"),
+                1,
+                true,
+                false,
+                ReviewOutcome.PASSED);
+        final StudySessionItem thirdItem = sessionItem(
+                3L,
+                session,
+                flashcard(103L, session.getDeck(), "researcher", "연구자"),
+                2,
+                true,
+                false,
+                ReviewOutcome.PASSED);
+        final StudySessionItem fourthItem = sessionItem(
+                4L,
+                session,
+                flashcard(104L, session.getDeck(), "deep sleep", "숙면"),
+                3,
+                true,
+                false,
+                ReviewOutcome.PASSED);
+        final List<StudySessionItem> items = List.of(firstItem, secondItem, thirdItem, fourthItem);
+        when(this.authenticatedUserProvider.getCurrentUserId()).thenReturn(USER_ID);
+        when(this.studySessionRepository.findByIdAndDeletedAtIsNull(SESSION_ID)).thenReturn(Optional.of(session));
+        when(this.studySessionItemRepository.findAllByStudySessionIdAndDeletedAtIsNullOrderBySequenceIndexAsc(SESSION_ID))
+                .thenReturn(items);
+        when(this.userSpeechPreferenceRepository.findByUserAccountIdAndDeletedAtIsNull(USER_ID)).thenReturn(Optional.empty());
+
+        final var response = this.studySessionService.goNext(SESSION_ID);
+
+        assertEquals("GUESS", response.activeMode());
+        assertEquals("INITIALIZED", response.modeState());
+        assertEquals(2, session.getCurrentModeIndex());
+        assertEquals(StudyMode.GUESS, session.getActiveMode());
     }
 
     @Test

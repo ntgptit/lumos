@@ -12,18 +12,21 @@ class StudyMatchSelectionState {
     required this.selectedLeftId,
     required this.selectedRightId,
     required this.totalPairs,
+    required this.correctPairByLeftId,
   });
 
   const StudyMatchSelectionState.initial()
     : matchedPairs = const <StudyMatchSubmission>[],
       selectedLeftId = null,
       selectedRightId = null,
-      totalPairs = 0;
+      totalPairs = 0,
+      correctPairByLeftId = const <String, String>{};
 
   final List<StudyMatchSubmission> matchedPairs;
   final String? selectedLeftId;
   final String? selectedRightId;
   final int totalPairs;
+  final Map<String, String> correctPairByLeftId;
 
   bool get canSubmit {
     return totalPairs > 0 && matchedPairs.length == totalPairs;
@@ -34,6 +37,7 @@ class StudyMatchSelectionState {
     Object? selectedLeftId = _unsetMatchValue,
     Object? selectedRightId = _unsetMatchValue,
     int? totalPairs,
+    Map<String, String>? correctPairByLeftId,
   }) {
     return StudyMatchSelectionState(
       matchedPairs: matchedPairs ?? this.matchedPairs,
@@ -44,6 +48,7 @@ class StudyMatchSelectionState {
           ? this.selectedRightId
           : selectedRightId as String?,
       totalPairs: totalPairs ?? this.totalPairs,
+      correctPairByLeftId: correctPairByLeftId ?? this.correctPairByLeftId,
     );
   }
 }
@@ -58,6 +63,9 @@ class StudyMatchSelectionController extends _$StudyMatchSelectionController {
   }
 
   void syncPairs(List<StudyMatchPair> pairs) {
+    final Map<String, String> correctPairByLeftId = <String, String>{
+      for (final StudyMatchPair pair in pairs) pair.leftId: pair.rightId,
+    };
     final Set<String> leftIds = pairs
         .map((StudyMatchPair pair) => pair.leftId)
         .toSet();
@@ -67,7 +75,9 @@ class StudyMatchSelectionController extends _$StudyMatchSelectionController {
     final List<StudyMatchSubmission> nextMatchedPairs = state.matchedPairs
         .where(
           (StudyMatchSubmission pair) =>
-              leftIds.contains(pair.leftId) && rightIds.contains(pair.rightId),
+              leftIds.contains(pair.leftId) &&
+              rightIds.contains(pair.rightId) &&
+              correctPairByLeftId[pair.leftId] == pair.rightId,
         )
         .toList(growable: false);
     state = state.copyWith(
@@ -79,6 +89,7 @@ class StudyMatchSelectionController extends _$StudyMatchSelectionController {
           ? state.selectedRightId
           : null,
       totalPairs: pairs.length,
+      correctPairByLeftId: correctPairByLeftId,
     );
   }
 
@@ -120,9 +131,13 @@ class StudyMatchSelectionController extends _$StudyMatchSelectionController {
     if ((selectedLeftId ?? '').isEmpty || (selectedRightId ?? '').isEmpty) {
       return;
     }
+    if (!_isCorrectPair(selectedLeftId!, selectedRightId!)) {
+      state = state.copyWith(selectedLeftId: null, selectedRightId: null);
+      return;
+    }
     final List<StudyMatchSubmission> nextMatchedPairs = <StudyMatchSubmission>[
       ...state.matchedPairs,
-      StudyMatchSubmission(leftId: selectedLeftId!, rightId: selectedRightId!),
+      StudyMatchSubmission(leftId: selectedLeftId, rightId: selectedRightId),
     ];
     state = state.copyWith(
       matchedPairs: nextMatchedPairs,
@@ -141,5 +156,9 @@ class StudyMatchSelectionController extends _$StudyMatchSelectionController {
     return state.matchedPairs.any(
       (StudyMatchSubmission pair) => pair.rightId == rightId,
     );
+  }
+
+  bool _isCorrectPair(String leftId, String rightId) {
+    return state.correctPairByLeftId[leftId] == rightId;
   }
 }

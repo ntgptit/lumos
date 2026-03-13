@@ -15,7 +15,6 @@ class StudySessionResolvedBodyContent extends ConsumerWidget {
     required this.modeStrategyFactory,
     required this.answerController,
     required this.onSubmitTypedAnswer,
-    required this.onSubmitMatchedPairs,
     required this.onChoicePressed,
     required this.onSelectMatchLeft,
     required this.onSelectMatchRight,
@@ -29,7 +28,6 @@ class StudySessionResolvedBodyContent extends ConsumerWidget {
   final StudyModeViewStrategyFactory modeStrategyFactory;
   final TextEditingController answerController;
   final VoidCallback onSubmitTypedAnswer;
-  final VoidCallback onSubmitMatchedPairs;
   final ValueChanged<String> onChoicePressed;
   final ValueChanged<String> onSelectMatchLeft;
   final ValueChanged<String> onSelectMatchRight;
@@ -53,7 +51,6 @@ class StudySessionResolvedBodyContent extends ConsumerWidget {
       matchSelectionState: matchSelectionState,
       speechPlaybackState: speechPlaybackState,
       onSubmitTypedAnswer: onSubmitTypedAnswer,
-      onSubmitMatchedPairs: onSubmitMatchedPairs,
       onChoicePressed: onChoicePressed,
       onSelectMatchLeft: onSelectMatchLeft,
       onSelectMatchRight: onSelectMatchRight,

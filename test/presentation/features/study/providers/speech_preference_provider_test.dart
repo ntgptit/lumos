@@ -11,9 +11,7 @@ void main() {
     test('build loads speech preference', () async {
       final FakeStudyRepository repository = FakeStudyRepository();
       final ProviderContainer container = ProviderContainer(
-        overrides: [
-          studyRepositoryProvider.overrideWithValue(repository),
-        ],
+        overrides: [studyRepositoryProvider.overrideWithValue(repository)],
       );
       addTearDown(container.dispose);
 
@@ -27,9 +25,7 @@ void main() {
     test('savePreference persists updated value', () async {
       final FakeStudyRepository repository = FakeStudyRepository();
       final ProviderContainer container = ProviderContainer(
-        overrides: [
-          studyRepositoryProvider.overrideWithValue(repository),
-        ],
+        overrides: [studyRepositoryProvider.overrideWithValue(repository)],
       );
       addTearDown(container.dispose);
       await container.read(speechPreferenceControllerProvider.future);
@@ -46,9 +42,9 @@ void main() {
             ),
           );
 
-      final preference = container.read(
-        speechPreferenceControllerProvider,
-      ).requireValue;
+      final preference = container
+          .read(speechPreferenceControllerProvider)
+          .requireValue;
       expect(repository.lastPreference!.voice, 'ko-KR-female');
       expect(preference.autoPlay, isTrue);
     });

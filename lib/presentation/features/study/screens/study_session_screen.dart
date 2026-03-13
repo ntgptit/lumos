@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -35,6 +37,7 @@ class StudySessionScreen extends ConsumerStatefulWidget {
 class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
   final TextEditingController _answerController = TextEditingController();
   StudySessionData? _lastResolvedSession;
+  bool _isCompletingMatchMode = false;
 
   @override
   void dispose() {
@@ -86,7 +89,6 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
           modeStrategyFactory: modeStrategyFactory,
           answerController: _answerController,
           onSubmitTypedAnswer: _submitTypedAnswer,
-          onSubmitMatchedPairs: _submitMatchedPairs,
           onChoicePressed: _submitChoice,
           onSelectMatchLeft: _selectMatchLeft,
           onSelectMatchRight: _selectMatchRight,
@@ -151,6 +153,7 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
     ref
         .read(studyMatchSelectionControllerProvider(session.sessionId).notifier)
         .selectLeft(leftId);
+    unawaited(_maybeCompleteMatchMode(session.sessionId));
   }
 
   void _selectMatchRight(String rightId) {
@@ -158,6 +161,32 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
     ref
         .read(studyMatchSelectionControllerProvider(session.sessionId).notifier)
         .selectRight(rightId);
+    unawaited(_maybeCompleteMatchMode(session.sessionId));
+  }
+
+  Future<void> _maybeCompleteMatchMode(int sessionId) async {
+    if (_isCompletingMatchMode) {
+      return;
+    }
+    final StudyMatchSelectionState selectionState = ref.read(
+      studyMatchSelectionControllerProvider(sessionId),
+    );
+    if (!selectionState.canSubmit) {
+      return;
+    }
+    _isCompletingMatchMode = true;
+    try {
+      await _submitMatchedPairs();
+      final StudySessionData updatedSession = _readCurrentSession();
+      if (!updatedSession.allowedActions.contains('GO_NEXT')) {
+        return;
+      }
+      await ref
+          .read(studySessionControllerProvider(_request).notifier)
+          .goNext();
+    } finally {
+      _isCompletingMatchMode = false;
+    }
   }
 
   Future<void> _playSpeech() async {

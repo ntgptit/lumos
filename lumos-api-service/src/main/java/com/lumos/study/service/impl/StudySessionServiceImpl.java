@@ -145,6 +145,7 @@ public class StudySessionServiceImpl implements StudySessionService {
         this.studySessionFlowSupport.applyOutcome(
                 session,
                 currentItem,
+                items,
                 outcome,
                 this.studySessionFlowSupport.resolveSubmittedAnswerLog(session, request));
 
@@ -187,7 +188,12 @@ public class StudySessionServiceImpl implements StudySessionService {
         final List<StudySessionItem> items = this.studySessionFlowSupport.resolveSessionItems(session);
         final StudySessionItem currentItem = this.studySessionFlowSupport.resolveCurrentItem(session, items);
         this.studySessionFlowSupport.ensureActionAllowed(session, currentItem, StudyModeStrategy.ACTION_MARK_REMEMBERED);
-        this.studySessionFlowSupport.applyOutcome(session, currentItem, ReviewOutcome.PASSED, null);
+        this.studySessionFlowSupport.applyOutcome(
+                session,
+                currentItem,
+                items,
+                ReviewOutcome.PASSED,
+                null);
 
         // Return the updated session snapshot after marking the current item as remembered.
         return this.studySessionResponseFactory.buildResponse(session);
@@ -206,7 +212,12 @@ public class StudySessionServiceImpl implements StudySessionService {
         final List<StudySessionItem> items = this.studySessionFlowSupport.resolveSessionItems(session);
         final StudySessionItem currentItem = this.studySessionFlowSupport.resolveCurrentItem(session, items);
         this.studySessionFlowSupport.ensureActionAllowed(session, currentItem, StudyModeStrategy.ACTION_RETRY_ITEM);
-        this.studySessionFlowSupport.applyOutcome(session, currentItem, ReviewOutcome.FAILED, null);
+        this.studySessionFlowSupport.applyOutcome(
+                session,
+                currentItem,
+                items,
+                ReviewOutcome.FAILED,
+                null);
 
         // Return the updated session snapshot after sending the item into the retry path.
         return this.studySessionResponseFactory.buildResponse(session);

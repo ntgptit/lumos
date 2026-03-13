@@ -33,6 +33,8 @@ public interface StudyModeStrategy {
 
     List<StudyMatchPairResponse> resolveMatchPairs(StudySessionItem currentItem, List<StudySessionItem> items);
 
+    List<StudySessionItem> resolvePassedItems(StudySessionItem currentItem, List<StudySessionItem> items);
+
     ReviewOutcome evaluateMatchPairs(
             StudySessionItem currentItem,
             List<StudySessionItem> items,

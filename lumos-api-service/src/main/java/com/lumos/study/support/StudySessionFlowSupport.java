@@ -67,14 +67,22 @@ public class StudySessionFlowSupport {
     public void applyOutcome(
             StudySession session,
             StudySessionItem currentItem,
+            List<StudySessionItem> items,
             ReviewOutcome outcome,
             String submittedAnswer) {
-        currentItem.setLastOutcome(outcome);
         final boolean isPassed = outcome == ReviewOutcome.PASSED;
-        currentItem.setCurrentModeCompleted(isPassed);
-        currentItem.setRetryPending(!isPassed);
+        final List<StudySessionItem> affectedItems = resolveOutcomeItems(
+                session,
+                currentItem,
+                items,
+                outcome);
+        for (StudySessionItem item : affectedItems) {
+            item.setLastOutcome(outcome);
+            item.setCurrentModeCompleted(isPassed);
+            item.setRetryPending(!isPassed);
+        }
         session.setModeState(StudyModeLifecycleState.WAITING_FEEDBACK);
-        saveAttempt(session, currentItem, outcome, submittedAnswer);
+        saveAttempts(session, affectedItems, outcome, submittedAnswer);
     }
 
     public Integer findNextSequenceIndex(List<StudySessionItem> items, int currentSequenceIndex) {
@@ -165,17 +173,30 @@ public class StudySessionFlowSupport {
         return this.studyModeStrategyFactory.getStrategy(studyMode);
     }
 
-    private void saveAttempt(
+    private List<StudySessionItem> resolveOutcomeItems(
             StudySession session,
             StudySessionItem currentItem,
+            List<StudySessionItem> items,
+            ReviewOutcome outcome) {
+        if (outcome != ReviewOutcome.PASSED) {
+            return List.of(currentItem);
+        }
+        return resolveStudyModeStrategy(session.getActiveMode()).resolvePassedItems(currentItem, items);
+    }
+
+    private void saveAttempts(
+            StudySession session,
+            List<StudySessionItem> items,
             ReviewOutcome outcome,
             String submittedAnswer) {
-        final StudyAttempt attempt = new StudyAttempt();
-        attempt.setStudySession(session);
-        attempt.setFlashcard(currentItem.getFlashcard());
-        attempt.setStudyMode(session.getActiveMode());
-        attempt.setReviewOutcome(outcome);
-        attempt.setSubmittedAnswer(submittedAnswer);
-        this.studyAttemptRepository.save(attempt);
+        for (StudySessionItem item : items) {
+            final StudyAttempt attempt = new StudyAttempt();
+            attempt.setStudySession(session);
+            attempt.setFlashcard(item.getFlashcard());
+            attempt.setStudyMode(session.getActiveMode());
+            attempt.setReviewOutcome(outcome);
+            attempt.setSubmittedAnswer(submittedAnswer);
+            this.studyAttemptRepository.save(attempt);
+        }
     }
 }

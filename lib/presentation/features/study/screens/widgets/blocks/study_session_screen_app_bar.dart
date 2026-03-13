@@ -35,7 +35,10 @@ class StudySessionScreenAppBar extends StatelessWidget
     if (resolvedSession == null) {
       return LumosAppBar(title: deckName);
     }
-    if (resolvedSession.activeMode != StudySessionSubModeConst.reviewMode) {
+    final bool showsModeChrome =
+        resolvedSession.activeMode == StudySessionSubModeConst.reviewMode ||
+        resolvedSession.activeMode == StudySessionSubModeConst.matchMode;
+    if (!showsModeChrome) {
       return LumosAppBar(
         title: deckName,
         actions: <Widget>[
@@ -52,6 +55,7 @@ class StudySessionScreenAppBar extends StatelessWidget
     }
     return LumosAppBar(
       title: viewModel?.modeLabel ?? deckName,
+      wrapActions: false,
       actions: <Widget>[
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: AppSpacing.xs),

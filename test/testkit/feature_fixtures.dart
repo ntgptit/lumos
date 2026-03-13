@@ -318,10 +318,23 @@ class FakeStudyRepository implements StudyRepository {
   Future<StudySessionData> goNext({required int sessionId}) async {
     await _delayAction();
     lastSessionId = sessionId;
+    final List<String> modePlan = _session.modePlan;
+    final int currentModeIndex = modePlan.indexOf(_session.activeMode);
+    final bool hasNextMode =
+        currentModeIndex >= 0 && currentModeIndex < modePlan.length - 1;
+    if (!hasNextMode) {
+      return _session = sampleStudySession(
+        sessionId: sessionId,
+        activeMode: _session.activeMode,
+        modeState: 'COMPLETED',
+        allowedActions: const <String>[],
+      );
+    }
+    final String nextMode = modePlan[currentModeIndex + 1];
     return _session = sampleStudySession(
       sessionId: sessionId,
-      activeMode: 'MATCH',
-      modeState: 'IN_PROGRESS',
+      activeMode: nextMode,
+      modeState: 'INITIALIZED',
       allowedActions: const <String>['SUBMIT_ANSWER'],
     );
   }

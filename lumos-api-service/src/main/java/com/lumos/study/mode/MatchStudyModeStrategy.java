@@ -1,9 +1,7 @@
 package com.lumos.study.mode;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -23,7 +21,6 @@ public class MatchStudyModeStrategy extends AbstractStudyModeStrategy {
 
     private static final String INSTRUCTION_MATCH = "Match the term with the correct meaning.";
     private static final String LEFT_ID_PREFIX = "left-";
-    private static final int MATCH_PAIR_LIMIT = 4;
     private static final String RIGHT_ID_PREFIX = "right-";
 
     @Override
@@ -72,6 +69,12 @@ public class MatchStudyModeStrategy extends AbstractStudyModeStrategy {
     }
 
     @Override
+    public List<StudySessionItem> resolvePassedItems(StudySessionItem currentItem, List<StudySessionItem> items) {
+        // Return every item shown in the current grid so a correct MATCH submission completes the visible challenge.
+        return List.copyOf(resolveMatchItems(currentItem, items));
+    }
+
+    @Override
     public ReviewOutcome evaluateMatchPairs(
             StudySessionItem currentItem,
             List<StudySessionItem> items,
@@ -100,21 +103,7 @@ public class MatchStudyModeStrategy extends AbstractStudyModeStrategy {
     }
 
     private List<StudySessionItem> resolveMatchItems(StudySessionItem currentItem, List<StudySessionItem> items) {
-        final List<StudySessionItem> matchItems = new ArrayList<>();
-        matchItems.add(currentItem);
-        // Fill the pairing grid with the current item first, then enough sibling items to reach the grid limit.
-        for (StudySessionItem item : items) {
-            // Keep the current item as the first pair and fill remaining slots with other items.
-            if (Objects.compare(currentItem.getId(), item.getId(), Comparator.naturalOrder()) == 0) {
-                continue;
-            }
-            matchItems.add(item);
-            // Stop when the pairing grid already contains the target number of rows.
-            if (matchItems.size() >= MATCH_PAIR_LIMIT) {
-                break;
-            }
-        }
-        // Return the item slice that defines the rows rendered in the current pairing challenge.
-        return matchItems;
+        // Return the full session item list so MATCH always shows balanced left-right columns for every term.
+        return List.copyOf(items);
     }
 }

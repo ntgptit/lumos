@@ -19,7 +19,6 @@ class StudySessionModeContent extends StatelessWidget {
     required this.matchSelectionState,
     required this.speechPlaybackState,
     required this.onSubmitTypedAnswer,
-    required this.onSubmitMatchedPairs,
     required this.onChoicePressed,
     required this.onSelectMatchLeft,
     required this.onSelectMatchRight,
@@ -35,7 +34,6 @@ class StudySessionModeContent extends StatelessWidget {
   final StudyMatchSelectionState matchSelectionState;
   final StudySpeechPlaybackState speechPlaybackState;
   final VoidCallback onSubmitTypedAnswer;
-  final VoidCallback onSubmitMatchedPairs;
   final ValueChanged<String> onChoicePressed;
   final ValueChanged<String> onSelectMatchLeft;
   final ValueChanged<String> onSelectMatchRight;
@@ -80,13 +78,8 @@ class StudySessionModeContent extends StatelessWidget {
           session: session,
           viewModel: viewModel,
           matchSelectionState: matchSelectionState,
-          speechPlaybackState: speechPlaybackState,
-          onSubmitMatchedPairs: onSubmitMatchedPairs,
           onSelectMatchLeft: onSelectMatchLeft,
           onSelectMatchRight: onSelectMatchRight,
-          onActionPressed: onActionPressed,
-          onPlaySpeech: onPlaySpeech,
-          onReplaySpeech: onReplaySpeech,
         );
       case StudySessionSubModeConst.recallMode:
         return StudySessionRecallContent(

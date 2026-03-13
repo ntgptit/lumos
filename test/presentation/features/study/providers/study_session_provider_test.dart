@@ -148,6 +148,54 @@ void main() {
       },
     );
 
+    test('match goNext can advance to the next mode', () async {
+      final FakeStudyRepository repository = FakeStudyRepository(
+        session: sampleStudySession(
+          activeMode: 'MATCH',
+          modeState: 'IN_PROGRESS',
+          allowedActions: const <String>['SUBMIT_ANSWER'],
+        ),
+      );
+      final ProviderContainer container = ProviderContainer(
+        overrides: [studyRepositoryProvider.overrideWithValue(repository)],
+      );
+      addTearDown(container.dispose);
+      await container.read(
+        studySessionControllerProvider(
+          const StudySessionLaunchRequest(deckId: 10),
+        ).future,
+      );
+
+      await container
+          .read(
+            studySessionControllerProvider(
+              const StudySessionLaunchRequest(deckId: 10),
+            ).notifier,
+          )
+          .submitMatchedPairs(
+            const <StudyMatchSubmission>[
+              StudyMatchSubmission(leftId: 'left-101', rightId: 'right-101'),
+            ],
+          );
+      await container
+          .read(
+            studySessionControllerProvider(
+              const StudySessionLaunchRequest(deckId: 10),
+            ).notifier,
+          )
+          .goNext();
+
+      final StudySessionData session = container
+          .read(
+            studySessionControllerProvider(
+              const StudySessionLaunchRequest(deckId: 10),
+            ),
+          )
+          .requireValue;
+      expect(session.activeMode, 'GUESS');
+      expect(session.modeState, 'INITIALIZED');
+    });
+
     test(
       'resetCurrentMode delegates to repository and resets canonical state',
       () async {

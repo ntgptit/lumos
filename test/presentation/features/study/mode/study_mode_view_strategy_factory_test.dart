@@ -42,7 +42,7 @@ void main() {
     );
 
     test(
-      'match strategy keeps choice-based interaction and exposes next only after feedback',
+      'match strategy keeps pair interaction and does not expose footer actions',
       () {
         final session = _buildSession(
           activeMode: 'MATCH',
@@ -63,10 +63,7 @@ void main() {
 
         expect(viewModel.matchPairs, hasLength(1));
         expect(viewModel.showAnswerInput, isFalse);
-        expect(
-          viewModel.actions.map((action) => action.actionId).toList(),
-          const <String>['GO_NEXT'],
-        );
+        expect(viewModel.actions, isEmpty);
       },
     );
 

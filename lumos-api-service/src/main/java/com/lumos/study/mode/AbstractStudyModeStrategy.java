@@ -96,6 +96,12 @@ public abstract class AbstractStudyModeStrategy implements StudyModeStrategy {
     }
 
     @Override
+    public List<StudySessionItem> resolvePassedItems(StudySessionItem currentItem, List<StudySessionItem> items) {
+        // Return only the current item so non-match modes complete one item per submission.
+        return List.of(currentItem);
+    }
+
+    @Override
     public ReviewOutcome evaluateMatchPairs(
             StudySessionItem currentItem,
             List<StudySessionItem> items,
