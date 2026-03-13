@@ -20,5 +20,9 @@ public interface StudySessionService {
 
     StudySessionResponse goNext(Long sessionId);
 
+    StudySessionResponse resetCurrentMode(Long sessionId);
+
+    void resetDeckProgress(Long deckId);
+
     StudySessionResponse completeMode(Long sessionId);
 }

@@ -154,6 +154,36 @@ public class StudySessionController {
     }
 
     /**
+     * Reset all progress in the current active mode.
+     *
+     * @param sessionId study session identifier
+     * @return updated study session response
+     */
+    @Operation(summary = "Reset current mode")
+    @PostMapping("/api/v1/study/sessions/{sessionId}/reset-current-mode")
+    public ResponseEntity<StudySessionResponse> resetCurrentMode(@PathVariable Long sessionId) {
+        final var response = this.studySessionService
+                .resetCurrentMode(sessionId);
+        // Return the reset mode snapshot so the client can restart the active mode from backend truth.
+        return ResponseEntity
+                .ok(response);
+    }
+
+    /**
+     * Reset all learning progress for the specified deck and current user.
+     *
+     * @param deckId deck identifier
+     * @return empty success response
+     */
+    @Operation(summary = "Reset deck learning progress")
+    @PostMapping("/api/v1/study/decks/{deckId}/reset-progress")
+    public ResponseEntity<Void> resetDeckProgress(@PathVariable Long deckId) {
+        this.studySessionService.resetDeckProgress(deckId);
+        // Return no content because the reset command completes without a response body.
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
      * Complete the current mode when all items satisfy the completion rule.
      *
      * @param sessionId study session identifier

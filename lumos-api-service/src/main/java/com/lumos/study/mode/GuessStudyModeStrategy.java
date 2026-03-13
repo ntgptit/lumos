@@ -31,10 +31,10 @@ public class GuessStudyModeStrategy extends AbstractStudyModeStrategy {
         // Restrict feedback state to acknowledgement after the answer is checked.
         if (session.getModeState() == StudyModeLifecycleState.WAITING_FEEDBACK) {
             // Return next-only because the choice outcome is already locked in.
-            return List.of(ACTION_GO_NEXT);
+            return withResetCurrentModeAction(List.of(ACTION_GO_NEXT));
         }
         // Return submit-only because guess mode is resolved by one choice submission.
-        return List.of(ACTION_SUBMIT_ANSWER);
+        return withResetCurrentModeAction(List.of(ACTION_SUBMIT_ANSWER));
     }
 
     @Override

@@ -113,6 +113,25 @@ class StudySessionControllerTest {
     }
 
     @Test
+    void resetCurrentMode_returnsOkResponse() {
+        final var response = studySessionResponse(SESSION_ID, DECK_ID, "Korean Basics");
+        when(this.studySessionService.resetCurrentMode(SESSION_ID)).thenReturn(response);
+
+        final var entity = this.studySessionController.resetCurrentMode(SESSION_ID);
+
+        assertEquals(200, entity.getStatusCode().value());
+        assertEquals(response, entity.getBody());
+    }
+
+    @Test
+    void resetDeckProgress_returnsNoContentResponse() {
+        final var entity = this.studySessionController.resetDeckProgress(DECK_ID);
+
+        verify(this.studySessionService).resetDeckProgress(DECK_ID);
+        assertEquals(204, entity.getStatusCode().value());
+    }
+
+    @Test
     void completeMode_returnsOkResponse() {
         final var response = studySessionResponse(SESSION_ID, DECK_ID, "Korean Basics");
         when(this.studySessionService.completeMode(SESSION_ID)).thenReturn(response);

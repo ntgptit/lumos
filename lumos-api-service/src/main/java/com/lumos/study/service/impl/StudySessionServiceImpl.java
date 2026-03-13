@@ -29,6 +29,8 @@ import com.lumos.study.enums.StudySessionType;
 import com.lumos.study.exception.StudyCommandNotAllowedException;
 import com.lumos.study.exception.StudySessionUnavailableException;
 import com.lumos.study.mode.StudyModeStrategy;
+import com.lumos.study.repository.LearningCardStateRepository;
+import com.lumos.study.repository.StudyAttemptRepository;
 import com.lumos.study.repository.StudySessionRepository;
 import com.lumos.study.service.StudySessionService;
 import com.lumos.study.support.StudyLearningStateSyncSupport;
@@ -49,6 +51,8 @@ public class StudySessionServiceImpl implements StudySessionService {
     private final DeckRepository deckRepository;
     private final FlashcardRepository flashcardRepository;
     private final StudySessionRepository studySessionRepository;
+    private final LearningCardStateRepository learningCardStateRepository;
+    private final StudyAttemptRepository studyAttemptRepository;
     private final StudySessionSetupSupport studySessionSetupSupport;
     private final StudySessionFlowSupport studySessionFlowSupport;
     private final StudyLearningStateSyncSupport studyLearningStateSyncSupport;
@@ -87,7 +91,8 @@ public class StudySessionServiceImpl implements StudySessionService {
                 .filter(flashcard -> this.studySessionSetupSupport.isDue(learningStateByFlashcardId.get(flashcard.getId())))
                 .sorted(Comparator.comparing(flashcard -> learningStateByFlashcardId.get(flashcard.getId()).getBoxIndex()))
                 .toList();
-        final StudySessionType sessionType = this.studySessionSetupSupport.resolveSessionType(
+        final StudySessionType sessionType = resolveSessionType(
+                request,
                 newFlashcards,
                 dueFlashcards);
         final List<Flashcard> selectedFlashcards = this.studySessionSetupSupport.resolveSelectedFlashcards(
@@ -262,6 +267,53 @@ public class StudySessionServiceImpl implements StudySessionService {
     }
 
     /**
+     * Reset all progress inside the active mode and return to the first item of that mode.
+     *
+     * @param sessionId study session identifier
+     * @return updated study session response
+     */
+    @Override
+    @Transactional
+    public StudySessionResponse resetCurrentMode(Long sessionId) {
+        final StudySession session = this.studySessionFlowSupport.resolveSession(sessionId);
+        final List<StudySessionItem> items = this.studySessionFlowSupport.resolveSessionItems(session);
+        final StudySessionItem currentItem = this.studySessionFlowSupport.resolveCurrentItem(session, items);
+        this.studySessionFlowSupport.ensureActionAllowed(
+                session,
+                currentItem,
+                StudyModeStrategy.ACTION_RESET_CURRENT_MODE);
+        this.studySessionFlowSupport.resetCurrentMode(session, items);
+        this.studyAttemptRepository.deleteAllByStudySessionIdAndStudyMode(session.getId(), session.getActiveMode());
+
+        // Return the reset mode snapshot after clearing current-mode progress and attempts.
+        return this.studySessionResponseFactory.buildResponse(session);
+    }
+
+    /**
+     * Reset all deck-scoped learning progress for the current user.
+     *
+     * @param deckId deck identifier
+     */
+    @Override
+    @Transactional
+    public void resetDeckProgress(Long deckId) {
+        final Long userId = this.authenticatedUserProvider.getCurrentUserId();
+        this.deckRepository.findByIdAndDeletedAtIsNull(deckId)
+                .orElseThrow(() -> new DeckNotFoundException(deckId));
+        final List<Flashcard> flashcards = this.flashcardRepository.findAllByDeckIdAndDeletedAtIsNullOrderByIdAsc(deckId);
+        // Collect deck flashcard ids so learning-state deletion stays scoped to the selected deck only.
+        final List<Long> flashcardIds = flashcards.stream()
+                .map(Flashcard::getId)
+                .toList();
+        // Stop early when the deck has no active flashcards to reset.
+        if (flashcardIds.isEmpty()) {
+            // Return because there is no persisted learning state to delete for an empty deck.
+            return;
+        }
+        this.learningCardStateRepository.deleteAllByUserAccountIdAndFlashcardIdIn(userId, flashcardIds);
+    }
+
+    /**
      * Complete the current mode when all items satisfy the mode completion rule.
      *
      * @param sessionId study session identifier
@@ -296,5 +348,18 @@ public class StudySessionServiceImpl implements StudySessionService {
 
         // Return the reset session snapshot for the next mode in the canonical mode plan.
         return this.studySessionResponseFactory.buildResponse(session);
+    }
+
+    private StudySessionType resolveSessionType(
+            StartStudySessionRequest request,
+            List<Flashcard> newFlashcards,
+            List<Flashcard> dueFlashcards) {
+        // Respect the explicit session type requested by the client when one is provided.
+        if (request.preferredSessionType() != null) {
+            // Return the client-requested session type so manual learn-entry choices override auto selection.
+            return request.preferredSessionType();
+        }
+        // Return the backend-selected session type when the client leaves session-type selection automatic.
+        return this.studySessionSetupSupport.resolveSessionType(newFlashcards, dueFlashcards);
     }
 }

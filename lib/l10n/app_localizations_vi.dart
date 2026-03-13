@@ -431,6 +431,48 @@ class AppLocalizationsVi extends AppLocalizations {
   String get flashcardStudyCompletedToast => 'Đã hoàn thành phiên học.';
 
   @override
+  String get flashcardLearnSheetTitle => 'Chọn cách học';
+
+  @override
+  String get flashcardLearnSheetSubtitle => 'Chọn phiên học bạn muốn bắt đầu cho bộ thẻ này.';
+
+  @override
+  String get flashcardLearnContinueOptionTitle => 'Học tiếp từ chưa học/chưa pass';
+
+  @override
+  String get flashcardLearnContinueOptionSubtitle => 'Học các từ vựng còn mới hoặc chưa vượt qua.';
+
+  @override
+  String get flashcardLearnReviewOptionTitle => 'Review từ đến hạn SRS';
+
+  @override
+  String get flashcardLearnReviewOptionSubtitle => 'Ôn tập các từ vựng đã đến hạn theo lịch SRS.';
+
+  @override
+  String get flashcardLearnResetOptionTitle => 'Reset chế độ học';
+
+  @override
+  String get flashcardLearnResetOptionSubtitle => 'Xóa tiến trình học của bộ thẻ này để bắt đầu lại.';
+
+  @override
+  String get flashcardLearnContinueUnavailableToast => 'Hiện không có từ mới hoặc từ chưa pass để học.';
+
+  @override
+  String get flashcardLearnReviewUnavailableToast => 'Hiện không có từ vựng nào đến hạn review.';
+
+  @override
+  String get flashcardLearnResetConfirmTitle => 'Reset tiến trình học?';
+
+  @override
+  String get flashcardLearnResetConfirmMessage => 'Thao tác này sẽ reset toàn bộ tiến trình học của bộ thẻ hiện tại.';
+
+  @override
+  String get flashcardLearnResetConfirmAction => 'Reset tiến trình';
+
+  @override
+  String get flashcardLearnResetSuccessToast => 'Đã reset tiến trình học.';
+
+  @override
   String get flashcardCloseTooltip => 'Đóng màn hình học';
 
   @override
@@ -687,6 +729,18 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get studySpeechReplayAction => 'Phát lại';
+
+  @override
+  String get studyResetCurrentModeAction => 'Đặt lại chế độ hiện tại';
+
+  @override
+  String get studyResetCurrentModeTitle => 'Đặt lại chế độ hiện tại?';
+
+  @override
+  String get studyResetCurrentModeMessage => 'Thao tác này sẽ xóa toàn bộ tiến độ trong chế độ học hiện tại và bắt đầu lại từ mục đầu tiên.';
+
+  @override
+  String get studyResetCurrentModeConfirm => 'Đặt lại chế độ';
 
   @override
   String get deckEditTooltip => 'Sửa deck';

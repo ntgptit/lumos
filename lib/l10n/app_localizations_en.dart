@@ -431,6 +431,48 @@ class AppLocalizationsEn extends AppLocalizations {
   String get flashcardStudyCompletedToast => 'Study session completed.';
 
   @override
+  String get flashcardLearnSheetTitle => 'Choose your study path';
+
+  @override
+  String get flashcardLearnSheetSubtitle => 'Pick the session you want to start for this deck.';
+
+  @override
+  String get flashcardLearnContinueOptionTitle => 'Continue learning';
+
+  @override
+  String get flashcardLearnContinueOptionSubtitle => 'Study vocabulary that is still new or not yet passed.';
+
+  @override
+  String get flashcardLearnReviewOptionTitle => 'Review due cards';
+
+  @override
+  String get flashcardLearnReviewOptionSubtitle => 'Review vocabulary that has reached its SRS deadline.';
+
+  @override
+  String get flashcardLearnResetOptionTitle => 'Reset study progress';
+
+  @override
+  String get flashcardLearnResetOptionSubtitle => 'Clear the learning progress for this deck and start again.';
+
+  @override
+  String get flashcardLearnContinueUnavailableToast => 'No new or unfinished vocabulary is available right now.';
+
+  @override
+  String get flashcardLearnReviewUnavailableToast => 'No vocabulary is currently due for review.';
+
+  @override
+  String get flashcardLearnResetConfirmTitle => 'Reset study progress?';
+
+  @override
+  String get flashcardLearnResetConfirmMessage => 'This will reset the learning progress for the current deck.';
+
+  @override
+  String get flashcardLearnResetConfirmAction => 'Reset progress';
+
+  @override
+  String get flashcardLearnResetSuccessToast => 'Study progress has been reset.';
+
+  @override
   String get flashcardCloseTooltip => 'Close study';
 
   @override
@@ -687,6 +729,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get studySpeechReplayAction => 'Replay';
+
+  @override
+  String get studyResetCurrentModeAction => 'Reset current mode';
+
+  @override
+  String get studyResetCurrentModeTitle => 'Reset current mode?';
+
+  @override
+  String get studyResetCurrentModeMessage => 'This will clear all progress in the current mode and start that mode again from the first item.';
+
+  @override
+  String get studyResetCurrentModeConfirm => 'Reset mode';
 
   @override
   String get deckEditTooltip => 'Edit deck';

@@ -11,9 +11,12 @@ abstract final class StudyRepositoryImplConst {
   StudyRepositoryImplConst._();
 
   static const String sessionsPath = '/api/v1/study/sessions';
+  static const String studyDecksPath = '/api/v1/study/decks';
   static const String remindersSummaryPath = '/api/v1/study/reminders/summary';
-  static const String analyticsOverviewPath = '/api/v1/study/analytics/overview';
-  static const String speechPreferencePath = '/api/v1/profile/speech-preference';
+  static const String analyticsOverviewPath =
+      '/api/v1/study/analytics/overview';
+  static const String speechPreferencePath =
+      '/api/v1/profile/speech-preference';
 }
 
 class DioStudyRepository implements StudyRepository {
@@ -22,10 +25,16 @@ class DioStudyRepository implements StudyRepository {
   final Dio _dio;
 
   @override
-  Future<StudySessionData> startSession({required int deckId}) async {
+  Future<StudySessionData> startSession({
+    required int deckId,
+    StudySessionTypeOption? preferredSessionType,
+  }) async {
     final Response<dynamic> response = await _dio.post<dynamic>(
       StudyRepositoryImplConst.sessionsPath,
-      data: <String, dynamic>{'deckId': deckId},
+      data: <String, dynamic>{
+        'deckId': deckId,
+        'preferredSessionType': preferredSessionType?.apiValue,
+      },
     );
     return StudySessionData.fromJson(_castMap(response.data));
   }
@@ -97,6 +106,21 @@ class DioStudyRepository implements StudyRepository {
       '${StudyRepositoryImplConst.sessionsPath}/$sessionId/next',
     );
     return StudySessionData.fromJson(_castMap(response.data));
+  }
+
+  @override
+  Future<StudySessionData> resetCurrentMode({required int sessionId}) async {
+    final Response<dynamic> response = await _dio.post<dynamic>(
+      '${StudyRepositoryImplConst.sessionsPath}/$sessionId/reset-current-mode',
+    );
+    return StudySessionData.fromJson(_castMap(response.data));
+  }
+
+  @override
+  Future<void> resetDeckProgress({required int deckId}) async {
+    await _dio.post<dynamic>(
+      '${StudyRepositoryImplConst.studyDecksPath}/$deckId/reset-progress',
+    );
   }
 
   @override

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../../../../../core/themes/extensions/theme_extensions.dart';
@@ -12,9 +14,12 @@ abstract final class StudySessionReviewContentConst {
   StudySessionReviewContentConst._();
 
   static const String reviewMode = 'REVIEW';
+  static const String rememberedActionId = 'MARK_REMEMBERED';
+  static const String retryActionId = 'RETRY_ITEM';
   static const String nextActionId = 'GO_NEXT';
-  static const int currentPageIndex = 0;
-  static const int nextPageIndex = 1;
+  static const int previousPageIndex = 0;
+  static const int currentPageIndex = 1;
+  static const int nextPageIndex = 2;
   static const int promptCardFlex = 1;
   static const int answerCardFlex = 1;
   static const double progressHeight = AppSpacing.sm;
@@ -40,7 +45,7 @@ class StudySessionReviewContent extends StatefulWidget {
     required this.session,
     required this.viewModel,
     required this.speechPlaybackState,
-    required this.onGoNext,
+    required this.onActionPressed,
     required this.onPlaySpeech,
     required this.onReplaySpeech,
     super.key,
@@ -49,7 +54,7 @@ class StudySessionReviewContent extends StatefulWidget {
   final StudySessionData session;
   final StudyModeViewModel viewModel;
   final StudySpeechPlaybackState speechPlaybackState;
-  final VoidCallback onGoNext;
+  final Future<void> Function(String) onActionPressed;
   final VoidCallback onPlaySpeech;
   final VoidCallback onReplaySpeech;
 
@@ -60,7 +65,7 @@ class StudySessionReviewContent extends StatefulWidget {
 
 class _StudySessionReviewContentState extends State<StudySessionReviewContent> {
   late final PageController _pageController;
-  bool _isNavigatingNext = false;
+  bool _isPerformingSwipeAction = false;
 
   @override
   void initState() {
@@ -77,7 +82,7 @@ class _StudySessionReviewContentState extends State<StudySessionReviewContent> {
         widget.session.currentItem.flashcardId) {
       return;
     }
-    _isNavigatingNext = false;
+    _isPerformingSwipeAction = false;
     _jumpToCurrentPage();
   }
 
@@ -90,10 +95,7 @@ class _StudySessionReviewContentState extends State<StudySessionReviewContent> {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
-    final bool canGoNext = widget.session.allowedActions.contains(
-      StudySessionReviewContentConst.nextActionId,
-    );
-    if (!canGoNext) {
+    if (!_canSwipeHorizontally()) {
       return _StudySessionReviewPage(
         session: widget.session,
         speechPlaybackState: widget.speechPlaybackState,
@@ -122,14 +124,7 @@ class _StudySessionReviewContentState extends State<StudySessionReviewContent> {
   }
 
   void _handlePageChanged(int pageIndex) {
-    if (pageIndex != StudySessionReviewContentConst.nextPageIndex) {
-      return;
-    }
-    if (_isNavigatingNext) {
-      return;
-    }
-    _isNavigatingNext = true;
-    widget.onGoNext();
+    unawaited(_processPageChanged(pageIndex));
   }
 
   void _jumpToCurrentPage() {
@@ -137,6 +132,64 @@ class _StudySessionReviewContentState extends State<StudySessionReviewContent> {
       return;
     }
     _pageController.jumpToPage(StudySessionReviewContentConst.currentPageIndex);
+  }
+
+  bool _canSwipeHorizontally() {
+    return _actionForPage(StudySessionReviewContentConst.previousPageIndex) !=
+            null ||
+        _actionForPage(StudySessionReviewContentConst.nextPageIndex) != null;
+  }
+
+  Future<void> _processPageChanged(int pageIndex) async {
+    final String? actionId = _actionForPage(pageIndex);
+    if (actionId == null) {
+      return;
+    }
+    if (_isPerformingSwipeAction) {
+      return;
+    }
+    _isPerformingSwipeAction = true;
+    try {
+      await _submitSwipeAction(actionId);
+    } finally {
+      if (mounted) {
+        _isPerformingSwipeAction = false;
+        _jumpToCurrentPage();
+      }
+    }
+  }
+
+  String? _actionForPage(int pageIndex) {
+    if (pageIndex == StudySessionReviewContentConst.previousPageIndex) {
+      if (_allowsAction(StudySessionReviewContentConst.retryActionId)) {
+        return StudySessionReviewContentConst.retryActionId;
+      }
+      if (_allowsAction(StudySessionReviewContentConst.nextActionId)) {
+        return StudySessionReviewContentConst.nextActionId;
+      }
+      return null;
+    }
+    if (pageIndex == StudySessionReviewContentConst.nextPageIndex) {
+      if (_allowsAction(StudySessionReviewContentConst.rememberedActionId)) {
+        return StudySessionReviewContentConst.rememberedActionId;
+      }
+      if (_allowsAction(StudySessionReviewContentConst.nextActionId)) {
+        return StudySessionReviewContentConst.nextActionId;
+      }
+    }
+    return null;
+  }
+
+  bool _allowsAction(String actionId) {
+    return widget.session.allowedActions.contains(actionId);
+  }
+
+  Future<void> _submitSwipeAction(String actionId) async {
+    await widget.onActionPressed(actionId);
+    if (actionId == StudySessionReviewContentConst.nextActionId) {
+      return;
+    }
+    await widget.onActionPressed(StudySessionReviewContentConst.nextActionId);
   }
 }
 

@@ -1,5 +1,14 @@
 import 'package:flutter/foundation.dart';
 
+enum StudySessionTypeOption {
+  firstLearning('FIRST_LEARNING'),
+  review('REVIEW');
+
+  const StudySessionTypeOption(this.apiValue);
+
+  final String apiValue;
+}
+
 @immutable
 class StudyChoice {
   const StudyChoice({required this.id, required this.label});

@@ -34,15 +34,15 @@ public class FillStudyModeStrategy extends AbstractStudyModeStrategy {
             // Keep answer submission available after showing a help hint.
             if (currentItem.getLastOutcome() == null) {
                 // Return submit-only so the user can still answer after seeing a hint.
-                return List.of(ACTION_SUBMIT_ANSWER);
+                return withResetCurrentModeAction(List.of(ACTION_SUBMIT_ANSWER));
             }
             // Return next-only because the fill outcome has already been recorded.
-            return List.of(ACTION_GO_NEXT);
+            return withResetCurrentModeAction(List.of(ACTION_GO_NEXT));
         }
         // Return the default fill actions so the user can answer directly or ask for help first.
-        return List.of(
+        return withResetCurrentModeAction(List.of(
                 ACTION_SUBMIT_ANSWER,
-                ACTION_REVEAL_ANSWER);
+                ACTION_REVEAL_ANSWER));
     }
 
     @Override

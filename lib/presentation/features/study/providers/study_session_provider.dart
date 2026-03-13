@@ -99,4 +99,13 @@ class StudySessionController extends _$StudySessionController {
       return repository.goNext(sessionId: current.sessionId);
     });
   }
+
+  Future<void> resetCurrentMode() async {
+    final StudySessionData current = state.asData!.value;
+    final StudyRepository repository = ref.read(studyRepositoryProvider);
+    state = const AsyncLoading<StudySessionData>();
+    state = await AsyncValue.guard<StudySessionData>(() {
+      return repository.resetCurrentMode(sessionId: current.sessionId);
+    });
+  }
 }

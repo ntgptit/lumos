@@ -114,6 +114,17 @@ public class StudySessionFlowSupport {
         }
     }
 
+    public void resetCurrentMode(StudySession session, List<StudySessionItem> items) {
+        session.setCurrentItemIndex(0);
+        session.setModeState(StudyModeLifecycleState.INITIALIZED);
+        session.setSessionCompleted(Boolean.FALSE);
+        for (StudySessionItem item : items) {
+            item.setCurrentModeCompleted(Boolean.FALSE);
+            item.setRetryPending(Boolean.FALSE);
+            item.setLastOutcome(null);
+        }
+    }
+
     public ReviewOutcome resolveSubmittedOutcome(
             StudySession session,
             StudySessionItem currentItem,

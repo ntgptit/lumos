@@ -33,15 +33,15 @@ public class RecallStudyModeStrategy extends AbstractStudyModeStrategy {
             // Switch to next-only acknowledgement once the item already has a final outcome.
             if (currentItem.getLastOutcome() != null) {
                 // Return next-only because the user has already judged recall success or failure.
-                return List.of(ACTION_GO_NEXT);
+                return withResetCurrentModeAction(List.of(ACTION_GO_NEXT));
             }
             // Return the self-assessment actions shown immediately after the answer is revealed.
-            return List.of(
+            return withResetCurrentModeAction(List.of(
                     ACTION_MARK_REMEMBERED,
-                    ACTION_RETRY_ITEM);
+                    ACTION_RETRY_ITEM));
         }
         // Return reveal-only so the learner must attempt recall mentally before seeing the answer.
-        return List.of(ACTION_REVEAL_ANSWER);
+        return withResetCurrentModeAction(List.of(ACTION_REVEAL_ANSWER));
     }
 
     @Override

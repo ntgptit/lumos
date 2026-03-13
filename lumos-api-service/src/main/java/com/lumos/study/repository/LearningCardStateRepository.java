@@ -18,5 +18,7 @@ public interface LearningCardStateRepository extends JpaRepository<LearningCardS
 
     Optional<LearningCardState> findByUserAccountIdAndFlashcardIdAndDeletedAtIsNull(Long userId, Long flashcardId);
 
+    void deleteAllByUserAccountIdAndFlashcardIdIn(Long userId, Collection<Long> flashcardIds);
+
     long countByUserAccountIdAndNextReviewAtLessThanEqualAndDeletedAtIsNull(Long userId, Instant threshold);
 }

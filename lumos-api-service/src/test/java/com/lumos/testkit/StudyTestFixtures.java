@@ -7,6 +7,7 @@ import com.lumos.study.dto.request.StartStudySessionRequest;
 import com.lumos.study.dto.request.SubmitAnswerRequest;
 import com.lumos.study.dto.request.StudyMatchPairRequest;
 import com.lumos.study.dto.request.UpdateSpeechPreferenceRequest;
+import com.lumos.study.enums.StudySessionType;
 import com.lumos.reminder.dto.response.ReminderRecommendationResponse;
 import com.lumos.reminder.dto.response.ReminderSummaryResponse;
 import com.lumos.study.dto.response.ProgressSummaryResponse;
@@ -25,7 +26,12 @@ public final class StudyTestFixtures {
 
     public static StartStudySessionRequest startStudySessionRequest(Long deckId) {
         
-        return new StartStudySessionRequest(deckId);
+        return new StartStudySessionRequest(deckId, null);
+    }
+
+    public static StartStudySessionRequest startStudySessionRequest(Long deckId, StudySessionType preferredSessionType) {
+        
+        return new StartStudySessionRequest(deckId, preferredSessionType);
     }
 
     public static SubmitAnswerRequest submitAnswerRequest(String answer) {

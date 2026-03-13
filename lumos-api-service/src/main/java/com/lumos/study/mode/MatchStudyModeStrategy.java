@@ -43,10 +43,10 @@ public class MatchStudyModeStrategy extends AbstractStudyModeStrategy {
         // Restrict feedback state to acknowledgement after the selected match is checked.
         if (session.getModeState() == StudyModeLifecycleState.WAITING_FEEDBACK) {
             // Return only the advance action because the current pairing result is already locked in.
-            return List.of(ACTION_GO_NEXT);
+            return withResetCurrentModeAction(List.of(ACTION_GO_NEXT));
         }
         // Return the submit action while the learner is still building the pairing grid.
-        return List.of(ACTION_SUBMIT_ANSWER);
+        return withResetCurrentModeAction(List.of(ACTION_SUBMIT_ANSWER));
     }
 
     @Override

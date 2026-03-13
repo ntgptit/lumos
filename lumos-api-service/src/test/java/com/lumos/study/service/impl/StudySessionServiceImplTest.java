@@ -19,7 +19,9 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.Optional;
+import java.time.Instant;
 
+import org.apache.commons.lang3.Strings;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -112,6 +114,8 @@ class StudySessionServiceImplTest {
                 this.deckRepository,
                 this.flashcardRepository,
                 this.studySessionRepository,
+                this.learningCardStateRepository,
+                this.studyAttemptRepository,
                 studySessionSetupSupport,
                 studySessionFlowSupport,
                 studyLearningStateSyncSupport,
@@ -144,11 +148,51 @@ class StudySessionServiceImplTest {
         when(this.studySessionItemRepository.findAllByStudySessionIdAndDeletedAtIsNullOrderBySequenceIndexAsc(SESSION_ID))
                 .thenReturn(List.of(item));
         when(this.userSpeechPreferenceRepository.findByUserAccountIdAndDeletedAtIsNull(USER_ID)).thenReturn(Optional.empty());
-        final var response = this.studySessionService.startSession(new StartStudySessionRequest(DECK_ID));
+        final var response = this.studySessionService.startSession(new StartStudySessionRequest(DECK_ID, null));
         assertEquals("FIRST_LEARNING", response.sessionType());
         assertEquals("REVIEW", response.activeMode());
         assertEquals(5, response.modePlan().size());
         assertEquals("안녕하세요", response.currentItem().prompt());
+    }
+
+    @Test
+    void startSession_respectsPreferredReviewSessionType() {
+        final var deck = deck();
+        final var learnedFlashcard = flashcard(101L, deck, "안녕하세요", "xin chao");
+        final var dueState = new LearningCardState();
+        dueState.setFlashcard(learnedFlashcard);
+        dueState.setBoxIndex(1);
+        dueState.setNextReviewAt(Instant.now());
+        final StudySession savedSession = session(
+                user(),
+                deck,
+                StudySessionType.REVIEW,
+                StudyMode.FILL,
+                StudyModeLifecycleState.INITIALIZED,
+                0,
+                0,
+                false);
+        savedSession.setId(SESSION_ID);
+        savedSession.setModePlan("FILL");
+        final StudySessionItem item = sessionItem(1L, savedSession, learnedFlashcard, 0, false, false, null);
+        when(this.authenticatedUserProvider.getCurrentUserId()).thenReturn(USER_ID);
+        when(this.userAccountRepository.findByIdAndDeletedAtIsNull(USER_ID)).thenReturn(Optional.of(user()));
+        when(this.deckRepository.findByIdAndDeletedAtIsNull(DECK_ID)).thenReturn(Optional.of(deck));
+        when(this.flashcardRepository.findAllByDeckIdAndDeletedAtIsNullOrderByIdAsc(DECK_ID))
+                .thenReturn(List.of(learnedFlashcard));
+        when(this.learningCardStateRepository.findAllByUserAccountIdAndFlashcardIdInAndDeletedAtIsNull(USER_ID, List.of(101L)))
+                .thenReturn(List.of(dueState));
+        when(this.studySessionRepository.save(any(StudySession.class))).thenReturn(savedSession);
+        when(this.studySessionItemRepository.findAllByStudySessionIdAndDeletedAtIsNullOrderBySequenceIndexAsc(SESSION_ID))
+                .thenReturn(List.of(item));
+        when(this.userSpeechPreferenceRepository.findByUserAccountIdAndDeletedAtIsNull(USER_ID)).thenReturn(Optional.empty());
+
+        final var response = this.studySessionService.startSession(
+                new StartStudySessionRequest(DECK_ID, StudySessionType.REVIEW));
+
+        assertEquals("REVIEW", response.sessionType());
+        assertEquals("FILL", response.activeMode());
+        assertEquals(1, response.modePlan().size());
     }
 
     @Test
@@ -266,6 +310,53 @@ class StudySessionServiceImplTest {
         assertEquals("IN_PROGRESS", response.modeState());
         assertEquals(1, session.getCurrentItemIndex());
         assertEquals(102L, response.currentItem().flashcardId());
+    }
+
+    @Test
+    void resetCurrentMode_clearsModeProgressAndDeletesAttempts() {
+        final StudySession session = activeSession();
+        session.setModeState(StudyModeLifecycleState.WAITING_FEEDBACK);
+        final StudySessionItem firstItem = currentItem(session, ReviewOutcome.PASSED, true, false);
+        final StudySessionItem secondItem = sessionItem(
+                2L,
+                session,
+                flashcard(102L, session.getDeck(), "감사합니다", "cam on"),
+                1,
+                false,
+                true,
+                ReviewOutcome.FAILED);
+        when(this.authenticatedUserProvider.getCurrentUserId()).thenReturn(USER_ID);
+        when(this.studySessionRepository.findByIdAndDeletedAtIsNull(SESSION_ID)).thenReturn(Optional.of(session));
+        when(this.studySessionItemRepository.findAllByStudySessionIdAndDeletedAtIsNullOrderBySequenceIndexAsc(SESSION_ID))
+                .thenReturn(List.of(firstItem, secondItem));
+        when(this.userSpeechPreferenceRepository.findByUserAccountIdAndDeletedAtIsNull(USER_ID)).thenReturn(Optional.empty());
+
+        final var response = this.studySessionService.resetCurrentMode(SESSION_ID);
+
+        verify(this.studyAttemptRepository).deleteAllByStudySessionIdAndStudyMode(SESSION_ID, StudyMode.REVIEW);
+        assertEquals("INITIALIZED", response.modeState());
+        assertEquals(0, session.getCurrentItemIndex());
+        assertFalse(firstItem.getCurrentModeCompleted());
+        assertFalse(secondItem.getRetryPending());
+        assertEquals(null, secondItem.getLastOutcome());
+        assertTrue(response.allowedActions().stream()
+                .anyMatch(action -> Strings.CS.equals(action, "RESET_CURRENT_MODE")));
+    }
+
+    @Test
+    void resetDeckProgress_deletesLearningStatesForDeckFlashcards() {
+        final var deck = deck();
+        final var firstFlashcard = flashcard(101L, deck, "안녕하세요", "xin chao");
+        final var secondFlashcard = flashcard(102L, deck, "감사합니다", "cam on");
+        when(this.authenticatedUserProvider.getCurrentUserId()).thenReturn(USER_ID);
+        when(this.deckRepository.findByIdAndDeletedAtIsNull(DECK_ID)).thenReturn(Optional.of(deck));
+        when(this.flashcardRepository.findAllByDeckIdAndDeletedAtIsNullOrderByIdAsc(DECK_ID))
+                .thenReturn(List.of(firstFlashcard, secondFlashcard));
+
+        this.studySessionService.resetDeckProgress(DECK_ID);
+
+        verify(this.learningCardStateRepository)
+                .deleteAllByUserAccountIdAndFlashcardIdIn(USER_ID, List.of(101L, 102L));
     }
 
     @Test

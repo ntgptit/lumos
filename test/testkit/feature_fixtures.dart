@@ -39,7 +39,8 @@ StudySessionData sampleStudySession({
     modeState: modeState,
     modePlan: const <String>['REVIEW', 'MATCH', 'GUESS', 'RECALL', 'FILL'],
     allowedActions:
-        allowedActions ?? const <String>['MARK_REMEMBERED', 'RETRY_ITEM'],
+        allowedActions ??
+        const <String>['MARK_REMEMBERED', 'RETRY_ITEM', 'RESET_CURRENT_MODE'],
     progress: const StudyProgressSummary(
       completedItems: 1,
       totalItems: 2,
@@ -213,10 +214,17 @@ class FakeStudyRepository implements StudyRepository {
   int? lastSessionId;
   String? lastAnswer;
   SpeechPreference? lastPreference;
+  int resetCurrentModeCallCount = 0;
+  int resetDeckProgressCallCount = 0;
+  StudySessionTypeOption? lastPreferredSessionType;
 
   @override
-  Future<StudySessionData> startSession({required int deckId}) async {
+  Future<StudySessionData> startSession({
+    required int deckId,
+    StudySessionTypeOption? preferredSessionType,
+  }) async {
     lastDeckId = deckId;
+    lastPreferredSessionType = preferredSessionType;
     return _session;
   }
 
@@ -297,6 +305,28 @@ class FakeStudyRepository implements StudyRepository {
       modeState: 'IN_PROGRESS',
       allowedActions: const <String>['SUBMIT_ANSWER'],
     );
+  }
+
+  @override
+  Future<StudySessionData> resetCurrentMode({required int sessionId}) async {
+    lastSessionId = sessionId;
+    resetCurrentModeCallCount += 1;
+    return _session = sampleStudySession(
+      sessionId: sessionId,
+      activeMode: _session.activeMode,
+      modeState: 'INITIALIZED',
+      allowedActions: const <String>[
+        'MARK_REMEMBERED',
+        'RETRY_ITEM',
+        'RESET_CURRENT_MODE',
+      ],
+    );
+  }
+
+  @override
+  Future<void> resetDeckProgress({required int deckId}) async {
+    lastDeckId = deckId;
+    resetDeckProgressCallCount += 1;
   }
 
   @override

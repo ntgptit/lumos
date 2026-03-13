@@ -8,9 +8,11 @@ import '../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../core/constants/route_names.dart';
 import '../../../../core/utils/string_utils.dart';
 import '../../../../domain/entities/flashcard_models.dart';
+import '../../../../domain/entities/study/study_models.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../shared/widgets/lumos_widgets.dart';
 import '../../home/screens/widgets/blocks/home_bottom_nav.dart';
+import '../../study/providers/study_session_launcher_provider.dart';
 import '../providers/flashcard_provider.dart';
 import '../providers/states/flashcard_state.dart';
 import 'widgets/blocks/flashcard_card_section_header.dart';
@@ -20,6 +22,7 @@ import 'widgets/blocks/flashcard_study_action_section.dart';
 import 'widgets/blocks/flashcard_study_progress_section.dart';
 import 'widgets/blocks/flashcard_tile.dart';
 import 'widgets/dialogs/flashcard_dialogs.dart';
+import 'widgets/dialogs/flashcard_learn_options_sheet.dart';
 import 'widgets/states/flashcard_empty_view.dart';
 
 abstract final class FlashcardContentConst {
@@ -396,8 +399,9 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
       FlashcardStudyAction(
         label: l10n.flashcardLearnActionLabel,
         icon: Icons.refresh_rounded,
-        onPressed: () =>
-            _openStudyScreen(initialIndex: widget.state.safePreviewIndex),
+        onPressed: () {
+          unawaited(_showLearnOptionsSheet());
+        },
         tone: FlashcardStudyActionTone.info,
       ),
       FlashcardStudyAction(
@@ -665,16 +669,14 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
       initialValue: state.sortBy,
       directionSectionTitle: l10n.commonDirection,
       initialDirectionIndex: _directionIndexFromValue(state.sortDirection),
-      directionLabelBuilder: (
-        FlashcardSortBy selectedSortBy,
-        int directionIndex,
-      ) {
-        return _directionLabelForIndex(
-          l10n: l10n,
-          sortBy: selectedSortBy,
-          directionIndex: directionIndex,
-        );
-      },
+      directionLabelBuilder:
+          (FlashcardSortBy selectedSortBy, int directionIndex) {
+            return _directionLabelForIndex(
+              l10n: l10n,
+              sortBy: selectedSortBy,
+              directionIndex: directionIndex,
+            );
+          },
       applyLabel: l10n.flashcardSortSaveButton,
       onApply: (FlashcardSortBy selectedSortBy, int directionIndex) {
         _applySort(
@@ -750,6 +752,110 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
     );
   }
 
+  Future<void> _showLearnOptionsSheet() async {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
+    final FlashcardState state = widget.state;
+    if (state.items.isEmpty) {
+      _showInfoSnackBar(
+        context: context,
+        message: l10n.flashcardStudyUnavailableToast,
+      );
+      return;
+    }
+    final FlashcardLearnSheetAction? action =
+        await showFlashcardLearnOptionsSheet(context: context);
+    if (!mounted || action == null) {
+      return;
+    }
+    if (action == FlashcardLearnSheetAction.firstLearning) {
+      await _startStudySession(
+        preferredSessionType: StudySessionTypeOption.firstLearning,
+        unavailableMessage: l10n.flashcardLearnContinueUnavailableToast,
+      );
+      return;
+    }
+    if (action == FlashcardLearnSheetAction.review) {
+      await _startStudySession(
+        preferredSessionType: StudySessionTypeOption.review,
+        unavailableMessage: l10n.flashcardLearnReviewUnavailableToast,
+      );
+      return;
+    }
+    await _showResetStudyProgressDialog();
+  }
+
+  Future<void> _startStudySession({
+    required StudySessionTypeOption preferredSessionType,
+    required String unavailableMessage,
+  }) async {
+    final FlashcardState state = widget.state;
+    try {
+      final StudySessionData session = await ref
+          .read(studySessionLauncherProvider.notifier)
+          .startSession(
+            deckId: state.deckId,
+            preferredSessionType: preferredSessionType,
+          );
+      if (!mounted) {
+        return;
+      }
+      context.pushNamed(
+        AppRouteName.studySession,
+        pathParameters: <String, String>{
+          AppRouteParam.deckId: state.deckId.toString(),
+        },
+        queryParameters: <String, String>{
+          AppRouteQuery.deckName: state.deckName,
+          AppRouteQuery.sessionId: session.sessionId.toString(),
+        },
+      );
+    } catch (_) {
+      if (!mounted) {
+        return;
+      }
+      _showErrorSnackBar(context: context, message: unavailableMessage);
+    }
+  }
+
+  Future<void> _showResetStudyProgressDialog() {
+    return showFlashcardConfirmDialog(
+      context: context,
+      titleBuilder: (AppLocalizations l10n) {
+        return l10n.flashcardLearnResetConfirmTitle;
+      },
+      messageBuilder: (AppLocalizations l10n) {
+        return l10n.flashcardLearnResetConfirmMessage;
+      },
+      confirmLabelBuilder: (AppLocalizations l10n) {
+        return l10n.flashcardLearnResetConfirmAction;
+      },
+      onConfirmed: _resetDeckStudyProgress,
+    );
+  }
+
+  Future<void> _resetDeckStudyProgress() async {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
+    final FlashcardState state = widget.state;
+    try {
+      await ref
+          .read(studySessionLauncherProvider.notifier)
+          .resetDeckProgress(deckId: state.deckId);
+      await _controller.refresh();
+      if (!mounted) {
+        return;
+      }
+      _showInfoSnackBar(
+        context: context,
+        message: l10n.flashcardLearnResetSuccessToast,
+      );
+    } catch (_) {
+      if (!mounted) {
+        return;
+      }
+      _showErrorSnackBar(context: context, message: l10n.commonRetry);
+    }
+  }
+
   bool _starredStateForItem({
     required FlashcardNode item,
     required FlashcardState state,
@@ -781,6 +887,19 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
         context: context,
         message: message,
         type: LumosSnackbarType.info,
+      ),
+    );
+  }
+
+  void _showErrorSnackBar({
+    required BuildContext context,
+    required String message,
+  }) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      LumosSnackbar(
+        context: context,
+        message: message,
+        type: LumosSnackbarType.error,
       ),
     );
   }

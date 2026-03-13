@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lumos/data/repositories/study/study_repository_impl.dart';
+import 'package:lumos/domain/entities/study/study_models.dart';
 import 'package:lumos/presentation/features/study/providers/study_session_provider.dart';
 
 import '../../../../testkit/feature_fixtures.dart';
@@ -144,6 +145,41 @@ void main() {
               .activeMode,
           'MATCH',
         );
+      },
+    );
+
+    test(
+      'resetCurrentMode delegates to repository and resets canonical state',
+      () async {
+        final FakeStudyRepository repository = FakeStudyRepository();
+        final ProviderContainer container = ProviderContainer(
+          overrides: [studyRepositoryProvider.overrideWithValue(repository)],
+        );
+        addTearDown(container.dispose);
+        await container.read(
+          studySessionControllerProvider(
+            const StudySessionLaunchRequest(deckId: 10),
+          ).future,
+        );
+
+        await container
+            .read(
+              studySessionControllerProvider(
+                const StudySessionLaunchRequest(deckId: 10),
+              ).notifier,
+            )
+            .resetCurrentMode();
+
+        final StudySessionData session = container
+            .read(
+              studySessionControllerProvider(
+                const StudySessionLaunchRequest(deckId: 10),
+              ),
+            )
+            .requireValue;
+        expect(repository.resetCurrentModeCallCount, 1);
+        expect(session.modeState, 'INITIALIZED');
+        expect(session.allowedActions, contains('RESET_CURRENT_MODE'));
       },
     );
 

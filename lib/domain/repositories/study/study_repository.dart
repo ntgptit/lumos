@@ -1,7 +1,10 @@
 import '../../entities/study/study_models.dart';
 
 abstract class StudyRepository {
-  Future<StudySessionData> startSession({required int deckId});
+  Future<StudySessionData> startSession({
+    required int deckId,
+    StudySessionTypeOption? preferredSessionType,
+  });
 
   Future<StudySessionData> resumeSession({required int sessionId});
 
@@ -22,6 +25,10 @@ abstract class StudyRepository {
   Future<StudySessionData> retryItem({required int sessionId});
 
   Future<StudySessionData> goNext({required int sessionId});
+
+  Future<StudySessionData> resetCurrentMode({required int sessionId});
+
+  Future<void> resetDeckProgress({required int deckId});
 
   Future<StudyReminderSummary> getReminderSummary();
 

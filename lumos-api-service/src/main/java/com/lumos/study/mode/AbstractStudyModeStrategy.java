@@ -130,6 +130,13 @@ public abstract class AbstractStudyModeStrategy implements StudyModeStrategy {
         return null;
     }
 
+    protected List<String> withResetCurrentModeAction(List<String> actions) {
+        final List<String> nextActions = new ArrayList<>(actions);
+        nextActions.add(ACTION_RESET_CURRENT_MODE);
+        // Return the augmented action set so every active mode can expose the shared reset command.
+        return List.copyOf(nextActions);
+    }
+
     private String normalize(String value) {
         // Return a trimmed answer value so comparisons ignore accidental surrounding whitespace.
         return StringUtils.trimToEmpty(value);

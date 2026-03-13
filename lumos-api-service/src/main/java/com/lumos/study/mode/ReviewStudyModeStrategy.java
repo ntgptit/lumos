@@ -32,12 +32,12 @@ public class ReviewStudyModeStrategy extends AbstractStudyModeStrategy {
         if (session.getModeState() == StudyModeLifecycleState.WAITING_FEEDBACK
                 && currentItem.getLastOutcome() != null) {
             // Return next-only because review mode already captured the learner's memory judgment.
-            return List.of(ACTION_GO_NEXT);
+            return withResetCurrentModeAction(List.of(ACTION_GO_NEXT));
         }
         // Return the two review judgments so the learner can mark remembered versus needs-review.
-        return List.of(
+        return withResetCurrentModeAction(List.of(
                 ACTION_MARK_REMEMBERED,
-                ACTION_RETRY_ITEM);
+                ACTION_RETRY_ITEM));
     }
 
     @Override

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../domain/entities/study/study_models.dart';
@@ -32,6 +33,7 @@ class StudySessionScreen extends ConsumerStatefulWidget {
 
 class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
   static const String _reviewMenuReplayAudio = 'REPLAY_AUDIO';
+  static const String _resetCurrentModeActionId = 'RESET_CURRENT_MODE';
 
   final TextEditingController _answerController = TextEditingController();
 
@@ -143,9 +145,14 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
     required StudySessionData? session,
     required StudyModeViewModel? viewModel,
   }) {
-    if (session == null ||
-        session.activeMode != StudySessionReviewContentConst.reviewMode) {
+    if (session == null) {
       return LumosAppBar(title: widget.deckName);
+    }
+    if (session.activeMode != StudySessionReviewContentConst.reviewMode) {
+      return LumosAppBar(
+        title: widget.deckName,
+        actions: _buildStudyMenuActions(l10n: l10n, session: session),
+      );
     }
     return LumosAppBar(
       title: viewModel?.modeLabel ?? widget.deckName,
@@ -159,28 +166,54 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
           tooltip: l10n.flashcardPlayAudioTooltip,
           onPressed: session.currentItem.speech.available ? _playSpeech : null,
         ),
-        PopupMenuButton<String>(
-          icon: const LumosIcon(Icons.more_vert_rounded),
-          onSelected: _handleReviewMenuSelection,
-          itemBuilder: (BuildContext context) {
-            final List<PopupMenuEntry<String>> items =
-                <PopupMenuEntry<String>>[];
-            if (session.currentItem.speech.available) {
-              items.add(
-                PopupMenuItem<String>(
-                  value: _reviewMenuReplayAudio,
-                  child: LumosText(
-                    l10n.studySpeechReplayAction,
-                    style: LumosTextStyle.bodyMedium,
-                  ),
-                ),
-              );
-            }
-            return items;
-          },
-        ),
+        ..._buildStudyMenuActions(l10n: l10n, session: session),
       ],
     );
+  }
+
+  List<Widget> _buildStudyMenuActions({
+    required AppLocalizations l10n,
+    required StudySessionData session,
+  }) {
+    final List<PopupMenuEntry<String>> items = <PopupMenuEntry<String>>[];
+    if (session.activeMode == StudySessionReviewContentConst.reviewMode &&
+        session.currentItem.speech.available) {
+      items.add(
+        PopupMenuItem<String>(
+          value: _reviewMenuReplayAudio,
+          child: LumosText(
+            l10n.studySpeechReplayAction,
+            style: LumosTextStyle.bodyMedium,
+          ),
+        ),
+      );
+    }
+    if (session.allowedActions.contains(_resetCurrentModeActionId)) {
+      if (items.isNotEmpty) {
+        items.add(const PopupMenuDivider());
+      }
+      items.add(
+        PopupMenuItem<String>(
+          value: _resetCurrentModeActionId,
+          child: LumosText(
+            l10n.studyResetCurrentModeAction,
+            style: LumosTextStyle.bodyMedium,
+          ),
+        ),
+      );
+    }
+    if (items.isEmpty) {
+      return const <Widget>[];
+    }
+    return <Widget>[
+      PopupMenuButton<String>(
+        icon: const LumosIcon(Icons.more_vert_rounded),
+        onSelected: (String actionId) {
+          _handleStudyMenuSelection(actionId, l10n);
+        },
+        itemBuilder: (BuildContext context) => items,
+      ),
+    ];
   }
 
   Future<void> _submitTypedAnswer() async {
@@ -223,6 +256,10 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
         _answerController.clear();
         await notifier.goNext();
         return;
+      case _resetCurrentModeActionId:
+        _answerController.clear();
+        await notifier.resetCurrentMode();
+        return;
     }
     throw UnsupportedError('Unsupported study action: $actionId');
   }
@@ -264,9 +301,13 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
         );
   }
 
-  void _handleReviewMenuSelection(String actionId) {
+  void _handleStudyMenuSelection(String actionId, AppLocalizations l10n) {
     if (actionId == _reviewMenuReplayAudio) {
       _replaySpeech();
+      return;
+    }
+    if (actionId == _resetCurrentModeActionId) {
+      _showResetCurrentModeDialog(l10n);
       return;
     }
     _handleActionPressed(actionId);
@@ -291,6 +332,27 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
     return StudySessionLaunchRequest(
       deckId: widget.deckId,
       sessionId: widget.sessionId,
+    );
+  }
+
+  Future<void> _showResetCurrentModeDialog(AppLocalizations l10n) async {
+    await showDialog<void>(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return LumosDialog(
+          title: l10n.studyResetCurrentModeTitle,
+          content: l10n.studyResetCurrentModeMessage,
+          cancelText: l10n.commonCancel,
+          confirmText: l10n.studyResetCurrentModeConfirm,
+          onCancel: () {
+            dialogContext.pop();
+          },
+          onConfirm: () {
+            dialogContext.pop();
+            _handleActionPressed(_resetCurrentModeActionId);
+          },
+        );
+      },
     );
   }
 }

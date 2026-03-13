@@ -16,6 +16,7 @@ public interface StudyModeStrategy {
     String ACTION_MARK_REMEMBERED = "MARK_REMEMBERED";
     String ACTION_RETRY_ITEM = "RETRY_ITEM";
     String ACTION_REVEAL_ANSWER = "REVEAL_ANSWER";
+    String ACTION_RESET_CURRENT_MODE = "RESET_CURRENT_MODE";
     String ACTION_SUBMIT_ANSWER = "SUBMIT_ANSWER";
 
     StudyMode getStudyMode();

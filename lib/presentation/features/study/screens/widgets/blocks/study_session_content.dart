@@ -42,7 +42,7 @@ class StudySessionContent extends StatelessWidget {
   final ValueChanged<String> onChoicePressed;
   final ValueChanged<String> onSelectMatchLeft;
   final ValueChanged<String> onSelectMatchRight;
-  final ValueChanged<String> onActionPressed;
+  final Future<void> Function(String) onActionPressed;
   final VoidCallback onPlaySpeech;
   final VoidCallback onReplaySpeech;
 
@@ -53,8 +53,7 @@ class StudySessionContent extends StatelessWidget {
         session: session,
         viewModel: viewModel,
         speechPlaybackState: speechPlaybackState,
-        onGoNext: () =>
-            onActionPressed(StudySessionReviewContentConst.nextActionId),
+        onActionPressed: onActionPressed,
         onPlaySpeech: onPlaySpeech,
         onReplaySpeech: onReplaySpeech,
       );
@@ -119,7 +118,9 @@ class StudySessionContent extends StatelessWidget {
         const SizedBox(height: AppSpacing.md),
         StudySessionActionBar(
           actions: viewModel.actions,
-          onActionPressed: onActionPressed,
+          onActionPressed: (String actionId) {
+            onActionPressed(actionId);
+          },
         ),
       ],
     );

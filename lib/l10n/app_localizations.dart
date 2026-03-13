@@ -875,6 +875,90 @@ abstract class AppLocalizations {
   /// **'Study session completed.'**
   String get flashcardStudyCompletedToast;
 
+  /// No description provided for @flashcardLearnSheetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your study path'**
+  String get flashcardLearnSheetTitle;
+
+  /// No description provided for @flashcardLearnSheetSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick the session you want to start for this deck.'**
+  String get flashcardLearnSheetSubtitle;
+
+  /// No description provided for @flashcardLearnContinueOptionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue learning'**
+  String get flashcardLearnContinueOptionTitle;
+
+  /// No description provided for @flashcardLearnContinueOptionSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Study vocabulary that is still new or not yet passed.'**
+  String get flashcardLearnContinueOptionSubtitle;
+
+  /// No description provided for @flashcardLearnReviewOptionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Review due cards'**
+  String get flashcardLearnReviewOptionTitle;
+
+  /// No description provided for @flashcardLearnReviewOptionSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Review vocabulary that has reached its SRS deadline.'**
+  String get flashcardLearnReviewOptionSubtitle;
+
+  /// No description provided for @flashcardLearnResetOptionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset study progress'**
+  String get flashcardLearnResetOptionTitle;
+
+  /// No description provided for @flashcardLearnResetOptionSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear the learning progress for this deck and start again.'**
+  String get flashcardLearnResetOptionSubtitle;
+
+  /// No description provided for @flashcardLearnContinueUnavailableToast.
+  ///
+  /// In en, this message translates to:
+  /// **'No new or unfinished vocabulary is available right now.'**
+  String get flashcardLearnContinueUnavailableToast;
+
+  /// No description provided for @flashcardLearnReviewUnavailableToast.
+  ///
+  /// In en, this message translates to:
+  /// **'No vocabulary is currently due for review.'**
+  String get flashcardLearnReviewUnavailableToast;
+
+  /// No description provided for @flashcardLearnResetConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset study progress?'**
+  String get flashcardLearnResetConfirmTitle;
+
+  /// No description provided for @flashcardLearnResetConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This will reset the learning progress for the current deck.'**
+  String get flashcardLearnResetConfirmMessage;
+
+  /// No description provided for @flashcardLearnResetConfirmAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset progress'**
+  String get flashcardLearnResetConfirmAction;
+
+  /// No description provided for @flashcardLearnResetSuccessToast.
+  ///
+  /// In en, this message translates to:
+  /// **'Study progress has been reset.'**
+  String get flashcardLearnResetSuccessToast;
+
   /// No description provided for @flashcardCloseTooltip.
   ///
   /// In en, this message translates to:
@@ -1366,6 +1450,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Replay'**
   String get studySpeechReplayAction;
+
+  /// No description provided for @studyResetCurrentModeAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset current mode'**
+  String get studyResetCurrentModeAction;
+
+  /// No description provided for @studyResetCurrentModeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset current mode?'**
+  String get studyResetCurrentModeTitle;
+
+  /// No description provided for @studyResetCurrentModeMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This will clear all progress in the current mode and start that mode again from the first item.'**
+  String get studyResetCurrentModeMessage;
+
+  /// No description provided for @studyResetCurrentModeConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset mode'**
+  String get studyResetCurrentModeConfirm;
 
   /// No description provided for @deckEditTooltip.
   ///
