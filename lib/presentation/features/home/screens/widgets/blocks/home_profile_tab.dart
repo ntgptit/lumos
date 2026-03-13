@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../core/providers/theme_provider.dart';
+import '../../../../../../domain/entities/study/study_models.dart';
 import '../../../../../../l10n/app_localizations.dart';
 import '../../../../../shared/widgets/lumos_widgets.dart';
 import '../../../../auth/providers/auth_session_provider.dart';
@@ -12,6 +13,12 @@ abstract final class HomeProfileTabConst {
   HomeProfileTabConst._();
 
   static const double maxWidth = 560;
+  static const List<String> speechVoices = <String>[
+    'ko-KR-neutral',
+    'ko-KR-female',
+    'ko-KR-male',
+  ];
+  static const List<double> speechSpeeds = <double>[0.8, 1.0, 1.2, 1.5];
 }
 
 class HomeProfileTab extends ConsumerWidget {
@@ -49,7 +56,7 @@ class HomeProfileTab extends ConsumerWidget {
     required ThemeMode themeMode,
     required AppThemePreference selectedPreference,
   }) {
-    final AsyncValue<dynamic> speechAsync = ref.watch(
+    final AsyncValue<SpeechPreference> speechAsync = ref.watch(
       speechPreferenceControllerProvider,
     );
     return Column(
@@ -177,7 +184,7 @@ class HomeProfileTab extends ConsumerWidget {
 
   Widget _buildSpeechCard({
     required WidgetRef ref,
-    required AsyncValue<dynamic> speechAsync,
+    required AsyncValue<SpeechPreference> speechAsync,
   }) {
     return speechAsync.when(
       loading: () => const LumosCard(
@@ -190,14 +197,11 @@ class HomeProfileTab extends ConsumerWidget {
         return LumosCard(
           child: Padding(
             padding: const EdgeInsets.all(AppSpacing.lg),
-            child: LumosText(
-              error.toString(),
-              style: LumosTextStyle.bodySmall,
-            ),
+            child: LumosText(error.toString(), style: LumosTextStyle.bodySmall),
           ),
         );
       },
-      data: (dynamic preference) {
+      data: (SpeechPreference preference) {
         return LumosCard(
           margin: EdgeInsets.zero,
           child: Padding(
@@ -238,11 +242,70 @@ class HomeProfileTab extends ConsumerWidget {
                         );
                   },
                 ),
+                const SizedBox(height: AppSpacing.sm),
+                LumosDropdown<String>(
+                  value: preference.voice,
+                  label: 'Voice',
+                  items: HomeProfileTabConst.speechVoices
+                      .map(
+                        (String voice) => DropdownMenuItem<String>(
+                          value: voice,
+                          child: LumosText(
+                            voice,
+                            style: LumosTextStyle.bodyMedium,
+                          ),
+                        ),
+                      )
+                      .toList(growable: false),
+                  onChanged: (String? voice) {
+                    if (voice == null) {
+                      return;
+                    }
+                    _saveSpeechPreference(
+                      ref: ref,
+                      preference: preference.copyWith(voice: voice),
+                    );
+                  },
+                ),
+                const SizedBox(height: AppSpacing.md),
+                LumosDropdown<double>(
+                  value: preference.speed,
+                  label: 'Speed',
+                  items: HomeProfileTabConst.speechSpeeds
+                      .map(
+                        (double speed) => DropdownMenuItem<double>(
+                          value: speed,
+                          child: LumosText(
+                            '${speed.toStringAsFixed(1)}x',
+                            style: LumosTextStyle.bodyMedium,
+                          ),
+                        ),
+                      )
+                      .toList(growable: false),
+                  onChanged: (double? speed) {
+                    if (speed == null) {
+                      return;
+                    }
+                    _saveSpeechPreference(
+                      ref: ref,
+                      preference: preference.copyWith(speed: speed),
+                    );
+                  },
+                ),
               ],
             ),
           ),
         );
       },
     );
+  }
+
+  void _saveSpeechPreference({
+    required WidgetRef ref,
+    required SpeechPreference preference,
+  }) {
+    ref
+        .read(speechPreferenceControllerProvider.notifier)
+        .savePreference(preference);
   }
 }

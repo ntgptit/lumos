@@ -28,4 +28,5 @@ abstract final class AppRouteQuery {
   AppRouteQuery._();
 
   static const String deckName = 'deckName';
+  static const String sessionId = 'sessionId';
 }

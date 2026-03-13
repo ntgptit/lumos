@@ -52,6 +52,7 @@ dependencies:
   dartz: ^0.10.1
   flutter_dotenv: ^6.0.0
   connectivity_plus: ^7.0.0
+  flutter_tts: ^4.2.3
   flutter_localizations:
     sdk: flutter
 

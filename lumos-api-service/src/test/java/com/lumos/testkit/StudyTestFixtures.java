@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.lumos.study.dto.request.StartStudySessionRequest;
 import com.lumos.study.dto.request.SubmitAnswerRequest;
+import com.lumos.study.dto.request.StudyMatchPairRequest;
 import com.lumos.study.dto.request.UpdateSpeechPreferenceRequest;
 import com.lumos.study.dto.response.ProgressSummaryResponse;
 import com.lumos.study.dto.response.ReminderRecommendationResponse;
@@ -12,6 +13,7 @@ import com.lumos.study.dto.response.SpeechCapabilityResponse;
 import com.lumos.study.dto.response.SpeechPreferenceResponse;
 import com.lumos.study.dto.response.StudyAnalyticsOverviewResponse;
 import com.lumos.study.dto.response.StudyChoiceResponse;
+import com.lumos.study.dto.response.StudyMatchPairResponse;
 import com.lumos.study.dto.response.StudyReminderSummaryResponse;
 import com.lumos.study.dto.response.StudySessionItemResponse;
 import com.lumos.study.dto.response.StudySessionResponse;
@@ -27,6 +29,10 @@ public final class StudyTestFixtures {
 
     public static SubmitAnswerRequest submitAnswerRequest(String answer) {
         return new SubmitAnswerRequest(answer);
+    }
+
+    public static SubmitAnswerRequest submitMatchAnswerRequest(String answer, List<StudyMatchPairRequest> matchedPairs) {
+        return new SubmitAnswerRequest(answer, matchedPairs);
     }
 
     public static UpdateSpeechPreferenceRequest updateSpeechPreferenceRequest(
@@ -57,7 +63,19 @@ public final class StudyTestFixtures {
                         "Reveal the answer, then confirm if you remembered it.",
                         "",
                         List.of(new StudyChoiceResponse("choice-0", "xin chao")),
-                        new SpeechCapabilityResponse(true, false, true, "ko-KR", "ko-KR-neutral", 1.0D, "안녕하세요")),
+                        List.of(new StudyMatchPairResponse("left-101", "안녕하세요", "right-101", "xin chao")),
+                        new SpeechCapabilityResponse(
+                                true,
+                                false,
+                                true,
+                                "ko-KR",
+                                "ko-KR-neutral",
+                                1.0D,
+                                "prompt",
+                                "text",
+                                "",
+                                List.of("play_speech", "replay_speech"),
+                                "안녕하세요")),
                 false);
     }
 

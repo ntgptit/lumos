@@ -6,12 +6,36 @@ import '../../../../domain/repositories/study/study_repository.dart';
 
 part 'study_session_provider.g.dart';
 
+class StudySessionLaunchRequest {
+  const StudySessionLaunchRequest({required this.deckId, this.sessionId});
+
+  final int deckId;
+  final int? sessionId;
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    return other is StudySessionLaunchRequest &&
+        other.deckId == deckId &&
+        other.sessionId == sessionId;
+  }
+
+  @override
+  int get hashCode => Object.hash(deckId, sessionId);
+}
+
 @Riverpod(keepAlive: true)
 class StudySessionController extends _$StudySessionController {
   @override
-  Future<StudySessionData> build(int deckId) async {
+  Future<StudySessionData> build(StudySessionLaunchRequest request) async {
     final StudyRepository repository = ref.read(studyRepositoryProvider);
-    return repository.startSession(deckId: deckId);
+    final int? sessionId = request.sessionId;
+    if (sessionId != null) {
+      return repository.resumeSession(sessionId: sessionId);
+    }
+    return repository.startSession(deckId: request.deckId);
   }
 
   Future<void> submitAnswer(String answer) async {
@@ -19,7 +43,24 @@ class StudySessionController extends _$StudySessionController {
     final StudyRepository repository = ref.read(studyRepositoryProvider);
     state = const AsyncLoading<StudySessionData>();
     state = await AsyncValue.guard<StudySessionData>(() {
-      return repository.submitAnswer(sessionId: current.sessionId, answer: answer);
+      return repository.submitAnswer(
+        sessionId: current.sessionId,
+        answer: answer,
+      );
+    });
+  }
+
+  Future<void> submitMatchedPairs(
+    List<StudyMatchSubmission> matchedPairs,
+  ) async {
+    final StudySessionData current = state.asData!.value;
+    final StudyRepository repository = ref.read(studyRepositoryProvider);
+    state = const AsyncLoading<StudySessionData>();
+    state = await AsyncValue.guard<StudySessionData>(() {
+      return repository.submitMatchedPairs(
+        sessionId: current.sessionId,
+        matchedPairs: matchedPairs,
+      );
     });
   }
 

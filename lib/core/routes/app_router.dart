@@ -59,9 +59,11 @@ GoRouter appRouter(Ref ref) {
         builder: (BuildContext context, GoRouterState state) {
           final int deckId = _resolveDeckId(state);
           final String deckName = _resolveDeckName(state);
+          final int? sessionId = _resolveSessionId(state);
           return StudySessionScreen(
             deckId: deckId,
             deckName: deckName,
+            sessionId: sessionId,
           );
         },
       ),
@@ -80,4 +82,9 @@ int _resolveDeckId(GoRouterState state) {
 
 String _resolveDeckName(GoRouterState state) {
   return state.uri.queryParameters[AppRouteQuery.deckName] ?? '';
+}
+
+int? _resolveSessionId(GoRouterState state) {
+  final String? rawSessionId = state.uri.queryParameters[AppRouteQuery.sessionId];
+  return int.tryParse(rawSessionId ?? '');
 }

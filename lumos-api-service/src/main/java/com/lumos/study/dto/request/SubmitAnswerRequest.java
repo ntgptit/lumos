@@ -1,6 +1,14 @@
 package com.lumos.study.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
+import java.util.List;
 
-public record SubmitAnswerRequest(@NotBlank String answer) {
+import jakarta.validation.Valid;
+
+public record SubmitAnswerRequest(
+        String answer,
+        @Valid List<StudyMatchPairRequest> matchedPairs) {
+
+    public SubmitAnswerRequest(String answer) {
+        this(answer, List.of());
+    }
 }

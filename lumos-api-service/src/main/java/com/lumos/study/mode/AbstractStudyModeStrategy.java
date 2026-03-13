@@ -7,10 +7,13 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.lumos.study.dto.request.StudyMatchPairRequest;
 import com.lumos.study.dto.response.StudyChoiceResponse;
+import com.lumos.study.dto.response.StudyMatchPairResponse;
 import com.lumos.study.entity.StudySession;
 import com.lumos.study.entity.StudySessionItem;
 import com.lumos.study.enums.ReviewOutcome;
+import com.lumos.study.exception.StudyCommandNotAllowedException;
 
 public abstract class AbstractStudyModeStrategy implements StudyModeStrategy {
 
@@ -72,6 +75,19 @@ public abstract class AbstractStudyModeStrategy implements StudyModeStrategy {
         }
         Collections.rotate(choices, currentItem.getSequenceIndex() % Math.max(1, choices.size()));
         return choices;
+    }
+
+    @Override
+    public List<StudyMatchPairResponse> resolveMatchPairs(StudySessionItem currentItem, List<StudySessionItem> items) {
+        return List.of();
+    }
+
+    @Override
+    public ReviewOutcome evaluateMatchPairs(
+            StudySessionItem currentItem,
+            List<StudySessionItem> items,
+            List<StudyMatchPairRequest> matchedPairs) {
+        throw new StudyCommandNotAllowedException();
     }
 
     @Override

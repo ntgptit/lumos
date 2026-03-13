@@ -16,6 +16,42 @@ class StudyChoice {
 }
 
 @immutable
+class StudyMatchPair {
+  const StudyMatchPair({
+    required this.leftId,
+    required this.leftLabel,
+    required this.rightId,
+    required this.rightLabel,
+  });
+
+  factory StudyMatchPair.fromJson(Map<String, dynamic> json) {
+    return StudyMatchPair(
+      leftId: json['leftId'] as String? ?? '',
+      leftLabel: json['leftLabel'] as String? ?? '',
+      rightId: json['rightId'] as String? ?? '',
+      rightLabel: json['rightLabel'] as String? ?? '',
+    );
+  }
+
+  final String leftId;
+  final String leftLabel;
+  final String rightId;
+  final String rightLabel;
+}
+
+@immutable
+class StudyMatchSubmission {
+  const StudyMatchSubmission({required this.leftId, required this.rightId});
+
+  final String leftId;
+  final String rightId;
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{'leftId': leftId, 'rightId': rightId};
+  }
+}
+
+@immutable
 class SpeechCapability {
   const SpeechCapability({
     required this.enabled,
@@ -24,6 +60,10 @@ class SpeechCapability {
     required this.locale,
     required this.voice,
     required this.speed,
+    required this.fieldName,
+    required this.sourceType,
+    required this.audioUrl,
+    required this.allowedActions,
     required this.speechText,
   });
 
@@ -35,6 +75,11 @@ class SpeechCapability {
       locale: json['locale'] as String? ?? '',
       voice: json['voice'] as String? ?? '',
       speed: (json['speed'] as num?)?.toDouble() ?? 1,
+      fieldName: json['fieldName'] as String? ?? '',
+      sourceType: json['sourceType'] as String? ?? '',
+      audioUrl: json['audioUrl'] as String? ?? '',
+      allowedActions: ((json['allowedActions'] as List?) ?? const <dynamic>[])
+          .cast<String>(),
       speechText: json['speechText'] as String? ?? '',
     );
   }
@@ -45,6 +90,10 @@ class SpeechCapability {
   final String locale;
   final String voice;
   final double speed;
+  final String fieldName;
+  final String sourceType;
+  final String audioUrl;
+  final List<String> allowedActions;
   final String speechText;
 }
 
@@ -59,6 +108,7 @@ class StudySessionItemData {
     required this.instruction,
     required this.inputPlaceholder,
     required this.choices,
+    required this.matchPairs,
     required this.speech,
   });
 
@@ -72,9 +122,21 @@ class StudySessionItemData {
       instruction: json['instruction'] as String? ?? '',
       inputPlaceholder: json['inputPlaceholder'] as String? ?? '',
       choices: ((json['choices'] as List?) ?? const <dynamic>[])
-          .map((dynamic item) => StudyChoice.fromJson((item as Map).cast<String, dynamic>()))
+          .map(
+            (dynamic item) =>
+                StudyChoice.fromJson((item as Map).cast<String, dynamic>()),
+          )
           .toList(growable: false),
-      speech: SpeechCapability.fromJson((json['speech'] as Map?)?.cast<String, dynamic>() ?? <String, dynamic>{}),
+      matchPairs: ((json['matchPairs'] as List?) ?? const <dynamic>[])
+          .map(
+            (dynamic item) =>
+                StudyMatchPair.fromJson((item as Map).cast<String, dynamic>()),
+          )
+          .toList(growable: false),
+      speech: SpeechCapability.fromJson(
+        (json['speech'] as Map?)?.cast<String, dynamic>() ??
+            <String, dynamic>{},
+      ),
     );
   }
 
@@ -86,6 +148,7 @@ class StudySessionItemData {
   final String instruction;
   final String inputPlaceholder;
   final List<StudyChoice> choices;
+  final List<StudyMatchPair> matchPairs;
   final SpeechCapability speech;
 }
 
@@ -146,10 +209,18 @@ class StudySessionData {
       sessionType: json['sessionType'] as String? ?? '',
       activeMode: json['activeMode'] as String? ?? '',
       modeState: json['modeState'] as String? ?? '',
-      modePlan: ((json['modePlan'] as List?) ?? const <dynamic>[]).cast<String>(),
-      allowedActions: ((json['allowedActions'] as List?) ?? const <dynamic>[]).cast<String>(),
-      progress: StudyProgressSummary.fromJson((json['progress'] as Map?)?.cast<String, dynamic>() ?? <String, dynamic>{}),
-      currentItem: StudySessionItemData.fromJson((json['currentItem'] as Map?)?.cast<String, dynamic>() ?? <String, dynamic>{}),
+      modePlan: ((json['modePlan'] as List?) ?? const <dynamic>[])
+          .cast<String>(),
+      allowedActions: ((json['allowedActions'] as List?) ?? const <dynamic>[])
+          .cast<String>(),
+      progress: StudyProgressSummary.fromJson(
+        (json['progress'] as Map?)?.cast<String, dynamic>() ??
+            <String, dynamic>{},
+      ),
+      currentItem: StudySessionItemData.fromJson(
+        (json['currentItem'] as Map?)?.cast<String, dynamic>() ??
+            <String, dynamic>{},
+      ),
       sessionCompleted: json['sessionCompleted'] as bool? ?? false,
     );
   }
@@ -208,13 +279,17 @@ class StudyReminderSummary {
   });
 
   factory StudyReminderSummary.fromJson(Map<String, dynamic> json) {
-    final Map<String, dynamic>? recommendationJson = (json['recommendation'] as Map?)?.cast<String, dynamic>();
+    final Map<String, dynamic>? recommendationJson =
+        (json['recommendation'] as Map?)?.cast<String, dynamic>();
     return StudyReminderSummary(
       dueCount: json['dueCount'] as int? ?? 0,
       overdueCount: json['overdueCount'] as int? ?? 0,
       escalationLevel: json['escalationLevel'] as String? ?? '',
-      reminderTypes: ((json['reminderTypes'] as List?) ?? const <dynamic>[]).cast<String>(),
-      recommendation: recommendationJson == null ? null : ReminderRecommendation.fromJson(recommendationJson),
+      reminderTypes: ((json['reminderTypes'] as List?) ?? const <dynamic>[])
+          .cast<String>(),
+      recommendation: recommendationJson == null
+          ? null
+          : ReminderRecommendation.fromJson(recommendationJson),
     );
   }
 
@@ -238,7 +313,8 @@ class StudyAnalyticsOverview {
 
   factory StudyAnalyticsOverview.fromJson(Map<String, dynamic> json) {
     final Map<String, dynamic> rawBoxDistribution =
-        (json['boxDistribution'] as Map?)?.cast<String, dynamic>() ?? <String, dynamic>{};
+        (json['boxDistribution'] as Map?)?.cast<String, dynamic>() ??
+        <String, dynamic>{};
     return StudyAnalyticsOverview(
       totalLearnedItems: json['totalLearnedItems'] as int? ?? 0,
       dueCount: json['dueCount'] as int? ?? 0,
@@ -246,7 +322,8 @@ class StudyAnalyticsOverview {
       passedAttempts: json['passedAttempts'] as int? ?? 0,
       failedAttempts: json['failedAttempts'] as int? ?? 0,
       boxDistribution: rawBoxDistribution.map(
-        (String key, dynamic value) => MapEntry(int.tryParse(key) ?? 0, value as int? ?? 0),
+        (String key, dynamic value) =>
+            MapEntry(int.tryParse(key) ?? 0, value as int? ?? 0),
       ),
     );
   }

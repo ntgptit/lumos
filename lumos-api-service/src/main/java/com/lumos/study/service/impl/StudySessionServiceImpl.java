@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import com.lumos.auth.entity.UserAccount;
 import com.lumos.auth.exception.UnauthorizedAccessException;
@@ -25,9 +26,11 @@ import com.lumos.flashcard.repository.FlashcardRepository;
 import com.lumos.study.constant.StudyConstants;
 import com.lumos.study.dto.request.StartStudySessionRequest;
 import com.lumos.study.dto.request.SubmitAnswerRequest;
+import com.lumos.study.dto.request.StudyMatchPairRequest;
 import com.lumos.study.dto.response.ProgressSummaryResponse;
 import com.lumos.study.dto.response.SpeechCapabilityResponse;
 import com.lumos.study.dto.response.StudyChoiceResponse;
+import com.lumos.study.dto.response.StudyMatchPairResponse;
 import com.lumos.study.dto.response.StudySessionItemResponse;
 import com.lumos.study.dto.response.StudySessionResponse;
 import com.lumos.study.entity.LearningCardState;
@@ -41,6 +44,7 @@ import com.lumos.study.enums.ReviewOutcome;
 import com.lumos.study.enums.StudyMode;
 import com.lumos.study.enums.StudyModeLifecycleState;
 import com.lumos.study.enums.StudySessionType;
+import com.lumos.study.exception.StudyAnswerPayloadInvalidException;
 import com.lumos.study.exception.StudyCommandNotAllowedException;
 import com.lumos.study.exception.StudySessionNotFoundException;
 import com.lumos.study.exception.StudySessionUnavailableException;
@@ -59,6 +63,10 @@ public class StudySessionServiceImpl implements StudySessionService {
 
     private static final int FIRST_MODE_INDEX = 0;
     private static final String MODE_PLAN_SEPARATOR = ",";
+    private static final String SPEECH_ACTION_PLAY = "play_speech";
+    private static final String SPEECH_ACTION_REPLAY = "replay_speech";
+    private static final String SPEECH_FIELD_PROMPT = "prompt";
+    private static final String SPEECH_SOURCE_TEXT = "text";
 
     private final AuthenticatedUserProvider authenticatedUserProvider;
     private final UserAccountRepository userAccountRepository;
@@ -149,11 +157,12 @@ public class StudySessionServiceImpl implements StudySessionService {
     @Transactional
     public StudySessionResponse submitAnswer(Long sessionId, SubmitAnswerRequest request) {
         final StudySession session = resolveSession(sessionId);
-        final StudySessionItem currentItem = resolveCurrentItem(session);
+        final List<StudySessionItem> items = resolveSessionItems(session);
+        final StudySessionItem currentItem = resolveCurrentItem(session, items);
         final StudyModeStrategy studyModeStrategy = resolveStudyModeStrategy(session.getActiveMode());
         ensureActionAllowed(session, currentItem, StudyModeStrategy.ACTION_SUBMIT_ANSWER);
-        final ReviewOutcome outcome = studyModeStrategy.evaluateAnswer(currentItem, request.answer());
-        applyOutcome(session, currentItem, outcome, request.answer());
+        final ReviewOutcome outcome = resolveSubmittedOutcome(studyModeStrategy, session, currentItem, items, request);
+        applyOutcome(session, currentItem, outcome, resolveSubmittedAnswerLog(session, request));
         return buildResponse(session);
     }
 
@@ -365,6 +374,10 @@ public class StudySessionServiceImpl implements StudySessionService {
 
     private StudySessionItem resolveCurrentItem(StudySession session) {
         final List<StudySessionItem> items = resolveSessionItems(session);
+        return resolveCurrentItem(session, items);
+    }
+
+    private StudySessionItem resolveCurrentItem(StudySession session, List<StudySessionItem> items) {
         return items.stream()
                 .filter(item -> Objects.deepEquals(item.getSequenceIndex(), session.getCurrentItemIndex()))
                 .findFirst()
@@ -562,15 +575,9 @@ public class StudySessionServiceImpl implements StudySessionService {
         final String prompt = studyModeStrategy.resolvePrompt(currentItem);
         final String answer = studyModeStrategy.resolveExpectedAnswer(currentItem);
         final List<StudyChoiceResponse> choices = studyModeStrategy.resolveChoices(currentItem, items);
+        final List<StudyMatchPairResponse> matchPairs = studyModeStrategy.resolveMatchPairs(currentItem, items);
         final UserSpeechPreference speechPreference = resolveSpeechPreference();
-        final SpeechCapabilityResponse speechCapability = new SpeechCapabilityResponse(
-                speechPreference.getEnabled(),
-                speechPreference.getAutoPlay(),
-                speechPreference.getEnabled(),
-                speechPreference.getLocale(),
-                speechPreference.getVoice(),
-                speechPreference.getSpeed(),
-                prompt);
+        final SpeechCapabilityResponse speechCapability = buildSpeechCapability(speechPreference, prompt);
         return new StudySessionItemResponse(
                 currentItem.getFlashcard().getId(),
                 prompt,
@@ -580,6 +587,7 @@ public class StudySessionServiceImpl implements StudySessionService {
                 studyModeStrategy.resolveInstruction(),
                 studyModeStrategy.resolveInputPlaceholder(),
                 choices,
+                matchPairs,
                 speechCapability);
     }
 
@@ -599,6 +607,54 @@ public class StudySessionServiceImpl implements StudySessionService {
 
     private StudyModeStrategy resolveStudyModeStrategy(StudyMode studyMode) {
         return this.studyModeStrategyFactory.getStrategy(studyMode);
+    }
+
+    private SpeechCapabilityResponse buildSpeechCapability(UserSpeechPreference speechPreference, String prompt) {
+        final boolean available = speechPreference.getEnabled() && StringUtils.isNotBlank(prompt);
+        return new SpeechCapabilityResponse(
+                speechPreference.getEnabled(),
+                speechPreference.getAutoPlay(),
+                available,
+                speechPreference.getLocale(),
+                speechPreference.getVoice(),
+                speechPreference.getSpeed(),
+                SPEECH_FIELD_PROMPT,
+                SPEECH_SOURCE_TEXT,
+                "",
+                available ? List.of(SPEECH_ACTION_PLAY, SPEECH_ACTION_REPLAY) : List.of(),
+                prompt);
+    }
+
+    private ReviewOutcome resolveSubmittedOutcome(
+            StudyModeStrategy studyModeStrategy,
+            StudySession session,
+            StudySessionItem currentItem,
+            List<StudySessionItem> items,
+            SubmitAnswerRequest request) {
+        // Use the pairing payload only for the canonical match mode.
+        if (session.getActiveMode() == StudyMode.MATCH) {
+            final List<StudyMatchPairRequest> matchedPairs = request.matchedPairs();
+            // Reject match submissions when the canonical left-right pairs are missing.
+            if (CollectionUtils.isEmpty(matchedPairs)) {
+                throw new StudyAnswerPayloadInvalidException();
+            }
+            return studyModeStrategy.evaluateMatchPairs(currentItem, items, matchedPairs);
+        }
+        // Reject non-match submissions when the free-form answer payload is blank.
+        if (StringUtils.isBlank(request.answer())) {
+            throw new StudyAnswerPayloadInvalidException();
+        }
+        return studyModeStrategy.evaluateAnswer(currentItem, request.answer());
+    }
+
+    private String resolveSubmittedAnswerLog(StudySession session, SubmitAnswerRequest request) {
+        // Persist pairing attempts as a compact left:right list for review analytics.
+        if (session.getActiveMode() == StudyMode.MATCH) {
+            return request.matchedPairs().stream()
+                    .map(pair -> pair.leftId() + ":" + pair.rightId())
+                    .collect(Collectors.joining(","));
+        }
+        return request.answer();
     }
 
     private void ensureActionAllowed(StudySession session, StudySessionItem currentItem, String actionId) {

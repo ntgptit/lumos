@@ -34,6 +34,7 @@ abstract class AbstractStudyModeViewStrategy implements StudyModeViewStrategy {
       submitLabel: resolveSubmitLabel(),
       useChoiceGrid: usesChoiceGrid(),
       choices: resolveChoices(currentItem: currentItem),
+      matchPairs: resolveMatchPairs(currentItem: currentItem),
       actions: resolveActions(session: session),
     );
   }
@@ -69,6 +70,12 @@ abstract class AbstractStudyModeViewStrategy implements StudyModeViewStrategy {
     return currentItem.choices;
   }
 
+  List<StudyMatchPair> resolveMatchPairs({
+    required StudySessionItemData currentItem,
+  }) {
+    return currentItem.matchPairs;
+  }
+
   bool usesChoiceGrid() {
     return false;
   }
@@ -78,15 +85,15 @@ abstract class AbstractStudyModeViewStrategy implements StudyModeViewStrategy {
   String resolveModeLabel() {
     switch (supportedMode) {
       case 'REVIEW':
-        return 'Xem lai';
+        return 'Xem lại';
       case 'MATCH':
-        return 'Ghep doi';
+        return 'Ghép đôi';
       case 'GUESS':
-        return 'Doan';
+        return 'Đoán';
       case 'RECALL':
-        return 'Nho lai';
+        return 'Nhớ lại';
       case 'FILL':
-        return 'Dien';
+        return 'Điền';
     }
     return supportedMode;
   }
@@ -117,7 +124,7 @@ abstract class AbstractStudyModeViewStrategy implements StudyModeViewStrategy {
       case _actionGoNext:
         return StudyModeActionViewModel(
           actionId: _actionGoNext,
-          label: session.sessionCompleted ? 'Done' : 'Next',
+          label: session.sessionCompleted ? 'Hoàn tất' : 'Tiếp tục',
           style: StudyModeActionButtonStyle.primary,
           icon: Icons.navigate_next_rounded,
         );
@@ -126,15 +133,15 @@ abstract class AbstractStudyModeViewStrategy implements StudyModeViewStrategy {
   }
 
   String resolveRevealActionLabel() {
-    return 'Show answer';
+    return 'Hiển thị';
   }
 
   String resolveRememberedActionLabel() {
-    return 'Remembered';
+    return 'Nhớ được';
   }
 
   String resolveRetryActionLabel() {
-    return 'Need review';
+    return 'Cần học lại';
   }
 
   List<StudyModeActionViewModel> resolveActions({

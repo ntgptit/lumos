@@ -47,9 +47,13 @@ void main() {
         final session = _buildSession(
           activeMode: 'MATCH',
           allowedActions: const <String>['GO_NEXT'],
-          choices: const <StudyChoice>[
-            StudyChoice(id: 'choice-0', label: 'xin chao'),
-            StudyChoice(id: 'choice-1', label: 'cam on'),
+          matchPairs: const <StudyMatchPair>[
+            StudyMatchPair(
+              leftId: 'left-101',
+              leftLabel: '안녕하세요',
+              rightId: 'right-101',
+              rightLabel: 'xin chao',
+            ),
           ],
         );
 
@@ -57,9 +61,8 @@ void main() {
             .resolve(session.activeMode)
             .buildViewModel(session: session);
 
-        expect(viewModel.choices, hasLength(2));
+        expect(viewModel.matchPairs, hasLength(1));
         expect(viewModel.showAnswerInput, isFalse);
-        expect(viewModel.useChoiceGrid, isTrue);
         expect(
           viewModel.actions.map((action) => action.actionId).toList(),
           const <String>['GO_NEXT'],
@@ -84,7 +87,7 @@ void main() {
 
       expect(viewModel.showAnswerInput, isTrue);
       expect(viewModel.inputLabel, 'Type your answer');
-      expect(viewModel.submitLabel, 'Check');
+      expect(viewModel.submitLabel, 'Kiểm tra');
       expect(
         viewModel.actions.map((action) => action.actionId).toList(),
         const <String>['REVEAL_ANSWER', 'GO_NEXT'],
@@ -97,6 +100,7 @@ StudySessionData _buildSession({
   required String activeMode,
   required List<String> allowedActions,
   List<StudyChoice> choices = const <StudyChoice>[],
+  List<StudyMatchPair> matchPairs = const <StudyMatchPair>[],
   String inputPlaceholder = '',
 }) {
   return StudySessionData(
@@ -126,6 +130,7 @@ StudySessionData _buildSession({
       instruction: 'Study instruction',
       inputPlaceholder: inputPlaceholder,
       choices: choices,
+      matchPairs: matchPairs,
       speech: const SpeechCapability(
         enabled: true,
         autoPlay: false,
@@ -133,6 +138,10 @@ StudySessionData _buildSession({
         locale: 'ko-KR',
         voice: 'ko-KR-neutral',
         speed: 1,
+        fieldName: 'prompt',
+        sourceType: 'text',
+        audioUrl: '',
+        allowedActions: <String>['play_speech', 'replay_speech'],
         speechText: '안녕하세요',
       ),
     ),

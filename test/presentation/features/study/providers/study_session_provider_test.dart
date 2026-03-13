@@ -10,14 +10,14 @@ void main() {
     test('build starts session with deck id', () async {
       final FakeStudyRepository repository = FakeStudyRepository();
       final ProviderContainer container = ProviderContainer(
-        overrides: [
-          studyRepositoryProvider.overrideWithValue(repository),
-        ],
+        overrides: [studyRepositoryProvider.overrideWithValue(repository)],
       );
       addTearDown(container.dispose);
 
       final session = await container.read(
-        studySessionControllerProvider(10).future,
+        studySessionControllerProvider(
+          const StudySessionLaunchRequest(deckId: 10),
+        ).future,
       );
 
       expect(repository.lastDeckId, 10);
@@ -27,55 +27,140 @@ void main() {
     test('submitAnswer delegates to repository and updates state', () async {
       final FakeStudyRepository repository = FakeStudyRepository();
       final ProviderContainer container = ProviderContainer(
-        overrides: [
-          studyRepositoryProvider.overrideWithValue(repository),
-        ],
+        overrides: [studyRepositoryProvider.overrideWithValue(repository)],
       );
       addTearDown(container.dispose);
-      await container.read(studySessionControllerProvider(10).future);
+      await container.read(
+        studySessionControllerProvider(
+          const StudySessionLaunchRequest(deckId: 10),
+        ).future,
+      );
 
       await container
-          .read(studySessionControllerProvider(10).notifier)
+          .read(
+            studySessionControllerProvider(
+              const StudySessionLaunchRequest(deckId: 10),
+            ).notifier,
+          )
           .submitAnswer('xin chao');
 
-      final session = container.read(studySessionControllerProvider(10)).requireValue;
+      final session = container
+          .read(
+            studySessionControllerProvider(
+              const StudySessionLaunchRequest(deckId: 10),
+            ),
+          )
+          .requireValue;
       expect(repository.lastAnswer, 'xin chao');
       expect(session.modeState, 'WAITING_FEEDBACK');
     });
 
-    test('revealAnswer markRemembered retryItem and goNext update canonical state', () async {
+    test(
+      'revealAnswer markRemembered retryItem and goNext update canonical state',
+      () async {
+        final FakeStudyRepository repository = FakeStudyRepository();
+        final ProviderContainer container = ProviderContainer(
+          overrides: [studyRepositoryProvider.overrideWithValue(repository)],
+        );
+        addTearDown(container.dispose);
+        await container.read(
+          studySessionControllerProvider(
+            const StudySessionLaunchRequest(deckId: 10),
+          ).future,
+        );
+
+        await container
+            .read(
+              studySessionControllerProvider(
+                const StudySessionLaunchRequest(deckId: 10),
+              ).notifier,
+            )
+            .revealAnswer();
+        expect(
+          container
+              .read(
+                studySessionControllerProvider(
+                  const StudySessionLaunchRequest(deckId: 10),
+                ),
+              )
+              .requireValue
+              .modeState,
+          'WAITING_FEEDBACK',
+        );
+
+        await container
+            .read(
+              studySessionControllerProvider(
+                const StudySessionLaunchRequest(deckId: 10),
+              ).notifier,
+            )
+            .markRemembered();
+        expect(
+          container
+              .read(
+                studySessionControllerProvider(
+                  const StudySessionLaunchRequest(deckId: 10),
+                ),
+              )
+              .requireValue
+              .allowedActions,
+          contains('GO_NEXT'),
+        );
+
+        await container
+            .read(
+              studySessionControllerProvider(
+                const StudySessionLaunchRequest(deckId: 10),
+              ).notifier,
+            )
+            .retryItem();
+        expect(
+          container
+              .read(
+                studySessionControllerProvider(
+                  const StudySessionLaunchRequest(deckId: 10),
+                ),
+              )
+              .requireValue
+              .modeState,
+          'WAITING_FEEDBACK',
+        );
+
+        await container
+            .read(
+              studySessionControllerProvider(
+                const StudySessionLaunchRequest(deckId: 10),
+              ).notifier,
+            )
+            .goNext();
+        expect(
+          container
+              .read(
+                studySessionControllerProvider(
+                  const StudySessionLaunchRequest(deckId: 10),
+                ),
+              )
+              .requireValue
+              .activeMode,
+          'MATCH',
+        );
+      },
+    );
+
+    test('build resumes session when session id is provided', () async {
       final FakeStudyRepository repository = FakeStudyRepository();
       final ProviderContainer container = ProviderContainer(
-        overrides: [
-          studyRepositoryProvider.overrideWithValue(repository),
-        ],
+        overrides: [studyRepositoryProvider.overrideWithValue(repository)],
       );
       addTearDown(container.dispose);
-      await container.read(studySessionControllerProvider(10).future);
 
-      await container.read(studySessionControllerProvider(10).notifier).revealAnswer();
-      expect(
-        container.read(studySessionControllerProvider(10)).requireValue.modeState,
-        'WAITING_FEEDBACK',
+      await container.read(
+        studySessionControllerProvider(
+          const StudySessionLaunchRequest(deckId: 10, sessionId: 33),
+        ).future,
       );
 
-      await container.read(studySessionControllerProvider(10).notifier).markRemembered();
-      expect(
-        container.read(studySessionControllerProvider(10)).requireValue.allowedActions,
-        contains('GO_NEXT'),
-      );
-
-      await container.read(studySessionControllerProvider(10).notifier).retryItem();
-      expect(
-        container.read(studySessionControllerProvider(10)).requireValue.modeState,
-        'RETRY_PENDING',
-      );
-
-      await container.read(studySessionControllerProvider(10).notifier).goNext();
-      expect(
-        container.read(studySessionControllerProvider(10)).requireValue.activeMode,
-        'MATCH',
-      );
+      expect(repository.lastSessionId, 33);
     });
   });
 }

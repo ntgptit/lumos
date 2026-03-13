@@ -13,6 +13,11 @@ class FillStudyModeViewStrategy extends AbstractStudyModeViewStrategy {
 
   @override
   String resolveRevealActionLabel() {
-    return 'Help';
+    return 'Trợ giúp';
+  }
+
+  @override
+  String resolveSubmitLabel() {
+    return 'Kiểm tra';
   }
 }

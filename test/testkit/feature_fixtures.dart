@@ -60,6 +60,14 @@ StudySessionData sampleStudySession({
       choices: const <StudyChoice>[
         StudyChoice(id: 'choice-0', label: 'xin chao'),
       ],
+      matchPairs: const <StudyMatchPair>[
+        StudyMatchPair(
+          leftId: 'left-101',
+          leftLabel: '안녕하세요',
+          rightId: 'right-101',
+          rightLabel: 'xin chao',
+        ),
+      ],
       speech: const SpeechCapability(
         enabled: true,
         autoPlay: false,
@@ -67,6 +75,10 @@ StudySessionData sampleStudySession({
         locale: 'ko-KR',
         voice: 'ko-KR-neutral',
         speed: 1,
+        fieldName: 'prompt',
+        sourceType: 'text',
+        audioUrl: '',
+        allowedActions: <String>['play_speech', 'replay_speech'],
         speechText: '안녕하세요',
       ),
     ),
@@ -230,6 +242,20 @@ class FakeStudyRepository implements StudyRepository {
   }
 
   @override
+  Future<StudySessionData> submitMatchedPairs({
+    required int sessionId,
+    required List<StudyMatchSubmission> matchedPairs,
+  }) async {
+    lastSessionId = sessionId;
+    return _session = sampleStudySession(
+      sessionId: sessionId,
+      activeMode: 'MATCH',
+      modeState: 'WAITING_FEEDBACK',
+      allowedActions: const <String>['GO_NEXT'],
+    );
+  }
+
+  @override
   Future<StudySessionData> revealAnswer({required int sessionId}) async {
     lastSessionId = sessionId;
     return _session = sampleStudySession(
@@ -257,7 +283,7 @@ class FakeStudyRepository implements StudyRepository {
     return _session = sampleStudySession(
       sessionId: sessionId,
       activeMode: _session.activeMode,
-      modeState: 'RETRY_PENDING',
+      modeState: 'WAITING_FEEDBACK',
       allowedActions: const <String>['GO_NEXT'],
     );
   }

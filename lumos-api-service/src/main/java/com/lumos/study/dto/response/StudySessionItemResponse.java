@@ -11,5 +11,6 @@ public record StudySessionItemResponse(
         String instruction,
         String inputPlaceholder,
         List<StudyChoiceResponse> choices,
+        List<StudyMatchPairResponse> matchPairs,
         SpeechCapabilityResponse speech) {
 }

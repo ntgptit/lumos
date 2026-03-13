@@ -33,6 +33,14 @@ void main() {
           'choices': <Map<String, dynamic>>[
             <String, dynamic>{'id': 'choice-0', 'label': 'xin chao'},
           ],
+          'matchPairs': <Map<String, dynamic>>[
+            <String, dynamic>{
+              'leftId': 'left-101',
+              'leftLabel': '안녕하세요',
+              'rightId': 'right-101',
+              'rightLabel': 'xin chao',
+            },
+          ],
           'speech': <String, dynamic>{
             'enabled': true,
             'autoPlay': false,
@@ -40,6 +48,10 @@ void main() {
             'locale': 'ko-KR',
             'voice': 'ko-KR-neutral',
             'speed': 1.0,
+            'fieldName': 'prompt',
+            'sourceType': 'text',
+            'audioUrl': '',
+            'allowedActions': const <String>['play_speech', 'replay_speech'],
             'speechText': '안녕하세요',
           },
         },
@@ -49,6 +61,7 @@ void main() {
       expect(session.sessionId, 33);
       expect(session.currentItem.flashcardId, 101);
       expect(session.currentItem.choices.single.label, 'xin chao');
+      expect(session.currentItem.matchPairs.single.leftId, 'left-101');
       expect(session.currentItem.speech.locale, 'ko-KR');
     });
 

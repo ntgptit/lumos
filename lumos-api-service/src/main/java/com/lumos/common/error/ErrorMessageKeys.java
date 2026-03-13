@@ -29,4 +29,5 @@ public class ErrorMessageKeys {
     public static final String STUDY_SESSION_NOT_FOUND = "study.session-not-found";
     public static final String STUDY_SESSION_UNAVAILABLE = "study.session-unavailable";
     public static final String STUDY_COMMAND_NOT_ALLOWED = "study.command-not-allowed";
+    public static final String STUDY_ANSWER_PAYLOAD_INVALID = "study.answer-payload-invalid";
 }

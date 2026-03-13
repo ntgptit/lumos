@@ -32,6 +32,7 @@ import com.lumos.auth.exception.DuplicateUsernameException;
 import com.lumos.auth.exception.InvalidCredentialsException;
 import com.lumos.auth.exception.InvalidRefreshTokenException;
 import com.lumos.auth.exception.UnauthorizedAccessException;
+import com.lumos.study.exception.StudyAnswerPayloadInvalidException;
 import com.lumos.study.exception.StudyCommandNotAllowedException;
 import com.lumos.study.exception.StudySessionNotFoundException;
 import com.lumos.study.exception.StudySessionUnavailableException;
@@ -219,6 +220,17 @@ public class GlobalExceptionHandler {
             HttpServletRequest request) {
         return buildErrorResponse(
                 HttpStatus.CONFLICT,
+                resolveMessage(exception.getMessageKey(), exception.getMessageArgs()),
+                request.getRequestURI(),
+                Map.of());
+    }
+
+    @ExceptionHandler(StudyAnswerPayloadInvalidException.class)
+    public ResponseEntity<ApiErrorResponse> handleStudyAnswerPayloadInvalid(
+            StudyAnswerPayloadInvalidException exception,
+            HttpServletRequest request) {
+        return buildErrorResponse(
+                HttpStatus.BAD_REQUEST,
                 resolveMessage(exception.getMessageKey(), exception.getMessageArgs()),
                 request.getRequestURI(),
                 Map.of());

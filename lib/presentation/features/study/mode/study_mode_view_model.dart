@@ -13,6 +13,7 @@ class StudyModeViewModel {
     required this.submitLabel,
     required this.useChoiceGrid,
     required this.choices,
+    required this.matchPairs,
     required this.actions,
   });
 
@@ -26,5 +27,6 @@ class StudyModeViewModel {
   final String submitLabel;
   final bool useChoiceGrid;
   final List<StudyChoice> choices;
+  final List<StudyMatchPair> matchPairs;
   final List<StudyModeActionViewModel> actions;
 }

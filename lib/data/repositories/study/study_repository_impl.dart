@@ -51,6 +51,23 @@ class DioStudyRepository implements StudyRepository {
   }
 
   @override
+  Future<StudySessionData> submitMatchedPairs({
+    required int sessionId,
+    required List<StudyMatchSubmission> matchedPairs,
+  }) async {
+    final Response<dynamic> response = await _dio.post<dynamic>(
+      '${StudyRepositoryImplConst.sessionsPath}/$sessionId/submit-answer',
+      data: <String, dynamic>{
+        'answer': 'match',
+        'matchedPairs': matchedPairs
+            .map((StudyMatchSubmission pair) => pair.toJson())
+            .toList(growable: false),
+      },
+    );
+    return StudySessionData.fromJson(_castMap(response.data));
+  }
+
+  @override
   Future<StudySessionData> revealAnswer({required int sessionId}) async {
     final Response<dynamic> response = await _dio.post<dynamic>(
       '${StudyRepositoryImplConst.sessionsPath}/$sessionId/reveal-answer',

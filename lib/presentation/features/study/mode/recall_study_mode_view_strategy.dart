@@ -18,11 +18,11 @@ class RecallStudyModeViewStrategy extends AbstractStudyModeViewStrategy {
 
   @override
   String resolveRevealActionLabel() {
-    return 'Show answer';
+    return 'Hiển thị';
   }
 
   @override
   String resolveRetryActionLabel() {
-    return 'Forgot it';
+    return 'Đã quên';
   }
 }

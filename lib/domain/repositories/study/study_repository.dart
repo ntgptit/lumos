@@ -10,6 +10,11 @@ abstract class StudyRepository {
     required String answer,
   });
 
+  Future<StudySessionData> submitMatchedPairs({
+    required int sessionId,
+    required List<StudyMatchSubmission> matchedPairs,
+  });
+
   Future<StudySessionData> revealAnswer({required int sessionId});
 
   Future<StudySessionData> markRemembered({required int sessionId});
