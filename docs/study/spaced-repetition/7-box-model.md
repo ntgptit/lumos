@@ -64,8 +64,6 @@ Tối thiểu gồm:
 
 - `passed`
 - `failed`
-- `revealed_without_pass`
-- `skipped`
 
 ### DueQueue
 
