@@ -74,6 +74,37 @@ void main() {
       StudySessionReviewContentConst.nextActionId,
     ]);
   });
+
+  testWidgets('review blocks backward swipe on the first card', (
+    WidgetTester tester,
+  ) async {
+    final List<String> actions = <String>[];
+    await _pumpReviewContent(
+      tester: tester,
+      locale: const Locale('vi'),
+      session: sampleStudySession(
+        progress: const StudyProgressSummary(
+          completedItems: 0,
+          totalItems: 2,
+          completedModes: 0,
+          totalModes: 5,
+          itemProgress: 0,
+          modeProgress: 0,
+          sessionProgress: 0,
+        ),
+      ),
+      onActionPressed: (String actionId) async {
+        actions.add(actionId);
+      },
+    );
+
+    await tester.drag(find.text('xin chao'), const Offset(600, 0));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
+
+    expect(actions, isEmpty);
+    expect(find.text('Đây là thẻ đầu tiên.'), findsOneWidget);
+  });
 }
 
 Future<void> _pumpStudySessionScreen({
@@ -101,6 +132,8 @@ Future<void> _pumpStudySessionScreen({
 Future<void> _pumpReviewContent({
   required WidgetTester tester,
   required Future<void> Function(String actionId) onActionPressed,
+  StudySessionData? session,
+  Locale? locale,
 }) async {
   tester.view.devicePixelRatio = 1;
   tester.view.physicalSize = const Size(430, 932);
@@ -109,11 +142,12 @@ Future<void> _pumpReviewContent({
 
   await tester.pumpWidget(
     MaterialApp(
+      locale: locale,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: Scaffold(
         body: StudySessionReviewContent(
-          session: sampleStudySession(),
+          session: session ?? sampleStudySession(),
           viewModel: _reviewViewModel(),
           speechPlaybackState: const StudySpeechPlaybackState.initial(),
           onActionPressed: onActionPressed,

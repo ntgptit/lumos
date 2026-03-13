@@ -12,6 +12,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.lumos.auth.entity.UserAccount;
 import com.lumos.auth.enums.AccountStatus;
 import com.lumos.auth.repository.UserAccountRepository;
+import com.lumos.common.error.ErrorMessageKeys;
 
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
@@ -29,6 +30,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenService jwtTokenService;
     private final UserAccountRepository userAccountRepository;
+    private final ApiSecurityErrorResponseWriter apiSecurityErrorResponseWriter;
 
     @Override
     protected void doFilterInternal(
@@ -47,16 +49,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             final UserAccount userAccount = this.userAccountRepository
                     .findByIdAndDeletedAtIsNull(claims.userId())
                     .orElse(null);
-            // Ignore the token when the referenced account no longer exists.
+            // Reject the token when the referenced account no longer exists.
             if (userAccount == null) {
-                filterChain.doFilter(request, response);
-                // Return without authenticating because the token points to a deleted account.
+                SecurityContextHolder.clearContext();
+                this.apiSecurityErrorResponseWriter.writeUnauthorized(request, response);
+                // Return immediately because deleted accounts must not keep using stale tokens.
                 return;
             }
-            // Ignore the token when the account is no longer allowed to sign in.
+            // Reject the token when the account is no longer allowed to sign in.
             if (userAccount.getAccountStatus() != AccountStatus.ACTIVE) {
-                filterChain.doFilter(request, response);
-                // Return without authenticating because inactive accounts must not regain access.
+                SecurityContextHolder.clearContext();
+                this.apiSecurityErrorResponseWriter.writeForbidden(
+                        request,
+                        response,
+                        ErrorMessageKeys.AUTH_ACCOUNT_DISABLED);
+                // Return immediately because inactive accounts must not regain access.
                 return;
             }
             final AuthUserPrincipal principal = new AuthUserPrincipal(userAccount.getId(), userAccount.getUsername());
@@ -67,6 +74,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (JwtException | IllegalArgumentException exception) {
             SecurityContextHolder.clearContext();
+            this.apiSecurityErrorResponseWriter.writeUnauthorized(request, response);
+            // Return immediately because expired and malformed access tokens must stop at the security boundary.
+            return;
         }
         filterChain.doFilter(request, response);
     }

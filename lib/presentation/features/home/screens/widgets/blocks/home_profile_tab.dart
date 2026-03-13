@@ -8,6 +8,7 @@ import '../../../../../../l10n/app_localizations.dart';
 import '../../../../../shared/widgets/lumos_widgets.dart';
 import '../../../../auth/providers/auth_session_provider.dart';
 import '../../../../study/providers/speech_preference_provider.dart';
+import '../../../../study/providers/study_preference_provider.dart';
 
 abstract final class HomeProfileTabConst {
   HomeProfileTabConst._();
@@ -19,6 +20,11 @@ abstract final class HomeProfileTabConst {
     'ko-KR-male',
   ];
   static const List<double> speechSpeeds = <double>[0.8, 1.0, 1.2, 1.5];
+  static final List<int> firstLearningCardLimits = List<int>.generate(
+    StudyPreference.maxFirstLearningCardLimit,
+    (int index) => StudyPreference.minFirstLearningCardLimit + index,
+    growable: false,
+  );
 }
 
 class HomeProfileTab extends ConsumerWidget {
@@ -59,6 +65,9 @@ class HomeProfileTab extends ConsumerWidget {
     final AsyncValue<SpeechPreference> speechAsync = ref.watch(
       speechPreferenceControllerProvider,
     );
+    final AsyncValue<StudyPreference> studyAsync = ref.watch(
+      studyPreferenceControllerProvider,
+    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
@@ -68,6 +77,8 @@ class HomeProfileTab extends ConsumerWidget {
           themeMode: themeMode,
           selectedPreference: selectedPreference,
         ),
+        const SizedBox(height: AppSpacing.lg),
+        _buildStudyCard(ref: ref, l10n: l10n, studyAsync: studyAsync),
         const SizedBox(height: AppSpacing.lg),
         _buildSpeechCard(ref: ref, l10n: l10n, speechAsync: speechAsync),
         const SizedBox(height: AppSpacing.lg),
@@ -180,6 +191,82 @@ class HomeProfileTab extends ConsumerWidget {
       ThemeMode.dark => l10n.profileThemeToggleToLight,
       _ => l10n.profileThemeToggleToDark,
     };
+  }
+
+  Widget _buildStudyCard({
+    required WidgetRef ref,
+    required AppLocalizations l10n,
+    required AsyncValue<StudyPreference> studyAsync,
+  }) {
+    return LumosCard(
+      margin: EdgeInsets.zero,
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            LumosText(
+              l10n.profileStudySectionTitle,
+              style: LumosTextStyle.titleLarge,
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            LumosText(
+              l10n.profileStudySectionSubtitle,
+              style: LumosTextStyle.bodyMedium,
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            studyAsync.when(
+              loading: () => const Center(child: LumosLoadingIndicator()),
+              error: (Object error, StackTrace stackTrace) {
+                return LumosText(
+                  error.toString(),
+                  style: LumosTextStyle.bodySmall,
+                );
+              },
+              data: (StudyPreference preference) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    LumosDropdown<int>(
+                      value: preference.firstLearningCardLimit,
+                      label: l10n.profileStudyFirstLearningLimitLabel,
+                      items: HomeProfileTabConst.firstLearningCardLimits
+                          .map(
+                            (int limit) => DropdownMenuItem<int>(
+                              value: limit,
+                              child: LumosText(
+                                l10n.profileStudyFirstLearningLimitValue(limit),
+                                style: LumosTextStyle.bodyMedium,
+                              ),
+                            ),
+                          )
+                          .toList(growable: false),
+                      onChanged: (int? limit) {
+                        if (limit == null) {
+                          return;
+                        }
+                        ref
+                            .read(studyPreferenceControllerProvider.notifier)
+                            .savePreference(
+                              preference.copyWith(
+                                firstLearningCardLimit: limit,
+                              ),
+                            );
+                      },
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    LumosText(
+                      l10n.profileStudyReviewHint,
+                      style: LumosTextStyle.bodySmall,
+                    ),
+                  ],
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildSpeechCard({

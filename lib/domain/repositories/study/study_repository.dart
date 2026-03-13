@@ -39,4 +39,10 @@ abstract class StudyRepository {
   Future<SpeechPreference> updateSpeechPreference({
     required SpeechPreference preference,
   });
+
+  Future<StudyPreference> getStudyPreference();
+
+  Future<StudyPreference> updateStudyPreference({
+    required StudyPreference preference,
+  });
 }

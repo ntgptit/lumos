@@ -1,8 +1,6 @@
 package com.lumos.study.service.impl;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +17,6 @@ import com.lumos.flashcard.repository.FlashcardRepository;
 import com.lumos.study.dto.request.StartStudySessionRequest;
 import com.lumos.study.dto.request.SubmitAnswerRequest;
 import com.lumos.study.dto.response.StudySessionResponse;
-import com.lumos.study.entity.LearningCardState;
 import com.lumos.study.entity.StudySession;
 import com.lumos.study.entity.StudySessionItem;
 import com.lumos.study.enums.ReviewOutcome;
@@ -37,6 +34,7 @@ import com.lumos.study.support.StudyLearningStateSyncSupport;
 import com.lumos.study.support.StudySessionFlowSupport;
 import com.lumos.study.support.StudySessionResponseFactory;
 import com.lumos.study.support.StudySessionSetupSupport;
+import com.lumos.study.support.UserStudyPreferenceSupport;
 
 import lombok.RequiredArgsConstructor;
 
@@ -57,6 +55,7 @@ public class StudySessionServiceImpl implements StudySessionService {
     private final StudySessionFlowSupport studySessionFlowSupport;
     private final StudyLearningStateSyncSupport studyLearningStateSyncSupport;
     private final StudySessionResponseFactory studySessionResponseFactory;
+    private final UserStudyPreferenceSupport userStudyPreferenceSupport;
 
     /**
      * Start a canonical study session for the requested deck.
@@ -72,32 +71,18 @@ public class StudySessionServiceImpl implements StudySessionService {
                 .orElseThrow(UnauthorizedAccessException::new);
         final Deck deck = this.deckRepository.findByIdAndDeletedAtIsNull(request.deckId())
                 .orElseThrow(() -> new DeckNotFoundException(request.deckId()));
-        final List<Flashcard> flashcards = this.flashcardRepository.findAllByDeckIdAndDeletedAtIsNullOrderByIdAsc(
-                request.deckId());
-        // Reject session creation when the selected deck has no active flashcards.
-        if (flashcards.isEmpty()) {
-            // Stop session creation because an empty deck cannot produce any meaningful study flow.
-            throw new StudySessionUnavailableException();
-        }
-
-        final Map<Long, LearningCardState> learningStateByFlashcardId = this.studySessionSetupSupport
-                .resolveLearningStateByFlashcardId(userId, flashcards);
-        // Separate unseen cards so first-learning sessions can traverse the full five-mode pipeline.
-        final List<Flashcard> newFlashcards = flashcards.stream()
-                .filter(flashcard -> !learningStateByFlashcardId.containsKey(flashcard.getId()))
-                .toList();
-        // Sort due cards by box so lower-retention items are reviewed before more stable ones.
-        final List<Flashcard> dueFlashcards = flashcards.stream()
-                .filter(flashcard -> this.studySessionSetupSupport.isDue(learningStateByFlashcardId.get(flashcard.getId())))
-                .sorted(Comparator.comparing(flashcard -> learningStateByFlashcardId.get(flashcard.getId()).getBoxIndex()))
-                .toList();
+        final List<Flashcard> firstLearningFlashcards = resolveFirstLearningFlashcards(request, userId);
+        final List<Flashcard> dueFlashcards = resolveDueFlashcards(
+                request,
+                userId,
+                firstLearningFlashcards);
         final StudySessionType sessionType = resolveSessionType(
                 request,
-                newFlashcards,
+                firstLearningFlashcards,
                 dueFlashcards);
         final List<Flashcard> selectedFlashcards = this.studySessionSetupSupport.resolveSelectedFlashcards(
                 sessionType,
-                newFlashcards,
+                firstLearningFlashcards,
                 dueFlashcards);
         // Reject session creation when no flashcards match the selected session type.
         if (selectedFlashcards.isEmpty()) {
@@ -352,7 +337,7 @@ public class StudySessionServiceImpl implements StudySessionService {
 
     private StudySessionType resolveSessionType(
             StartStudySessionRequest request,
-            List<Flashcard> newFlashcards,
+            List<Flashcard> firstLearningFlashcards,
             List<Flashcard> dueFlashcards) {
         // Respect the explicit session type requested by the client when one is provided.
         if (request.preferredSessionType() != null) {
@@ -360,6 +345,38 @@ public class StudySessionServiceImpl implements StudySessionService {
             return request.preferredSessionType();
         }
         // Return the backend-selected session type when the client leaves session-type selection automatic.
-        return this.studySessionSetupSupport.resolveSessionType(newFlashcards, dueFlashcards);
+        return this.studySessionSetupSupport.resolveSessionType(firstLearningFlashcards, dueFlashcards);
+    }
+
+    private List<Flashcard> resolveFirstLearningFlashcards(StartStudySessionRequest request, Long userId) {
+        // Skip first-learning candidate lookup when the client explicitly requested a review session.
+        if (request.preferredSessionType() == StudySessionType.REVIEW) {
+            // Return an empty list because review-only entry should not load new-card candidates.
+            return List.of();
+        }
+        final int firstLearningCardLimit = this.userStudyPreferenceSupport.resolveFirstLearningCardLimit(userId);
+        // Return the DB-limited first-learning candidates that respect the user's configured session size.
+        return this.studySessionSetupSupport.resolveFirstLearningFlashcards(
+                userId,
+                request.deckId(),
+                firstLearningCardLimit);
+    }
+
+    private List<Flashcard> resolveDueFlashcards(
+            StartStudySessionRequest request,
+            Long userId,
+            List<Flashcard> firstLearningFlashcards) {
+        // Skip due-card lookup when the client explicitly requested a first-learning session.
+        if (request.preferredSessionType() == StudySessionType.FIRST_LEARNING) {
+            // Return an empty list because first-learning entry should not load review candidates.
+            return List.of();
+        }
+        // Skip due-card lookup when automatic session selection already found first-learning candidates.
+        if (!firstLearningFlashcards.isEmpty()) {
+            // Return an empty list because automatic selection should stay on first-learning while new cards exist.
+            return List.of();
+        }
+        // Return all due review cards because review sessions must keep the existing deadline-driven behavior.
+        return this.studySessionSetupSupport.resolveDueFlashcards(userId, request.deckId());
     }
 }

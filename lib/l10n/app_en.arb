@@ -319,6 +319,18 @@
   "profileSpeechAutoPlayLabel": "Auto play current item",
   "profileSpeechVoiceLabel": "Voice",
   "profileSpeechSpeedLabel": "Speed",
+  "profileStudySectionTitle": "Study preference",
+  "profileStudySectionSubtitle": "Set how many new cards a FIRST_LEARNING session can load from the backend.",
+  "profileStudyFirstLearningLimitLabel": "New cards per FIRST_LEARNING session",
+  "profileStudyFirstLearningLimitValue": "{count} card(s)",
+  "@profileStudyFirstLearningLimitValue": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profileStudyReviewHint": "REVIEW sessions always include every due card.",
   "studyProgressMomentumTitle": "Study momentum",
   "studyProgressMomentumSummary": "Due {dueCount} | Overdue {overdueCount} | Escalation {escalationLevel}",
   "@studyProgressMomentumSummary": {
@@ -375,6 +387,7 @@
   "studySpeechPlayAction": "Listen",
   "studySpeechPlayingAction": "Playing",
   "studySpeechReplayAction": "Replay",
+  "studyReviewFirstCardToast": "This is the first card.",
   "studyResetCurrentModeAction": "Reset current mode",
   "studyResetCurrentModeTitle": "Reset current mode?",
   "studyResetCurrentModeMessage": "This will clear all progress in the current mode and start that mode again from the first item.",

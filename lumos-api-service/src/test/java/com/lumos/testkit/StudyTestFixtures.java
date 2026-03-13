@@ -6,6 +6,7 @@ import java.util.Map;
 import com.lumos.study.dto.request.StartStudySessionRequest;
 import com.lumos.study.dto.request.SubmitAnswerRequest;
 import com.lumos.study.dto.request.StudyMatchPairRequest;
+import com.lumos.study.dto.request.UpdateStudyPreferenceRequest;
 import com.lumos.study.dto.request.UpdateSpeechPreferenceRequest;
 import com.lumos.study.enums.StudySessionType;
 import com.lumos.reminder.dto.response.ReminderRecommendationResponse;
@@ -16,6 +17,7 @@ import com.lumos.study.dto.response.SpeechPreferenceResponse;
 import com.lumos.study.dto.response.StudyAnalyticsOverviewResponse;
 import com.lumos.study.dto.response.StudyChoiceResponse;
 import com.lumos.study.dto.response.StudyMatchPairResponse;
+import com.lumos.study.dto.response.StudyPreferenceResponse;
 import com.lumos.study.dto.response.StudySessionItemResponse;
 import com.lumos.study.dto.response.StudySessionResponse;
 
@@ -51,6 +53,11 @@ public final class StudyTestFixtures {
             Double speed) {
         
         return new UpdateSpeechPreferenceRequest(enabled, autoPlay, voice, speed);
+    }
+
+    public static UpdateStudyPreferenceRequest updateStudyPreferenceRequest(int firstLearningCardLimit) {
+        
+        return new UpdateStudyPreferenceRequest(firstLearningCardLimit);
     }
 
     public static StudySessionResponse studySessionResponse(Long sessionId, Long deckId, String deckName) {
@@ -114,5 +121,10 @@ public final class StudyTestFixtures {
     public static SpeechPreferenceResponse speechPreferenceResponse() {
         
         return new SpeechPreferenceResponse(true, false, "ko-KR-neutral", 1.0D, "ko-KR");
+    }
+
+    public static StudyPreferenceResponse studyPreferenceResponse() {
+        
+        return new StudyPreferenceResponse(20);
     }
 }

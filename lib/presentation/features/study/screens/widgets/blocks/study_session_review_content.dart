@@ -64,20 +64,23 @@ class StudySessionReviewContent extends StatefulWidget {
 }
 
 class _StudySessionReviewContentState extends State<StudySessionReviewContent> {
-  late final PageController _pageController;
+  late PageController _pageController;
   bool _isPerformingSwipeAction = false;
+  bool _isFirstCardMessageVisible = false;
 
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(
-      initialPage: StudySessionReviewContentConst.currentPageIndex,
-    );
+    _pageController = _createPageController();
   }
 
   @override
   void didUpdateWidget(covariant StudySessionReviewContent oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (_usesFirstCardPager(oldWidget.session) !=
+        _usesFirstCardPager(widget.session)) {
+      _replacePageController();
+    }
     if (oldWidget.session.currentItem.flashcardId ==
         widget.session.currentItem.flashcardId) {
       return;
@@ -118,18 +121,19 @@ class _StudySessionReviewContentState extends State<StudySessionReviewContent> {
     if (!_pageController.hasClients) {
       return;
     }
-    _pageController.jumpToPage(StudySessionReviewContentConst.currentPageIndex);
+    _pageController.jumpToPage(_currentPageIndex);
   }
 
   bool _canSwipeHorizontally() {
     return _actionForPage(StudySessionReviewContentConst.previousPageIndex) !=
             null ||
-        _actionForPage(StudySessionReviewContentConst.nextPageIndex) != null;
+        _actionForPage(_nextPageIndex) != null;
   }
 
   Future<void> _processPageChanged(int pageIndex) async {
     final String? actionId = _actionForPage(pageIndex);
     if (actionId == null) {
+      _jumpToCurrentPage();
       return;
     }
     if (_isPerformingSwipeAction) {
@@ -148,7 +152,8 @@ class _StudySessionReviewContentState extends State<StudySessionReviewContent> {
   }
 
   String? _actionForPage(int pageIndex) {
-    if (pageIndex == StudySessionReviewContentConst.previousPageIndex) {
+    if (_isBackwardSwipeUnlocked &&
+        pageIndex == StudySessionReviewContentConst.previousPageIndex) {
       if (_allowsAction(StudySessionReviewContentConst.retryActionId)) {
         return StudySessionReviewContentConst.retryActionId;
       }
@@ -157,7 +162,7 @@ class _StudySessionReviewContentState extends State<StudySessionReviewContent> {
       }
       return null;
     }
-    if (pageIndex == StudySessionReviewContentConst.nextPageIndex) {
+    if (pageIndex == _nextPageIndex) {
       if (_allowsAction(StudySessionReviewContentConst.rememberedActionId)) {
         return StudySessionReviewContentConst.rememberedActionId;
       }
@@ -180,6 +185,80 @@ class _StudySessionReviewContentState extends State<StudySessionReviewContent> {
     await widget.onActionPressed(StudySessionReviewContentConst.nextActionId);
   }
 
+  PageController _createPageController() {
+    return PageController(initialPage: _currentPageIndex);
+  }
+
+  void _replacePageController() {
+    final PageController previousController = _pageController;
+    _pageController = _createPageController();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      previousController.dispose();
+    });
+  }
+
+  bool _usesFirstCardPager(StudySessionData session) {
+    return session.progress.completedItems == 0;
+  }
+
+  bool get _isBackwardSwipeUnlocked {
+    return !_usesFirstCardPager(widget.session);
+  }
+
+  int get _currentPageIndex {
+    if (_isBackwardSwipeUnlocked) {
+      return StudySessionReviewContentConst.currentPageIndex;
+    }
+    return StudySessionReviewContentConst.previousPageIndex;
+  }
+
+  int get _nextPageIndex {
+    if (_isBackwardSwipeUnlocked) {
+      return StudySessionReviewContentConst.nextPageIndex;
+    }
+    return StudySessionReviewContentConst.currentPageIndex;
+  }
+
+  int get _pagerItemCount {
+    return _nextPageIndex + 1;
+  }
+
+  void _handleLeadingEdgeAttempt() {
+    if (_isBackwardSwipeUnlocked) {
+      return;
+    }
+    _showFirstCardMessage();
+  }
+
+  void _showFirstCardMessage() {
+    if (!mounted) {
+      return;
+    }
+    if (_isFirstCardMessageVisible) {
+      return;
+    }
+    final ScaffoldMessengerState? messenger = ScaffoldMessenger.maybeOf(
+      context,
+    );
+    if (messenger == null) {
+      return;
+    }
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
+    _isFirstCardMessageVisible = true;
+    final ScaffoldFeatureController<SnackBar, SnackBarClosedReason> controller =
+        messenger.showSnackBar(
+          LumosSnackbar(
+            context: context,
+            message: l10n.studyReviewFirstCardToast,
+          ),
+        );
+    unawaited(
+      controller.closed.then((_) {
+        _isFirstCardMessageVisible = false;
+      }),
+    );
+  }
+
   Widget _buildCardViewport({required AppLocalizations l10n}) {
     final Widget cards = _StudySessionReviewCardDeck(
       session: widget.session,
@@ -193,10 +272,11 @@ class _StudySessionReviewContentState extends State<StudySessionReviewContent> {
     }
     return LumosHorizontalPager(
       controller: _pageController,
-      itemCount: StudySessionReviewContentConst.nextPageIndex + 1,
+      itemCount: _pagerItemCount,
       onPageChanged: _handlePageChanged,
+      onLeadingEdgeAttempt: _handleLeadingEdgeAttempt,
       itemBuilder: (BuildContext contextValue, int index) {
-        if (index == StudySessionReviewContentConst.currentPageIndex) {
+        if (index == _currentPageIndex) {
           return cards;
         }
         return const SizedBox.shrink();

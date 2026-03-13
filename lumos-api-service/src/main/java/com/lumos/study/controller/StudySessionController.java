@@ -12,10 +12,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lumos.study.dto.request.StartStudySessionRequest;
 import com.lumos.study.dto.request.SubmitAnswerRequest;
+import com.lumos.study.dto.request.UpdateStudyPreferenceRequest;
 import com.lumos.study.dto.request.UpdateSpeechPreferenceRequest;
+import com.lumos.study.dto.response.StudyPreferenceResponse;
 import com.lumos.study.dto.response.SpeechPreferenceResponse;
 import com.lumos.study.dto.response.StudySessionResponse;
 import com.lumos.study.service.SpeechPreferenceService;
+import com.lumos.study.service.StudyPreferenceService;
 import com.lumos.study.service.StudySessionService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,6 +37,7 @@ public class StudySessionController {
 
     private final StudySessionService studySessionService;
     private final SpeechPreferenceService speechPreferenceService;
+    private final StudyPreferenceService studyPreferenceService;
 
     /**
      * Start a canonical study session for the selected deck.
@@ -228,6 +232,39 @@ public class StudySessionController {
         final var response = this.speechPreferenceService
                 .updateSpeechPreference(request);
         // Return the saved speech preference so the client reflects canonical audio settings.
+        return ResponseEntity
+                .ok(response);
+    }
+
+    /**
+     * Return the current user's study preference.
+     *
+     * @return study preference response
+     */
+    @Operation(summary = "Get study preference")
+    @GetMapping("/api/v1/profile/study-preference")
+    public ResponseEntity<StudyPreferenceResponse> getStudyPreference() {
+        final var response = this.studyPreferenceService
+                .getStudyPreference();
+        // Return the current study preference so the profile screen can render the first-learning session size.
+        return ResponseEntity
+                .ok(response);
+    }
+
+    /**
+     * Update the current user's study preference.
+     *
+     * @param request study preference update payload
+     * @return updated study preference response
+     */
+    @Operation(summary = "Update study preference")
+    @PutMapping("/api/v1/profile/study-preference")
+    public ResponseEntity<StudyPreferenceResponse> updateStudyPreference(
+            @Valid
+            @RequestBody UpdateStudyPreferenceRequest request) {
+        final var response = this.studyPreferenceService
+                .updateStudyPreference(request);
+        // Return the saved study preference so first-learning session size stays aligned with backend truth.
         return ResponseEntity
                 .ok(response);
     }

@@ -18,6 +18,7 @@ class LumosHorizontalPager extends StatelessWidget {
     required this.itemBuilder,
     super.key,
     this.onPageChanged,
+    this.onLeadingEdgeAttempt,
     this.autofocus = true,
   });
 
@@ -25,6 +26,7 @@ class LumosHorizontalPager extends StatelessWidget {
   final int itemCount;
   final IndexedWidgetBuilder itemBuilder;
   final ValueChanged<int>? onPageChanged;
+  final VoidCallback? onLeadingEdgeAttempt;
   final bool autofocus;
 
   @override
@@ -34,15 +36,18 @@ class LumosHorizontalPager extends StatelessWidget {
       onKeyEvent: _handleKeyEvent,
       child: Listener(
         onPointerSignal: _handlePointerSignal,
-        child: ScrollConfiguration(
-          behavior: const _LumosHorizontalPagerScrollBehavior(),
-          child: PageView.builder(
-            controller: controller,
-            scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(parent: PageScrollPhysics()),
-            itemCount: itemCount,
-            onPageChanged: onPageChanged,
-            itemBuilder: itemBuilder,
+        child: NotificationListener<OverscrollNotification>(
+          onNotification: _handleOverscrollNotification,
+          child: ScrollConfiguration(
+            behavior: const _LumosHorizontalPagerScrollBehavior(),
+            child: PageView.builder(
+              controller: controller,
+              scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(parent: PageScrollPhysics()),
+              itemCount: itemCount,
+              onPageChanged: onPageChanged,
+              itemBuilder: itemBuilder,
+            ),
           ),
         ),
       ),
@@ -106,6 +111,7 @@ class LumosHorizontalPager extends StatelessWidget {
   void _goToPreviousPage() {
     final int currentPage = _resolvedPage;
     if (currentPage <= 0) {
+      onLeadingEdgeAttempt?.call();
       return;
     }
     controller.animateToPage(
@@ -120,6 +126,20 @@ class LumosHorizontalPager extends StatelessWidget {
       return controller.initialPage;
     }
     return controller.page?.round() ?? controller.initialPage;
+  }
+
+  bool _handleOverscrollNotification(OverscrollNotification notification) {
+    if (notification.metrics.axis != Axis.horizontal) {
+      return false;
+    }
+    if (notification.metrics.pixels > notification.metrics.minScrollExtent) {
+      return false;
+    }
+    if (notification.overscroll >= AppSpacing.none) {
+      return false;
+    }
+    onLeadingEdgeAttempt?.call();
+    return false;
   }
 }
 

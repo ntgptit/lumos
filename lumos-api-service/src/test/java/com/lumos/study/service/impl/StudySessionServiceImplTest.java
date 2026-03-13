@@ -14,6 +14,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -22,6 +24,7 @@ import java.util.Optional;
 import java.time.Instant;
 
 import org.apache.commons.lang3.Strings;
+import org.springframework.data.domain.Pageable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -59,6 +62,7 @@ import com.lumos.study.support.StudyLearningStateSyncSupport;
 import com.lumos.study.support.StudySessionFlowSupport;
 import com.lumos.study.support.StudySessionResponseFactory;
 import com.lumos.study.support.StudySessionSetupSupport;
+import com.lumos.study.support.UserStudyPreferenceSupport;
 
 @ExtendWith(MockitoExtension.class)
 class StudySessionServiceImplTest {
@@ -80,6 +84,8 @@ class StudySessionServiceImplTest {
     private LearningCardStateRepository learningCardStateRepository;
     @Mock
     private UserSpeechPreferenceRepository userSpeechPreferenceRepository;
+    @Mock
+    private UserStudyPreferenceSupport userStudyPreferenceSupport;
     private StudySessionServiceImpl studySessionService;
 
     @BeforeEach
@@ -91,7 +97,7 @@ class StudySessionServiceImplTest {
                 new RecallStudyModeStrategy(),
                 new FillStudyModeStrategy()));
         final StudySessionSetupSupport studySessionSetupSupport = new StudySessionSetupSupport(
-                this.learningCardStateRepository,
+                this.flashcardRepository,
                 this.studySessionItemRepository);
         final StudySessionFlowSupport studySessionFlowSupport = new StudySessionFlowSupport(
                 this.authenticatedUserProvider,
@@ -119,7 +125,8 @@ class StudySessionServiceImplTest {
                 studySessionSetupSupport,
                 studySessionFlowSupport,
                 studyLearningStateSyncSupport,
-                studySessionResponseFactory);
+                studySessionResponseFactory,
+                this.userStudyPreferenceSupport);
     }
 
     @Test
@@ -141,9 +148,9 @@ class StudySessionServiceImplTest {
         when(this.authenticatedUserProvider.getCurrentUserId()).thenReturn(USER_ID);
         when(this.userAccountRepository.findByIdAndDeletedAtIsNull(USER_ID)).thenReturn(Optional.of(user()));
         when(this.deckRepository.findByIdAndDeletedAtIsNull(DECK_ID)).thenReturn(Optional.of(deck));
-        when(this.flashcardRepository.findAllByDeckIdAndDeletedAtIsNullOrderByIdAsc(DECK_ID)).thenReturn(List.of(flashcard));
-        when(this.learningCardStateRepository.findAllByUserAccountIdAndFlashcardIdInAndDeletedAtIsNull(USER_ID, List.of(101L)))
-                .thenReturn(List.of());
+        when(this.userStudyPreferenceSupport.resolveFirstLearningCardLimit(USER_ID)).thenReturn(20);
+        when(this.flashcardRepository.findFirstLearningFlashcards(eq(USER_ID), eq(DECK_ID), any(Pageable.class)))
+                .thenReturn(List.of(flashcard));
         when(this.studySessionRepository.save(any(StudySession.class))).thenReturn(savedSession);
         when(this.studySessionItemRepository.findAllByStudySessionIdAndDeletedAtIsNullOrderBySequenceIndexAsc(SESSION_ID))
                 .thenReturn(List.of(item));
@@ -159,10 +166,6 @@ class StudySessionServiceImplTest {
     void startSession_respectsPreferredReviewSessionType() {
         final var deck = deck();
         final var learnedFlashcard = flashcard(101L, deck, "안녕하세요", "xin chao");
-        final var dueState = new LearningCardState();
-        dueState.setFlashcard(learnedFlashcard);
-        dueState.setBoxIndex(1);
-        dueState.setNextReviewAt(Instant.now());
         final StudySession savedSession = session(
                 user(),
                 deck,
@@ -178,10 +181,8 @@ class StudySessionServiceImplTest {
         when(this.authenticatedUserProvider.getCurrentUserId()).thenReturn(USER_ID);
         when(this.userAccountRepository.findByIdAndDeletedAtIsNull(USER_ID)).thenReturn(Optional.of(user()));
         when(this.deckRepository.findByIdAndDeletedAtIsNull(DECK_ID)).thenReturn(Optional.of(deck));
-        when(this.flashcardRepository.findAllByDeckIdAndDeletedAtIsNullOrderByIdAsc(DECK_ID))
+        when(this.flashcardRepository.findDueReviewFlashcards(eq(USER_ID), eq(DECK_ID), any(Instant.class)))
                 .thenReturn(List.of(learnedFlashcard));
-        when(this.learningCardStateRepository.findAllByUserAccountIdAndFlashcardIdInAndDeletedAtIsNull(USER_ID, List.of(101L)))
-                .thenReturn(List.of(dueState));
         when(this.studySessionRepository.save(any(StudySession.class))).thenReturn(savedSession);
         when(this.studySessionItemRepository.findAllByStudySessionIdAndDeletedAtIsNullOrderBySequenceIndexAsc(SESSION_ID))
                 .thenReturn(List.of(item));
@@ -193,6 +194,77 @@ class StudySessionServiceImplTest {
         assertEquals("REVIEW", response.sessionType());
         assertEquals("FILL", response.activeMode());
         assertEquals(1, response.modePlan().size());
+        verify(this.userStudyPreferenceSupport, never()).resolveFirstLearningCardLimit(USER_ID);
+    }
+
+    @Test
+    void startSession_limitsFirstLearningCardsUsingStudyPreference() {
+        final var deck = deck();
+        final var firstFlashcard = flashcard(101L, deck, "안녕하세요", "xin chao");
+        final StudySession savedSession = session(
+                user(),
+                deck,
+                StudySessionType.FIRST_LEARNING,
+                StudyMode.REVIEW,
+                StudyModeLifecycleState.INITIALIZED,
+                0,
+                0,
+                false);
+        savedSession.setId(SESSION_ID);
+        savedSession.setModePlan("REVIEW,MATCH,GUESS,RECALL,FILL");
+        final StudySessionItem item = sessionItem(1L, savedSession, firstFlashcard, 0, false, false, null);
+        when(this.authenticatedUserProvider.getCurrentUserId()).thenReturn(USER_ID);
+        when(this.userAccountRepository.findByIdAndDeletedAtIsNull(USER_ID)).thenReturn(Optional.of(user()));
+        when(this.deckRepository.findByIdAndDeletedAtIsNull(DECK_ID)).thenReturn(Optional.of(deck));
+        when(this.userStudyPreferenceSupport.resolveFirstLearningCardLimit(USER_ID)).thenReturn(1);
+        when(this.flashcardRepository.findFirstLearningFlashcards(eq(USER_ID), eq(DECK_ID), any(Pageable.class)))
+                .thenReturn(List.of(firstFlashcard));
+        when(this.studySessionRepository.save(any(StudySession.class))).thenReturn(savedSession);
+        when(this.studySessionItemRepository.findAllByStudySessionIdAndDeletedAtIsNullOrderBySequenceIndexAsc(SESSION_ID))
+                .thenReturn(List.of(item));
+        when(this.userSpeechPreferenceRepository.findByUserAccountIdAndDeletedAtIsNull(USER_ID)).thenReturn(Optional.empty());
+
+        final var response = this.studySessionService.startSession(new StartStudySessionRequest(DECK_ID, null));
+
+        assertEquals(1, response.progress().totalItems());
+        assertEquals(101L, response.currentItem().flashcardId());
+        verify(this.userStudyPreferenceSupport).resolveFirstLearningCardLimit(USER_ID);
+    }
+
+    @Test
+    void startSession_reviewSessionKeepsAllDueCardsInTheSession() {
+        final var deck = deck();
+        final var firstDueFlashcard = flashcard(101L, deck, "안녕하세요", "xin chao");
+        final var secondDueFlashcard = flashcard(102L, deck, "감사합니다", "cam on");
+        final StudySession savedSession = session(
+                user(),
+                deck,
+                StudySessionType.REVIEW,
+                StudyMode.FILL,
+                StudyModeLifecycleState.INITIALIZED,
+                0,
+                0,
+                false);
+        savedSession.setId(SESSION_ID);
+        savedSession.setModePlan("FILL");
+        final StudySessionItem firstItem = sessionItem(1L, savedSession, firstDueFlashcard, 0, false, false, null);
+        final StudySessionItem secondItem = sessionItem(2L, savedSession, secondDueFlashcard, 1, false, false, null);
+        when(this.authenticatedUserProvider.getCurrentUserId()).thenReturn(USER_ID);
+        when(this.userAccountRepository.findByIdAndDeletedAtIsNull(USER_ID)).thenReturn(Optional.of(user()));
+        when(this.deckRepository.findByIdAndDeletedAtIsNull(DECK_ID)).thenReturn(Optional.of(deck));
+        when(this.flashcardRepository.findDueReviewFlashcards(eq(USER_ID), eq(DECK_ID), any(Instant.class)))
+                .thenReturn(List.of(firstDueFlashcard, secondDueFlashcard));
+        when(this.studySessionRepository.save(any(StudySession.class))).thenReturn(savedSession);
+        when(this.studySessionItemRepository.findAllByStudySessionIdAndDeletedAtIsNullOrderBySequenceIndexAsc(SESSION_ID))
+                .thenReturn(List.of(firstItem, secondItem));
+        when(this.userSpeechPreferenceRepository.findByUserAccountIdAndDeletedAtIsNull(USER_ID)).thenReturn(Optional.empty());
+
+        final var response = this.studySessionService.startSession(
+                new StartStudySessionRequest(DECK_ID, StudySessionType.REVIEW));
+
+        assertEquals("REVIEW", response.sessionType());
+        assertEquals(2, response.progress().totalItems());
+        verify(this.userStudyPreferenceSupport, never()).resolveFirstLearningCardLimit(USER_ID);
     }
 
     @Test

@@ -29,6 +29,7 @@ StudySessionData sampleStudySession({
   String activeMode = 'REVIEW',
   String modeState = 'IN_PROGRESS',
   List<String>? allowedActions,
+  StudyProgressSummary? progress,
 }) {
   return StudySessionData(
     sessionId: sessionId,
@@ -41,15 +42,17 @@ StudySessionData sampleStudySession({
     allowedActions:
         allowedActions ??
         const <String>['MARK_REMEMBERED', 'RETRY_ITEM', 'RESET_CURRENT_MODE'],
-    progress: const StudyProgressSummary(
-      completedItems: 1,
-      totalItems: 2,
-      completedModes: 0,
-      totalModes: 5,
-      itemProgress: 0.5,
-      modeProgress: 0,
-      sessionProgress: 0.1,
-    ),
+    progress:
+        progress ??
+        const StudyProgressSummary(
+          completedItems: 1,
+          totalItems: 2,
+          completedModes: 0,
+          totalModes: 5,
+          itemProgress: 0.5,
+          modeProgress: 0,
+          sessionProgress: 0.1,
+        ),
     currentItem: StudySessionItemData(
       flashcardId: 101,
       prompt: '안녕하세요',
@@ -128,6 +131,10 @@ SpeechPreference sampleSpeechPreference() {
   );
 }
 
+StudyPreference sampleStudyPreference({int firstLearningCardLimit = 20}) {
+  return StudyPreference(firstLearningCardLimit: firstLearningCardLimit);
+}
+
 class FakeAuthRepository implements AuthRepository {
   FakeAuthRepository({
     this.bootstrapResult,
@@ -200,22 +207,26 @@ class FakeStudyRepository implements StudyRepository {
     StudyReminderSummary? reminder,
     StudyAnalyticsOverview? analytics,
     SpeechPreference? preference,
+    StudyPreference? studyPreference,
     this.actionDelay = Duration.zero,
   }) : _session = session ?? sampleStudySession(),
        _reminder = reminder ?? sampleReminderSummary(),
        _analytics = analytics ?? sampleAnalyticsOverview(),
-       _preference = preference ?? sampleSpeechPreference();
+       _preference = preference ?? sampleSpeechPreference(),
+       _studyPreference = studyPreference ?? sampleStudyPreference();
 
   StudySessionData _session;
   final StudyReminderSummary _reminder;
   final StudyAnalyticsOverview _analytics;
   SpeechPreference _preference;
+  StudyPreference _studyPreference;
   final Duration actionDelay;
 
   int? lastDeckId;
   int? lastSessionId;
   String? lastAnswer;
   SpeechPreference? lastPreference;
+  StudyPreference? lastStudyPreference;
   int resetCurrentModeCallCount = 0;
   int resetDeckProgressCallCount = 0;
   StudySessionTypeOption? lastPreferredSessionType;
@@ -360,6 +371,20 @@ class FakeStudyRepository implements StudyRepository {
     lastPreference = preference;
     _preference = preference;
     return _preference;
+  }
+
+  @override
+  Future<StudyPreference> getStudyPreference() async {
+    return _studyPreference;
+  }
+
+  @override
+  Future<StudyPreference> updateStudyPreference({
+    required StudyPreference preference,
+  }) async {
+    lastStudyPreference = preference;
+    _studyPreference = preference;
+    return _studyPreference;
   }
 
   Future<void> _delayAction() async {

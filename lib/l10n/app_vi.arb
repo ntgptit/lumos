@@ -316,6 +316,18 @@
   "profileSpeechAutoPlayLabel": "Tự phát mục hiện tại",
   "profileSpeechVoiceLabel": "Giọng đọc",
   "profileSpeechSpeedLabel": "Tốc độ",
+  "profileStudySectionTitle": "Tùy chọn phiên học",
+  "profileStudySectionSubtitle": "Thiết lập số thẻ mới mà backend được phép nạp cho mỗi phiên FIRST_LEARNING.",
+  "profileStudyFirstLearningLimitLabel": "Số thẻ mới mỗi phiên FIRST_LEARNING",
+  "profileStudyFirstLearningLimitValue": "{count} thẻ",
+  "@profileStudyFirstLearningLimitValue": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profileStudyReviewHint": "Phiên REVIEW luôn lấy toàn bộ thẻ đã đến hạn.",
   "studyProgressMomentumTitle": "Nhịp độ học tập",
   "studyProgressMomentumSummary": "Đến hạn {dueCount} | Quá hạn {overdueCount} | Leo thang {escalationLevel}",
   "@studyProgressMomentumSummary": {
@@ -372,6 +384,7 @@
   "studySpeechPlayAction": "Nghe",
   "studySpeechPlayingAction": "Đang phát",
   "studySpeechReplayAction": "Phát lại",
+  "studyReviewFirstCardToast": "Đây là thẻ đầu tiên.",
   "studyResetCurrentModeAction": "Đặt lại chế độ hiện tại",
   "studyResetCurrentModeTitle": "Đặt lại chế độ hiện tại?",
   "studyResetCurrentModeMessage": "Thao tác này sẽ xóa toàn bộ tiến độ trong chế độ học hiện tại và bắt đầu lại từ mục đầu tiên.",

@@ -677,6 +677,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileSpeechSpeedLabel => 'Speed';
 
   @override
+  String get profileStudySectionTitle => 'Study preference';
+
+  @override
+  String get profileStudySectionSubtitle => 'Set how many new cards a FIRST_LEARNING session can load from the backend.';
+
+  @override
+  String get profileStudyFirstLearningLimitLabel => 'New cards per FIRST_LEARNING session';
+
+  @override
+  String profileStudyFirstLearningLimitValue(int count) {
+    return '$count card(s)';
+  }
+
+  @override
+  String get profileStudyReviewHint => 'REVIEW sessions always include every due card.';
+
+  @override
   String get studyProgressMomentumTitle => 'Study momentum';
 
   @override
@@ -729,6 +746,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get studySpeechReplayAction => 'Replay';
+
+  @override
+  String get studyReviewFirstCardToast => 'This is the first card.';
 
   @override
   String get studyResetCurrentModeAction => 'Reset current mode';

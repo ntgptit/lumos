@@ -1,5 +1,9 @@
 package com.lumos.deck.service.impl;
 
+import static com.lumos.testkit.DeckTestFixtures.createDeckRequest;
+import static com.lumos.testkit.DeckTestFixtures.updateDeckRequest;
+import static com.lumos.testkit.SearchRequestFixtures.byNameAsc;
+import static com.lumos.testkit.SearchRequestFixtures.empty;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -7,10 +11,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
-import static com.lumos.testkit.DeckTestFixtures.createDeckRequest;
-import static com.lumos.testkit.DeckTestFixtures.updateDeckRequest;
-import static com.lumos.testkit.SearchRequestFixtures.byNameAsc;
-import static com.lumos.testkit.SearchRequestFixtures.empty;
 
 import java.time.Instant;
 import java.util.List;
@@ -58,179 +58,296 @@ class DeckServiceImplTest {
 
     @Test
     void createDeck_createsDeckWithNormalizedFields() {
-        final var folder = folder(FOLDER_ID, 2);
+        final var folder = this
+                .folder(FOLDER_ID, 2);
         final var request = createDeckRequest("  Deck A  ", "  Description  ");
-        final var mappedDeck = deck(folder, DECK_ID, "Deck A", "Description");
-        final var response = deckResponse();
-        when(this.folderRepository.findByIdAndDeletedAtIsNull(FOLDER_ID)).thenReturn(Optional.of(folder));
-        when(this.folderRepository.existsByParentIdAndDeletedAtIsNull(FOLDER_ID)).thenReturn(false);
-        when(this.deckRepository.existsActiveNameByFolderId(FOLDER_ID, "Deck A", null)).thenReturn(false);
-        when(this.deckMapper.toDeckEntity(folder, "Deck A", "Description", DeckConstants.FLASHCARD_COUNT_DEFAULT))
+        final var mappedDeck = this
+                .deck(folder, DECK_ID, "Deck A", "Description");
+        final var response = this
+                .deckResponse();
+        when(this.folderRepository
+                .findByIdAndDeletedAtIsNull(FOLDER_ID))
+                .thenReturn(Optional
+                        .of(folder));
+        when(this.folderRepository
+                .existsByParentIdAndDeletedAtIsNull(FOLDER_ID))
+                .thenReturn(false);
+        when(this.deckRepository
+                .existsActiveNameByFolderId(FOLDER_ID, "Deck A", null))
+                .thenReturn(false);
+        when(this.deckMapper
+                .toDeckEntity(folder, "Deck A", "Description", DeckConstants.FLASHCARD_COUNT_DEFAULT))
                 .thenReturn(mappedDeck);
-        when(this.deckRepository.save(mappedDeck)).thenReturn(mappedDeck);
-        when(this.deckMapper.toDeckResponse(mappedDeck)).thenReturn(response);
+        when(this.deckRepository
+                .save(mappedDeck))
+                .thenReturn(mappedDeck);
+        when(this.deckMapper
+                .toDeckResponse(mappedDeck))
+                .thenReturn(response);
 
-        final var result = this.deckService.createDeck(FOLDER_ID, request);
+        final var result = this.deckService
+                .createDeck(FOLDER_ID, request);
 
         assertEquals(response, result);
     }
 
     @Test
     void createDeck_withNullDescription_usesDefaultDescription() {
-        final var folder = folder(FOLDER_ID, 1);
+        final var folder = this
+                .folder(FOLDER_ID, 1);
         final var request = createDeckRequest(" Deck A ", null);
-        final var mappedDeck = deck(folder, DECK_ID, "Deck A", DeckConstants.EMPTY_DESCRIPTION);
-        when(this.folderRepository.findByIdAndDeletedAtIsNull(FOLDER_ID)).thenReturn(Optional.of(folder));
-        when(this.folderRepository.existsByParentIdAndDeletedAtIsNull(FOLDER_ID)).thenReturn(false);
-        when(this.deckRepository.existsActiveNameByFolderId(FOLDER_ID, "Deck A", null)).thenReturn(false);
-        when(this.deckMapper.toDeckEntity(
-                folder,
-                "Deck A",
-                DeckConstants.EMPTY_DESCRIPTION,
-                DeckConstants.FLASHCARD_COUNT_DEFAULT)).thenReturn(mappedDeck);
-        when(this.deckRepository.save(mappedDeck)).thenReturn(mappedDeck);
-        when(this.deckMapper.toDeckResponse(mappedDeck)).thenReturn(deckResponse());
+        final var mappedDeck = this
+                .deck(folder, DECK_ID, "Deck A", DeckConstants.EMPTY_DESCRIPTION);
+        when(this.folderRepository
+                .findByIdAndDeletedAtIsNull(FOLDER_ID))
+                .thenReturn(Optional
+                        .of(folder));
+        when(this.folderRepository
+                .existsByParentIdAndDeletedAtIsNull(FOLDER_ID))
+                .thenReturn(false);
+        when(this.deckRepository
+                .existsActiveNameByFolderId(FOLDER_ID, "Deck A", null))
+                .thenReturn(false);
+        when(this.deckMapper
+                .toDeckEntity(
+                        folder,
+                        "Deck A",
+                        DeckConstants.EMPTY_DESCRIPTION,
+                        DeckConstants.FLASHCARD_COUNT_DEFAULT))
+                .thenReturn(mappedDeck);
+        when(this.deckRepository
+                .save(mappedDeck))
+                .thenReturn(mappedDeck);
+        when(this.deckMapper
+                .toDeckResponse(mappedDeck))
+                .thenReturn(this
+                        .deckResponse());
 
-        this.deckService.createDeck(FOLDER_ID, request);
+        this.deckService
+                .createDeck(FOLDER_ID, request);
 
-        verify(this.deckMapper).toDeckEntity(
-                folder,
-                "Deck A",
-                DeckConstants.EMPTY_DESCRIPTION,
-                DeckConstants.FLASHCARD_COUNT_DEFAULT);
+        verify(this.deckMapper)
+                .toDeckEntity(
+                        folder,
+                        "Deck A",
+                        DeckConstants.EMPTY_DESCRIPTION,
+                        DeckConstants.FLASHCARD_COUNT_DEFAULT);
     }
 
     @Test
     void createDeck_whenFolderMissing_throwsFolderNotFoundException() {
-        when(this.folderRepository.findByIdAndDeletedAtIsNull(FOLDER_ID)).thenReturn(Optional.empty());
+        when(this.folderRepository
+                .findByIdAndDeletedAtIsNull(FOLDER_ID))
+                .thenReturn(Optional
+                        .empty());
         final var request = createDeckRequest("Deck A", "Description");
 
-        assertThrows(FolderNotFoundException.class, () -> this.deckService.createDeck(FOLDER_ID, request));
+        assertThrows(FolderNotFoundException.class, () -> this.deckService
+                .createDeck(FOLDER_ID, request));
         verifyNoInteractions(this.deckRepository);
     }
 
     @Test
     void createDeck_whenFolderHasSubfolders_throwsDeckParentHasSubfoldersException() {
-        final var folder = folder(FOLDER_ID, 2);
-        when(this.folderRepository.findByIdAndDeletedAtIsNull(FOLDER_ID)).thenReturn(Optional.of(folder));
-        when(this.folderRepository.existsByParentIdAndDeletedAtIsNull(FOLDER_ID)).thenReturn(true);
+        final var folder = this
+                .folder(FOLDER_ID, 2);
+        when(this.folderRepository
+                .findByIdAndDeletedAtIsNull(FOLDER_ID))
+                .thenReturn(Optional
+                        .of(folder));
+        when(this.folderRepository
+                .existsByParentIdAndDeletedAtIsNull(FOLDER_ID))
+                .thenReturn(true);
         final var request = createDeckRequest("Deck A", "Description");
 
-        assertThrows(DeckParentHasSubfoldersException.class, () -> this.deckService.createDeck(FOLDER_ID, request));
+        assertThrows(DeckParentHasSubfoldersException.class, () -> this.deckService
+                .createDeck(FOLDER_ID, request));
     }
 
     @Test
     void createDeck_whenDeckNameAlreadyExists_throwsDeckNameConflictException() {
-        final var folder = folder(FOLDER_ID, 2);
+        final var folder = this
+                .folder(FOLDER_ID, 2);
         final var request = createDeckRequest("Deck A", "Description");
-        when(this.folderRepository.findByIdAndDeletedAtIsNull(FOLDER_ID)).thenReturn(Optional.of(folder));
-        when(this.folderRepository.existsByParentIdAndDeletedAtIsNull(FOLDER_ID)).thenReturn(false);
-        when(this.deckRepository.existsActiveNameByFolderId(FOLDER_ID, "Deck A", null)).thenReturn(true);
+        when(this.folderRepository
+                .findByIdAndDeletedAtIsNull(FOLDER_ID))
+                .thenReturn(Optional
+                        .of(folder));
+        when(this.folderRepository
+                .existsByParentIdAndDeletedAtIsNull(FOLDER_ID))
+                .thenReturn(false);
+        when(this.deckRepository
+                .existsActiveNameByFolderId(FOLDER_ID, "Deck A", null))
+                .thenReturn(true);
 
-        assertThrows(DeckNameConflictException.class, () -> this.deckService.createDeck(FOLDER_ID, request));
+        assertThrows(DeckNameConflictException.class, () -> this.deckService
+                .createDeck(FOLDER_ID, request));
     }
 
     @Test
     void updateDeck_updatesNormalizedFields() {
-        final var folder = folder(FOLDER_ID, 2);
-        final var deck = deck(folder, DECK_ID, "Deck A", "Description");
+        final var folder = this
+                .folder(FOLDER_ID, 2);
+        final var deck = this
+                .deck(folder, DECK_ID, "Deck A", "Description");
         final var request = updateDeckRequest("  Deck Updated  ", "  New Description  ");
-        when(this.deckRepository.findByIdAndDeletedAtIsNull(DECK_ID)).thenReturn(Optional.of(deck));
-        when(this.deckRepository.existsActiveNameByFolderId(FOLDER_ID, "Deck Updated", DECK_ID)).thenReturn(false);
-        when(this.deckMapper.toDeckResponse(deck)).thenReturn(deckResponse());
+        when(this.deckRepository
+                .findByIdAndDeletedAtIsNull(DECK_ID))
+                .thenReturn(Optional
+                        .of(deck));
+        when(this.deckRepository
+                .existsActiveNameByFolderId(FOLDER_ID, "Deck Updated", DECK_ID))
+                .thenReturn(false);
+        when(this.deckMapper
+                .toDeckResponse(deck))
+                .thenReturn(this
+                        .deckResponse());
 
-        this.deckService.updateDeck(FOLDER_ID, DECK_ID, request);
+        this.deckService
+                .updateDeck(FOLDER_ID, DECK_ID, request);
 
-        assertEquals("Deck Updated", deck.getName());
-        assertEquals("New Description", deck.getDescription());
+        assertEquals("Deck Updated", deck
+                .getName());
+        assertEquals("New Description", deck
+                .getDescription());
     }
 
     @Test
     void updateDeck_whenFolderScopeMismatch_throwsDeckNotFoundException() {
-        final var folder = folder(99L, 2);
-        final var deck = deck(folder, DECK_ID, "Deck A", "Description");
-        when(this.deckRepository.findByIdAndDeletedAtIsNull(DECK_ID)).thenReturn(Optional.of(deck));
+        final var folder = this
+                .folder(99L, 2);
+        final var deck = this
+                .deck(folder, DECK_ID, "Deck A", "Description");
+        when(this.deckRepository
+                .findByIdAndDeletedAtIsNull(DECK_ID))
+                .thenReturn(Optional
+                        .of(deck));
         final var request = updateDeckRequest("Deck B", "Description");
 
-        assertThrows(DeckNotFoundException.class, () -> this.deckService.updateDeck(FOLDER_ID, DECK_ID, request));
+        assertThrows(DeckNotFoundException.class, () -> this.deckService
+                .updateDeck(FOLDER_ID, DECK_ID, request));
     }
 
     @Test
     void updateDeck_whenDeckNameExists_throwsDeckNameConflictException() {
-        final var folder = folder(FOLDER_ID, 1);
-        final var deck = deck(folder, DECK_ID, "Deck A", "Description");
-        when(this.deckRepository.findByIdAndDeletedAtIsNull(DECK_ID)).thenReturn(Optional.of(deck));
-        when(this.deckRepository.existsActiveNameByFolderId(FOLDER_ID, "Deck Updated", DECK_ID)).thenReturn(true);
+        final var folder = this
+                .folder(FOLDER_ID, 1);
+        final var deck = this
+                .deck(folder, DECK_ID, "Deck A", "Description");
+        when(this.deckRepository
+                .findByIdAndDeletedAtIsNull(DECK_ID))
+                .thenReturn(Optional
+                        .of(deck));
+        when(this.deckRepository
+                .existsActiveNameByFolderId(FOLDER_ID, "Deck Updated", DECK_ID))
+                .thenReturn(true);
         final var request = updateDeckRequest("Deck Updated", "Description");
 
-        assertThrows(DeckNameConflictException.class, () -> this.deckService.updateDeck(FOLDER_ID, DECK_ID, request));
+        assertThrows(DeckNameConflictException.class, () -> this.deckService
+                .updateDeck(FOLDER_ID, DECK_ID, request));
     }
 
     @Test
     void deleteDeck_softDeletesDeckInFolderScope() {
-        final var folder = folder(FOLDER_ID, 1);
-        final var deck = deck(folder, DECK_ID, "Deck A", "Description");
-        when(this.deckRepository.findByIdAndDeletedAtIsNull(DECK_ID)).thenReturn(Optional.of(deck));
+        final var folder = this
+                .folder(FOLDER_ID, 1);
+        final var deck = this
+                .deck(folder, DECK_ID, "Deck A", "Description");
+        when(this.deckRepository
+                .findByIdAndDeletedAtIsNull(DECK_ID))
+                .thenReturn(Optional
+                        .of(deck));
 
-        this.deckService.deleteDeck(FOLDER_ID, DECK_ID);
+        this.deckService
+                .deleteDeck(FOLDER_ID, DECK_ID);
 
-        final var instantCaptor = ArgumentCaptor.forClass(Instant.class);
-        verify(this.deckRepository).softDeleteDeck(eq(FOLDER_ID), eq(DECK_ID), instantCaptor.capture());
+        final var instantCaptor = ArgumentCaptor
+                .forClass(Instant.class);
+        verify(this.deckRepository)
+                .softDeleteDeck(eq(FOLDER_ID), eq(DECK_ID), instantCaptor
+                        .capture());
     }
 
     @Test
     void getDecks_returnsMappedDeckResponses() {
-        final var folder = folder(FOLDER_ID, 1);
-        final var deck = deck(folder, DECK_ID, "Deck A", "Description");
+        final var folder = this
+                .folder(FOLDER_ID, 1);
+        final var deck = this
+                .deck(folder, DECK_ID, "Deck A", "Description");
         final var searchRequest = byNameAsc("deck");
-        final var pageable = PageRequest.of(0, 10);
-        final var response = deckResponse();
-        when(this.folderRepository.findByIdAndDeletedAtIsNull(FOLDER_ID)).thenReturn(Optional.of(folder));
-        when(this.deckRepository.findAll(any(Specification.class), any(PageRequest.class)))
-                .thenReturn(new PageImpl<>(List.of(deck)));
-        when(this.deckMapper.toDeckResponse(deck)).thenReturn(response);
+        final var pageable = PageRequest
+                .of(0, 10);
+        final var response = this
+                .deckResponse();
+        when(this.folderRepository
+                .findByIdAndDeletedAtIsNull(FOLDER_ID))
+                .thenReturn(Optional
+                        .of(folder));
+        when(this.deckRepository
+                .findAll(any(Specification.class), any(PageRequest.class)))
+                .thenReturn(new PageImpl<>(List
+                        .of(deck)));
+        when(this.deckMapper
+                .toDeckResponse(deck))
+                .thenReturn(response);
 
-        final var result = this.deckService.getDecks(FOLDER_ID, searchRequest, pageable);
+        final var result = this.deckService
+                .getDecks(FOLDER_ID, searchRequest, pageable);
 
-        assertEquals(1, result.size());
-        assertEquals(response, result.get(0));
+        assertEquals(1, result
+                .size());
+        assertEquals(response, result
+                .get(0));
     }
 
     @Test
     void getDecks_whenFolderMissing_throwsFolderNotFoundException() {
-        when(this.folderRepository.findByIdAndDeletedAtIsNull(FOLDER_ID)).thenReturn(Optional.empty());
+        when(this.folderRepository
+                .findByIdAndDeletedAtIsNull(FOLDER_ID))
+                .thenReturn(Optional
+                        .empty());
         final var searchRequest = empty();
-        final var pageable = PageRequest.of(0, 10);
+        final var pageable = PageRequest
+                .of(0, 10);
 
-        assertThrows(FolderNotFoundException.class, () -> this.deckService.getDecks(FOLDER_ID, searchRequest, pageable));
+        assertThrows(FolderNotFoundException.class, () -> this.deckService
+                .getDecks(FOLDER_ID, searchRequest, pageable));
     }
 
     private Folder folder(Long id, Integer depth) {
         final var folder = new Folder();
-        folder.setId(id);
-        folder.setDepth(depth);
-        
+        folder
+                .setId(id);
+        folder
+                .setDepth(depth);
+
         return folder;
     }
 
     private Deck deck(Folder folder, Long id, String name, String description) {
         final var deck = new Deck();
-        deck.setId(id);
-        deck.setFolder(folder);
-        deck.setName(name);
-        deck.setDescription(description);
-        deck.setFlashcardCount(0);
-        
+        deck
+                .setId(id);
+        deck
+                .setFolder(folder);
+        deck
+                .setName(name);
+        deck
+                .setDescription(description);
+        deck
+                .setFlashcardCount(0);
+
         return deck;
     }
 
     private DeckResponse deckResponse() {
-        
-        return com.lumos.testkit.DeckTestFixtures.deckResponse(
-                DECK_ID,
-                FOLDER_ID,
-                "Deck A",
-                "Description",
-                0);
+
+        return com.lumos.testkit.DeckTestFixtures
+                .deckResponse(
+                        DECK_ID,
+                        FOLDER_ID,
+                        "Deck A",
+                        "Description",
+                        0);
     }
 }

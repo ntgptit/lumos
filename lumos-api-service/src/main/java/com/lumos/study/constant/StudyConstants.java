@@ -13,6 +13,9 @@ public class StudyConstants {
     public static final String SPEECH_LOCALE = "ko-KR";
     public static final String DEFAULT_SPEECH_VOICE = "ko-KR-neutral";
     public static final double DEFAULT_SPEECH_SPEED = 1.0D;
+    public static final int DEFAULT_FIRST_LEARNING_CARD_LIMIT = 20;
+    public static final int MIN_FIRST_LEARNING_CARD_LIMIT = 1;
+    public static final int MAX_FIRST_LEARNING_CARD_LIMIT = 100;
     public static final int MIN_BOX_INDEX = 1;
     public static final int MAX_BOX_INDEX = 7;
     public static final List<StudyMode> FIRST_LEARNING_MODE_PLAN = List.of(

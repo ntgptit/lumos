@@ -3,21 +3,20 @@ package com.lumos.study.support;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
+import com.lumos.flashcard.repository.FlashcardRepository;
 import com.lumos.flashcard.entity.Flashcard;
 import com.lumos.study.constant.StudyConstants;
-import com.lumos.study.entity.LearningCardState;
 import com.lumos.study.entity.StudySession;
 import com.lumos.study.entity.StudySessionItem;
 import com.lumos.study.enums.StudyMode;
 import com.lumos.study.enums.StudySessionType;
 import com.lumos.study.exception.StudySessionUnavailableException;
-import com.lumos.study.repository.LearningCardStateRepository;
 import com.lumos.study.repository.StudySessionItemRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -28,25 +27,18 @@ public class StudySessionSetupSupport {
 
     private static final String MODE_PLAN_SEPARATOR = ",";
 
-    private final LearningCardStateRepository learningCardStateRepository;
+    private final FlashcardRepository flashcardRepository;
     private final StudySessionItemRepository studySessionItemRepository;
 
-    public Map<Long, LearningCardState> resolveLearningStateByFlashcardId(Long userId, List<Flashcard> flashcards) {
-        final List<Long> flashcardIds = flashcards.stream().map(Flashcard::getId).toList();
-        if (flashcardIds.isEmpty()) {
-            return Map.of();
-        }
-        return this.learningCardStateRepository
-                .findAllByUserAccountIdAndFlashcardIdInAndDeletedAtIsNull(userId, flashcardIds)
-                .stream()
-                .collect(Collectors.toMap(state -> state.getFlashcard().getId(), state -> state));
+    public List<Flashcard> resolveFirstLearningFlashcards(Long userId, Long deckId, int firstLearningCardLimit) {
+        return this.flashcardRepository.findFirstLearningFlashcards(
+                userId,
+                deckId,
+                PageRequest.of(0, firstLearningCardLimit));
     }
 
-    public boolean isDue(LearningCardState learningCardState) {
-        if (learningCardState == null) {
-            return false;
-        }
-        return !learningCardState.getNextReviewAt().isAfter(Instant.now());
+    public List<Flashcard> resolveDueFlashcards(Long userId, Long deckId) {
+        return this.flashcardRepository.findDueReviewFlashcards(userId, deckId, Instant.now());
     }
 
     public StudySessionType resolveSessionType(List<Flashcard> newFlashcards, List<Flashcard> dueFlashcards) {

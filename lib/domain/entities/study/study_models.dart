@@ -396,3 +396,30 @@ class SpeechPreference {
     );
   }
 }
+
+@immutable
+class StudyPreference {
+  const StudyPreference({required this.firstLearningCardLimit});
+
+  static const int minFirstLearningCardLimit = 1;
+  static const int maxFirstLearningCardLimit = 100;
+
+  factory StudyPreference.fromJson(Map<String, dynamic> json) {
+    return StudyPreference(
+      firstLearningCardLimit: json['firstLearningCardLimit'] as int? ?? 20,
+    );
+  }
+
+  final int firstLearningCardLimit;
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{'firstLearningCardLimit': firstLearningCardLimit};
+  }
+
+  StudyPreference copyWith({int? firstLearningCardLimit}) {
+    return StudyPreference(
+      firstLearningCardLimit:
+          firstLearningCardLimit ?? this.firstLearningCardLimit,
+    );
+  }
+}

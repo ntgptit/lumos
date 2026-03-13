@@ -677,6 +677,23 @@ class AppLocalizationsVi extends AppLocalizations {
   String get profileSpeechSpeedLabel => 'Tốc độ';
 
   @override
+  String get profileStudySectionTitle => 'Tùy chọn phiên học';
+
+  @override
+  String get profileStudySectionSubtitle => 'Thiết lập số thẻ mới mà backend được phép nạp cho mỗi phiên FIRST_LEARNING.';
+
+  @override
+  String get profileStudyFirstLearningLimitLabel => 'Số thẻ mới mỗi phiên FIRST_LEARNING';
+
+  @override
+  String profileStudyFirstLearningLimitValue(int count) {
+    return '$count thẻ';
+  }
+
+  @override
+  String get profileStudyReviewHint => 'Phiên REVIEW luôn lấy toàn bộ thẻ đã đến hạn.';
+
+  @override
   String get studyProgressMomentumTitle => 'Nhịp độ học tập';
 
   @override
@@ -729,6 +746,9 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get studySpeechReplayAction => 'Phát lại';
+
+  @override
+  String get studyReviewFirstCardToast => 'Đây là thẻ đầu tiên.';
 
   @override
   String get studyResetCurrentModeAction => 'Đặt lại chế độ hiện tại';

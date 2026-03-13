@@ -1367,6 +1367,36 @@ abstract class AppLocalizations {
   /// **'Speed'**
   String get profileSpeechSpeedLabel;
 
+  /// No description provided for @profileStudySectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Study preference'**
+  String get profileStudySectionTitle;
+
+  /// No description provided for @profileStudySectionSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Set how many new cards a FIRST_LEARNING session can load from the backend.'**
+  String get profileStudySectionSubtitle;
+
+  /// No description provided for @profileStudyFirstLearningLimitLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'New cards per FIRST_LEARNING session'**
+  String get profileStudyFirstLearningLimitLabel;
+
+  /// No description provided for @profileStudyFirstLearningLimitValue.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} card(s)'**
+  String profileStudyFirstLearningLimitValue(int count);
+
+  /// No description provided for @profileStudyReviewHint.
+  ///
+  /// In en, this message translates to:
+  /// **'REVIEW sessions always include every due card.'**
+  String get profileStudyReviewHint;
+
   /// No description provided for @studyProgressMomentumTitle.
   ///
   /// In en, this message translates to:
@@ -1450,6 +1480,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Replay'**
   String get studySpeechReplayAction;
+
+  /// No description provided for @studyReviewFirstCardToast.
+  ///
+  /// In en, this message translates to:
+  /// **'This is the first card.'**
+  String get studyReviewFirstCardToast;
 
   /// No description provided for @studyResetCurrentModeAction.
   ///
