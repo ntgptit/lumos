@@ -175,6 +175,7 @@ class FlashcardServiceImplTest {
     private Deck deck(Long deckId) {
         final var deck = new Deck();
         deck.setId(deckId);
+        
         return deck;
     }
 
@@ -189,10 +190,12 @@ class FlashcardServiceImplTest {
         flashcard.setPronunciation("");
         flashcard.setNote("");
         flashcard.setIsBookmarked(false);
+        
         return flashcard;
     }
 
     private FlashcardResponse flashcardResponse() {
+        
         return com.lumos.testkit.FlashcardTestFixtures.flashcardResponse(
                 FLASHCARD_ID,
                 DECK_ID,

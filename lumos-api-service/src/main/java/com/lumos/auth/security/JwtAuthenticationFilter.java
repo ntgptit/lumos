@@ -39,6 +39,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // Skip authentication when the request does not carry a usable bearer token.
         if (StringUtils.isEmpty(StringUtils.strip(token))) {
             filterChain.doFilter(request, response);
+            // Return without mutating the security context for unauthenticated requests.
             return;
         }
         try {
@@ -49,11 +50,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             // Ignore the token when the referenced account no longer exists.
             if (userAccount == null) {
                 filterChain.doFilter(request, response);
+                // Return without authenticating because the token points to a deleted account.
                 return;
             }
             // Ignore the token when the account is no longer allowed to sign in.
             if (userAccount.getAccountStatus() != AccountStatus.ACTIVE) {
                 filterChain.doFilter(request, response);
+                // Return without authenticating because inactive accounts must not regain access.
                 return;
             }
             final AuthUserPrincipal principal = new AuthUserPrincipal(userAccount.getId(), userAccount.getUsername());
@@ -73,8 +76,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String token = StringUtils.substringAfter(rawAuthorization, BEARER_PREFIX);
         // Ignore authorization headers that do not contain a bearer token payload.
         if (StringUtils.isEmpty(StringUtils.strip(token))) {
+            // Return null so the filter treats the request as unauthenticated.
             return null;
         }
+        // Return the raw bearer token so downstream JWT parsing can validate it.
         return token;
     }
 }

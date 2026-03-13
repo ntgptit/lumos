@@ -16,6 +16,7 @@ public class ReviewStudyModeStrategy extends AbstractStudyModeStrategy {
 
     @Override
     public StudyMode getStudyMode() {
+        // Return the enum key that binds this strategy to the review mode.
         return StudyMode.REVIEW;
     }
 
@@ -24,13 +25,16 @@ public class ReviewStudyModeStrategy extends AbstractStudyModeStrategy {
         final List<String> completedActions = resolveCompletedActions(session);
         // Return immediately when the session has already finished.
         if (completedActions != null) {
+            // Return the completed-state action set so review mode cannot continue after session completion.
             return completedActions;
         }
         // Move to next only after the user already chose remembered or failed.
         if (session.getModeState() == StudyModeLifecycleState.WAITING_FEEDBACK
                 && currentItem.getLastOutcome() != null) {
+            // Return next-only because review mode already captured the learner's memory judgment.
             return List.of(ACTION_GO_NEXT);
         }
+        // Return the two review judgments so the learner can mark remembered versus needs-review.
         return List.of(
                 ACTION_MARK_REMEMBERED,
                 ACTION_RETRY_ITEM);
@@ -38,6 +42,7 @@ public class ReviewStudyModeStrategy extends AbstractStudyModeStrategy {
 
     @Override
     public String resolveInstruction() {
+        // Return the instruction text that frames review mode as a memory self-check.
         return INSTRUCTION_REVIEW;
     }
 }

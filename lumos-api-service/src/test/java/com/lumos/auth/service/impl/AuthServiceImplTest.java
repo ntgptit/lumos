@@ -134,6 +134,7 @@ class AuthServiceImplTest {
         user.setUsername(username);
         user.setEmail(email);
         user.setAccountStatus(AccountStatus.ACTIVE);
+        
         return user;
     }
 
@@ -143,6 +144,7 @@ class AuthServiceImplTest {
         refreshToken.setTokenHash("hash");
         refreshToken.setTokenStatus(status);
         refreshToken.setExpiresAt(expiresAt);
+        
         return refreshToken;
     }
 }

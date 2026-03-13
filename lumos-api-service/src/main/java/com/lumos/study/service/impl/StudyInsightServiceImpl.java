@@ -48,16 +48,19 @@ public class StudyInsightServiceImpl implements StudyInsightService {
         final List<LearningCardState> states = this.learningCardStateRepository
                 .findAllByUserAccountIdAndDeletedAtIsNull(userId);
         final List<LearningCardState> dueStates = states
+                // Filter the user's learning states down to cards that are already due for study.
                 .stream()
                 .filter(state -> !state.getNextReviewAt().isAfter(now))
                 .toList();
         final List<LearningCardState> overdueStates = states
+                // Filter the same learning states down to cards that are past the overdue threshold.
                 .stream()
                 .filter(state -> state.getNextReviewAt().isBefore(now.minusSeconds(OVERDUE_THRESHOLD_SECONDS)))
                 .toList();
         final ReminderEscalationLevel escalationLevel = resolveEscalationLevel(overdueStates.size());
         final List<String> reminderTypes = resolveReminderTypes(dueStates.size(), overdueStates.size(), escalationLevel);
         final ReminderRecommendationResponse recommendation = resolveRecommendation(dueStates);
+        // Return the reminder summary that drives badges, escalation level, and session recommendation.
         return new StudyReminderSummaryResponse(
                 dueStates.size(),
                 overdueStates.size(),
@@ -79,14 +82,18 @@ public class StudyInsightServiceImpl implements StudyInsightService {
         final List<LearningCardState> states = this.learningCardStateRepository
                 .findAllByUserAccountIdAndDeletedAtIsNull(userId);
         final Map<Integer, Long> boxDistribution = new HashMap<>();
+        // Count how many learned cards currently sit in each SRS box.
         for (LearningCardState state : states) {
             boxDistribution.merge(state.getBoxIndex(), 1L, Long::sum);
         }
+        // Count cards that are already due according to their next-review timestamp.
         final long dueCount = states.stream().filter(state -> !state.getNextReviewAt().isAfter(now)).count();
         final long overdueCount = states
+                // Count cards that crossed the overdue threshold to measure backlog severity.
                 .stream()
                 .filter(state -> state.getNextReviewAt().isBefore(now.minusSeconds(OVERDUE_THRESHOLD_SECONDS)))
                 .count();
+        // Return the analytics overview consumed by the progress screen.
         return new StudyAnalyticsOverviewResponse(
                 states.size(),
                 dueCount,
@@ -99,20 +106,25 @@ public class StudyInsightServiceImpl implements StudyInsightService {
     private ReminderEscalationLevel resolveEscalationLevel(int overdueCount) {
         // Use no escalation when there is no overdue backlog.
         if (overdueCount <= 0) {
+            // Return no escalation when the learner has no overdue review debt.
             return ReminderEscalationLevel.NONE;
         }
         // Use level 1 escalation for a small overdue backlog.
         if (overdueCount < 5) {
+            // Return the mildest escalation when the overdue backlog is still small.
             return ReminderEscalationLevel.LEVEL_1;
         }
         // Use level 2 escalation for a moderate overdue backlog.
         if (overdueCount < 10) {
+            // Return medium escalation when the learner is beginning to accumulate debt.
             return ReminderEscalationLevel.LEVEL_2;
         }
         // Use level 3 escalation for a large overdue backlog.
         if (overdueCount < 20) {
+            // Return strong escalation when the backlog is already large.
             return ReminderEscalationLevel.LEVEL_3;
         }
+        // Return the highest escalation level when the overdue backlog is severe.
         return ReminderEscalationLevel.LEVEL_4;
     }
 
@@ -127,33 +139,40 @@ public class StudyInsightServiceImpl implements StudyInsightService {
         if (overdueCount > 0 && escalationLevel != ReminderEscalationLevel.NONE) {
             reminderTypes.add(ReminderType.OVERDUE_ESCALATION.name());
         }
+        // Return the reminder channels that the current due/overdue situation should surface.
         return reminderTypes;
     }
 
     private ReminderRecommendationResponse resolveRecommendation(List<LearningCardState> dueStates) {
         // Skip recommendation output when there is no due work to study.
         if (dueStates.isEmpty()) {
+            // Return no recommendation when the learner has nothing due to review.
             return null;
         }
         final Map<Long, List<LearningCardState>> statesByDeckId = new HashMap<>();
+        // Group due cards by deck so the recommendation can point to one concrete study target.
         for (LearningCardState state : dueStates) {
             final Long deckId = state.getFlashcard().getDeck().getId();
             statesByDeckId.computeIfAbsent(deckId, ignored -> new ArrayList<>()).add(state);
         }
         final Map.Entry<Long, List<LearningCardState>> bestEntry = statesByDeckId.entrySet()
+                // Select the deck with the largest due backlog as the current recommendation target.
                 .stream()
                 .max(Comparator.comparingInt(entry -> entry.getValue().size()))
                 .orElse(null);
         // Return no recommendation when no deck grouping can be selected.
         if (bestEntry == null) {
+            // Return no recommendation when no due deck bucket can be resolved.
             return null;
         }
         final LearningCardState sample = bestEntry.getValue().get(0);
         final int estimatedSessionMinutes = Math.max(1, bestEntry.getValue().size() / SESSION_MINUTES_DIVISOR);
+        // Return the deck-level recommendation used to steer the learner into the next review session.
         return new ReminderRecommendationResponse(
                 bestEntry.getKey(),
                 sample.getFlashcard().getDeck().getName(),
                 bestEntry.getValue().size(),
+                // Count overdue cards inside the selected deck to show how urgent the recommendation is.
                 (int) bestEntry.getValue().stream()
                         .filter(state -> state.getNextReviewAt().isBefore(Instant.now().minusSeconds(OVERDUE_THRESHOLD_SECONDS)))
                         .count(),

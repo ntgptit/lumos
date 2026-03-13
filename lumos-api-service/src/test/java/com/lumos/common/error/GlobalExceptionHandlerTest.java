@@ -192,6 +192,7 @@ class GlobalExceptionHandlerTest {
     private GlobalExceptionHandler handler() {
         when(this.messageSource.getMessage(any(), any(), any(), any(Locale.class)))
                 .thenAnswer(invocation -> "resolved:" + invocation.getArgument(0, String.class));
+        
         return new GlobalExceptionHandler(this.messageSource);
     }
 
@@ -200,6 +201,7 @@ class GlobalExceptionHandlerTest {
         request.setRequestURI(uri);
         request.addPreferredLocale(Locale.US);
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
+        
         return request;
     }
 

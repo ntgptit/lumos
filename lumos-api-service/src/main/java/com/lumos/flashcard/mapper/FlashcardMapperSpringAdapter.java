@@ -18,6 +18,7 @@ public class FlashcardMapperSpringAdapter implements FlashcardMapper {
     public FlashcardResponse toFlashcardResponse(Flashcard flashcard) {
         final var deckId = this.resolveDeckId(flashcard.getDeck());
         final var audit = this.toAuditMetadata(flashcard);
+        
         return new FlashcardResponse(
                 flashcard.getId(),
                 deckId,
@@ -50,6 +51,7 @@ public class FlashcardMapperSpringAdapter implements FlashcardMapper {
         flashcard.setPronunciation(pronunciation);
         flashcard.setNote(note);
         flashcard.setIsBookmarked(isBookmarked);
+        
         return flashcard;
     }
 
@@ -62,14 +64,17 @@ public class FlashcardMapperSpringAdapter implements FlashcardMapper {
             int totalPages,
             boolean hasNext,
             boolean hasPrevious) {
+        
         return new FlashcardPageResponse(items, page, size, totalElements, totalPages, hasNext, hasPrevious);
     }
 
     private Long resolveDeckId(Deck deck) {
         // Deck id is absent only when flashcard entity is incomplete.
         if (deck == null) {
+            
             return null;
         }
+        
         return deck.getId();
     }
 }

@@ -37,6 +37,7 @@ public class HealthController {
     @GetMapping
     public ResponseEntity<HealthResponse> getHealth() {
         final var response = new HealthResponse(HealthControllerConst.UP_STATUS);
+        // Return a simple liveness payload so infrastructure checks can verify the service is up.
         return ResponseEntity.ok(response);
     }
 }

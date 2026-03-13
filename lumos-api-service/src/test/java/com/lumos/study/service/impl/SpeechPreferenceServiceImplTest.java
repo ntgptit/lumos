@@ -80,6 +80,7 @@ class SpeechPreferenceServiceImplTest {
         preference.setVoice("ko-KR-neutral");
         preference.setSpeed(1.0D);
         preference.setLocale("ko-KR");
+        
         return preference;
     }
 }

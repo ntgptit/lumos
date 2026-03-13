@@ -19,6 +19,7 @@ public final class FlashcardTestFixtures {
             String backText,
             String frontLangCode,
             String backLangCode) {
+        
         return new CreateFlashcardRequest(frontText, backText, frontLangCode, backLangCode);
     }
 
@@ -27,6 +28,7 @@ public final class FlashcardTestFixtures {
             String backText,
             String frontLangCode,
             String backLangCode) {
+        
         return new UpdateFlashcardRequest(frontText, backText, frontLangCode, backLangCode);
     }
 
@@ -40,6 +42,7 @@ public final class FlashcardTestFixtures {
             String pronunciation,
             String note,
             Boolean isBookmarked) {
+        
         return new FlashcardResponse(
                 flashcardId,
                 deckId,
@@ -63,6 +66,7 @@ public final class FlashcardTestFixtures {
             int totalPages,
             boolean hasNext,
             boolean hasPrevious) {
+        
         return new FlashcardPageResponse(items, page, size, totalElements, totalPages, hasNext, hasPrevious);
     }
 }

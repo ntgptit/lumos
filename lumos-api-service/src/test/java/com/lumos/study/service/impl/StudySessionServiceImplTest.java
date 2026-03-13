@@ -272,6 +272,7 @@ class StudySessionServiceImplTest {
         user.setId(USER_ID);
         user.setUsername("tester");
         user.setEmail("tester@mail.com");
+        
         return user;
     }
 
@@ -279,6 +280,7 @@ class StudySessionServiceImplTest {
         final Deck deck = new Deck();
         deck.setId(DECK_ID);
         deck.setName("Korean Basics");
+        
         return deck;
     }
 
@@ -290,6 +292,7 @@ class StudySessionServiceImplTest {
         flashcard.setBackText(back);
         flashcard.setNote("note");
         flashcard.setPronunciation("pronunciation");
+        
         return flashcard;
     }
 
@@ -298,6 +301,7 @@ class StudySessionServiceImplTest {
                 StudyModeLifecycleState.IN_PROGRESS, 0, 0, false);
         session.setId(SESSION_ID);
         session.setModePlan("REVIEW,MATCH,GUESS,RECALL,FILL");
+        
         return session;
     }
 
@@ -319,6 +323,7 @@ class StudySessionServiceImplTest {
         session.setCurrentModeIndex(currentModeIndex);
         session.setCurrentItemIndex(currentItemIndex);
         session.setSessionCompleted(completed);
+        
         return session;
     }
 
@@ -327,6 +332,7 @@ class StudySessionServiceImplTest {
             ReviewOutcome outcome,
             boolean completed,
             boolean retryPending) {
+        
         return sessionItem(1L, session, flashcard(101L, session.getDeck(), "안녕하세요", "xin chao"), 0, completed,
                 retryPending, outcome);
     }
@@ -351,6 +357,7 @@ class StudySessionServiceImplTest {
         item.setCurrentModeCompleted(completed);
         item.setRetryPending(retryPending);
         item.setLastOutcome(outcome);
+        
         return item;
     }
 }

@@ -69,6 +69,7 @@ public class AuthServiceImpl implements AuthService {
         userAccount.setPasswordHash(this.passwordEncoder.encode(request.password()));
         userAccount.setAccountStatus(AccountStatus.ACTIVE);
         final UserAccount savedUserAccount = this.userAccountRepository.save(userAccount);
+        // Return the initial authenticated session for the account that has just been persisted.
         return issueAuthResponse(savedUserAccount);
     }
 
@@ -87,8 +88,10 @@ public class AuthServiceImpl implements AuthService {
         ensureAccountIsActive(userAccount);
         // Reject the login when the submitted password does not match the stored hash.
         if (!this.passwordEncoder.matches(request.password(), userAccount.getPasswordHash())) {
+            // Stop the login flow immediately so invalid credentials never issue tokens.
             throw new InvalidCredentialsException();
         }
+        // Return a fresh authenticated session after the credentials have been verified.
         return issueAuthResponse(userAccount);
     }
 
@@ -106,6 +109,7 @@ public class AuthServiceImpl implements AuthService {
         final UserAccount userAccount = refreshToken.getUserAccount();
         ensureAccountIsActive(userAccount);
         rotateRefreshToken(refreshToken);
+        // Return the rotated session payload after replacing the consumed refresh token.
         return issueAuthResponse(userAccount);
     }
 
@@ -120,6 +124,7 @@ public class AuthServiceImpl implements AuthService {
         final RefreshToken refreshToken = resolveRefreshToken(request.refreshToken());
         // Keep logout idempotent when the refresh token was already revoked earlier.
         if (refreshToken.getTokenStatus() == RefreshTokenStatus.REVOKED) {
+            // Return immediately because logout is already fully applied for this token.
             return;
         }
         refreshToken.setTokenStatus(RefreshTokenStatus.REVOKED);
@@ -138,6 +143,7 @@ public class AuthServiceImpl implements AuthService {
         final UserAccount userAccount = this.userAccountRepository.findByIdAndDeletedAtIsNull(userId)
                 .orElseThrow(UnauthorizedAccessException::new);
         ensureAccountIsActive(userAccount);
+        // Return the active account profile that matches the current authenticated principal.
         return new CurrentUserResponse(
                 userAccount.getId(),
                 userAccount.getUsername(),
@@ -148,23 +154,28 @@ public class AuthServiceImpl implements AuthService {
     private void validateUniqueness(String normalizedUsername, String normalizedEmail) {
         // Reject the registration when another active account already owns the username.
         if (this.userAccountRepository.existsByUsernameIgnoreCase(normalizedUsername)) {
+            // Stop registration because usernames must remain globally unique among active accounts.
             throw new DuplicateUsernameException();
         }
         // Reject the registration when another active account already owns the email.
         if (this.userAccountRepository.existsByEmailIgnoreCase(normalizedEmail)) {
+            // Stop registration because emails must remain globally unique among active accounts.
             throw new DuplicateEmailException();
         }
     }
 
     private Optional<UserAccount> resolveUserByIdentifier(String normalizedIdentifier) {
+        // Return the active account resolved by username-or-email so auth stays canonical in one query.
         return this.userAccountRepository.findActiveByIdentifier(normalizedIdentifier);
     }
 
     private void ensureAccountIsActive(UserAccount userAccount) {
         // Continue only when the account is currently allowed to sign in.
         if (userAccount.getAccountStatus() == AccountStatus.ACTIVE) {
+            // Return immediately because active accounts may continue through the auth flow.
             return;
         }
+        // Stop token issuance for accounts that have been disabled at the account-state level.
         throw new AccountDisabledException();
     }
 
@@ -177,6 +188,7 @@ public class AuthServiceImpl implements AuthService {
         refreshToken.setTokenStatus(RefreshTokenStatus.ACTIVE);
         refreshToken.setExpiresAt(Instant.now().plusSeconds(this.jwtTokenService.getRefreshTokenTtlSeconds()));
         this.refreshTokenRepository.save(refreshToken);
+        // Return the full auth payload that the client needs to bootstrap or refresh the session.
         return new AuthResponse(
                 toAuthUserResponse(userAccount),
                 accessToken,
@@ -186,6 +198,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private AuthUserResponse toAuthUserResponse(UserAccount userAccount) {
+        // Return the user projection embedded inside auth responses to avoid leaking the entity directly.
         return new AuthUserResponse(
                 userAccount.getId(),
                 userAccount.getUsername(),
@@ -194,15 +207,18 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private String normalizeUsername(String username) {
+        // Return the canonical username format used for uniqueness checks and account lookup.
         return StringUtils.trimToEmpty(username).toLowerCase(Locale.ROOT);
     }
 
     private String normalizeEmail(String email) {
+        // Return the canonical email format used for uniqueness checks and account lookup.
         return StringUtils.trimToEmpty(email).toLowerCase(Locale.ROOT);
     }
 
     private RefreshToken resolveRefreshToken(String rawRefreshToken) {
         final String tokenHash = hashToken(StringUtils.strip(rawRefreshToken));
+        // Return the persisted refresh token record that matches the presented token hash.
         return this.refreshTokenRepository.findByTokenHashAndDeletedAtIsNull(tokenHash)
                 .orElseThrow(InvalidRefreshTokenException::new);
     }
@@ -210,14 +226,17 @@ public class AuthServiceImpl implements AuthService {
     private void ensureRefreshTokenIsUsable(RefreshToken refreshToken) {
         // Reject refresh attempts for tokens that are no longer active.
         if (refreshToken.getTokenStatus() != RefreshTokenStatus.ACTIVE) {
+            // Stop refresh immediately because rotated, revoked, and expired tokens must not be reused.
             throw new InvalidRefreshTokenException();
         }
         // Keep active tokens usable until their expiration timestamp is reached.
         if (refreshToken.getExpiresAt().isAfter(Instant.now())) {
+            // Return immediately because the active refresh token is still inside its valid lifetime.
             return;
         }
         refreshToken.setTokenStatus(RefreshTokenStatus.EXPIRED);
         refreshToken.setRevokedAt(Instant.now());
+        // Stop refresh after marking the token expired so subsequent reuse is consistently rejected.
         throw new InvalidRefreshTokenException();
     }
 
@@ -227,6 +246,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private String generateRefreshTokenValue() {
+        // Return a high-entropy opaque refresh token that is stored only as a hash in persistence.
         return UUID.randomUUID() + "-" + UUID.randomUUID();
     }
 
@@ -234,8 +254,10 @@ public class AuthServiceImpl implements AuthService {
         try {
             final MessageDigest messageDigest = MessageDigest.getInstance(HASH_ALGORITHM);
             final byte[] digest = messageDigest.digest(rawRefreshToken.getBytes(StandardCharsets.UTF_8));
+            // Return the deterministic token hash that the database uses for refresh-token lookup.
             return HexFormat.of().formatHex(digest);
         } catch (NoSuchAlgorithmException exception) {
+            // Stop startup-time auth flows because refresh-token hashing cannot work without the algorithm.
             throw new IllegalStateException(exception);
         }
     }

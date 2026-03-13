@@ -57,6 +57,10 @@ RULE_QUERY_KEYWORD_UPPERCASE = "QUERY_SQL_KEYWORDS_MUST_BE_UPPERCASE"
 RULE_JAVADOC_CONTROLLER_REQUIRED = "JAVADOC_REQUIRED_FOR_CONTROLLER_AND_ENDPOINTS"
 RULE_JAVADOC_SERVICE_REQUIRED = "JAVADOC_REQUIRED_FOR_SERVICE_METHODS"
 RULE_IF_REQUIRES_COMMENT = "IF_STATEMENT_REQUIRES_PRECEDING_COMMENT"
+RULE_THROW_REQUIRES_COMMENT = "THROW_STATEMENT_REQUIRES_PRECEDING_COMMENT"
+RULE_FOR_REQUIRES_COMMENT = "FOR_STATEMENT_REQUIRES_PRECEDING_COMMENT"
+RULE_STREAM_REQUIRES_COMMENT = "STREAM_CALL_REQUIRES_PRECEDING_COMMENT"
+RULE_RETURN_REQUIRES_COMMENT = "RETURN_STATEMENT_REQUIRES_PRECEDING_COMMENT"
 
 SEVERITY_ERROR = "ERROR"
 SEVERITY_WARNING = "WARN"
@@ -92,6 +96,9 @@ QUERY_ANNOTATION_PATTERN = re.compile(r"^\s*@\s*Query\b")
 REST_CONTROLLER_ANNOTATION_PATTERN = re.compile(r"^\s*@\s*RestController\b")
 PUBLIC_METHOD_START_PATTERN = re.compile(r"^\s*public\s+.+\(.+\).*")
 IF_STATEMENT_PATTERN = re.compile(r"^\s*if\s*\(")
+THROW_STATEMENT_PATTERN = re.compile(r"^\s*throw\b")
+STREAM_CALL_PATTERN = re.compile(r"\.\s*stream\s*\(")
+RETURN_STATEMENT_PATTERN = re.compile(r"^\s*return\b")
 MANUAL_MAPPING_NEW_PATTERN = re.compile(r"\bnew\s+\w+(Entity|Dto|DTO|Response|Request)\s*\(")
 DTO_VALIDATION_ANNOTATION_PATTERN = re.compile(
     r"@\s*(Valid|NotNull|NotBlank|NotEmpty|Size|Pattern|Min|Max|Positive|PositiveOrZero|Negative|NegativeOrZero|Email|Past|PastOrPresent|Future|FutureOrPresent|AssertTrue|AssertFalse)\b"
@@ -128,6 +135,9 @@ DIRECT_ENDS_WITH_PATTERN = re.compile(r"\.\s*endsWith\s*\(")
 DIRECT_CONTAINS_PATTERN = re.compile(r"\.\s*contains\s*\(")
 DIRECT_EQUALS_PATTERN = re.compile(r"\.\s*equals\s*\(")
 DIRECT_EQUALS_IGNORE_CASE_PATTERN = re.compile(r"\.\s*equalsIgnoreCase\s*\(")
+DEPRECATED_STRINGUTILS_EQUALS_PATTERN = re.compile(r"StringUtils\.equals\s*\(")
+DEPRECATED_STRINGUTILS_EQUALS_IGNORE_CASE_PATTERN = re.compile(r"StringUtils\.equalsIgnoreCase\s*\(")
+DEPRECATED_STRINGUTILS_COMPARE_IGNORE_CASE_PATTERN = re.compile(r"StringUtils\.compareIgnoreCase\s*\(")
 NULL_OR_EMPTY_SAME_VAR_PATTERN = re.compile(r"\b([A-Za-z_][A-Za-z0-9_]*)\s*==\s*null\s*\|\|\s*\1\s*\.\s*isEmpty\s*\(")
 NOT_NULL_AND_EMPTY_SAME_VAR_PATTERN = re.compile(r"\b([A-Za-z_][A-Za-z0-9_]*)\s*!=\s*null\s*&&\s*\1\s*\.\s*isEmpty\s*\(")
 NOT_NULL_AND_NOT_EMPTY_SAME_VAR_PATTERN = re.compile(
@@ -1072,8 +1082,8 @@ class NoDirectStringPredicateRule(Rule):
                 "StringUtils.isEmpty(" in line
                 or "StringUtils.isNotEmpty(" in line
                 or "StringUtils.contains(" in line
-                or "StringUtils.equals(" in line
-                or "StringUtils.equalsIgnoreCase(" in line
+                or "Strings.CS.equals(" in line
+                or "Strings.CI.equals(" in line
                 or "Strings.CS.startsWith(" in line
                 or "Strings.CS.endsWith(" in line
                 or "Strings.CI.startsWith(" in line
@@ -1160,6 +1170,45 @@ class NoDirectStringPredicateRule(Rule):
                 )
                 continue
 
+            if DEPRECATED_STRINGUTILS_EQUALS_PATTERN.search(line) is not None:
+                violations.append(
+                    Violation(
+                        rule=self.name,
+                        severity=SEVERITY_ERROR,
+                        file=file_ctx.rel_path,
+                        line=index,
+                        reason="Deprecated StringUtils.equals() is forbidden. Use Apache Commons Lang3 Strings.CS.equals().",
+                        snippet=raw.strip(),
+                    )
+                )
+                continue
+
+            if DEPRECATED_STRINGUTILS_EQUALS_IGNORE_CASE_PATTERN.search(line) is not None:
+                violations.append(
+                    Violation(
+                        rule=self.name,
+                        severity=SEVERITY_ERROR,
+                        file=file_ctx.rel_path,
+                        line=index,
+                        reason="Deprecated StringUtils.equalsIgnoreCase() is forbidden. Use Apache Commons Lang3 Strings.CI.equals().",
+                        snippet=raw.strip(),
+                    )
+                )
+                continue
+
+            if DEPRECATED_STRINGUTILS_COMPARE_IGNORE_CASE_PATTERN.search(line) is not None:
+                violations.append(
+                    Violation(
+                        rule=self.name,
+                        severity=SEVERITY_ERROR,
+                        file=file_ctx.rel_path,
+                        line=index,
+                        reason="Deprecated StringUtils.compareIgnoreCase() is forbidden. Use Apache Commons Lang3 Strings.CI.equals()/Strings.CI.compare().",
+                        snippet=raw.strip(),
+                    )
+                )
+                continue
+
             if DIRECT_EQUALS_PATTERN.search(line) is not None:
                 violations.append(
                     Violation(
@@ -1167,7 +1216,7 @@ class NoDirectStringPredicateRule(Rule):
                         severity=SEVERITY_ERROR,
                         file=file_ctx.rel_path,
                         line=index,
-                        reason="Direct .equals() is forbidden for String comparison. Use StringUtils.equals.",
+                        reason="Direct .equals() is forbidden for String comparison. Use Apache Commons Lang3 Strings.CS.equals().",
                         snippet=raw.strip(),
                     )
                 )
@@ -1181,7 +1230,7 @@ class NoDirectStringPredicateRule(Rule):
                     severity=SEVERITY_ERROR,
                     file=file_ctx.rel_path,
                     line=index,
-                    reason="Direct .equalsIgnoreCase() is forbidden. Use StringUtils.equalsIgnoreCase.",
+                    reason="Direct .equalsIgnoreCase() is forbidden. Use Apache Commons Lang3 Strings.CI.equals().",
                     snippet=raw.strip(),
                 )
             )
@@ -1372,14 +1421,31 @@ class JavaDocServiceRule(Rule):
         return violations
 
 
-class IfRequiresCommentRule(Rule):
-    name = RULE_IF_REQUIRES_COMMENT
+class PrecedingCommentRule(Rule):
+    def __init__(
+        self,
+        *,
+        name: str,
+        pattern: re.Pattern[str],
+        reason: str,
+        main_source_only: bool = False,
+        rel_path_contains_any: tuple[str, ...] = (),
+    ) -> None:
+        self.name = name
+        self._pattern = pattern
+        self._reason = reason
+        self._main_source_only = main_source_only
+        self._rel_path_contains_any = rel_path_contains_any
 
     def check(self, file_ctx: FileContext, project_ctx: ProjectContext) -> Iterable[Violation]:
+        if self._main_source_only and not file_ctx.rel_path.startswith("src/main/java/"):
+            return []
+        if self._rel_path_contains_any and not any(token in file_ctx.rel_path for token in self._rel_path_contains_any):
+            return []
         violations: list[Violation] = []
         lines = file_ctx.lines
         for index, raw in enumerate(lines, start=1):
-            if IF_STATEMENT_PATTERN.search(raw) is None:
+            if self._pattern.search(raw) is None:
                 continue
             if _has_comment_above(lines, index, 4):
                 continue
@@ -1389,7 +1455,7 @@ class IfRequiresCommentRule(Rule):
                     severity=SEVERITY_ERROR,
                     file=file_ctx.rel_path,
                     line=index,
-                    reason="if statement must have a preceding comment explaining the condition.",
+                    reason=self._reason,
                     snippet=raw.strip(),
                 )
             )
@@ -1808,7 +1874,41 @@ def main() -> int:
         QueryKeywordUppercaseRule(),
         JavaDocControllerRule(),
         JavaDocServiceRule(),
-        IfRequiresCommentRule(),
+        PrecedingCommentRule(
+            name=RULE_IF_REQUIRES_COMMENT,
+            pattern=IF_STATEMENT_PATTERN,
+            reason="if statement must have a preceding comment explaining the condition.",
+            main_source_only=True,
+            rel_path_contains_any=("/service/", "/mode/", "/security/", "/controller/"),
+        ),
+        PrecedingCommentRule(
+            name=RULE_THROW_REQUIRES_COMMENT,
+            pattern=THROW_STATEMENT_PATTERN,
+            reason="throw statement must have a preceding comment explaining the exception path.",
+            main_source_only=True,
+            rel_path_contains_any=("/service/", "/mode/", "/security/", "/controller/"),
+        ),
+        PrecedingCommentRule(
+            name=RULE_FOR_REQUIRES_COMMENT,
+            pattern=FOR_PATTERN,
+            reason="for statement must have a preceding comment explaining the loop intent.",
+            main_source_only=True,
+            rel_path_contains_any=("/service/", "/mode/", "/security/", "/controller/"),
+        ),
+        PrecedingCommentRule(
+            name=RULE_STREAM_REQUIRES_COMMENT,
+            pattern=STREAM_CALL_PATTERN,
+            reason="stream call must have a preceding comment explaining the stream pipeline intent.",
+            main_source_only=True,
+            rel_path_contains_any=("/service/", "/mode/", "/security/", "/controller/"),
+        ),
+        PrecedingCommentRule(
+            name=RULE_RETURN_REQUIRES_COMMENT,
+            pattern=RETURN_STATEMENT_PATTERN,
+            reason="return statement must have a preceding comment explaining the return path.",
+            main_source_only=True,
+            rel_path_contains_any=("/service/", "/mode/", "/security/", "/controller/"),
+        ),
     ]
 
     violations: list[Violation] = []

@@ -97,6 +97,7 @@ class FlashcardSpecificationsTest {
         when(deckPath.get("id")).thenReturn(deckIdPath);
         when(root.get("frontText")).thenReturn(frontTextPath);
         when(root.get("backText")).thenReturn(backTextPath);
+        
         return root;
     }
 
@@ -114,6 +115,7 @@ class FlashcardSpecificationsTest {
         when(builder.conjunction()).thenReturn(conjunctionPredicate);
         when(builder.and(activePredicate, deckPredicate)).thenReturn(finalPredicate);
         when(builder.and(finalPredicate, conjunctionPredicate)).thenReturn(finalPredicate);
+        
         return builder;
     }
 
@@ -141,11 +143,13 @@ class FlashcardSpecificationsTest {
         when(builder.or(frontLikePredicate, backLikePredicate)).thenReturn(textPredicate);
         when(builder.and(activePredicate, deckPredicate)).thenReturn(finalPredicate);
         when(builder.and(finalPredicate, textPredicate)).thenReturn(finalPredicate);
+        
         return builder;
     }
 
     @SuppressWarnings("unchecked")
     private Expression<String> castToExpression(Object value) {
+        
         return (Expression<String>) value;
     }
 }

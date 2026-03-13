@@ -15,6 +15,7 @@ public class OpenApiConfig {
 
     @Bean
     OpenAPI lumosOpenApi() {
+        // Return the OpenAPI document metadata exposed through Swagger and API-doc endpoints.
         return new OpenAPI()
                 .info(
                         new Info()

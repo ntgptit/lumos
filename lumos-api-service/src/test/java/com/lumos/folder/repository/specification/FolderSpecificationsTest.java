@@ -86,6 +86,7 @@ class FolderSpecificationsTest {
         when(root.get("parent")).thenReturn(parentPath);
         when(parentPath.get("id")).thenReturn(parentIdPath);
         when(root.get("name")).thenReturn(namePath);
+        
         return root;
     }
 
@@ -103,6 +104,7 @@ class FolderSpecificationsTest {
         when(builder.conjunction()).thenReturn(conjunctionPredicate);
         when(builder.and(activePredicate, rootPredicate)).thenReturn(finalPredicate);
         when(builder.and(finalPredicate, conjunctionPredicate)).thenReturn(finalPredicate);
+        
         return builder;
     }
 
@@ -123,11 +125,13 @@ class FolderSpecificationsTest {
         when(builder.like(eq(lowerExpression), eq("%folder%"))).thenReturn(likePredicate);
         when(builder.and(activePredicate, parentPredicate)).thenReturn(finalPredicate);
         when(builder.and(finalPredicate, likePredicate)).thenReturn(finalPredicate);
+        
         return builder;
     }
 
     @SuppressWarnings("unchecked")
     private Expression<String> castToExpression(Object value) {
+        
         return (Expression<String>) value;
     }
 }

@@ -216,10 +216,12 @@ class FolderServiceImplTest {
         folder.setName(name);
         folder.setDescription(description);
         folder.setColorHex(FolderConstants.DEFAULT_COLOR_HEX);
+        
         return folder;
     }
 
     private FolderResponse folderResponse(Long id, Long parentId, Integer depth, Integer childFolderCount) {
+        
         return com.lumos.testkit.FolderTestFixtures.folderResponse(
                 id,
                 "Folder A",
@@ -231,14 +233,17 @@ class FolderServiceImplTest {
     }
 
     private FolderChildCountProjection projection(Long parentId, Long childCount) {
+        
         return new FolderChildCountProjection() {
             @Override
             public Long getParentId() {
+                
                 return parentId;
             }
 
             @Override
             public Long getChildFolderCount() {
+                
                 return childCount;
             }
         };

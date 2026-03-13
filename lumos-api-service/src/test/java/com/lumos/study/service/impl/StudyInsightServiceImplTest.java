@@ -87,6 +87,7 @@ class StudyInsightServiceImplTest {
         final Deck deck = new Deck();
         deck.setId(id);
         deck.setName(name);
+        
         return deck;
     }
 
@@ -104,6 +105,7 @@ class StudyInsightServiceImplTest {
         state.setLastResult(ReviewOutcome.PASSED);
         state.setConsecutiveSuccessCount(1);
         state.setLapseCount(0);
+        
         return state;
     }
 }

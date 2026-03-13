@@ -33,6 +33,7 @@ public class SpeechPreferenceServiceImpl implements SpeechPreferenceService {
     @Transactional
     public SpeechPreferenceResponse getSpeechPreference() {
         final UserSpeechPreference preference = resolvePreference();
+        // Return the persisted speech preference so the client can render the current account-level setting.
         return toResponse(preference);
     }
 
@@ -50,6 +51,7 @@ public class SpeechPreferenceServiceImpl implements SpeechPreferenceService {
         preference.setAutoPlay(request.autoPlay());
         preference.setVoice(request.voice());
         preference.setSpeed(request.speed());
+        // Return the saved preference snapshot so the client stays aligned with the backend canonical state.
         return toResponse(preference);
     }
 
@@ -60,6 +62,7 @@ public class SpeechPreferenceServiceImpl implements SpeechPreferenceService {
                 .orElse(null);
         // Reuse the stored preference when the user has already configured speech options.
         if (existingPreference != null) {
+            // Return the existing preference instead of creating a duplicate row for the same account.
             return existingPreference;
         }
         final UserAccount userAccount = this.userAccountRepository.findByIdAndDeletedAtIsNull(userId)
@@ -71,10 +74,12 @@ public class SpeechPreferenceServiceImpl implements SpeechPreferenceService {
         preference.setVoice(StudyConstants.DEFAULT_SPEECH_VOICE);
         preference.setSpeed(StudyConstants.DEFAULT_SPEECH_SPEED);
         preference.setLocale(StudyConstants.SPEECH_LOCALE);
+        // Return the newly persisted default preference so later reads and updates reuse the same record.
         return this.userSpeechPreferenceRepository.save(preference);
     }
 
     private SpeechPreferenceResponse toResponse(UserSpeechPreference preference) {
+        // Return the DTO projection exposed by the profile speech-preference API.
         return new SpeechPreferenceResponse(
                 preference.getEnabled(),
                 preference.getAutoPlay(),

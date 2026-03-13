@@ -25,6 +25,7 @@ public interface DeckMapper {
     Deck toDeckEntity(Folder folder, String name, String description, Integer flashcardCount);
 
     default AuditMetadataResponse toAuditMetadata(Deck deck) {
+        
         return new AuditMetadataResponse(deck.getCreatedAt(), deck.getUpdatedAt());
     }
 }

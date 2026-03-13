@@ -86,6 +86,7 @@ class DeckSpecificationsTest {
         when(root.get("folder")).thenReturn(folderPath);
         when(folderPath.get("id")).thenReturn(folderIdPath);
         when(root.get("name")).thenReturn(namePath);
+        
         return root;
     }
 
@@ -103,6 +104,7 @@ class DeckSpecificationsTest {
         when(builder.conjunction()).thenReturn(conjunctionPredicate);
         when(builder.and(activePredicate, folderPredicate)).thenReturn(finalPredicate);
         when(builder.and(finalPredicate, conjunctionPredicate)).thenReturn(finalPredicate);
+        
         return builder;
     }
 
@@ -123,11 +125,13 @@ class DeckSpecificationsTest {
         when(builder.like(eq(lowerExpression), eq("%deck%"))).thenReturn(likePredicate);
         when(builder.and(activePredicate, folderPredicate)).thenReturn(finalPredicate);
         when(builder.and(finalPredicate, likePredicate)).thenReturn(finalPredicate);
+        
         return builder;
     }
 
     @SuppressWarnings("unchecked")
     private Expression<String> castToExpression(Object value) {
+        
         return (Expression<String>) value;
     }
 }

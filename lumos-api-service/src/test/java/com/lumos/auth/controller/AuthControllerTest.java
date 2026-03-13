@@ -88,6 +88,7 @@ class AuthControllerTest {
     }
 
     private AuthResponse authResponse() {
+        
         return new AuthResponse(
                 new AuthUserResponse(10L, "tester", "tester@mail.com", "ACTIVE"),
                 "access-token",

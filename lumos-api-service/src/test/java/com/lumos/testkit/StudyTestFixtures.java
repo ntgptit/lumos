@@ -24,14 +24,17 @@ public final class StudyTestFixtures {
     }
 
     public static StartStudySessionRequest startStudySessionRequest(Long deckId) {
+        
         return new StartStudySessionRequest(deckId);
     }
 
     public static SubmitAnswerRequest submitAnswerRequest(String answer) {
+        
         return new SubmitAnswerRequest(answer);
     }
 
     public static SubmitAnswerRequest submitMatchAnswerRequest(String answer, List<StudyMatchPairRequest> matchedPairs) {
+        
         return new SubmitAnswerRequest(answer, matchedPairs);
     }
 
@@ -40,10 +43,12 @@ public final class StudyTestFixtures {
             boolean autoPlay,
             String voice,
             Double speed) {
+        
         return new UpdateSpeechPreferenceRequest(enabled, autoPlay, voice, speed);
     }
 
     public static StudySessionResponse studySessionResponse(Long sessionId, Long deckId, String deckName) {
+        
         return new StudySessionResponse(
                 sessionId,
                 deckId,
@@ -80,6 +85,7 @@ public final class StudyTestFixtures {
     }
 
     public static StudyReminderSummaryResponse studyReminderSummaryResponse() {
+        
         return new StudyReminderSummaryResponse(
                 4L,
                 2L,
@@ -89,6 +95,7 @@ public final class StudyTestFixtures {
     }
 
     public static StudyAnalyticsOverviewResponse studyAnalyticsOverviewResponse() {
+        
         return new StudyAnalyticsOverviewResponse(
                 12L,
                 4L,
@@ -99,6 +106,7 @@ public final class StudyTestFixtures {
     }
 
     public static SpeechPreferenceResponse speechPreferenceResponse() {
+        
         return new SpeechPreferenceResponse(true, false, "ko-KR-neutral", 1.0D, "ko-KR");
     }
 }

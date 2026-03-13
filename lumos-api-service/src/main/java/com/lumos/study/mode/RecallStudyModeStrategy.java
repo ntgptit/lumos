@@ -16,6 +16,7 @@ public class RecallStudyModeStrategy extends AbstractStudyModeStrategy {
 
     @Override
     public StudyMode getStudyMode() {
+        // Return the enum key that binds this strategy to the recall mode.
         return StudyMode.RECALL;
     }
 
@@ -24,23 +25,28 @@ public class RecallStudyModeStrategy extends AbstractStudyModeStrategy {
         final List<String> completedActions = resolveCompletedActions(session);
         // Return immediately when the session has already finished.
         if (completedActions != null) {
+            // Return the completed-state action set so recall mode cannot continue after session completion.
             return completedActions;
         }
         // Split recall between answer-reveal state and post-assessment acknowledgement.
         if (session.getModeState() == StudyModeLifecycleState.WAITING_FEEDBACK) {
             // Switch to next-only acknowledgement once the item already has a final outcome.
             if (currentItem.getLastOutcome() != null) {
+                // Return next-only because the user has already judged recall success or failure.
                 return List.of(ACTION_GO_NEXT);
             }
+            // Return the self-assessment actions shown immediately after the answer is revealed.
             return List.of(
                     ACTION_MARK_REMEMBERED,
                     ACTION_RETRY_ITEM);
         }
+        // Return reveal-only so the learner must attempt recall mentally before seeing the answer.
         return List.of(ACTION_REVEAL_ANSWER);
     }
 
     @Override
     public String resolveInstruction() {
+        // Return the instruction text that explains the delayed-reveal recall exercise.
         return INSTRUCTION_RECALL;
     }
 }

@@ -209,6 +209,7 @@ class DeckServiceImplTest {
         final var folder = new Folder();
         folder.setId(id);
         folder.setDepth(depth);
+        
         return folder;
     }
 
@@ -219,10 +220,12 @@ class DeckServiceImplTest {
         deck.setName(name);
         deck.setDescription(description);
         deck.setFlashcardCount(0);
+        
         return deck;
     }
 
     private DeckResponse deckResponse() {
+        
         return com.lumos.testkit.DeckTestFixtures.deckResponse(
                 DECK_ID,
                 FOLDER_ID,

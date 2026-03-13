@@ -24,6 +24,7 @@ public class StudyConstants {
     public static final List<StudyMode> REVIEW_MODE_PLAN = List.of(StudyMode.FILL);
 
     public static Duration intervalForBox(int boxIndex) {
+        
         return switch (boxIndex) {
             case 1 -> Duration.ofHours(12);
             case 2 -> Duration.ofDays(1);

@@ -44,6 +44,7 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
         final AuthResponse response = this.authService.register(request);
+        // Return the newly created account with an authenticated session payload.
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -57,6 +58,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         final AuthResponse response = this.authService.login(request);
+        // Return the authenticated session so the client can store the issued tokens.
         return ResponseEntity.ok(response);
     }
 
@@ -70,6 +72,7 @@ public class AuthController {
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponse> refreshToken(@Valid @RequestBody RefreshTokenRequest request) {
         final AuthResponse response = this.authService.refreshToken(request);
+        // Return the rotated session payload with the refreshed access token set.
         return ResponseEntity.ok(response);
     }
 
@@ -83,6 +86,7 @@ public class AuthController {
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@Valid @RequestBody LogoutRequest request) {
         this.authService.logout(request);
+        // Return an empty success response after revoking the provided refresh token.
         return ResponseEntity.noContent().build();
     }
 
@@ -95,6 +99,7 @@ public class AuthController {
     @GetMapping("/me")
     public ResponseEntity<CurrentUserResponse> getCurrentUser() {
         final CurrentUserResponse response = this.authService.getCurrentUser();
+        // Return the canonical authenticated user profile resolved from the current token.
         return ResponseEntity.ok(response);
     }
 }

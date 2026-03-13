@@ -17,6 +17,7 @@ public class FillStudyModeStrategy extends AbstractStudyModeStrategy {
 
     @Override
     public StudyMode getStudyMode() {
+        // Return the enum key that binds this strategy to the fill-in-answer mode.
         return StudyMode.FILL;
     }
 
@@ -25,16 +26,20 @@ public class FillStudyModeStrategy extends AbstractStudyModeStrategy {
         final List<String> completedActions = resolveCompletedActions(session);
         // Return immediately when the session has already finished.
         if (completedActions != null) {
+            // Return the completed-state action set so finished sessions cannot restart fill input.
             return completedActions;
         }
         // Switch to feedback-specific actions after help or answer submission.
         if (session.getModeState() == StudyModeLifecycleState.WAITING_FEEDBACK) {
             // Keep answer submission available after showing a help hint.
             if (currentItem.getLastOutcome() == null) {
+                // Return submit-only so the user can still answer after seeing a hint.
                 return List.of(ACTION_SUBMIT_ANSWER);
             }
+            // Return next-only because the fill outcome has already been recorded.
             return List.of(ACTION_GO_NEXT);
         }
+        // Return the default fill actions so the user can answer directly or ask for help first.
         return List.of(
                 ACTION_SUBMIT_ANSWER,
                 ACTION_REVEAL_ANSWER);
@@ -42,11 +47,13 @@ public class FillStudyModeStrategy extends AbstractStudyModeStrategy {
 
     @Override
     public String resolveInstruction() {
+        // Return the instruction text that explains the expected fill interaction.
         return INSTRUCTION_FILL;
     }
 
     @Override
     public String resolveInputPlaceholder() {
+        // Return the placeholder shown inside the fill answer field.
         return FILL_INPUT_PLACEHOLDER;
     }
 }

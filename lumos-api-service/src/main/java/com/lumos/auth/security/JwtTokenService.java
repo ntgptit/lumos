@@ -29,6 +29,7 @@ public class JwtTokenService {
     public String generateAccessToken(UserAccount userAccount) {
         final Instant now = Instant.now();
         final Instant expiresAt = now.plusSeconds(this.jwtProperties.getAccessTokenTtlSeconds());
+        // Return a signed access token that carries the canonical auth claims for this user.
         return Jwts.builder()
                 .subject(String.valueOf(userAccount.getId()))
                 .claim(TOKEN_TYPE_CLAIM, TOKEN_TYPE_ACCESS)
@@ -46,20 +47,24 @@ public class JwtTokenService {
                 .build()
                 .parseSignedClaims(accessToken)
                 .getPayload();
+        // Return the minimal claims object that downstream security code needs for authorization.
         return new JwtAccessTokenClaims(
                 Long.valueOf(claims.getSubject()),
                 claims.get(USERNAME_CLAIM, String.class));
     }
 
     public long getAccessTokenTtlSeconds() {
+        // Return the configured access-token lifetime so clients can anticipate refresh timing.
         return this.jwtProperties.getAccessTokenTtlSeconds();
     }
 
     public long getRefreshTokenTtlSeconds() {
+        // Return the configured refresh-token lifetime for refresh-session persistence decisions.
         return this.jwtProperties.getRefreshTokenTtlSeconds();
     }
 
     private SecretKey resolveSigningKey() {
+        // Return the HMAC signing key derived from the configured shared JWT secret.
         return Keys.hmacShaKeyFor(this.jwtProperties.getSecret().getBytes(StandardCharsets.UTF_8));
     }
 }

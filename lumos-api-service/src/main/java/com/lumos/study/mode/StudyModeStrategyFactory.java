@@ -15,6 +15,7 @@ public class StudyModeStrategyFactory {
 
     public StudyModeStrategyFactory(List<StudyModeStrategy> strategies) {
         final Map<StudyMode, StudyModeStrategy> nextStrategiesByMode = new EnumMap<>(StudyMode.class);
+        // Register each injected strategy under the mode it owns so lookup stays O(1) at runtime.
         for (StudyModeStrategy strategy : strategies) {
             nextStrategiesByMode.put(strategy.getStudyMode(), strategy);
         }
@@ -25,8 +26,10 @@ public class StudyModeStrategyFactory {
         final StudyModeStrategy strategy = this.strategiesByMode.get(studyMode);
         // Return the registered strategy immediately when the mode has a mapped implementation.
         if (strategy != null) {
+            // Return the mode strategy that owns the behavior for the requested study mode.
             return strategy;
         }
+        // Fail fast because the session cannot execute a mode that has no registered strategy.
         throw new IllegalStateException("Missing StudyModeStrategy for mode: " + studyMode);
     }
 }

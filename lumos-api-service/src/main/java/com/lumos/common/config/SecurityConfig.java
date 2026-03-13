@@ -28,6 +28,7 @@ public class SecurityConfig {
 
     @Bean
     PasswordEncoder passwordEncoder() {
+        // Return the password encoder used to hash and verify stored account credentials.
         return new BCryptPasswordEncoder();
     }
 
@@ -56,6 +57,7 @@ public class SecurityConfig {
                 .anonymous(Customizer.withDefaults());
         http
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        // Return the stateless security chain that protects private endpoints with JWT authentication.
         return http
                 .build();
     }

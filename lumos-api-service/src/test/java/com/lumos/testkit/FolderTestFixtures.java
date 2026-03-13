@@ -14,14 +14,17 @@ public final class FolderTestFixtures {
     }
 
     public static CreateFolderRequest createFolderRequest(String name, String description, Long parentId) {
+        
         return new CreateFolderRequest(name, description, parentId);
     }
 
     public static RenameFolderRequest renameFolderRequest(String name) {
+        
         return new RenameFolderRequest(name);
     }
 
     public static UpdateFolderRequest updateFolderRequest(String name, String description, Long parentId) {
+        
         return new UpdateFolderRequest(name, description, parentId);
     }
 
@@ -33,6 +36,7 @@ public final class FolderTestFixtures {
             Long parentId,
             Integer depth,
             Integer childFolderCount) {
+        
         return new FolderResponse(
                 id,
                 name,

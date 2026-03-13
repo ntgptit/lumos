@@ -28,6 +28,7 @@ public class MatchStudyModeStrategy extends AbstractStudyModeStrategy {
 
     @Override
     public StudyMode getStudyMode() {
+        // Return the canonical mode key used to route MATCH behavior through the factory.
         return StudyMode.MATCH;
     }
 
@@ -36,17 +37,21 @@ public class MatchStudyModeStrategy extends AbstractStudyModeStrategy {
         final List<String> completedActions = resolveCompletedActions(session);
         // Return immediately when the session has already finished.
         if (completedActions != null) {
+            // Return the completed action set so the frontend stops exposing interactive commands.
             return completedActions;
         }
         // Restrict feedback state to acknowledgement after the selected match is checked.
         if (session.getModeState() == StudyModeLifecycleState.WAITING_FEEDBACK) {
+            // Return only the advance action because the current pairing result is already locked in.
             return List.of(ACTION_GO_NEXT);
         }
+        // Return the submit action while the learner is still building the pairing grid.
         return List.of(ACTION_SUBMIT_ANSWER);
     }
 
     @Override
     public String resolveInstruction() {
+        // Return the instructional copy shown above the pairing grid for MATCH mode.
         return INSTRUCTION_MATCH;
     }
 
@@ -54,6 +59,7 @@ public class MatchStudyModeStrategy extends AbstractStudyModeStrategy {
     public List<StudyMatchPairResponse> resolveMatchPairs(StudySessionItem currentItem, List<StudySessionItem> items) {
         final List<StudySessionItem> matchItems = resolveMatchItems(currentItem, items);
         final List<StudyMatchPairResponse> matchPairs = new ArrayList<>();
+        // Build the left-right grid rows that the frontend renders for the current match challenge.
         for (StudySessionItem item : matchItems) {
             matchPairs.add(new StudyMatchPairResponse(
                     LEFT_ID_PREFIX + item.getFlashcard().getId(),
@@ -61,6 +67,7 @@ public class MatchStudyModeStrategy extends AbstractStudyModeStrategy {
                     RIGHT_ID_PREFIX + item.getFlashcard().getId(),
                     resolveExpectedAnswer(item)));
         }
+        // Return the pairing contract that the frontend uses to render the current MATCH attempt.
         return matchPairs;
     }
 
@@ -70,26 +77,32 @@ public class MatchStudyModeStrategy extends AbstractStudyModeStrategy {
             List<StudySessionItem> items,
             List<StudyMatchPairRequest> matchedPairs) {
         final List<StudyMatchPairResponse> expectedPairs = resolveMatchPairs(currentItem, items);
+        // Flatten the expected match grid into canonical left:right identifiers for exact-set comparison.
         final Set<String> expectedPairIds = expectedPairs.stream()
                 .map(pair -> pair.leftId() + ":" + pair.rightId())
                 .collect(Collectors.toSet());
+        // Flatten the submitted grid into the same canonical shape before comparing learner input.
         final Set<String> submittedPairIds = matchedPairs.stream()
                 .map(pair -> StringUtils.trimToEmpty(pair.leftId()) + ":" + StringUtils.trimToEmpty(pair.rightId()))
                 .collect(Collectors.toSet());
         // Mark the answer as failed when the number of submitted pairs does not match the expected grid.
         if (submittedPairIds.size() != expectedPairs.size()) {
+            // Return fail because an incomplete grid means the learner did not finish all required pairs.
             return ReviewOutcome.FAILED;
         }
         // Mark the answer as failed when any selected pair mismatches the expected canonical pair set.
         if (!expectedPairIds.containsAll(submittedPairIds) || !submittedPairIds.containsAll(expectedPairIds)) {
+            // Return fail because at least one submitted pairing maps to the wrong counterpart.
             return ReviewOutcome.FAILED;
         }
+        // Return pass only when the learner completes the entire pairing grid correctly.
         return ReviewOutcome.PASSED;
     }
 
     private List<StudySessionItem> resolveMatchItems(StudySessionItem currentItem, List<StudySessionItem> items) {
         final List<StudySessionItem> matchItems = new ArrayList<>();
         matchItems.add(currentItem);
+        // Fill the pairing grid with the current item first, then enough sibling items to reach the grid limit.
         for (StudySessionItem item : items) {
             // Keep the current item as the first pair and fill remaining slots with other items.
             if (Objects.compare(currentItem.getId(), item.getId(), Comparator.naturalOrder()) == 0) {
@@ -101,6 +114,7 @@ public class MatchStudyModeStrategy extends AbstractStudyModeStrategy {
                 break;
             }
         }
+        // Return the item slice that defines the rows rendered in the current pairing challenge.
         return matchItems;
     }
 }

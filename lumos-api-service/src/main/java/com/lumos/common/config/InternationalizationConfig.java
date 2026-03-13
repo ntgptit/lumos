@@ -21,6 +21,7 @@ public class InternationalizationConfig implements WebMvcConfigurer {
         messageSource.setBasename(ConfigConstants.I18N_BASENAME);
         messageSource.setDefaultEncoding(ConfigConstants.I18N_ENCODING);
 
+        // Return the shared message source so validation and error handlers resolve localized text consistently.
         return messageSource;
     }
 
@@ -31,6 +32,7 @@ public class InternationalizationConfig implements WebMvcConfigurer {
                 ConfigConstants.I18N_DEFAULT_COUNTRY);
         localeResolver.setDefaultLocale(defaultLocale);
 
+        // Return the session-based locale resolver so requests default to the configured locale until overridden.
         return localeResolver;
     }
 
@@ -38,6 +40,7 @@ public class InternationalizationConfig implements WebMvcConfigurer {
     LocaleChangeInterceptor localeChangeInterceptor() {
         final var interceptor = new LocaleChangeInterceptor();
         interceptor.setParamName(ConfigConstants.I18N_PARAM_LANG);
+        // Return the interceptor that lets clients switch locale through the configured query parameter.
         return interceptor;
     }
 

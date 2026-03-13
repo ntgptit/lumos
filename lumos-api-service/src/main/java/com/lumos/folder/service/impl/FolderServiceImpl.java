@@ -75,6 +75,7 @@ public class FolderServiceImpl implements FolderService {
                         depth);
         final var savedFolder = this.folderRepository
                 .save(folder);
+        // Return the created folder DTO after the tree position and metadata have been persisted.
         return this.folderMapper
                 .toFolderResponse(savedFolder);
     }
@@ -104,6 +105,7 @@ public class FolderServiceImpl implements FolderService {
         folder
                 .setName(normalizedName);
 
+        // Return the renamed folder DTO so the client reflects the canonical sibling-safe name.
         return this.folderMapper
                 .toFolderResponse(folder);
     }
@@ -138,6 +140,7 @@ public class FolderServiceImpl implements FolderService {
         folder
                 .setDescription(normalizedDescription);
 
+        // Return the updated folder DTO after applying normalized metadata to the managed entity.
         return this.folderMapper
                 .toFolderResponse(folder);
     }
@@ -187,13 +190,16 @@ public class FolderServiceImpl implements FolderService {
                 .getContent();
         final var childCountByParentId = this
                 .resolveChildCountByParentId(folders);
+        // Return the page slice enriched with child counts so the tree view can render folder badges.
         return folders
+                // Map each folder row with its precomputed child count so the list API stays O(1) per row.
                 .stream()
                 .map(folder -> {
                     final var childFolderCount = childCountByParentId
                             .getOrDefault(folder
                                     .getId(),
                                     FolderConstants.DEFAULT_CHILD_FOLDER_COUNT);
+                    // Return the folder row enriched with its child count for tree-navigation rendering.
                     return this.folderMapper
                             .toFolderResponse(folder, childFolderCount);
                 })
@@ -201,6 +207,7 @@ public class FolderServiceImpl implements FolderService {
     }
 
     private Folder findActiveFolder(Long folderId) {
+        // Return the active folder or fail so tree operations never target a deleted node.
         return this.folderRepository
                 .findByIdAndDeletedAtIsNull(folderId)
                 .orElseThrow(() -> new FolderNotFoundException(folderId));
@@ -209,8 +216,10 @@ public class FolderServiceImpl implements FolderService {
     private Folder resolveParent(Long parentId) {
         // Null parentId indicates root-level folder creation.
         if (parentId == null) {
+            // Return null so the caller creates a root folder instead of attaching to a parent.
             return null;
         }
+        // Return the resolved parent folder so child depth and sibling validation use canonical tree data.
         return this
                 .findActiveFolder(parentId);
     }
@@ -218,8 +227,10 @@ public class FolderServiceImpl implements FolderService {
     private int resolveDepth(Folder parent) {
         // Root folder starts at level 1 when parent is absent.
         if (parent == null) {
+            // Return the root depth constant because folders without parent start a new tree branch.
             return FolderConstants.ROOT_FOLDER_DEPTH;
         }
+        // Return the parent depth plus one so descendants maintain a consistent tree level.
         return parent
                 .getDepth() + 1;
     }
@@ -235,6 +246,7 @@ public class FolderServiceImpl implements FolderService {
                 .existsActiveSiblingName(parentId, name, excludeId);
         // Reject duplicate folder name within the same parent scope.
         if (exists) {
+            // Reject sibling name collisions because folder names must stay unique inside one parent.
             throw new FolderNameConflictException(name);
         }
     }
@@ -242,6 +254,7 @@ public class FolderServiceImpl implements FolderService {
     private void validateParentHasNoDecks(Folder parent) {
         // Root-level folder creation has no parent constraint.
         if (parent == null) {
+            // Return without validation because root folders do not inherit the no-deck parent rule.
             return;
         }
         final var hasDecks = this.deckRepository
@@ -249,8 +262,10 @@ public class FolderServiceImpl implements FolderService {
                         .getId());
         // Allow subfolder creation only when parent folder has no decks.
         if (!hasDecks) {
+            // Return without error because the parent still behaves as a pure container folder.
             return;
         }
+        // Block subfolder creation under a folder that already owns decks to preserve the tree invariant.
         throw new FolderHasDecksConflictException(parent
                 .getId());
     }
@@ -258,25 +273,31 @@ public class FolderServiceImpl implements FolderService {
     private String normalizeDescription(String description) {
         // Fallback to empty description when value is absent.
         if (description == null) {
+            // Return the shared empty-description token so folder metadata remains null-safe.
             return FolderConstants.EMPTY_DESCRIPTION;
         }
+        // Return the trimmed description so storage does not keep accidental outer whitespace.
         return StringUtils
                 .strip(description);
     }
 
     private Map<Long, Integer> resolveChildCountByParentId(List<Folder> folders) {
         final var folderIds = folders
+                // Extract folder ids first so the aggregate child-count query runs once for the page.
                 .stream()
                 .map(Folder::getId)
                 .toList();
         // Return early when folder list is empty to avoid unnecessary query.
         if (folderIds
                 .isEmpty()) {
+            // Return an empty count map because no folder rows need child-count enrichment.
             return Map
                     .of();
         }
+        // Return the child-count lookup keyed by parent id for fast response mapping.
         return this.folderRepository
                 .findChildCountByParentIds(folderIds)
+                // Re-index projection rows by parent id so response mapping can look up counts cheaply.
                 .stream()
                 .collect(
                         Collectors

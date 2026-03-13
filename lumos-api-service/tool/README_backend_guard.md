@@ -53,8 +53,15 @@ python tool/verify_backend_checklists.py --strict
 - `JAVADOC_REQUIRED_FOR_CONTROLLER_AND_ENDPOINTS`
 - `JAVADOC_REQUIRED_FOR_SERVICE_METHODS`
 - `IF_STATEMENT_REQUIRES_PRECEDING_COMMENT`
+- `THROW_STATEMENT_REQUIRES_PRECEDING_COMMENT`
+- `FOR_STATEMENT_REQUIRES_PRECEDING_COMMENT`
+- `STREAM_CALL_REQUIRES_PRECEDING_COMMENT`
+- `RETURN_STATEMENT_REQUIRES_PRECEDING_COMMENT`
+
+Comment-intent rules above are enforced for production behavior code under `src/main/java/**` in service, mode, security, and controller packages. The purpose is to explain business or behavioral intent, not to force synthetic comments into tests or thin persistence glue.
 
 ## Notes
 
 - Guard is regex/static-scan based (fail-fast, no AST dependency).
 - `--strict` will fail build on warnings.
+- Deprecated Apache Commons Lang3 APIs such as `StringUtils.equals(...)`, `StringUtils.equalsIgnoreCase(...)`, and `StringUtils.compareIgnoreCase(...)` should not be used. Prefer `Strings.CS.equals(...)`, `Strings.CI.equals(...)`, `Strings.CI.compare(...)`, or other non-deprecated utilities that match the intent.

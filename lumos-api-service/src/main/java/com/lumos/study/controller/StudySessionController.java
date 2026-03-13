@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lumos.study.dto.request.StartStudySessionRequest;
@@ -48,9 +47,14 @@ public class StudySessionController {
      */
     @Operation(summary = "Start study session")
     @PostMapping("/api/v1/study/sessions")
-    public ResponseEntity<StudySessionResponse> startSession(@Valid @RequestBody StartStudySessionRequest request) {
-        final StudySessionResponse response = this.studySessionService.startSession(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    public ResponseEntity<StudySessionResponse> startSession(@Valid
+    @RequestBody StartStudySessionRequest request) {
+        final var response = this.studySessionService
+                .startSession(request);
+        // Return the created session snapshot so the study screen can bootstrap from backend state.
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(response);
     }
 
     /**
@@ -62,8 +66,11 @@ public class StudySessionController {
     @Operation(summary = "Resume study session")
     @GetMapping("/api/v1/study/sessions/{sessionId}")
     public ResponseEntity<StudySessionResponse> resumeSession(@PathVariable Long sessionId) {
-        final StudySessionResponse response = this.studySessionService.resumeSession(sessionId);
-        return ResponseEntity.ok(response);
+        final var response = this.studySessionService
+                .resumeSession(sessionId);
+        // Return the persisted session snapshot so the client can resume without rebuilding state locally.
+        return ResponseEntity
+                .ok(response);
     }
 
     /**
@@ -77,9 +84,13 @@ public class StudySessionController {
     @PostMapping("/api/v1/study/sessions/{sessionId}/submit-answer")
     public ResponseEntity<StudySessionResponse> submitAnswer(
             @PathVariable Long sessionId,
-            @Valid @RequestBody SubmitAnswerRequest request) {
-        final StudySessionResponse response = this.studySessionService.submitAnswer(sessionId, request);
-        return ResponseEntity.ok(response);
+            @Valid
+            @RequestBody SubmitAnswerRequest request) {
+        final var response = this.studySessionService
+                .submitAnswer(sessionId, request);
+        // Return the post-submit session snapshot so the client can render feedback from backend truth.
+        return ResponseEntity
+                .ok(response);
     }
 
     /**
@@ -91,8 +102,11 @@ public class StudySessionController {
     @Operation(summary = "Reveal answer")
     @PostMapping("/api/v1/study/sessions/{sessionId}/reveal-answer")
     public ResponseEntity<StudySessionResponse> revealAnswer(@PathVariable Long sessionId) {
-        final StudySessionResponse response = this.studySessionService.revealAnswer(sessionId);
-        return ResponseEntity.ok(response);
+        final var response = this.studySessionService
+                .revealAnswer(sessionId);
+        // Return the reveal-state snapshot so the client can switch into feedback mode.
+        return ResponseEntity
+                .ok(response);
     }
 
     /**
@@ -104,8 +118,11 @@ public class StudySessionController {
     @Operation(summary = "Mark remembered")
     @PostMapping("/api/v1/study/sessions/{sessionId}/mark-remembered")
     public ResponseEntity<StudySessionResponse> markRemembered(@PathVariable Long sessionId) {
-        final StudySessionResponse response = this.studySessionService.markRemembered(sessionId);
-        return ResponseEntity.ok(response);
+        final var response = this.studySessionService
+                .markRemembered(sessionId);
+        // Return the session snapshot after recording a remembered outcome for the current item.
+        return ResponseEntity
+                .ok(response);
     }
 
     /**
@@ -117,8 +134,11 @@ public class StudySessionController {
     @Operation(summary = "Retry item")
     @PostMapping("/api/v1/study/sessions/{sessionId}/retry-item")
     public ResponseEntity<StudySessionResponse> retryItem(@PathVariable Long sessionId) {
-        final StudySessionResponse response = this.studySessionService.retryItem(sessionId);
-        return ResponseEntity.ok(response);
+        final var response = this.studySessionService
+                .retryItem(sessionId);
+        // Return the session snapshot after moving the current item into the retry path.
+        return ResponseEntity
+                .ok(response);
     }
 
     /**
@@ -130,8 +150,11 @@ public class StudySessionController {
     @Operation(summary = "Go next")
     @PostMapping("/api/v1/study/sessions/{sessionId}/next")
     public ResponseEntity<StudySessionResponse> goNext(@PathVariable Long sessionId) {
-        final StudySessionResponse response = this.studySessionService.goNext(sessionId);
-        return ResponseEntity.ok(response);
+        final var response = this.studySessionService
+                .goNext(sessionId);
+        // Return the advanced session snapshot so the study screen can render the next backend-selected item.
+        return ResponseEntity
+                .ok(response);
     }
 
     /**
@@ -143,8 +166,11 @@ public class StudySessionController {
     @Operation(summary = "Complete mode")
     @PostMapping("/api/v1/study/sessions/{sessionId}/complete-mode")
     public ResponseEntity<StudySessionResponse> completeMode(@PathVariable Long sessionId) {
-        final StudySessionResponse response = this.studySessionService.completeMode(sessionId);
-        return ResponseEntity.ok(response);
+        final var response = this.studySessionService
+                .completeMode(sessionId);
+        // Return the next-mode or completed-session snapshot after backend mode completion logic runs.
+        return ResponseEntity
+                .ok(response);
     }
 
     /**
@@ -155,8 +181,11 @@ public class StudySessionController {
     @Operation(summary = "Get reminder summary")
     @GetMapping("/api/v1/study/reminders/summary")
     public ResponseEntity<StudyReminderSummaryResponse> getReminderSummary() {
-        final StudyReminderSummaryResponse response = this.studyInsightService.getReminderSummary();
-        return ResponseEntity.ok(response);
+        final var response = this.studyInsightService
+                .getReminderSummary();
+        // Return the reminder summary so the client can show due and overdue study prompts.
+        return ResponseEntity
+                .ok(response);
     }
 
     /**
@@ -167,8 +196,11 @@ public class StudySessionController {
     @Operation(summary = "Get analytics overview")
     @GetMapping("/api/v1/study/analytics/overview")
     public ResponseEntity<StudyAnalyticsOverviewResponse> getAnalyticsOverview() {
-        final StudyAnalyticsOverviewResponse response = this.studyInsightService.getAnalyticsOverview();
-        return ResponseEntity.ok(response);
+        final var response = this.studyInsightService
+                .getAnalyticsOverview();
+        // Return the analytics overview so the progress UI can render SRS metrics.
+        return ResponseEntity
+                .ok(response);
     }
 
     /**
@@ -179,8 +211,11 @@ public class StudySessionController {
     @Operation(summary = "Get speech preference")
     @GetMapping("/api/v1/profile/speech-preference")
     public ResponseEntity<SpeechPreferenceResponse> getSpeechPreference() {
-        final SpeechPreferenceResponse response = this.speechPreferenceService.getSpeechPreference();
-        return ResponseEntity.ok(response);
+        final var response = this.speechPreferenceService
+                .getSpeechPreference();
+        // Return the current speech preference so profile and study screens stay in sync.
+        return ResponseEntity
+                .ok(response);
     }
 
     /**
@@ -192,8 +227,12 @@ public class StudySessionController {
     @Operation(summary = "Update speech preference")
     @PutMapping("/api/v1/profile/speech-preference")
     public ResponseEntity<SpeechPreferenceResponse> updateSpeechPreference(
-            @Valid @RequestBody UpdateSpeechPreferenceRequest request) {
-        final SpeechPreferenceResponse response = this.speechPreferenceService.updateSpeechPreference(request);
-        return ResponseEntity.ok(response);
+            @Valid
+            @RequestBody UpdateSpeechPreferenceRequest request) {
+        final var response = this.speechPreferenceService
+                .updateSpeechPreference(request);
+        // Return the saved speech preference so the client reflects canonical audio settings.
+        return ResponseEntity
+                .ok(response);
     }
 }

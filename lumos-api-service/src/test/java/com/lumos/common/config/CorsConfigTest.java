@@ -46,6 +46,7 @@ class CorsConfigTest {
     private Object readField(Object target, String fieldName) throws Exception {
         final Field field = target.getClass().getDeclaredField(fieldName);
         field.setAccessible(true);
+        
         return field.get(target);
     }
 }

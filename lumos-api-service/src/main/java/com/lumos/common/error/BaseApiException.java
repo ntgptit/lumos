@@ -14,10 +14,12 @@ public abstract class BaseApiException extends RuntimeException {
     }
 
     public String getMessageKey() {
+        // Return the i18n message key that the global exception handler resolves for the client payload.
         return messageKey;
     }
 
     public Object[] getMessageArgs() {
+        // Return the interpolation arguments used to render the localized error message.
         return messageArgs;
     }
 }
