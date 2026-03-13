@@ -11,6 +11,7 @@ import com.lumos.study.constant.StudyConstants;
 import com.lumos.study.dto.request.UpdateSpeechPreferenceRequest;
 import com.lumos.study.dto.response.SpeechPreferenceResponse;
 import com.lumos.study.entity.UserSpeechPreference;
+import com.lumos.study.mapper.SpeechPreferenceMapper;
 import com.lumos.study.repository.UserSpeechPreferenceRepository;
 import com.lumos.study.service.SpeechPreferenceService;
 
@@ -23,6 +24,7 @@ public class SpeechPreferenceServiceImpl implements SpeechPreferenceService {
     private final AuthenticatedUserProvider authenticatedUserProvider;
     private final UserAccountRepository userAccountRepository;
     private final UserSpeechPreferenceRepository userSpeechPreferenceRepository;
+    private final SpeechPreferenceMapper speechPreferenceMapper;
 
     /**
      * Return the current user's persisted speech preference.
@@ -80,11 +82,6 @@ public class SpeechPreferenceServiceImpl implements SpeechPreferenceService {
 
     private SpeechPreferenceResponse toResponse(UserSpeechPreference preference) {
         // Return the DTO projection exposed by the profile speech-preference API.
-        return new SpeechPreferenceResponse(
-                preference.getEnabled(),
-                preference.getAutoPlay(),
-                preference.getVoice(),
-                preference.getSpeed(),
-                preference.getLocale());
+        return this.speechPreferenceMapper.toSpeechPreferenceResponse(preference);
     }
 }

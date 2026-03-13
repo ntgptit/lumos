@@ -8,7 +8,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -18,6 +17,7 @@ import com.lumos.deck.entity.Deck;
 import com.lumos.flashcard.entity.Flashcard;
 import com.lumos.study.entity.LearningCardState;
 import com.lumos.study.enums.ReviewOutcome;
+import com.lumos.study.mapper.StudyInsightResponseMapper;
 import com.lumos.study.repository.LearningCardStateRepository;
 import com.lumos.study.repository.StudyAttemptRepository;
 
@@ -35,8 +35,16 @@ class StudyInsightServiceImplTest {
     @Mock
     private StudyAttemptRepository studyAttemptRepository;
 
-    @InjectMocks
     private StudyInsightServiceImpl studyInsightService;
+
+    @org.junit.jupiter.api.BeforeEach
+    void setUp() {
+        this.studyInsightService = new StudyInsightServiceImpl(
+                this.authenticatedUserProvider,
+                this.learningCardStateRepository,
+                this.studyAttemptRepository,
+                new StudyInsightResponseMapper());
+    }
 
     @Test
     void getReminderSummary_returnsRecommendationAndEscalation() {

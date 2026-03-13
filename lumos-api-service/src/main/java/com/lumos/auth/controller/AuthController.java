@@ -42,10 +42,14 @@ public class AuthController {
      */
     @Operation(summary = "Register account")
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
-        final AuthResponse response = this.authService.register(request);
+    public ResponseEntity<AuthResponse> register(@Valid
+    @RequestBody RegisterRequest request) {
+        final var response = this.authService
+                .register(request);
         // Return the newly created account with an authenticated session payload.
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(response);
     }
 
     /**
@@ -56,10 +60,13 @@ public class AuthController {
      */
     @Operation(summary = "Login")
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
-        final AuthResponse response = this.authService.login(request);
+    public ResponseEntity<AuthResponse> login(@Valid
+    @RequestBody LoginRequest request) {
+        final var response = this.authService
+                .login(request);
         // Return the authenticated session so the client can store the issued tokens.
-        return ResponseEntity.ok(response);
+        return ResponseEntity
+                .ok(response);
     }
 
     /**
@@ -70,10 +77,13 @@ public class AuthController {
      */
     @Operation(summary = "Refresh access token")
     @PostMapping("/refresh")
-    public ResponseEntity<AuthResponse> refreshToken(@Valid @RequestBody RefreshTokenRequest request) {
-        final AuthResponse response = this.authService.refreshToken(request);
+    public ResponseEntity<AuthResponse> refreshToken(@Valid
+    @RequestBody RefreshTokenRequest request) {
+        final var response = this.authService
+                .refreshToken(request);
         // Return the rotated session payload with the refreshed access token set.
-        return ResponseEntity.ok(response);
+        return ResponseEntity
+                .ok(response);
     }
 
     /**
@@ -84,10 +94,14 @@ public class AuthController {
      */
     @Operation(summary = "Logout")
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(@Valid @RequestBody LogoutRequest request) {
-        this.authService.logout(request);
+    public ResponseEntity<Void> logout(@Valid
+    @RequestBody LogoutRequest request) {
+        this.authService
+                .logout(request);
         // Return an empty success response after revoking the provided refresh token.
-        return ResponseEntity.noContent().build();
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 
     /**
@@ -98,8 +112,11 @@ public class AuthController {
     @Operation(summary = "Get current user")
     @GetMapping("/me")
     public ResponseEntity<CurrentUserResponse> getCurrentUser() {
-        final CurrentUserResponse response = this.authService.getCurrentUser();
-        // Return the canonical authenticated user profile resolved from the current token.
-        return ResponseEntity.ok(response);
+        final var response = this.authService
+                .getCurrentUser();
+        // Return the canonical authenticated user profile resolved from the current
+        // token.
+        return ResponseEntity
+                .ok(response);
     }
 }

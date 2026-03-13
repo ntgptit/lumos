@@ -11,9 +11,11 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -26,6 +28,7 @@ import com.lumos.auth.entity.UserAccount;
 import com.lumos.auth.enums.AccountStatus;
 import com.lumos.auth.enums.RefreshTokenStatus;
 import com.lumos.auth.exception.InvalidCredentialsException;
+import com.lumos.auth.mapper.AuthMapper;
 import com.lumos.auth.repository.RefreshTokenRepository;
 import com.lumos.auth.repository.UserAccountRepository;
 import com.lumos.auth.security.AuthenticatedUserProvider;
@@ -48,6 +51,9 @@ class AuthServiceImplTest {
 
     @Mock
     private AuthenticatedUserProvider authenticatedUserProvider;
+
+    @Spy
+    private AuthMapper authMapper = Mappers.getMapper(AuthMapper.class);
 
     @InjectMocks
     private AuthServiceImpl authService;

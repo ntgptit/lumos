@@ -50,7 +50,7 @@ class GlobalExceptionHandlerTest {
 
     @Test
     void constructor_createsHandlerInstance() {
-        final var handler = new GlobalExceptionHandler(this.messageSource);
+        final var handler = new GlobalExceptionHandler(new ApiErrorResponseFactory(this.messageSource));
 
         assertTrue(handler instanceof GlobalExceptionHandler);
     }
@@ -192,8 +192,8 @@ class GlobalExceptionHandlerTest {
     private GlobalExceptionHandler handler() {
         when(this.messageSource.getMessage(any(), any(), any(), any(Locale.class)))
                 .thenAnswer(invocation -> "resolved:" + invocation.getArgument(0, String.class));
-        
-        return new GlobalExceptionHandler(this.messageSource);
+
+        return new GlobalExceptionHandler(new ApiErrorResponseFactory(this.messageSource));
     }
 
     private MockHttpServletRequest request(String uri) {

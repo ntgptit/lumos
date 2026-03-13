@@ -19,7 +19,6 @@ import com.lumos.auth.dto.request.LogoutRequest;
 import com.lumos.auth.dto.request.RefreshTokenRequest;
 import com.lumos.auth.dto.request.RegisterRequest;
 import com.lumos.auth.dto.response.AuthResponse;
-import com.lumos.auth.dto.response.AuthUserResponse;
 import com.lumos.auth.dto.response.CurrentUserResponse;
 import com.lumos.auth.entity.RefreshToken;
 import com.lumos.auth.entity.UserAccount;
@@ -31,6 +30,7 @@ import com.lumos.auth.exception.DuplicateUsernameException;
 import com.lumos.auth.exception.InvalidCredentialsException;
 import com.lumos.auth.exception.InvalidRefreshTokenException;
 import com.lumos.auth.exception.UnauthorizedAccessException;
+import com.lumos.auth.mapper.AuthMapper;
 import com.lumos.auth.repository.RefreshTokenRepository;
 import com.lumos.auth.repository.UserAccountRepository;
 import com.lumos.auth.security.AuthenticatedUserProvider;
@@ -50,6 +50,7 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenService jwtTokenService;
     private final AuthenticatedUserProvider authenticatedUserProvider;
+    private final AuthMapper authMapper;
 
     /**
      * Register a new account and issue the initial authenticated session.
@@ -144,11 +145,7 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(UnauthorizedAccessException::new);
         ensureAccountIsActive(userAccount);
         // Return the active account profile that matches the current authenticated principal.
-        return new CurrentUserResponse(
-                userAccount.getId(),
-                userAccount.getUsername(),
-                userAccount.getEmail(),
-                userAccount.getAccountStatus().name());
+        return this.authMapper.toCurrentUserResponse(userAccount);
     }
 
     private void validateUniqueness(String normalizedUsername, String normalizedEmail) {
@@ -189,21 +186,11 @@ public class AuthServiceImpl implements AuthService {
         refreshToken.setExpiresAt(Instant.now().plusSeconds(this.jwtTokenService.getRefreshTokenTtlSeconds()));
         this.refreshTokenRepository.save(refreshToken);
         // Return the full auth payload that the client needs to bootstrap or refresh the session.
-        return new AuthResponse(
-                toAuthUserResponse(userAccount),
+        return this.authMapper.toAuthResponse(
+                userAccount,
                 accessToken,
                 refreshTokenValue,
-                this.jwtTokenService.getAccessTokenTtlSeconds(),
-                true);
-    }
-
-    private AuthUserResponse toAuthUserResponse(UserAccount userAccount) {
-        // Return the user projection embedded inside auth responses to avoid leaking the entity directly.
-        return new AuthUserResponse(
-                userAccount.getId(),
-                userAccount.getUsername(),
-                userAccount.getEmail(),
-                userAccount.getAccountStatus().name());
+                this.jwtTokenService.getAccessTokenTtlSeconds());
     }
 
     private String normalizeUsername(String username) {

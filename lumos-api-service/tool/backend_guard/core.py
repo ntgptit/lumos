@@ -61,6 +61,8 @@ RULE_THROW_REQUIRES_COMMENT = "THROW_STATEMENT_REQUIRES_PRECEDING_COMMENT"
 RULE_FOR_REQUIRES_COMMENT = "FOR_STATEMENT_REQUIRES_PRECEDING_COMMENT"
 RULE_STREAM_REQUIRES_COMMENT = "STREAM_CALL_REQUIRES_PRECEDING_COMMENT"
 RULE_RETURN_REQUIRES_COMMENT = "RETURN_STATEMENT_REQUIRES_PRECEDING_COMMENT"
+RULE_EXCEPTION_MESSAGE_I18N = "EXCEPTION_MESSAGE_MUST_USE_I18N_KEY"
+RULE_MESSAGE_KEYS_BUNDLE = "ERROR_MESSAGE_KEYS_MUST_EXIST_IN_MESSAGE_BUNDLES"
 
 SEVERITY_ERROR = "ERROR"
 SEVERITY_WARNING = "WARN"
@@ -68,6 +70,12 @@ SEVERITY_WARNING = "WARN"
 JAVA_EXTENSION = ".java"
 CLASS_MAX_LINES = 300
 REPORT_FILE = "backend_guard_report.json"
+I18N_ALLOW_TECHNICAL_LITERAL_MARKER = "backend-guard: allow-technical-literal"
+MESSAGE_BUNDLE_FILES = (
+    "src/main/resources/messages.properties",
+    "src/main/resources/messages_en.properties",
+    "src/main/resources/messages_vi.properties",
+)
 
 RELATION_PATTERN = re.compile(r"@\s*(OneToMany|ManyToOne|ManyToMany|OneToOne)\s*(\((.*?)\))?")
 REQUEST_MAPPING_PATTERN = re.compile(r'@\s*RequestMapping\s*\(\s*"([^"]+)"')
@@ -99,6 +107,18 @@ IF_STATEMENT_PATTERN = re.compile(r"^\s*if\s*\(")
 THROW_STATEMENT_PATTERN = re.compile(r"^\s*throw\b")
 STREAM_CALL_PATTERN = re.compile(r"\.\s*stream\s*\(")
 RETURN_STATEMENT_PATTERN = re.compile(r"^\s*return\b")
+THROW_NEW_EXCEPTION_LITERAL_PATTERN = re.compile(
+    r'throw\s+new\s+[A-Za-z_][A-Za-z0-9_]*Exception\s*\([^)]*"([^"]+)"'
+)
+RESPONSE_STATUS_EXCEPTION_LITERAL_PATTERN = re.compile(
+    r'new\s+ResponseStatusException\s*\([^)]*"([^"]+)"'
+)
+MESSAGE_SOURCE_LITERAL_PATTERN = re.compile(
+    r'messageSource\s*\.\s*getMessage\s*\(\s*"([^"]+)"'
+)
+MESSAGE_KEY_CONSTANT_PATTERN = re.compile(
+    r'public\s+static\s+final\s+String\s+[A-Z0-9_]+\s*=\s*"([^"]+)";'
+)
 MANUAL_MAPPING_NEW_PATTERN = re.compile(r"\bnew\s+\w+(Entity|Dto|DTO|Response|Request)\s*\(")
 DTO_VALIDATION_ANNOTATION_PATTERN = re.compile(
     r"@\s*(Valid|NotNull|NotBlank|NotEmpty|Size|Pattern|Min|Max|Positive|PositiveOrZero|Negative|NegativeOrZero|Email|Past|PastOrPresent|Future|FutureOrPresent|AssertTrue|AssertFalse)\b"
@@ -206,6 +226,7 @@ class ProjectContext:
     root: Path
     java_files: list[FileContext]
     strict: bool
+    only_filters: set[str]
 
 
 class MaxClassLinesRule(Rule):
@@ -717,6 +738,8 @@ class MapStructNoManualMappingRule(Rule):
     name = RULE_MAPSTRUCT_NO_MANUAL_MAPPING
 
     def check(self, file_ctx: FileContext, project_ctx: ProjectContext) -> Iterable[Violation]:
+        if not file_ctx.rel_path.startswith("src/main/java/"):
+            return []
         if "/service/" not in file_ctx.rel_path and "/controller/" not in file_ctx.rel_path:
             return []
         violations: list[Violation] = []
@@ -1462,6 +1485,44 @@ class PrecedingCommentRule(Rule):
         return violations
 
 
+class ExceptionMessageI18nRule(Rule):
+    name = RULE_EXCEPTION_MESSAGE_I18N
+
+    def check(self, file_ctx: FileContext, project_ctx: ProjectContext) -> Iterable[Violation]:
+        if not file_ctx.rel_path.startswith("src/main/java/"):
+            return []
+        if not any(
+            token in file_ctx.rel_path
+            for token in ("/controller/", "/service/", "/mode/", "/security/", "/exception/", "/error/")
+        ):
+            return []
+        violations: list[Violation] = []
+        for index, raw in enumerate(file_ctx.lines, start=1):
+            if I18N_ALLOW_TECHNICAL_LITERAL_MARKER in raw:
+                continue
+            if _has_comment_marker_above(file_ctx.lines, index, I18N_ALLOW_TECHNICAL_LITERAL_MARKER, 2):
+                continue
+            stripped = _strip_line_comment(raw).strip()
+            if stripped == "":
+                continue
+            literal = _find_exception_literal(stripped)
+            if literal is None:
+                continue
+            if _looks_like_message_key(literal):
+                continue
+            violations.append(
+                Violation(
+                    rule=self.name,
+                    severity=SEVERITY_ERROR,
+                    file=file_ctx.rel_path,
+                    line=index,
+                    reason="Exception or message-source path must use i18n message keys instead of hardcoded user-facing text.",
+                    snippet=raw.strip(),
+                )
+            )
+        return violations
+
+
 def _check_vietnamese_messages(root: Path) -> list[Violation]:
     file_path = root / "src" / "main" / "resources" / "messages_vi.properties"
     if not file_path.exists():
@@ -1505,6 +1566,54 @@ def _check_vietnamese_messages(root: Path) -> list[Violation]:
                 snippet=raw.strip(),
             )
         )
+    return violations
+
+
+def _check_error_message_keys_in_bundles(root: Path) -> list[Violation]:
+    key_file = root / "src" / "main" / "java" / "com" / "lumos" / "common" / "error" / "ErrorMessageKeys.java"
+    if not key_file.exists():
+        return [
+            Violation(
+                rule=RULE_MESSAGE_KEYS_BUNDLE,
+                severity=SEVERITY_ERROR,
+                file="src/main/java/com/lumos/common/error/ErrorMessageKeys.java",
+                line=1,
+                reason="Missing ErrorMessageKeys.java for backend i18n contract.",
+                snippet="ErrorMessageKeys.java",
+            )
+        ]
+    key_lines = key_file.read_text(encoding="utf-8").splitlines()
+    defined_keys: list[tuple[int, str]] = []
+    for index, raw in enumerate(key_lines, start=1):
+        match = MESSAGE_KEY_CONSTANT_PATTERN.search(raw)
+        if match is None:
+            continue
+        defined_keys.append((index, match.group(1)))
+
+    bundle_entries: dict[str, set[str]] = {}
+    for relative_path in MESSAGE_BUNDLE_FILES:
+        bundle_path = root / Path(relative_path)
+        if not bundle_path.exists():
+            bundle_entries[relative_path] = set()
+            continue
+        bundle_entries[relative_path] = _load_message_bundle_keys(bundle_path)
+
+    violations: list[Violation] = []
+    key_relative = key_file.relative_to(root).as_posix()
+    for line_number, key in defined_keys:
+        for relative_path in MESSAGE_BUNDLE_FILES:
+            if key in bundle_entries[relative_path]:
+                continue
+            violations.append(
+                Violation(
+                    rule=RULE_MESSAGE_KEYS_BUNDLE,
+                    severity=SEVERITY_ERROR,
+                    file=key_relative,
+                    line=line_number,
+                    reason=f'Message key "{key}" must exist in {relative_path}.',
+                    snippet=key,
+                )
+            )
     return violations
 
 
@@ -1664,6 +1773,51 @@ def _strip_line_comment(line: str) -> str:
     return line[:index]
 
 
+def _find_exception_literal(line: str) -> str | None:
+    for pattern in (
+        THROW_NEW_EXCEPTION_LITERAL_PATTERN,
+        RESPONSE_STATUS_EXCEPTION_LITERAL_PATTERN,
+        MESSAGE_SOURCE_LITERAL_PATTERN,
+    ):
+        match = pattern.search(line)
+        if match is None:
+            continue
+        return match.group(1).strip()
+    return None
+
+
+def _looks_like_message_key(value: str) -> bool:
+    return re.fullmatch(r"[a-z0-9_.-]+", value) is not None
+
+
+def _has_comment_marker_above(lines: list[str], start_line: int, marker: str, max_lookback: int) -> bool:
+    start_index = start_line - 2
+    end_index = max(-1, start_index - max_lookback)
+    for index in range(start_index, end_index, -1):
+        raw = lines[index].strip()
+        if raw == "":
+            continue
+        if raw.startswith("//") and marker in raw:
+            return True
+        if raw.startswith("//"):
+            continue
+        return False
+    return False
+
+
+def _load_message_bundle_keys(path: Path) -> set[str]:
+    keys: set[str] = set()
+    for raw in path.read_text(encoding="utf-8").splitlines():
+        stripped = raw.strip()
+        if stripped == "" or stripped.startswith("#"):
+            continue
+        if "=" not in stripped:
+            continue
+        key, _ = stripped.split("=", 1)
+        keys.add(key.strip())
+    return keys
+
+
 def _has_javadoc_above(lines: list[str], start_line: int, max_lookback: int) -> bool:
     start_index = start_line - 2
     end_index = max(-1, start_index - max_lookback)
@@ -1819,9 +1973,60 @@ def _write_report(root: Path, violations: list[Violation]) -> None:
     report_path.write_text(json.dumps(payload, ensure_ascii=True, indent=2), encoding="utf-8")
 
 
+def _parse_only_filters(raw_value: str) -> set[str]:
+    if raw_value.strip() == "":
+        return set()
+    return {
+        token.strip()
+        for token in raw_value.split(",")
+        if token.strip() != ""
+    }
+
+
+def _rule_group_aliases() -> dict[str, set[str]]:
+    return {
+        "i18n": {
+            RULE_DTO_VALIDATION_MESSAGE_CONSTANT,
+            RULE_VI_MESSAGES_ACCENTED,
+            RULE_EXCEPTION_MESSAGE_I18N,
+            RULE_MESSAGE_KEYS_BUNDLE,
+        }
+    }
+
+
+def _resolve_selected_rule_names(only_filters: set[str]) -> set[str]:
+    group_aliases = _rule_group_aliases()
+    selected_rule_names: set[str] = set()
+    for token in only_filters:
+        if token in group_aliases:
+            selected_rule_names.update(group_aliases[token])
+            continue
+        selected_rule_names.add(token)
+    return selected_rule_names
+
+
+def _filter_rules(rules: list[Rule], only_filters: set[str]) -> list[Rule]:
+    if not only_filters:
+        return rules
+    selected_rule_names = _resolve_selected_rule_names(only_filters)
+    return [rule for rule in rules if rule.name in selected_rule_names]
+
+
+def _should_run_auxiliary_rule(rule_name: str, only_filters: set[str]) -> bool:
+    if not only_filters:
+        return True
+    selected_rule_names = _resolve_selected_rule_names(only_filters)
+    return rule_name in selected_rule_names
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Spring Boot backend checklist guard.")
     parser.add_argument("--root", default=".", help="Project root directory. Default: current directory.")
+    parser.add_argument(
+        "--only",
+        default="",
+        help="Run only selected rule ids or rule groups (comma separated). Example: --only=i18n",
+    )
     parser.add_argument(
         "--strict",
         action="store_true",
@@ -1835,7 +2040,13 @@ def main() -> int:
         print("No Java files found under src/main/java or src/test/java.")
         return 1
 
-    project_ctx = ProjectContext(root=root, java_files=java_files, strict=args.strict)
+    only_filters = _parse_only_filters(args.only)
+    project_ctx = ProjectContext(
+        root=root,
+        java_files=java_files,
+        strict=args.strict,
+        only_filters=only_filters,
+    )
     rules: list[Rule] = [
         MaxClassLinesRule(),
         ControllerRestRule(),
@@ -1874,6 +2085,7 @@ def main() -> int:
         QueryKeywordUppercaseRule(),
         JavaDocControllerRule(),
         JavaDocServiceRule(),
+        ExceptionMessageI18nRule(),
         PrecedingCommentRule(
             name=RULE_IF_REQUIRES_COMMENT,
             pattern=IF_STATEMENT_PATTERN,
@@ -1911,6 +2123,8 @@ def main() -> int:
         ),
     ]
 
+    rules = _filter_rules(rules, only_filters)
+
     violations: list[Violation] = []
     for file_ctx in java_files:
         for rule in rules:
@@ -1919,7 +2133,10 @@ def main() -> int:
                 continue
             violations.extend(found)
 
-    violations.extend(_check_vietnamese_messages(root))
+    if _should_run_auxiliary_rule(RULE_VI_MESSAGES_ACCENTED, only_filters):
+        violations.extend(_check_vietnamese_messages(root))
+    if _should_run_auxiliary_rule(RULE_MESSAGE_KEYS_BUNDLE, only_filters):
+        violations.extend(_check_error_message_keys_in_bundles(root))
 
     _write_report(root, violations)
     _print_summary(violations)

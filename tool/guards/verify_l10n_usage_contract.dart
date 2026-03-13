@@ -8,7 +8,10 @@ import 'package:analyzer/source/line_info.dart';
 class L10nUsageGuardConst {
   const L10nUsageGuardConst._();
 
-  static const String presentationRoot = 'lib/presentation';
+  static const Set<String> scanRoots = <String>{
+    'lib/presentation',
+    'lib/main.dart',
+  };
   static const String allowLiteralMarker = 'l10n-guard: allow-literal';
 
   static const Set<String> trackedTextWidgets = <String>{
@@ -67,23 +70,16 @@ class _FileContext {
 }
 
 Future<void> main() async {
-  final Directory root = Directory(L10nUsageGuardConst.presentationRoot);
-  if (!root.existsSync()) {
+  final List<File> files = _collectScanFiles();
+  if (files.isEmpty) {
     stderr.writeln(
-      'Missing `${L10nUsageGuardConst.presentationRoot}` directory.',
+      'Missing l10n scan targets: ${L10nUsageGuardConst.scanRoots.join(', ')}.',
     );
     exitCode = 1;
     return;
   }
 
   final List<L10nUsageViolation> violations = <L10nUsageViolation>[];
-  final List<File> files = root
-      .listSync(recursive: true)
-      .whereType<File>()
-      .where((File file) => file.path.endsWith('.dart'))
-      .where((File file) => !file.path.endsWith('.g.dart'))
-      .where((File file) => !file.path.endsWith('.freezed.dart'))
-      .toList(growable: false);
 
   for (final File file in files) {
     final String path = _normalizePath(file.path);
@@ -114,6 +110,41 @@ Future<void> main() async {
     stderr.writeln(violation.toConsoleLine());
   }
   exitCode = 1;
+}
+
+List<File> _collectScanFiles() {
+  final Set<String> seenPaths = <String>{};
+  final List<File> files = <File>[];
+  for (final String scanRoot in L10nUsageGuardConst.scanRoots) {
+    final FileSystemEntityType entityType = FileSystemEntity.typeSync(scanRoot);
+    if (entityType == FileSystemEntityType.notFound) {
+      continue;
+    }
+    if (entityType == FileSystemEntityType.file) {
+      if (_isTrackedDartFile(scanRoot) && seenPaths.add(scanRoot)) {
+        files.add(File(scanRoot));
+      }
+      continue;
+    }
+    final Directory directory = Directory(scanRoot);
+    final Iterable<File> nestedFiles = directory
+        .listSync(recursive: true)
+        .whereType<File>()
+        .where((File file) => _isTrackedDartFile(file.path));
+    for (final File file in nestedFiles) {
+      if (!seenPaths.add(file.path)) {
+        continue;
+      }
+      files.add(file);
+    }
+  }
+  return files;
+}
+
+bool _isTrackedDartFile(String path) {
+  return path.endsWith('.dart') &&
+      !path.endsWith('.g.dart') &&
+      !path.endsWith('.freezed.dart');
 }
 
 class _L10nUsageVisitor extends RecursiveAstVisitor<void> {

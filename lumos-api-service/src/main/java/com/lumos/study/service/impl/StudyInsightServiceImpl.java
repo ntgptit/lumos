@@ -18,6 +18,7 @@ import com.lumos.study.entity.LearningCardState;
 import com.lumos.study.enums.ReminderEscalationLevel;
 import com.lumos.study.enums.ReminderType;
 import com.lumos.study.enums.ReviewOutcome;
+import com.lumos.study.mapper.StudyInsightResponseMapper;
 import com.lumos.study.repository.LearningCardStateRepository;
 import com.lumos.study.repository.StudyAttemptRepository;
 import com.lumos.study.service.StudyInsightService;
@@ -34,6 +35,7 @@ public class StudyInsightServiceImpl implements StudyInsightService {
     private final AuthenticatedUserProvider authenticatedUserProvider;
     private final LearningCardStateRepository learningCardStateRepository;
     private final StudyAttemptRepository studyAttemptRepository;
+    private final StudyInsightResponseMapper studyInsightResponseMapper;
 
     /**
      * Return reminder counts, escalation level, and the recommended review session.
@@ -61,10 +63,10 @@ public class StudyInsightServiceImpl implements StudyInsightService {
         final List<String> reminderTypes = resolveReminderTypes(dueStates.size(), overdueStates.size(), escalationLevel);
         final ReminderRecommendationResponse recommendation = resolveRecommendation(dueStates);
         // Return the reminder summary that drives badges, escalation level, and session recommendation.
-        return new StudyReminderSummaryResponse(
+        return this.studyInsightResponseMapper.toStudyReminderSummaryResponse(
                 dueStates.size(),
                 overdueStates.size(),
-                escalationLevel.name(),
+                escalationLevel,
                 reminderTypes,
                 recommendation);
     }
@@ -94,7 +96,7 @@ public class StudyInsightServiceImpl implements StudyInsightService {
                 .filter(state -> state.getNextReviewAt().isBefore(now.minusSeconds(OVERDUE_THRESHOLD_SECONDS)))
                 .count();
         // Return the analytics overview consumed by the progress screen.
-        return new StudyAnalyticsOverviewResponse(
+        return this.studyInsightResponseMapper.toStudyAnalyticsOverviewResponse(
                 states.size(),
                 dueCount,
                 overdueCount,
@@ -168,7 +170,7 @@ public class StudyInsightServiceImpl implements StudyInsightService {
         final LearningCardState sample = bestEntry.getValue().get(0);
         final int estimatedSessionMinutes = Math.max(1, bestEntry.getValue().size() / SESSION_MINUTES_DIVISOR);
         // Return the deck-level recommendation used to steer the learner into the next review session.
-        return new ReminderRecommendationResponse(
+        return this.studyInsightResponseMapper.toReminderRecommendationResponse(
                 bestEntry.getKey(),
                 sample.getFlashcard().getDeck().getName(),
                 bestEntry.getValue().size(),

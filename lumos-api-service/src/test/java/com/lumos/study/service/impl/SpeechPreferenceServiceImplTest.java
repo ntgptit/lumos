@@ -9,8 +9,9 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
+import org.mapstruct.factory.Mappers;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.lumos.auth.entity.UserAccount;
@@ -18,6 +19,7 @@ import com.lumos.auth.repository.UserAccountRepository;
 import com.lumos.auth.security.AuthenticatedUserProvider;
 import com.lumos.study.constant.StudyConstants;
 import com.lumos.study.entity.UserSpeechPreference;
+import com.lumos.study.mapper.SpeechPreferenceMapper;
 import com.lumos.study.repository.UserSpeechPreferenceRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -34,8 +36,19 @@ class SpeechPreferenceServiceImplTest {
     @Mock
     private UserSpeechPreferenceRepository userSpeechPreferenceRepository;
 
-    @InjectMocks
+    @Spy
+    private SpeechPreferenceMapper speechPreferenceMapper = Mappers.getMapper(SpeechPreferenceMapper.class);
+
     private SpeechPreferenceServiceImpl speechPreferenceService;
+
+    @org.junit.jupiter.api.BeforeEach
+    void setUp() {
+        this.speechPreferenceService = new SpeechPreferenceServiceImpl(
+                this.authenticatedUserProvider,
+                this.userAccountRepository,
+                this.userSpeechPreferenceRepository,
+                this.speechPreferenceMapper);
+    }
 
     @Test
     void getSpeechPreference_returnsExistingPreference() {
