@@ -35,6 +35,7 @@ import com.lumos.flashcard.entity.Flashcard;
 import com.lumos.flashcard.exception.FlashcardNotFoundException;
 import com.lumos.flashcard.mapper.FlashcardMapper;
 import com.lumos.flashcard.repository.FlashcardRepository;
+import com.lumos.study.support.StudySessionFlashcardCleanupSupport;
 
 @ExtendWith(MockitoExtension.class)
 class FlashcardServiceImplTest {
@@ -50,6 +51,9 @@ class FlashcardServiceImplTest {
 
     @Mock
     private FlashcardMapper flashcardMapper;
+
+    @Mock
+    private StudySessionFlashcardCleanupSupport studySessionFlashcardCleanupSupport;
 
     @InjectMocks
     private FlashcardServiceImpl flashcardService;
@@ -175,6 +179,8 @@ class FlashcardServiceImplTest {
         verify(this.flashcardRepository)
                 .softDeleteFlashcard(eq(DECK_ID), eq(FLASHCARD_ID), instantCaptor
                         .capture());
+        verify(this.studySessionFlashcardCleanupSupport)
+                .removeFlashcardFromAllModes(eq(FLASHCARD_ID), any(Instant.class));
         verify(this.deckRepository)
                 .adjustFlashcardCount(eq(DECK_ID), eq(-1), any(Instant.class));
     }

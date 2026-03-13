@@ -11,6 +11,7 @@ import '../../../shared/widgets/lumos_widgets.dart';
 import '../mode/study_mode_view_model.dart';
 import '../mode/study_mode_view_strategy.dart';
 import '../mode/study_mode_view_strategy_factory.dart';
+import '../providers/study_guess_selection_provider.dart';
 import '../providers/study_match_selection_provider.dart';
 import '../providers/study_speech_playback_provider.dart';
 import '../providers/study_mode_view_strategy_factory_provider.dart';
@@ -37,6 +38,7 @@ class StudySessionScreen extends ConsumerStatefulWidget {
 class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
   final TextEditingController _answerController = TextEditingController();
   StudySessionData? _lastResolvedSession;
+  bool _isCompletingGuessMode = false;
   bool _isCompletingMatchMode = false;
 
   @override
@@ -72,6 +74,7 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
       modeStrategyFactory: modeStrategyFactory,
     );
     _listenSessionUpdates(request);
+    _listenGuessSelectionUpdates(currentSession?.sessionId);
     _listenMatchSelectionUpdates(currentSession?.sessionId);
     return Scaffold(
       appBar: StudySessionScreenAppBar(
@@ -90,7 +93,7 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
           modeStrategyFactory: modeStrategyFactory,
           answerController: _answerController,
           onSubmitTypedAnswer: _submitTypedAnswer,
-          onChoicePressed: _submitChoice,
+          onChoicePressed: _selectGuessChoice,
           onSelectMatchLeft: _selectMatchLeft,
           onSelectMatchRight: _selectMatchRight,
           onActionPressed: _handleActionPressed,
@@ -107,10 +110,12 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
         .submitAnswer(_answerController.text);
   }
 
-  Future<void> _submitChoice(String answer) async {
-    await ref
-        .read(studySessionControllerProvider(_request).notifier)
-        .submitAnswer(answer);
+  void _selectGuessChoice(String answer) {
+    final StudySessionData session = _readCurrentSession();
+    final bool isCorrect = answer == session.currentItem.answer;
+    ref
+        .read(studyGuessSelectionControllerProvider(session.sessionId).notifier)
+        .selectChoice(choiceLabel: answer, isCorrect: isCorrect);
   }
 
   Future<void> _submitMatchedPairs() async {
@@ -190,6 +195,43 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
     }
   }
 
+  Future<void> _maybeCompleteGuessMode(int sessionId) async {
+    if (_isCompletingGuessMode) {
+      return;
+    }
+    final StudyGuessSelectionState selectionState = ref.read(
+      studyGuessSelectionControllerProvider(sessionId),
+    );
+    if (!selectionState.canSubmit) {
+      return;
+    }
+    final String submittedAnswer = selectionState.pendingSubmittedAnswer!;
+    _isCompletingGuessMode = true;
+    try {
+      await ref
+          .read(studySessionControllerProvider(_request).notifier)
+          .submitAnswer(submittedAnswer);
+      final StudySessionData updatedSession = _readCurrentSession();
+      if (!updatedSession.allowedActions.contains('GO_NEXT')) {
+        ref
+            .read(studyGuessSelectionControllerProvider(sessionId).notifier)
+            .reset();
+        return;
+      }
+      _answerController.clear();
+      await ref
+          .read(studySessionControllerProvider(_request).notifier)
+          .goNext();
+    } catch (_) {
+      ref
+          .read(studyGuessSelectionControllerProvider(sessionId).notifier)
+          .reset();
+      rethrow;
+    } finally {
+      _isCompletingGuessMode = false;
+    }
+  }
+
   Future<void> _playSpeech() async {
     final StudySessionData session = _readCurrentSession();
     await ref
@@ -226,32 +268,54 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
   }
 
   void _listenSessionUpdates(StudySessionLaunchRequest request) {
-    ref.listen<AsyncValue<StudySessionData>>(
-      studySessionControllerProvider(request),
-      (
-        AsyncValue<StudySessionData>? previous,
-        AsyncValue<StudySessionData> next,
-      ) {
-        next.whenData((StudySessionData session) {
-          _lastResolvedSession = session;
-          ref
-              .read(
-                studyMatchSelectionControllerProvider(
-                  session.sessionId,
-                ).notifier,
-              )
-              .syncPairs(session.currentItem.matchPairs);
-          ref
-              .read(
-                studySpeechPlaybackControllerProvider(
-                  session.sessionId,
-                ).notifier,
-              )
-              .syncCurrentItem(
-                flashcardId: session.currentItem.flashcardId,
-                speech: session.currentItem.speech,
-              );
-        });
+    ref.listen<
+      AsyncValue<StudySessionData>
+    >(studySessionControllerProvider(request), (
+      AsyncValue<StudySessionData>? previous,
+      AsyncValue<StudySessionData> next,
+    ) {
+      next.whenData((StudySessionData session) {
+        _lastResolvedSession = session;
+        ref
+            .read(
+              studyGuessSelectionControllerProvider(session.sessionId).notifier,
+            )
+            .syncCurrentItem(
+              itemKey:
+                  '${session.activeMode}:${session.currentItem.flashcardId}',
+            );
+        ref
+            .read(
+              studyMatchSelectionControllerProvider(session.sessionId).notifier,
+            )
+            .syncPairs(session.currentItem.matchPairs);
+        ref
+            .read(
+              studySpeechPlaybackControllerProvider(session.sessionId).notifier,
+            )
+            .syncCurrentItem(
+              flashcardId: session.currentItem.flashcardId,
+              speech: session.currentItem.speech,
+            );
+      });
+    });
+  }
+
+  void _listenGuessSelectionUpdates(int? sessionId) {
+    final int? resolvedSessionId = sessionId;
+    if (resolvedSessionId == null) {
+      return;
+    }
+    ref.listen<StudyGuessSelectionState>(
+      studyGuessSelectionControllerProvider(resolvedSessionId),
+      (StudyGuessSelectionState? previous, StudyGuessSelectionState next) {
+        if (previous?.canSubmit == true) {
+          return;
+        }
+        if (!next.canSubmit) {
+          return;
+        }
+        unawaited(_maybeCompleteGuessMode(resolvedSessionId));
       },
     );
   }
@@ -263,10 +327,7 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
     }
     ref.listen<StudyMatchSelectionState>(
       studyMatchSelectionControllerProvider(resolvedSessionId),
-      (
-        StudyMatchSelectionState? previous,
-        StudyMatchSelectionState next,
-      ) {
+      (StudyMatchSelectionState? previous, StudyMatchSelectionState next) {
         if (previous?.canSubmit == true) {
           return;
         }

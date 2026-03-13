@@ -5,6 +5,7 @@ import '../../../../../../domain/entities/study/study_models.dart';
 import '../../../mode/study_mode_view_model.dart';
 import '../../../mode/study_mode_view_strategy.dart';
 import '../../../mode/study_mode_view_strategy_factory.dart';
+import '../../../providers/study_guess_selection_provider.dart';
 import '../../../providers/study_match_selection_provider.dart';
 import '../../../providers/study_speech_playback_provider.dart';
 import '../sub_mode/study_session_mode_content.dart';
@@ -38,6 +39,9 @@ class StudySessionResolvedBodyContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final StudyModeViewModel viewModel = _buildModeViewModel(session);
+    final StudyGuessSelectionState guessSelectionState = ref.watch(
+      studyGuessSelectionControllerProvider(session.sessionId),
+    );
     final StudyMatchSelectionState matchSelectionState = ref.watch(
       studyMatchSelectionControllerProvider(session.sessionId),
     );
@@ -48,6 +52,7 @@ class StudySessionResolvedBodyContent extends ConsumerWidget {
       session: session,
       viewModel: viewModel,
       answerController: answerController,
+      guessSelectionState: guessSelectionState,
       matchSelectionState: matchSelectionState,
       speechPlaybackState: speechPlaybackState,
       onSubmitTypedAnswer: onSubmitTypedAnswer,

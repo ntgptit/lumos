@@ -8,5 +8,7 @@ import com.lumos.study.entity.StudySessionItem;
 
 public interface StudySessionItemRepository extends JpaRepository<StudySessionItem, Long> {
 
+    List<StudySessionItem> findAllByFlashcardIdAndDeletedAtIsNullOrderByStudySessionIdAscSequenceIndexAsc(Long flashcardId);
+
     List<StudySessionItem> findAllByStudySessionIdAndDeletedAtIsNullOrderBySequenceIndexAsc(Long studySessionId);
 }

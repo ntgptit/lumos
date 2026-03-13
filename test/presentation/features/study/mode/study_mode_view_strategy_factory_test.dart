@@ -67,6 +67,28 @@ void main() {
       },
     );
 
+    test(
+      'guess strategy keeps choice interaction and does not expose continue action',
+      () {
+        final session = _buildSession(
+          activeMode: 'GUESS',
+          allowedActions: const <String>['SUBMIT_ANSWER', 'GO_NEXT'],
+          choices: const <StudyChoice>[
+            StudyChoice(id: 'choice-0', label: 'xin chao'),
+            StudyChoice(id: 'choice-1', label: 'cam on'),
+          ],
+        );
+
+        final viewModel = factory
+            .resolve(session.activeMode)
+            .buildViewModel(session: session);
+
+        expect(viewModel.choices, hasLength(2));
+        expect(viewModel.showAnswerInput, isFalse);
+        expect(viewModel.actions, isEmpty);
+      },
+    );
+
     test('fill strategy enables answer input when submit is allowed', () {
       final session = _buildSession(
         activeMode: 'FILL',

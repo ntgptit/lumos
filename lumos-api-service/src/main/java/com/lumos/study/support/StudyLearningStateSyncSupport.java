@@ -44,6 +44,10 @@ public class StudyLearningStateSyncSupport {
             }
 
             final ReviewOutcome outcome = item.getLastOutcome();
+            // Ignore legacy skipped outcomes so old rows do not mutate the current spaced-repetition state.
+            if (outcome == null || outcome == ReviewOutcome.SKIPPED) {
+                continue;
+            }
             final int nextBoxIndex = resolveNextBoxIndex(state.getBoxIndex(), outcome);
             state.setBoxIndex(nextBoxIndex);
             state.setLastReviewedAt(Instant.now());

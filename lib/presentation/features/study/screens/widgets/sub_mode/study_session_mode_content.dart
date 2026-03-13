@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../../../domain/entities/study/study_models.dart';
 import '../../../mode/study_mode_view_model.dart';
+import '../../../providers/study_guess_selection_provider.dart';
 import '../../../providers/study_match_selection_provider.dart';
 import '../../../providers/study_speech_playback_provider.dart';
 import 'fill/study_session_fill_content.dart';
@@ -16,6 +17,7 @@ class StudySessionModeContent extends StatelessWidget {
     required this.session,
     required this.viewModel,
     required this.answerController,
+    required this.guessSelectionState,
     required this.matchSelectionState,
     required this.speechPlaybackState,
     required this.onSubmitTypedAnswer,
@@ -31,6 +33,7 @@ class StudySessionModeContent extends StatelessWidget {
   final StudySessionData session;
   final StudyModeViewModel viewModel;
   final TextEditingController answerController;
+  final StudyGuessSelectionState guessSelectionState;
   final StudyMatchSelectionState matchSelectionState;
   final StudySpeechPlaybackState speechPlaybackState;
   final VoidCallback onSubmitTypedAnswer;
@@ -67,6 +70,7 @@ class StudySessionModeContent extends StatelessWidget {
         return StudySessionGuessContent(
           session: session,
           viewModel: viewModel,
+          guessSelectionState: guessSelectionState,
           speechPlaybackState: speechPlaybackState,
           onChoicePressed: onChoicePressed,
           onActionPressed: onActionPressed,

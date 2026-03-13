@@ -8,6 +8,6 @@ class GuessStudyModeViewStrategy extends AbstractStudyModeViewStrategy {
 
   @override
   List<String> resolveActionOrder() {
-    return const <String>['GO_NEXT'];
+    return const <String>[];
   }
 }

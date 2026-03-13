@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Strings;
 
 import com.lumos.study.dto.request.StudyMatchPairRequest;
 import com.lumos.study.dto.response.StudyChoiceResponse;
@@ -27,10 +26,11 @@ public abstract class AbstractStudyModeStrategy implements StudyModeStrategy {
         final var normalizedExpectedAnswer = this
                 .normalize(this
                         .resolveExpectedAnswer(currentItem));
-        final var isMatched = Strings.CI
-                .equals(
+        final var isMatched = StringUtils
+                .compareIgnoreCase(
                         normalizedSubmittedAnswer,
-                        normalizedExpectedAnswer);
+                        normalizedExpectedAnswer)
+                == 0;
         // Return a passed outcome only when the submitted answer matches the expected
         // answer.
         if (isMatched) {
@@ -102,10 +102,8 @@ public abstract class AbstractStudyModeStrategy implements StudyModeStrategy {
                             .resolveExpectedAnswer(item));
         }
 
-        // Keep distinct choice labels and cap the list to the supported multiple-choice
-        // size.
-        final var uniqueValues = values
-                .stream()
+        // Keep distinct choice labels and cap the list to the supported multiple-choice size.
+        final var uniqueValues = values.stream()
                 .distinct()
                 .limit(CHOICE_LIMIT)
                 .toList();

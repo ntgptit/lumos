@@ -22,6 +22,7 @@ import com.lumos.flashcard.mapper.FlashcardMapper;
 import com.lumos.flashcard.repository.FlashcardRepository;
 import com.lumos.flashcard.repository.specification.FlashcardSpecifications;
 import com.lumos.flashcard.service.FlashcardService;
+import com.lumos.study.support.StudySessionFlashcardCleanupSupport;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,6 +36,7 @@ public class FlashcardServiceImpl implements FlashcardService {
     private final FlashcardRepository flashcardRepository;
     private final DeckRepository deckRepository;
     private final FlashcardMapper flashcardMapper;
+    private final StudySessionFlashcardCleanupSupport studySessionFlashcardCleanupSupport;
 
     /**
      * Create a flashcard in the target deck.
@@ -103,9 +105,11 @@ public class FlashcardServiceImpl implements FlashcardService {
     @Override
     @Transactional
     public void deleteFlashcard(Long deckId, Long flashcardId) {
+        final Instant deletedAt = Instant.now();
         this.findActiveFlashcard(deckId, flashcardId);
-        this.flashcardRepository.softDeleteFlashcard(deckId, flashcardId, Instant.now());
-        this.deckRepository.adjustFlashcardCount(deckId, FLASHCARD_COUNT_DELTA_DELETE, Instant.now());
+        this.studySessionFlashcardCleanupSupport.removeFlashcardFromAllModes(flashcardId, deletedAt);
+        this.flashcardRepository.softDeleteFlashcard(deckId, flashcardId, deletedAt);
+        this.deckRepository.adjustFlashcardCount(deckId, FLASHCARD_COUNT_DELTA_DELETE, deletedAt);
     }
 
     /**

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../../domain/entities/study/study_models.dart';
 import '../../../../mode/study_mode_view_model.dart';
+import '../../../../providers/study_guess_selection_provider.dart';
 import '../../../../providers/study_speech_playback_provider.dart';
 import '../widgets/study_session_action_bar.dart';
 import 'widgets/study_session_guess_choice_list.dart';
@@ -26,6 +27,7 @@ class StudySessionGuessContent extends StatelessWidget {
   const StudySessionGuessContent({
     required this.session,
     required this.viewModel,
+    required this.guessSelectionState,
     required this.speechPlaybackState,
     required this.onChoicePressed,
     required this.onActionPressed,
@@ -36,6 +38,7 @@ class StudySessionGuessContent extends StatelessWidget {
 
   final StudySessionData session;
   final StudyModeViewModel viewModel;
+  final StudyGuessSelectionState guessSelectionState;
   final StudySpeechPlaybackState speechPlaybackState;
   final ValueChanged<String> onChoicePressed;
   final Future<void> Function(String) onActionPressed;
@@ -44,9 +47,9 @@ class StudySessionGuessContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool canSubmitChoice = session.allowedActions.contains(
-      _submitAnswerActionId,
-    );
+    final bool canSubmitChoice =
+        session.allowedActions.contains(_submitAnswerActionId) &&
+        !guessSelectionState.isInteractionLocked;
     final ScrollBehavior scrollBehavior = ScrollConfiguration.of(
       context,
     ).copyWith(scrollbars: false);
@@ -80,11 +83,13 @@ class StudySessionGuessContent extends StatelessWidget {
                     const SizedBox(height: _guessSectionSpacing),
                     StudySessionGuessChoiceList(
                       choices: viewModel.choices,
+                      selectionState: guessSelectionState,
                       isInteractive: canSubmitChoice,
                       onChoicePressed: onChoicePressed,
                     ),
                   ],
-                  if (viewModel.actions.isNotEmpty) ...<Widget>[
+                  if (viewModel.actions.isNotEmpty &&
+                      !guessSelectionState.isInteractionLocked) ...<Widget>[
                     const SizedBox(height: _guessSectionSpacing),
                     StudySessionActionBar(
                       actions: viewModel.actions,
