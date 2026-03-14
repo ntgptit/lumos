@@ -34,7 +34,15 @@ class FolderListContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<Widget> trailingSlivers = <Widget>[
       if (showLoadMore)
-        const SliverToBoxAdapter(child: FolderLoadMoreIndicator()),
+        const SliverToBoxAdapter(
+          child: Padding(
+            padding: EdgeInsets.only(
+              top: FolderContentSupportConst.loadMoreTopSpacing,
+              bottom: FolderContentSupportConst.loadMoreBottomSpacing,
+            ),
+            child: FolderLoadMoreIndicator(),
+          ),
+        ),
       const SliverToBoxAdapter(
         child: SizedBox(height: FolderContentSupportConst.listBottomSpacing),
       ),

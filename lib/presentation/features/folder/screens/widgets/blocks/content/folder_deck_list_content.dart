@@ -65,7 +65,10 @@ class FolderDeckListContent extends StatelessWidget {
           itemBuilder: (BuildContext context, int index) {
             return const SizedBox.shrink();
           },
-          emptySliver: const FolderDeckLoading(),
+          emptySliver: const Padding(
+            padding: EdgeInsets.symmetric(vertical: AppSpacing.lg),
+            child: FolderDeckLoading(),
+          ),
         );
       },
       error: (Object error, StackTrace stackTrace) {

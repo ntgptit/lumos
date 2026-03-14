@@ -16,6 +16,8 @@ import 'guards/verify_shared_widget_override_contract.dart'
     as shared_widget_override_guard;
 import 'guards/verify_shared_widgets_m3_coverage.dart'
     as shared_widgets_m3_coverage_guard;
+import 'guards/verify_spacing_ownership_contract.dart'
+    as spacing_ownership_guard;
 import 'guards/verify_state_management_contract.dart' as state_management_guard;
 import 'guards/verify_string_utils_contract.dart' as string_utils_guard;
 import 'guards/verify_theme_architecture_contract.dart'
@@ -200,6 +202,11 @@ List<_GuardTask> _buildDefaultTasks() {
       id: 'ui-constants',
       fileName: 'guards/verify_ui_constants_centralization.dart',
       run: ui_constants_centralization_guard.main,
+    ),
+    _GuardTask(
+      id: 'spacing-ownership',
+      fileName: 'guards/verify_spacing_ownership_contract.dart',
+      run: spacing_ownership_guard.main,
     ),
     _GuardTask(
       id: 'theme-architecture',
