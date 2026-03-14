@@ -58,6 +58,16 @@ class FolderBrowserContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double sectionGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.lg,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double errorGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.md,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     final List<Widget> leadingSlivers = <Widget>[
       SliverToBoxAdapter(
         child: FolderHeader(
@@ -75,14 +85,14 @@ class FolderBrowserContent extends StatelessWidget {
           onOpenRootFolder: onOpenRootFolder,
         ),
       ),
-      const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.lg)),
+      SliverToBoxAdapter(child: SizedBox(height: sectionGap)),
     ];
     if (state.inlineErrorMessage case final String message) {
       leadingSlivers.add(
         SliverToBoxAdapter(child: FolderErrorBanner(message: message)),
       );
       leadingSlivers.add(
-        const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.md)),
+        SliverToBoxAdapter(child: SizedBox(height: errorGap)),
       );
     }
     if (canManageDecks) {

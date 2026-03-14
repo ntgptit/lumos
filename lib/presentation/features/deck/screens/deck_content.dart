@@ -30,6 +30,11 @@ class DeckContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final double listBottomSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: DeckContentConst.listBottomSpacing,
+      minScale: ResponsiveDimensions.compactVerticalInsetScale,
+    );
     final AppLocalizations l10n = AppLocalizations.of(context)!;
     final DeckAsyncController controller = ref.read(
       deckAsyncControllerProvider(
@@ -57,7 +62,7 @@ class DeckContent extends ConsumerWidget {
               if (visibleDecks.isEmpty) ...<Widget>[
                 DeckEmptyView(isSearchResult: state.searchQuery.isNotEmpty),
               ],
-              const SizedBox(height: DeckContentConst.listBottomSpacing),
+              SizedBox(height: listBottomSpacing),
             ],
           ),
         ),

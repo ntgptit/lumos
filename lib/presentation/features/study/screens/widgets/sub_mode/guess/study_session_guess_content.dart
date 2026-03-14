@@ -8,20 +8,12 @@ import '../../../../mode/study_mode_view_model.dart';
 import '../../../../providers/study_guess_selection_provider.dart';
 import '../../../../providers/study_speech_playback_provider.dart';
 import '../widgets/study_session_action_bar.dart';
+import '../widgets/study_session_layout_metrics.dart';
 import '../widgets/study_session_progress_row.dart';
 import 'widgets/study_session_guess_choice_list.dart';
 import 'widgets/study_session_guess_prompt_card.dart';
 
 const String _submitAnswerActionId = 'SUBMIT_ANSWER';
-const EdgeInsetsGeometry _guessContentPadding = EdgeInsets.fromLTRB(
-  AppSpacing.lg,
-  AppSpacing.md,
-  AppSpacing.lg,
-  AppSpacing.xl,
-);
-const EdgeInsetsGeometry _guessProgressPadding = EdgeInsets.symmetric(
-  horizontal: AppSpacing.md,
-);
 const double _guessPromptHeightFactor = 0.45;
 const double _guessSectionSpacing = AppSpacing.md;
 const double _guessBottomSpacing = AppSpacing.none;
@@ -53,6 +45,25 @@ class StudySessionGuessContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final EdgeInsets contentPadding = StudySessionLayoutMetrics.contentPadding(
+      context,
+    );
+    final EdgeInsets progressPadding =
+        StudySessionLayoutMetrics.progressPadding(context);
+    final double sectionSpacing = StudySessionLayoutMetrics.sectionSpacing(
+      context,
+      baseValue: _guessSectionSpacing,
+    );
+    final double scrollableSectionSpacing =
+        StudySessionLayoutMetrics.sectionSpacing(
+          context,
+          baseValue: _guessScrollableSectionSpacing,
+        );
+    final double minimumChoiceHeight = StudySessionLayoutMetrics.compactHeight(
+      context,
+      baseValue: _guessMinimumChoiceHeight,
+      minScale: ResponsiveDimensions.compactLargeInsetScale,
+    );
     final bool canSubmitChoice =
         session.allowedActions.contains(_submitAnswerActionId) &&
         !guessSelectionState.isInteractionLocked;
@@ -60,17 +71,17 @@ class StudySessionGuessContent extends StatelessWidget {
         viewModel.actions.isNotEmpty &&
         !guessSelectionState.isInteractionLocked;
     return Padding(
-      padding: _guessContentPadding,
+      padding: contentPadding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Padding(
-            padding: _guessProgressPadding,
+            padding: progressPadding,
             child: StudySessionProgressRow(
               progressValue: session.progress.sessionProgress,
             ),
           ),
-          const SizedBox(height: _guessSectionSpacing),
+          SizedBox(height: sectionSpacing),
           Expanded(
             child: LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
@@ -91,7 +102,7 @@ class StudySessionGuessContent extends StatelessWidget {
                             : onPlaySpeech,
                       ),
                       if (viewModel.choices.isNotEmpty) ...<Widget>[
-                        const SizedBox(height: _guessScrollableSectionSpacing),
+                        SizedBox(height: scrollableSectionSpacing),
                         StudySessionGuessChoiceList(
                           choices: viewModel.choices,
                           selectionState: guessSelectionState,
@@ -101,7 +112,7 @@ class StudySessionGuessContent extends StatelessWidget {
                       ],
                       if (viewModel.actions.isNotEmpty &&
                           !guessSelectionState.isInteractionLocked) ...<Widget>[
-                        const SizedBox(height: _guessScrollableSectionSpacing),
+                        SizedBox(height: scrollableSectionSpacing),
                         StudySessionActionBar(
                           actions: viewModel.actions,
                           onActionPressed: onActionPressed,
@@ -120,14 +131,14 @@ class StudySessionGuessContent extends StatelessWidget {
                 final double availableChoicesHeight =
                     constraints.maxHeight -
                     promptHeight -
-                    _guessSectionSpacing -
+                    sectionSpacing -
                     _guessBottomSpacing;
                 final double choiceHeight =
                     (availableChoicesHeight -
                         (studySessionGuessChoiceGap *
                             math.max(0, choiceCount - 1))) /
                     math.max(1, choiceCount);
-                if (choiceHeight < _guessMinimumChoiceHeight) {
+                if (choiceHeight < minimumChoiceHeight) {
                   return scrollableContent;
                 }
                 return Column(
@@ -142,7 +153,7 @@ class StudySessionGuessContent extends StatelessWidget {
                           : onPlaySpeech,
                       height: promptHeight,
                     ),
-                    const SizedBox(height: _guessSectionSpacing),
+                    SizedBox(height: sectionSpacing),
                     StudySessionGuessChoiceList(
                       choices: viewModel.choices,
                       selectionState: guessSelectionState,

@@ -8,6 +8,21 @@ class FolderSkeletonView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double heroHeight = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.canvas,
+      minScale: ResponsiveDimensions.compactLargeInsetScale,
+    );
+    final double sectionGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.lg,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double itemGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.sm,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return ListView(
       padding: EdgeInsets.zero,
       children: <Widget>[
@@ -15,13 +30,13 @@ class FolderSkeletonView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              const LumosSkeletonBox(height: AppSpacing.canvas),
-              const SizedBox(height: AppSpacing.lg),
+              LumosSkeletonBox(height: heroHeight),
+              SizedBox(height: sectionGap),
               ...List<Widget>.generate(
                 6,
-                (int index) => const Padding(
-                  padding: EdgeInsets.only(bottom: AppSpacing.sm),
-                  child: LumosSkeletonBox(height: AppSpacing.canvas),
+                (int index) => Padding(
+                  padding: EdgeInsets.only(bottom: itemGap),
+                  child: LumosSkeletonBox(height: heroHeight),
                 ),
               ),
             ],

@@ -4,7 +4,7 @@ import 'package:lumos/core/themes/foundation/app_spacing.dart';
 import 'app_breakpoint_tokens.dart';
 
 abstract final class ResponsiveDimensions {
-  static const double baseDesignWidth = 390.0;
+  static const double baseDesignWidth = 430.0;
   static const double minScaleFactor = 0.9;
   static const double maxScaleFactor = 1.2;
   static const double minPercentage = 0.0;
@@ -48,6 +48,24 @@ abstract final class ResponsiveDimensions {
       baseValue: baseValue,
       minScale: minScale,
       maxScale: maxPercentage,
+    );
+  }
+
+  static EdgeInsets compactInsets({
+    required BuildContext context,
+    required EdgeInsets baseInsets,
+    double minScale = compactInsetScale,
+  }) {
+    final double scale = compactValue(
+      context: context,
+      baseValue: 1,
+      minScale: minScale,
+    );
+    return EdgeInsets.fromLTRB(
+      baseInsets.left * scale,
+      baseInsets.top * scale,
+      baseInsets.right * scale,
+      baseInsets.bottom * scale,
     );
   }
 

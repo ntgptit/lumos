@@ -4,6 +4,7 @@ import '../../../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../mode/study_fill_answer_comparison.dart';
 import '../../../../../../../shared/widgets/lumos_widgets.dart';
 import '../../widgets/study_session_content_card.dart';
+import '../../widgets/study_session_layout_metrics.dart';
 import 'study_session_fill_panel_style.dart';
 
 const double _fillComparisonSpacing = AppSpacing.canvas;
@@ -22,6 +23,10 @@ class StudySessionFillAnswerPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double comparisonSpacing = StudySessionLayoutMetrics.actionSpacing(
+      context,
+      baseValue: _fillComparisonSpacing,
+    );
     final ThemeData theme = Theme.of(context);
     final ColorScheme colorScheme = theme.colorScheme;
     final TextStyle resolvedBaseStyle =
@@ -56,7 +61,7 @@ class StudySessionFillAnswerPanel extends StatelessWidget {
                 align: TextAlign.center,
                 style: resolvedBaseStyle,
               ),
-              const SizedBox(height: _fillComparisonSpacing),
+              SizedBox(height: comparisonSpacing),
               Text.rich(
                 TextSpan(
                   style: resolvedBaseStyle,

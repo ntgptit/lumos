@@ -9,20 +9,12 @@ import '../../../../mode/study_mode_action_view_model.dart';
 import '../../../../mode/study_mode_view_model.dart';
 import '../../../../providers/study_recall_selection_provider.dart';
 import '../../../../providers/study_speech_playback_provider.dart';
+import '../widgets/study_session_layout_metrics.dart';
 import '../widgets/study_session_progress_row.dart';
 import 'widgets/study_session_recall_action_row.dart';
 import 'widgets/study_session_recall_answer_panel.dart';
 import 'widgets/study_session_recall_prompt_card.dart';
 
-const EdgeInsetsGeometry _recallContentPadding = EdgeInsets.fromLTRB(
-  AppSpacing.lg,
-  AppSpacing.md,
-  AppSpacing.lg,
-  AppSpacing.xl,
-);
-const EdgeInsetsGeometry _recallProgressPadding = EdgeInsets.symmetric(
-  horizontal: AppSpacing.md,
-);
 const double _recallSectionSpacing = AppSpacing.lg;
 const double _recallActionSpacing = AppSpacing.xl;
 
@@ -48,6 +40,19 @@ class StudySessionRecallContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final EdgeInsets contentPadding = StudySessionLayoutMetrics.contentPadding(
+      context,
+    );
+    final EdgeInsets progressPadding =
+        StudySessionLayoutMetrics.progressPadding(context);
+    final double sectionSpacing = StudySessionLayoutMetrics.sectionSpacing(
+      context,
+      baseValue: _recallSectionSpacing,
+    );
+    final double actionSpacing = StudySessionLayoutMetrics.actionSpacing(
+      context,
+      baseValue: _recallActionSpacing,
+    );
     final AppLocalizations l10n = AppLocalizations.of(context)!;
     final List<StudyModeActionViewModel> visibleActions =
         StudyRecallLayoutResolver.resolveVisibleActions(
@@ -61,17 +66,17 @@ class StudySessionRecallContent extends StatelessWidget {
           ),
         );
     return Padding(
-      padding: _recallContentPadding,
+      padding: contentPadding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Padding(
-            padding: _recallProgressPadding,
+            padding: progressPadding,
             child: StudySessionProgressRow(
               progressValue: session.progress.sessionProgress,
             ),
           ),
-          const SizedBox(height: _recallSectionSpacing),
+          SizedBox(height: sectionSpacing),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -89,7 +94,7 @@ class StudySessionRecallContent extends StatelessWidget {
                         : onPlaySpeech,
                   ),
                 ),
-                const SizedBox(height: _recallSectionSpacing),
+                SizedBox(height: sectionSpacing),
                 Expanded(
                   child: StudySessionRecallAnswerPanel(
                     content: StudyRecallLayoutResolver.resolveAnswerContent(
@@ -98,7 +103,7 @@ class StudySessionRecallContent extends StatelessWidget {
                     isRevealed: viewModel.showAnswer,
                   ),
                 ),
-                const SizedBox(height: _recallActionSpacing),
+                SizedBox(height: actionSpacing),
                 StudySessionRecallActionRow(
                   actions: visibleActions,
                   selectionState: recallSelectionState,

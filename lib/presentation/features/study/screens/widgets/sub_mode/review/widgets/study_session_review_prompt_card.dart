@@ -4,19 +4,12 @@ import '../../../../../../../../core/constants/text_styles.dart';
 import '../../../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../../shared/widgets/lumos_widgets.dart';
 import '../../widgets/study_session_content_card.dart';
+import '../../widgets/study_session_layout_metrics.dart';
 
 const double _reviewPromptIconSize = IconSizes.iconMedium;
 const double _reviewPromptLineHeight =
     AppTypographyConst.titleLargeLineHeight /
     AppTypographyConst.titleLargeFontSize;
-const EdgeInsetsGeometry _reviewPromptCardPadding = EdgeInsets.symmetric(
-  horizontal: AppSpacing.xl,
-  vertical: AppSpacing.xl,
-);
-const EdgeInsetsGeometry _reviewPromptTopIconPadding = EdgeInsets.only(
-  top: AppSpacing.lg,
-  right: AppSpacing.lg,
-);
 
 class StudySessionReviewPromptCard extends StatelessWidget {
   const StudySessionReviewPromptCard({required this.content, super.key});
@@ -27,15 +20,23 @@ class StudySessionReviewPromptCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colorScheme = theme.colorScheme;
+    final double iconSize = StudySessionLayoutMetrics.compactIcon(
+      context,
+      baseValue: _reviewPromptIconSize,
+    );
+    final EdgeInsets cardPadding = StudySessionLayoutMetrics.cardPadding(
+      context,
+      horizontal: AppSpacing.xl,
+      vertical: AppSpacing.xl,
+    );
+    final EdgeInsets topTrailingPadding =
+        StudySessionLayoutMetrics.topTrailingPadding(context);
     return StudySessionContentCard(
       variant: LumosCardVariant.filled,
-      topTrailing: const LumosIcon(
-        Icons.edit_outlined,
-        size: _reviewPromptIconSize,
-      ),
-      topTrailingPadding: _reviewPromptTopIconPadding,
+      topTrailing: LumosIcon(Icons.edit_outlined, size: iconSize),
+      topTrailingPadding: topTrailingPadding,
       child: Padding(
-        padding: _reviewPromptCardPadding,
+        padding: cardPadding,
         child: Center(
           child: SingleChildScrollView(
             child: LumosInlineText(

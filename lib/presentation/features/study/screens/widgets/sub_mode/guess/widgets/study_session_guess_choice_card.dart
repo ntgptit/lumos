@@ -4,6 +4,7 @@ import '../../../../../../../../core/constants/text_styles.dart';
 import '../../../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../../../core/themes/extensions/theme_extensions.dart';
 import '../../../../../../../shared/widgets/lumos_widgets.dart';
+import '../../widgets/study_session_layout_metrics.dart';
 
 const double studySessionGuessChoiceCardDefaultHeight = 64;
 const double _guessChoiceLineHeight =
@@ -39,6 +40,18 @@ class StudySessionGuessChoiceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colorScheme = theme.colorScheme;
+    final double resolvedHeight =
+        height ??
+        StudySessionLayoutMetrics.compactHeight(
+          context,
+          baseValue: studySessionGuessChoiceCardDefaultHeight,
+          minScale: ResponsiveDimensions.compactLargeInsetScale,
+        );
+    final EdgeInsets cardPadding = ResponsiveDimensions.compactInsets(
+      context: context,
+      baseInsets: _guessChoiceCardPadding as EdgeInsets,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     final Color backgroundColor = isSuccessFeedback
         ? context.appColors.successContainer
         : isErrorFeedback
@@ -66,9 +79,9 @@ class StudySessionGuessChoiceCard extends StatelessWidget {
           borderRadius: BorderRadii.xLarge,
         ),
         child: SizedBox(
-          height: height ?? studySessionGuessChoiceCardDefaultHeight,
+          height: resolvedHeight,
           child: Padding(
-            padding: _guessChoiceCardPadding,
+            padding: cardPadding,
             child: Center(
               child: LumosInlineText(
                 label,

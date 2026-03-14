@@ -4,6 +4,7 @@ import '../../../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../../../domain/entities/study/study_models.dart';
 import '../../../../../mode/study_match_pair_layout_resolver.dart';
 import '../../../../../providers/study_match_selection_provider.dart';
+import '../../widgets/study_session_layout_metrics.dart';
 import 'study_session_match_pair_row.dart';
 
 const double _matchRowGap = AppSpacing.md;
@@ -26,6 +27,10 @@ class StudySessionMatchPairs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double rowGap = StudySessionLayoutMetrics.sectionSpacing(
+      context,
+      baseValue: _matchRowGap,
+    );
     final Set<String> matchedLeftIds = selectionState.matchedPairs
         .map((StudyMatchSubmission pair) => pair.leftId)
         .toSet();
@@ -66,7 +71,7 @@ class StudySessionMatchPairs extends StatelessWidget {
             return row;
           }
           return Padding(
-            padding: const EdgeInsets.only(bottom: _matchRowGap),
+            padding: EdgeInsets.only(bottom: rowGap),
             child: row,
           );
         }),

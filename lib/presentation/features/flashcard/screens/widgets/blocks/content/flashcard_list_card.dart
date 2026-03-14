@@ -55,12 +55,37 @@ class FlashcardListCard extends StatelessWidget {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
     final ThemeData theme = Theme.of(context);
     final String normalizedNote = StringUtils.normalizeName(item.note);
+    final EdgeInsets cardPadding = ResponsiveDimensions.compactInsets(
+      context: context,
+      baseInsets: FlashcardListCardConst.cardPadding,
+      minScale: ResponsiveDimensions.compactLargeInsetScale,
+    );
+    final double textGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardListCardConst.textGap,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double iconSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardListCardConst.iconSpacing,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double actionIconSize = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardListCardConst.actionIconSize,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double frontTextFontSize = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardListCardConst.frontTextFontSize,
+      minScale: ResponsiveDimensions.compactLargeInsetScale,
+    );
     return LumosCard(
       variant: LumosCardVariant.filled,
       borderRadius: BorderRadii.xLarge,
       padding: EdgeInsets.zero,
       child: Padding(
-        padding: FlashcardListCardConst.cardPadding,
+        padding: cardPadding,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -70,7 +95,7 @@ class FlashcardListCard extends StatelessWidget {
                   child: LumosInlineText(
                     item.frontText,
                     style: theme.textTheme.titleMedium?.copyWith(
-                      fontSize: FlashcardListCardConst.frontTextFontSize,
+                      fontSize: frontTextFontSize,
                       height: FlashcardListCardConst.frontTextHeight,
                       letterSpacing:
                           AppTypographyConst.titleMediumLetterSpacing,
@@ -78,7 +103,7 @@ class FlashcardListCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(width: FlashcardListCardConst.iconSpacing),
+                SizedBox(width: iconSpacing),
                 Theme(
                   data: theme.copyWith(
                     visualDensity: FlashcardListCardConst.actionVisualDensity,
@@ -91,7 +116,7 @@ class FlashcardListCard extends StatelessWidget {
                         onPressed: onAudioPressed,
                         tooltip: l10n.flashcardPlayAudioTooltip,
                         icon: Icons.volume_up_outlined,
-                        size: FlashcardListCardConst.actionIconSize,
+                        size: actionIconSize,
                         selected: isAudioPlaying,
                         selectedIcon: Icons.graphic_eq_rounded,
                       ),
@@ -99,7 +124,7 @@ class FlashcardListCard extends StatelessWidget {
                         onPressed: onStarPressed,
                         tooltip: l10n.flashcardBookmarkTooltip,
                         icon: Icons.star_border,
-                        size: FlashcardListCardConst.actionIconSize,
+                        size: actionIconSize,
                         selected: isStarred,
                         selectedIcon: Icons.star,
                       ),
@@ -126,9 +151,9 @@ class FlashcardListCard extends StatelessWidget {
                             ),
                           ];
                         },
-                        icon: const LumosIcon(
+                        icon: LumosIcon(
                           Icons.more_vert_rounded,
-                          size: FlashcardListCardConst.actionIconSize,
+                          size: actionIconSize,
                         ),
                       ),
                     ],
@@ -136,7 +161,7 @@ class FlashcardListCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: FlashcardListCardConst.textGap),
+            SizedBox(height: textGap),
             LumosInlineText(
               item.backText,
               style: theme.textTheme.bodyMedium?.copyWith(
@@ -146,7 +171,7 @@ class FlashcardListCard extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
             if (normalizedNote.isNotEmpty) ...<Widget>[
-              const SizedBox(height: FlashcardListCardConst.textGap),
+              SizedBox(height: textGap),
               LumosInlineText(
                 normalizedNote,
                 style: theme.textTheme.bodySmall,

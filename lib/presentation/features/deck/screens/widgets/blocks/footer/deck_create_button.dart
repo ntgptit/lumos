@@ -22,9 +22,14 @@ class DeckCreateButton extends StatelessWidget {
     if (isMutating) {
       return const SizedBox.shrink();
     }
+    final double bottomInset = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.xxl,
+      minScale: ResponsiveDimensions.compactVerticalInsetScale,
+    );
     return Positioned(
       right: horizontalInset,
-      bottom: AppSpacing.xxl,
+      bottom: bottomInset,
       child: LumosFloatingActionButton(
         onPressed: onPressed,
         icon: Icons.style_outlined,

@@ -8,6 +8,7 @@ import '../../../../../../../../domain/entities/study/study_models.dart';
 import '../../../../../../../shared/widgets/lumos_widgets.dart';
 import '../../../../../providers/study_speech_playback_provider.dart';
 import '../../widgets/study_session_content_card.dart';
+import '../../widgets/study_session_layout_metrics.dart';
 
 const double _guessHeroCardMinHeight = 184;
 const double _guessHeroCardMaxHeight = 240;
@@ -17,18 +18,6 @@ const double _guessHeroPromptLineHeight =
     AppTypographyConst.headlineLargeLineHeight /
     AppTypographyConst.headlineLargeFontSize;
 const int _guessHeroPromptMaxLines = 2;
-const EdgeInsetsGeometry _guessHeroCardPadding = EdgeInsets.symmetric(
-  horizontal: AppSpacing.xl,
-  vertical: AppSpacing.xl,
-);
-const EdgeInsetsGeometry _guessHeroTopIconPadding = EdgeInsets.only(
-  top: AppSpacing.lg,
-  right: AppSpacing.lg,
-);
-const EdgeInsetsGeometry _guessHeroBottomIconPadding = EdgeInsets.only(
-  right: AppSpacing.md,
-  bottom: AppSpacing.md,
-);
 
 class StudySessionGuessPromptCard extends StatelessWidget {
   const StudySessionGuessPromptCard({
@@ -51,33 +40,50 @@ class StudySessionGuessPromptCard extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colorScheme = theme.colorScheme;
     final bool isSpeechEnabled = speech.available && !playbackState.isBusy;
+    final double resolvedIconSize = StudySessionLayoutMetrics.compactIcon(
+      context,
+      baseValue: _guessHeroIconSize,
+    );
+    final EdgeInsets cardPadding = StudySessionLayoutMetrics.cardPadding(
+      context,
+      horizontal: AppSpacing.xl,
+      vertical: AppSpacing.xl,
+    );
+    final EdgeInsets topTrailingPadding =
+        StudySessionLayoutMetrics.topTrailingPadding(context);
+    final EdgeInsets bottomTrailingPadding =
+        StudySessionLayoutMetrics.bottomTrailingPadding(context);
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         final double resolvedHeight =
             height ??
             math.min(
-              _guessHeroCardMaxHeight,
+              StudySessionLayoutMetrics.compactHeight(
+                context,
+                baseValue: _guessHeroCardMaxHeight,
+                minScale: ResponsiveDimensions.compactLargeInsetScale,
+              ),
               math.max(
-                _guessHeroCardMinHeight,
+                StudySessionLayoutMetrics.compactHeight(
+                  context,
+                  baseValue: _guessHeroCardMinHeight,
+                ),
                 constraints.maxWidth * _guessHeroCardHeightFactor,
               ),
             );
         return StudySessionContentCard(
           height: resolvedHeight,
           expandToFill: false,
-          topTrailing: const LumosIcon(
-            Icons.edit_outlined,
-            size: _guessHeroIconSize,
-          ),
-          topTrailingPadding: _guessHeroTopIconPadding,
+          topTrailing: LumosIcon(Icons.edit_outlined, size: resolvedIconSize),
+          topTrailingPadding: topTrailingPadding,
           bottomTrailing: LumosIconButton(
             icon: Icons.volume_up_rounded,
             tooltip: speech.available ? speech.speechText : null,
             onPressed: isSpeechEnabled ? onPlayPressed : null,
           ),
-          bottomTrailingPadding: _guessHeroBottomIconPadding,
+          bottomTrailingPadding: bottomTrailingPadding,
           child: Padding(
-            padding: _guessHeroCardPadding,
+            padding: cardPadding,
             child: Center(
               child: LumosInlineText(
                 prompt,

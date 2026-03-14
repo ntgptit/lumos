@@ -32,24 +32,57 @@ class FlashcardSetMetadataSection extends StatelessWidget {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final String ownerName = l10n.flashcardOwnerFallback;
+    final double titleBottomSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardSetMetadataSectionConst.titleBottomSpacing,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double rowSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardSetMetadataSectionConst.rowSpacing,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double ownerAvatarRadius = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardSetMetadataSectionConst.ownerAvatarRadius,
+      minScale: ResponsiveDimensions.compactLargeInsetScale,
+    );
+    final double chipHorizontalPadding = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardSetMetadataSectionConst.chipHorizontalPadding,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double chipVerticalPadding = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardSetMetadataSectionConst.chipVerticalPadding,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double dividerHorizontalMargin = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardSetMetadataSectionConst.dividerHorizontalMargin,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double dividerHeight = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardSetMetadataSectionConst.dividerHeight,
+      minScale: ResponsiveDimensions.compactLargeInsetScale,
+    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         LumosText(title, style: LumosTextStyle.titleMedium),
-        const SizedBox(
-          height: FlashcardSetMetadataSectionConst.titleBottomSpacing,
-        ),
+        SizedBox(height: titleBottomSpacing),
         Row(
           children: <Widget>[
             CircleAvatar(
-              radius: FlashcardSetMetadataSectionConst.ownerAvatarRadius,
+              radius: ownerAvatarRadius,
               backgroundColor: colorScheme.secondaryContainer,
               child: IconTheme(
                 data: IconThemeData(color: colorScheme.onSecondaryContainer),
                 child: const LumosIcon(Icons.person_rounded),
               ),
             ),
-            const SizedBox(width: FlashcardSetMetadataSectionConst.rowSpacing),
+            SizedBox(width: rowSpacing),
             LumosInlineText(
               ownerName,
               style: Theme.of(context).textTheme.bodyMedium,
@@ -63,11 +96,9 @@ class FlashcardSetMetadataSection extends StatelessWidget {
                 borderRadius: BorderRadii.large,
               ),
               child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal:
-                      FlashcardSetMetadataSectionConst.chipHorizontalPadding,
-                  vertical:
-                      FlashcardSetMetadataSectionConst.chipVerticalPadding,
+                padding: EdgeInsets.symmetric(
+                  horizontal: chipHorizontalPadding,
+                  vertical: chipVerticalPadding,
                 ),
                 child: LumosInlineText(
                   l10n.flashcardPlusBadge,
@@ -78,12 +109,9 @@ class FlashcardSetMetadataSection extends StatelessWidget {
               ),
             ),
             Container(
-              margin: const EdgeInsets.symmetric(
-                horizontal:
-                    FlashcardSetMetadataSectionConst.dividerHorizontalMargin,
-              ),
+              margin: EdgeInsets.symmetric(horizontal: dividerHorizontalMargin),
               width: WidgetSizes.borderWidthRegular,
-              height: FlashcardSetMetadataSectionConst.dividerHeight,
+              height: dividerHeight,
               color: colorScheme.outlineVariant,
             ),
             Expanded(

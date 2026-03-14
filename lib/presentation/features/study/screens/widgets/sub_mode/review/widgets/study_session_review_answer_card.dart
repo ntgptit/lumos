@@ -4,20 +4,11 @@ import '../../../../../../../../core/constants/text_styles.dart';
 import '../../../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../../shared/widgets/lumos_widgets.dart';
 import '../../widgets/study_session_content_card.dart';
+import '../../widgets/study_session_layout_metrics.dart';
 
 const double _reviewAnswerLineHeight =
     AppTypographyConst.headlineLargeLineHeight /
     AppTypographyConst.headlineLargeFontSize;
-const EdgeInsetsGeometry _reviewAnswerCardPadding = EdgeInsets.fromLTRB(
-  AppSpacing.xl,
-  AppSpacing.lg,
-  AppSpacing.xl,
-  AppSpacing.xl,
-);
-const EdgeInsetsGeometry _reviewAnswerTopIconPadding = EdgeInsets.only(
-  top: AppSpacing.lg,
-  right: AppSpacing.lg,
-);
 
 class StudySessionReviewAnswerCard extends StatelessWidget {
   const StudySessionReviewAnswerCard({
@@ -39,6 +30,15 @@ class StudySessionReviewAnswerCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colorScheme = theme.colorScheme;
+    final EdgeInsets cardPadding = StudySessionLayoutMetrics.cardInsets(
+      context,
+      left: AppSpacing.xl,
+      top: AppSpacing.lg,
+      right: AppSpacing.xl,
+      bottom: AppSpacing.xl,
+    );
+    final EdgeInsets topTrailingPadding =
+        StudySessionLayoutMetrics.topTrailingPadding(context);
     return StudySessionContentCard(
       variant: LumosCardVariant.filled,
       topTrailing: LumosIconButton(
@@ -46,9 +46,9 @@ class StudySessionReviewAnswerCard extends StatelessWidget {
         tooltip: tooltip,
         onPressed: isSpeechAvailable ? onSpeechPressed : null,
       ),
-      topTrailingPadding: _reviewAnswerTopIconPadding,
+      topTrailingPadding: topTrailingPadding,
       child: Padding(
-        padding: _reviewAnswerCardPadding,
+        padding: cardPadding,
         child: Center(
           child: SingleChildScrollView(
             child: LumosInlineText(

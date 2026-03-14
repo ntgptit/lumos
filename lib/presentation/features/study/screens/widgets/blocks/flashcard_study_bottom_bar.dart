@@ -16,6 +16,11 @@ class FlashcardStudyBottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double actionGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.sm,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     final AppLocalizations l10n = AppLocalizations.of(context)!;
     return Row(
       children: <Widget>[
@@ -26,7 +31,7 @@ class FlashcardStudyBottomBar extends StatelessWidget {
             label: l10n.flashcardPreviousButton,
           ),
         ),
-        const SizedBox(width: AppSpacing.sm),
+        SizedBox(width: actionGap),
         Expanded(
           child: LumosPrimaryButton(
             onPressed: onNextPressed,

@@ -4,6 +4,7 @@ import '../../../../../../../../core/constants/text_styles.dart';
 import '../../../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../../../core/themes/extensions/theme_extensions.dart';
 import '../../../../../../../shared/widgets/lumos_widgets.dart';
+import '../../widgets/study_session_layout_metrics.dart';
 
 const int _matchMeaningMaxLines = 5;
 const int _matchWordMaxLines = 2;
@@ -14,10 +15,6 @@ const double _matchMeaningLineHeight =
 const double _matchTermLineHeight =
     AppTypographyConst.titleLargeLineHeight /
     AppTypographyConst.titleLargeFontSize;
-const EdgeInsetsGeometry _matchCardContentPadding = EdgeInsets.symmetric(
-  horizontal: AppSpacing.xl,
-  vertical: AppSpacing.xl,
-);
 
 class StudySessionMatchPairButton extends StatelessWidget {
   const StudySessionMatchPairButton({
@@ -47,6 +44,11 @@ class StudySessionMatchPairButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colorScheme = theme.colorScheme;
+    final EdgeInsets contentPadding = StudySessionLayoutMetrics.cardPadding(
+      context,
+      horizontal: AppSpacing.xl,
+      vertical: AppSpacing.xl,
+    );
     final Color backgroundColor = isSuccessFeedback
         ? context.appColors.successContainer
         : isErrorFeedback
@@ -97,15 +99,14 @@ class StudySessionMatchPairButton extends StatelessWidget {
               duration: AppDurations.medium,
               curve: Curves.easeInOutCubic,
               decoration: BoxDecoration(
-                color:
-                    isSuccessFeedback || isErrorFeedback
+                color: isSuccessFeedback || isErrorFeedback
                     ? backgroundColor
                     : colorScheme.surface.withValues(
                         alpha: AppOpacity.transparent,
                       ),
                 borderRadius: BorderRadii.xLarge,
               ),
-              padding: _matchCardContentPadding,
+              padding: contentPadding,
               child: Center(
                 child: Align(
                   alignment: isMeaningCard

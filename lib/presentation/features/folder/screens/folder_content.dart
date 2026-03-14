@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lumos/core/themes/foundation/app_responsive.dart';
 
 import '../../../../core/constants/route_names.dart';
 import '../../../../core/error/failures.dart';
@@ -353,6 +354,16 @@ class _FolderContentState extends ConsumerState<FolderContent> {
     required AppLocalizations l10n,
     required List<FolderContentSupportCreateAction> actions,
   }) {
+    final EdgeInsets actionSheetPadding = ResponsiveDimensions.compactInsets(
+      context: context,
+      baseInsets: const EdgeInsets.fromLTRB(
+        FolderContentSupportConst.createActionSheetHorizontalPadding,
+        FolderContentSupportConst.createActionSheetVerticalPadding,
+        FolderContentSupportConst.createActionSheetHorizontalPadding,
+        FolderContentSupportConst.createActionSheetBottomPadding,
+      ),
+      minScale: ResponsiveDimensions.compactOuterInsetScale,
+    );
     unawaited(
       showModalBottomSheet<void>(
         context: context,
@@ -360,12 +371,7 @@ class _FolderContentState extends ConsumerState<FolderContent> {
         builder: (BuildContext bottomSheetContext) {
           return SafeArea(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(
-                FolderContentSupportConst.createActionSheetHorizontalPadding,
-                FolderContentSupportConst.createActionSheetVerticalPadding,
-                FolderContentSupportConst.createActionSheetHorizontalPadding,
-                FolderContentSupportConst.createActionSheetBottomPadding,
-              ),
+              padding: actionSheetPadding,
               child: LumosActionSheet(
                 actions: actions
                     .map(

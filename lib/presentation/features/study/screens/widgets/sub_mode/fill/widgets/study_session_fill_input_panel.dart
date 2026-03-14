@@ -3,15 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../../../l10n/app_localizations.dart';
 import '../../../../../../../shared/widgets/lumos_widgets.dart';
+import '../../widgets/study_session_layout_metrics.dart';
 import 'study_session_fill_panel_style.dart';
-
-const EdgeInsetsGeometry _fillErrorFieldPadding = EdgeInsets.only(
-  bottom: AppSpacing.xxxl,
-);
-const EdgeInsetsGeometry _fillInputErrorBannerPadding = EdgeInsets.symmetric(
-  horizontal: AppSpacing.lg,
-  vertical: AppSpacing.sm,
-);
 
 class StudySessionFillInputPanel extends StatelessWidget {
   const StudySessionFillInputPanel({
@@ -34,6 +27,23 @@ class StudySessionFillInputPanel extends StatelessWidget {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
     final ThemeData theme = Theme.of(context);
     final ColorScheme colorScheme = theme.colorScheme;
+    final double errorFieldPadding = StudySessionLayoutMetrics.actionSpacing(
+      context,
+      baseValue: AppSpacing.xxxl,
+    );
+    final EdgeInsets errorBannerPadding = StudySessionLayoutMetrics.cardPadding(
+      context,
+      horizontal: AppSpacing.lg,
+      vertical: AppSpacing.sm,
+    );
+    final double horizontalInset = StudySessionLayoutMetrics.sectionSpacing(
+      context,
+      baseValue: AppSpacing.lg,
+    );
+    final double bottomInset = StudySessionLayoutMetrics.sectionSpacing(
+      context,
+      baseValue: AppSpacing.lg,
+    );
     return LumosCard(
       margin: EdgeInsets.zero,
       variant: LumosCardVariant.filled,
@@ -47,7 +57,7 @@ class StudySessionFillInputPanel extends StatelessWidget {
                 duration: AppDurations.fast,
                 curve: Curves.easeOut,
                 padding: showsRequiredInputError
-                    ? _fillErrorFieldPadding
+                    ? EdgeInsets.only(bottom: errorFieldPadding)
                     : EdgeInsets.zero,
                 child: LumosTextField(
                   controller: controller,
@@ -68,9 +78,9 @@ class StudySessionFillInputPanel extends StatelessWidget {
               ),
             ),
             Positioned(
-              left: AppSpacing.lg,
-              right: AppSpacing.lg,
-              bottom: AppSpacing.lg,
+              left: horizontalInset,
+              right: horizontalInset,
+              bottom: bottomInset,
               child: IgnorePointer(
                 child: AnimatedSwitcher(
                   duration: AppDurations.fast,
@@ -80,7 +90,7 @@ class StudySessionFillInputPanel extends StatelessWidget {
                       ? Align(
                           alignment: Alignment.bottomCenter,
                           child: Container(
-                            padding: _fillInputErrorBannerPadding,
+                            padding: errorBannerPadding,
                             decoration: BoxDecoration(
                               color: colorScheme.errorContainer,
                               borderRadius: BorderRadii.pill,

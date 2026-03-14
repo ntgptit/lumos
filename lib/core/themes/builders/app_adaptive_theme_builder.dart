@@ -15,10 +15,11 @@ abstract final class AppAdaptiveThemeConst {
   AppAdaptiveThemeConst._();
 
   static const double baseCompactWidth = ResponsiveDimensions.baseDesignWidth;
-  static const double minimumComponentScale = 0.88;
-  static const double minimumDisplayScale = 0.9;
-  static const double minimumHeadlineScale = 0.92;
-  static const double minimumBodyScale = 0.95;
+  static const double minimumComponentScale = 0.85;
+  static const double minimumDisplayScale = 0.8;
+  static const double minimumHeadlineScale = 0.84;
+  static const double minimumTitleScale = 0.88;
+  static const double minimumBodyScale = 0.86;
   static const double minimumRadiusScale = 0.94;
   static const double maximumScale = 1.0;
   static const double maximumCompactDensity = -1.0;
@@ -210,6 +211,10 @@ final class AppAdaptiveThemeBuilder {
       screenWidth: screenWidth,
       minimumScale: AppAdaptiveThemeConst.minimumHeadlineScale,
     );
+    final double titleScale = _resolveScale(
+      screenWidth: screenWidth,
+      minimumScale: AppAdaptiveThemeConst.minimumTitleScale,
+    );
     final double bodyScale = _resolveScale(
       screenWidth: screenWidth,
       minimumScale: AppAdaptiveThemeConst.minimumBodyScale,
@@ -221,15 +226,15 @@ final class AppAdaptiveThemeBuilder {
       headlineLarge: _scaleTextStyle(textTheme.headlineLarge, headlineScale),
       headlineMedium: _scaleTextStyle(textTheme.headlineMedium, headlineScale),
       headlineSmall: _scaleTextStyle(textTheme.headlineSmall, headlineScale),
-      titleLarge: _scaleTextStyle(textTheme.titleLarge, headlineScale),
-      titleMedium: _scaleTextStyle(textTheme.titleMedium, bodyScale),
-      titleSmall: _scaleTextStyle(textTheme.titleSmall, bodyScale),
+      titleLarge: _scaleTextStyle(textTheme.titleLarge, titleScale),
+      titleMedium: _scaleTextStyle(textTheme.titleMedium, titleScale),
+      titleSmall: _scaleTextStyle(textTheme.titleSmall, titleScale),
       bodyLarge: _scaleTextStyle(textTheme.bodyLarge, bodyScale),
       bodyMedium: _scaleTextStyle(textTheme.bodyMedium, bodyScale),
-      bodySmall: _scaleTextStyle(textTheme.bodySmall, bodyScale),
+      bodySmall: textTheme.bodySmall,
       labelLarge: _scaleTextStyle(textTheme.labelLarge, bodyScale),
       labelMedium: _scaleTextStyle(textTheme.labelMedium, bodyScale),
-      labelSmall: _scaleTextStyle(textTheme.labelSmall, bodyScale),
+      labelSmall: textTheme.labelSmall,
     );
   }
 

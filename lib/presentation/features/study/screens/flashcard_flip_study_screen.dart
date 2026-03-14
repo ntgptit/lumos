@@ -112,6 +112,41 @@ class _FlashcardFlipStudyScreenState
 
   @override
   Widget build(BuildContext context) {
+    final double screenHorizontalPadding = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardFlipStudyConst.screenHorizontalPadding,
+      minScale: ResponsiveDimensions.compactOuterInsetScale,
+    );
+    final double screenVerticalPadding = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardFlipStudyConst.screenVerticalPadding,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double progressTopGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardFlipStudyConst.progressTopGap,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double progressBottomGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardFlipStudyConst.progressBottomGap,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double cardVerticalInset = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardFlipStudyConst.cardVerticalInset,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double bottomBarTopGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardFlipStudyConst.bottomBarTopGap,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double bottomBarBottomGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardFlipStudyConst.bottomBarBottomGap,
+      minScale: ResponsiveDimensions.compactVerticalInsetScale,
+    );
     final AppLocalizations l10n = AppLocalizations.of(context)!;
     final String title = _displayTitle(
       deckName: widget.deckName,
@@ -167,15 +202,15 @@ class _FlashcardFlipStudyScreenState
           ],
         ),
         body: Padding(
-          padding: const EdgeInsets.fromLTRB(
-            FlashcardFlipStudyConst.screenHorizontalPadding,
-            FlashcardFlipStudyConst.screenVerticalPadding,
-            FlashcardFlipStudyConst.screenHorizontalPadding,
+          padding: EdgeInsets.fromLTRB(
+            screenHorizontalPadding,
+            screenVerticalPadding,
+            screenHorizontalPadding,
             AppSpacing.none,
           ),
           child: Column(
             children: <Widget>[
-              const SizedBox(height: FlashcardFlipStudyConst.progressTopGap),
+              SizedBox(height: progressTopGap),
               ValueListenableBuilder<int>(
                 valueListenable: _currentIndexNotifier,
                 builder: (BuildContext context, int value, Widget? child) {
@@ -183,7 +218,7 @@ class _FlashcardFlipStudyScreenState
                   return LumosProgressBar(value: progress);
                 },
               ),
-              const SizedBox(height: FlashcardFlipStudyConst.progressBottomGap),
+              SizedBox(height: progressBottomGap),
               Expanded(
                 child: PageView.builder(
                   controller: _pageController,
@@ -192,8 +227,8 @@ class _FlashcardFlipStudyScreenState
                   itemBuilder: (BuildContext context, int index) {
                     final FlashcardNode item = widget.items[index];
                     return Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: FlashcardFlipStudyConst.cardVerticalInset,
+                      padding: EdgeInsets.symmetric(
+                        vertical: cardVerticalInset,
                       ),
                       child: AnimatedBuilder(
                         animation: Listenable.merge(<Listenable>[
@@ -223,7 +258,7 @@ class _FlashcardFlipStudyScreenState
                   },
                 ),
               ),
-              const SizedBox(height: FlashcardFlipStudyConst.bottomBarTopGap),
+              SizedBox(height: bottomBarTopGap),
               ValueListenableBuilder<int>(
                 valueListenable: _currentIndexNotifier,
                 builder: (BuildContext context, int value, Widget? child) {
@@ -236,9 +271,7 @@ class _FlashcardFlipStudyScreenState
                   );
                 },
               ),
-              const SizedBox(
-                height: FlashcardFlipStudyConst.bottomBarBottomGap,
-              ),
+              SizedBox(height: bottomBarBottomGap),
             ],
           ),
         ),

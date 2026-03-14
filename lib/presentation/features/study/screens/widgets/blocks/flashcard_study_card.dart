@@ -45,14 +45,44 @@ class FlashcardStudyCard extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
     final String normalizedNote = StringUtils.normalizeName(item.note);
     final bool hasNote = normalizedNote.isNotEmpty;
+    final double contentHorizontalPadding = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardStudyCardConst.contentHorizontalPadding,
+      minScale: ResponsiveDimensions.compactLargeInsetScale,
+    );
+    final double contentVerticalPadding = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardStudyCardConst.contentVerticalPadding,
+      minScale: ResponsiveDimensions.compactLargeInsetScale,
+    );
+    final double actionIconSize = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardStudyCardConst.actionIconSize,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double titleGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardStudyCardConst.titleGap,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double bottomGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardStudyCardConst.bottomGap,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double hintIconSize = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardStudyCardConst.hintIconSize,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return LumosCard(
       variant: LumosCardVariant.filled,
       borderRadius: BorderRadii.xLarge,
       onTap: onFlipPressed,
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: FlashcardStudyCardConst.contentHorizontalPadding,
-          vertical: FlashcardStudyCardConst.contentVerticalPadding,
+        padding: EdgeInsets.symmetric(
+          horizontal: contentHorizontalPadding,
+          vertical: contentVerticalPadding,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -63,7 +93,7 @@ class FlashcardStudyCard extends StatelessWidget {
                   onPressed: onAudioPressed,
                   tooltip: l10n.flashcardPlayAudioTooltip,
                   icon: Icons.volume_up_outlined,
-                  size: FlashcardStudyCardConst.actionIconSize,
+                  size: actionIconSize,
                   selected: isAudioPlaying,
                   selectedIcon: Icons.graphic_eq_rounded,
                 ),
@@ -72,13 +102,13 @@ class FlashcardStudyCard extends StatelessWidget {
                   onPressed: onStarPressed,
                   tooltip: l10n.flashcardBookmarkTooltip,
                   icon: Icons.star_border,
-                  size: FlashcardStudyCardConst.actionIconSize,
+                  size: actionIconSize,
                   selected: isStarred,
                   selectedIcon: Icons.star,
                 ),
               ],
             ),
-            const SizedBox(height: FlashcardStudyCardConst.titleGap),
+            SizedBox(height: titleGap),
             Expanded(
               child: Center(
                 child: AnimatedSwitcher(
@@ -100,9 +130,7 @@ class FlashcardStudyCard extends StatelessWidget {
                             ),
                             if (hasNote)
                               Padding(
-                                padding: const EdgeInsets.only(
-                                  top: FlashcardStudyCardConst.titleGap,
-                                ),
+                                padding: EdgeInsets.only(top: titleGap),
                                 child: LumosInlineText(
                                   normalizedNote,
                                   align: TextAlign.center,
@@ -125,12 +153,9 @@ class FlashcardStudyCard extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: FlashcardStudyCardConst.bottomGap),
+            SizedBox(height: bottomGap),
             Center(
-              child: const LumosIcon(
-                Icons.flip_to_back_rounded,
-                size: FlashcardStudyCardConst.hintIconSize,
-              ),
+              child: LumosIcon(Icons.flip_to_back_rounded, size: hintIconSize),
             ),
           ],
         ),

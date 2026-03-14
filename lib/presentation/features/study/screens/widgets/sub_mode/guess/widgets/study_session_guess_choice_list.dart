@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../../../domain/entities/study/study_models.dart';
 import '../../../../../providers/study_guess_selection_provider.dart';
+import '../../widgets/study_session_layout_metrics.dart';
 import 'study_session_guess_choice_card.dart';
 
 const double studySessionGuessChoiceGap = AppSpacing.sm;
@@ -26,6 +27,10 @@ class StudySessionGuessChoiceList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final int choiceCount = choices.length;
+    final double choiceGap = StudySessionLayoutMetrics.sectionSpacing(
+      context,
+      baseValue: studySessionGuessChoiceGap,
+    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: List<Widget>.generate(choiceCount, (int index) {
@@ -33,7 +38,7 @@ class StudySessionGuessChoiceList extends StatelessWidget {
         final bool isLastChoice = index == choiceCount - 1;
         return Padding(
           padding: EdgeInsets.only(
-            bottom: isLastChoice ? AppSpacing.none : studySessionGuessChoiceGap,
+            bottom: isLastChoice ? AppSpacing.none : choiceGap,
           ),
           child: StudySessionGuessChoiceCard(
             label: choice.label,

@@ -26,6 +26,36 @@ Future<FlashcardLearnOptionsSheetAction?> showFlashcardLearnOptionsSheet({
       context,
     ).colorScheme.surface.withValues(alpha: AppOpacity.transparent),
     builder: (BuildContext sheetContext) {
+      final double sectionSpacing = ResponsiveDimensions.compactValue(
+        context: sheetContext,
+        baseValue: FlashcardLearnOptionsSheetConst.sectionSpacing,
+        minScale: ResponsiveDimensions.compactInsetScale,
+      );
+      final double optionSpacing = ResponsiveDimensions.compactValue(
+        context: sheetContext,
+        baseValue: FlashcardLearnOptionsSheetConst.optionSpacing,
+        minScale: ResponsiveDimensions.compactInsetScale,
+      );
+      final double iconContainerSize = ResponsiveDimensions.compactValue(
+        context: sheetContext,
+        baseValue: FlashcardLearnOptionsSheetConst.iconContainerSize,
+        minScale: ResponsiveDimensions.compactLargeInsetScale,
+      );
+      final double iconSize = ResponsiveDimensions.compactValue(
+        context: sheetContext,
+        baseValue: FlashcardLearnOptionsSheetConst.iconSize,
+        minScale: ResponsiveDimensions.compactInsetScale,
+      );
+      final double rowGap = ResponsiveDimensions.compactValue(
+        context: sheetContext,
+        baseValue: AppSpacing.md,
+        minScale: ResponsiveDimensions.compactInsetScale,
+      );
+      final double subtitleGap = ResponsiveDimensions.compactValue(
+        context: sheetContext,
+        baseValue: AppSpacing.xs,
+        minScale: ResponsiveDimensions.compactInsetScale,
+      );
       final AppLocalizations l10n = AppLocalizations.of(sheetContext)!;
       return LumosBottomSheet(
         child: SingleChildScrollView(
@@ -37,16 +67,12 @@ Future<FlashcardLearnOptionsSheetAction?> showFlashcardLearnOptionsSheet({
                 l10n.flashcardLearnSheetTitle,
                 style: LumosTextStyle.titleLarge,
               ),
-              const SizedBox(
-                height: FlashcardLearnOptionsSheetConst.optionSpacing,
-              ),
+              SizedBox(height: optionSpacing),
               LumosInlineText(
                 l10n.flashcardLearnSheetSubtitle,
                 style: Theme.of(sheetContext).textTheme.bodyMedium,
               ),
-              const SizedBox(
-                height: FlashcardLearnOptionsSheetConst.sectionSpacing,
-              ),
+              SizedBox(height: sectionSpacing),
               LumosCard(
                 variant: LumosCardVariant.elevated,
                 onTap: () {
@@ -58,8 +84,8 @@ Future<FlashcardLearnOptionsSheetAction?> showFlashcardLearnOptionsSheet({
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Container(
-                      width: FlashcardLearnOptionsSheetConst.iconContainerSize,
-                      height: FlashcardLearnOptionsSheetConst.iconContainerSize,
+                      width: iconContainerSize,
+                      height: iconContainerSize,
                       decoration: BoxDecoration(
                         color: Theme.of(
                           sheetContext,
@@ -71,12 +97,12 @@ Future<FlashcardLearnOptionsSheetAction?> showFlashcardLearnOptionsSheet({
                           color: Theme.of(
                             sheetContext,
                           ).colorScheme.onSecondaryContainer,
-                          size: FlashcardLearnOptionsSheetConst.iconSize,
+                          size: iconSize,
                         ),
                         child: const LumosIcon(Icons.school_rounded),
                       ),
                     ),
-                    const SizedBox(width: AppSpacing.md),
+                    SizedBox(width: rowGap),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,7 +111,7 @@ Future<FlashcardLearnOptionsSheetAction?> showFlashcardLearnOptionsSheet({
                             l10n.flashcardLearnContinueOptionTitle,
                             style: Theme.of(sheetContext).textTheme.titleMedium,
                           ),
-                          const SizedBox(height: AppSpacing.xs),
+                          SizedBox(height: subtitleGap),
                           LumosInlineText(
                             l10n.flashcardLearnContinueOptionSubtitle,
                             style: Theme.of(sheetContext).textTheme.bodyMedium,
@@ -96,9 +122,7 @@ Future<FlashcardLearnOptionsSheetAction?> showFlashcardLearnOptionsSheet({
                   ],
                 ),
               ),
-              const SizedBox(
-                height: FlashcardLearnOptionsSheetConst.optionSpacing,
-              ),
+              SizedBox(height: optionSpacing),
               LumosCard(
                 variant: LumosCardVariant.elevated,
                 onTap: () {
@@ -108,8 +132,8 @@ Future<FlashcardLearnOptionsSheetAction?> showFlashcardLearnOptionsSheet({
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Container(
-                      width: FlashcardLearnOptionsSheetConst.iconContainerSize,
-                      height: FlashcardLearnOptionsSheetConst.iconContainerSize,
+                      width: iconContainerSize,
+                      height: iconContainerSize,
                       decoration: BoxDecoration(
                         color: Theme.of(
                           sheetContext,
@@ -121,12 +145,12 @@ Future<FlashcardLearnOptionsSheetAction?> showFlashcardLearnOptionsSheet({
                           color: Theme.of(
                             sheetContext,
                           ).colorScheme.onSecondaryContainer,
-                          size: FlashcardLearnOptionsSheetConst.iconSize,
+                          size: iconSize,
                         ),
                         child: const LumosIcon(Icons.schedule_rounded),
                       ),
                     ),
-                    const SizedBox(width: AppSpacing.md),
+                    SizedBox(width: rowGap),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,7 +159,7 @@ Future<FlashcardLearnOptionsSheetAction?> showFlashcardLearnOptionsSheet({
                             l10n.flashcardLearnReviewOptionTitle,
                             style: Theme.of(sheetContext).textTheme.titleMedium,
                           ),
-                          const SizedBox(height: AppSpacing.xs),
+                          SizedBox(height: subtitleGap),
                           LumosInlineText(
                             l10n.flashcardLearnReviewOptionSubtitle,
                             style: Theme.of(sheetContext).textTheme.bodyMedium,
@@ -146,9 +170,7 @@ Future<FlashcardLearnOptionsSheetAction?> showFlashcardLearnOptionsSheet({
                   ],
                 ),
               ),
-              const SizedBox(
-                height: FlashcardLearnOptionsSheetConst.optionSpacing,
-              ),
+              SizedBox(height: optionSpacing),
               LumosCard(
                 variant: LumosCardVariant.elevated,
                 onTap: () {
@@ -160,8 +182,8 @@ Future<FlashcardLearnOptionsSheetAction?> showFlashcardLearnOptionsSheet({
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Container(
-                      width: FlashcardLearnOptionsSheetConst.iconContainerSize,
-                      height: FlashcardLearnOptionsSheetConst.iconContainerSize,
+                      width: iconContainerSize,
+                      height: iconContainerSize,
                       decoration: BoxDecoration(
                         color: Theme.of(
                           sheetContext,
@@ -173,12 +195,12 @@ Future<FlashcardLearnOptionsSheetAction?> showFlashcardLearnOptionsSheet({
                           color: Theme.of(
                             sheetContext,
                           ).colorScheme.onErrorContainer,
-                          size: FlashcardLearnOptionsSheetConst.iconSize,
+                          size: iconSize,
                         ),
                         child: const LumosIcon(Icons.restart_alt_rounded),
                       ),
                     ),
-                    const SizedBox(width: AppSpacing.md),
+                    SizedBox(width: rowGap),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -187,7 +209,7 @@ Future<FlashcardLearnOptionsSheetAction?> showFlashcardLearnOptionsSheet({
                             l10n.flashcardLearnResetOptionTitle,
                             style: Theme.of(sheetContext).textTheme.titleMedium,
                           ),
-                          const SizedBox(height: AppSpacing.xs),
+                          SizedBox(height: subtitleGap),
                           LumosInlineText(
                             l10n.flashcardLearnResetOptionSubtitle,
                             style: Theme.of(sheetContext).textTheme.bodyMedium,

@@ -36,14 +36,24 @@ class DeckListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double leadingSize = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: DeckListTileConst.leadingSize,
+      minScale: ResponsiveDimensions.compactLargeInsetScale,
+    );
+    final double leadingIconSize = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: DeckListTileConst.leadingIconSize,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     final AppLocalizations l10n = AppLocalizations.of(context)!;
     return LumosActionListItemCard(
       title: item.name,
       subtitle: _buildSubtitle(l10n),
       onTap: onOpen,
       leading: Container(
-        width: DeckListTileConst.leadingSize,
-        height: DeckListTileConst.leadingSize,
+        width: leadingSize,
+        height: leadingSize,
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.tertiaryContainer,
           borderRadius: BorderRadii.large,
@@ -56,9 +66,9 @@ class DeckListTile extends StatelessWidget {
           data: IconThemeData(
             color: Theme.of(context).colorScheme.onTertiaryContainer,
           ),
-          child: const LumosIcon(
+          child: LumosIcon(
             Icons.style_rounded,
-            size: DeckListTileConst.leadingIconSize,
+            size: leadingIconSize,
           ),
         ),
       ),

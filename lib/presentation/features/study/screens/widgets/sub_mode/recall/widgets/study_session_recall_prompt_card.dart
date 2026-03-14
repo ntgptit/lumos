@@ -6,24 +6,13 @@ import '../../../../../../../../domain/entities/study/study_models.dart';
 import '../../../../../../../shared/widgets/lumos_widgets.dart';
 import '../../../../../providers/study_speech_playback_provider.dart';
 import '../../widgets/study_session_content_card.dart';
+import '../../widgets/study_session_layout_metrics.dart';
 
 const double _recallPromptIconSize = IconSizes.iconMedium;
 const double _recallPromptLineHeight =
     AppTypographyConst.headlineLargeLineHeight /
     AppTypographyConst.headlineLargeFontSize;
 const int _recallPromptMaxLines = 3;
-const EdgeInsetsGeometry _recallPromptCardPadding = EdgeInsets.symmetric(
-  horizontal: AppSpacing.xl,
-  vertical: AppSpacing.xl,
-);
-const EdgeInsetsGeometry _recallPromptTopIconPadding = EdgeInsets.only(
-  top: AppSpacing.lg,
-  right: AppSpacing.lg,
-);
-const EdgeInsetsGeometry _recallPromptBottomIconPadding = EdgeInsets.only(
-  right: AppSpacing.md,
-  bottom: AppSpacing.md,
-);
 
 class StudySessionRecallPromptCard extends StatelessWidget {
   const StudySessionRecallPromptCard({
@@ -44,21 +33,31 @@ class StudySessionRecallPromptCard extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colorScheme = theme.colorScheme;
     final bool isSpeechEnabled = speech.available && !playbackState.isBusy;
+    final double iconSize = StudySessionLayoutMetrics.compactIcon(
+      context,
+      baseValue: _recallPromptIconSize,
+    );
+    final EdgeInsets cardPadding = StudySessionLayoutMetrics.cardPadding(
+      context,
+      horizontal: AppSpacing.xl,
+      vertical: AppSpacing.xl,
+    );
+    final EdgeInsets topTrailingPadding =
+        StudySessionLayoutMetrics.topTrailingPadding(context);
+    final EdgeInsets bottomTrailingPadding =
+        StudySessionLayoutMetrics.bottomTrailingPadding(context);
     return StudySessionContentCard(
       variant: LumosCardVariant.filled,
-      topTrailing: const LumosIcon(
-        Icons.edit_outlined,
-        size: _recallPromptIconSize,
-      ),
-      topTrailingPadding: _recallPromptTopIconPadding,
+      topTrailing: LumosIcon(Icons.edit_outlined, size: iconSize),
+      topTrailingPadding: topTrailingPadding,
       bottomTrailing: LumosIconButton(
         icon: Icons.volume_up_rounded,
         tooltip: speech.available ? speech.speechText : null,
         onPressed: isSpeechEnabled ? onPlayPressed : null,
       ),
-      bottomTrailingPadding: _recallPromptBottomIconPadding,
+      bottomTrailingPadding: bottomTrailingPadding,
       child: Padding(
-        padding: _recallPromptCardPadding,
+        padding: cardPadding,
         child: Center(
           child: SingleChildScrollView(
             child: LumosInlineText(

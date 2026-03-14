@@ -31,9 +31,14 @@ class FolderCreateButton extends StatelessWidget {
     }
     final bool isSingleAction = actions.length == 1;
     final FolderContentSupportCreateAction singleAction = actions.first;
+    final double bottomInset = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.xxl,
+      minScale: ResponsiveDimensions.compactVerticalInsetScale,
+    );
     return Positioned(
       right: horizontalInset,
-      bottom: AppSpacing.xxl,
+      bottom: bottomInset,
       child: LumosFloatingActionButton(
         onPressed: () {
           if (isSingleAction) {

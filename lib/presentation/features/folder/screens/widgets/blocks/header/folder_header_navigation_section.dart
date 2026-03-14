@@ -93,6 +93,26 @@ class _FolderHeaderNavigationSectionState
 
   @override
   Widget build(BuildContext context) {
+    final double containerPadding = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.sm,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double rowGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.sm,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double compactGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.xs,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double metaPillWidth = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FolderHeaderNavigationSectionLayout.contextMetaPillWidth,
+      minScale: ResponsiveDimensions.compactLargeInsetScale,
+    );
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final String currentSortLabel = _buildCurrentSortLabel();
     final IconData contextMetaIcon = widget.searchQuery.isNotEmpty
@@ -106,7 +126,7 @@ class _FolderHeaderNavigationSectionState
         ? _buildSearchHint()
         : currentSortLabel;
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.sm),
+      padding: EdgeInsets.all(containerPadding),
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerHigh,
         borderRadius: BorderRadii.large,
@@ -167,9 +187,9 @@ class _FolderHeaderNavigationSectionState
                 onSelectionChanged: _onNavigationGroupChanged,
               ),
               const Spacer(),
-              const SizedBox(width: AppSpacing.sm),
+              SizedBox(width: rowGap),
               SizedBox(
-                width: FolderHeaderNavigationSectionLayout.contextMetaPillWidth,
+                width: metaPillWidth,
                 child: FolderHeaderMetaPill(
                   icon: contextMetaIcon,
                   label: contextMetaLabel,
@@ -180,7 +200,7 @@ class _FolderHeaderNavigationSectionState
               ),
             ],
           ),
-          const SizedBox(height: AppSpacing.sm),
+          SizedBox(height: rowGap),
           Row(
             children: <Widget>[
               Expanded(
@@ -192,7 +212,7 @@ class _FolderHeaderNavigationSectionState
                   clearTooltip: _buildSearchClearTooltip(),
                 ),
               ),
-              const SizedBox(width: AppSpacing.xs),
+              SizedBox(width: compactGap),
               LumosIconButton(
                 icon: Icons.sort_rounded,
                 tooltip: currentSortLabel,

@@ -67,14 +67,37 @@ class FlashcardListContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double sectionSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardContentSupportConst.sectionSpacing,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double itemSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardContentSupportConst.listItemSpacing,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double mediumGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.md,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double loadingBottomGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.sm,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double bottomSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardContentSupportConst.listBottomSpacing,
+      minScale: ResponsiveDimensions.compactVerticalInsetScale,
+    );
     final List<Widget> leadingSlivers = <Widget>[];
     if (state.inlineErrorMessage case final String message) {
       leadingSlivers.add(
         SliverToBoxAdapter(child: FlashcardErrorBanner(message: message)),
       );
-      leadingSlivers.add(
-        const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.md)),
-      );
+      leadingSlivers.add(SliverToBoxAdapter(child: SizedBox(height: mediumGap)));
     }
     if (state.hasItems) {
       leadingSlivers.add(
@@ -91,9 +114,7 @@ class FlashcardListContent extends StatelessWidget {
       leadingSlivers.add(
         SliverToBoxAdapter(
           child: Padding(
-            padding: const EdgeInsets.only(
-              top: FlashcardContentSupportConst.sectionSpacing,
-            ),
+            padding: EdgeInsets.only(top: sectionSpacing),
             child: FlashcardSetMetadataSection(
               title: title,
               totalFlashcards: state.totalElements,
@@ -106,9 +127,7 @@ class FlashcardListContent extends StatelessWidget {
       leadingSlivers.add(
         SliverToBoxAdapter(
           child: Padding(
-            padding: const EdgeInsets.only(
-              top: FlashcardContentSupportConst.sectionSpacing,
-            ),
+            padding: EdgeInsets.only(top: sectionSpacing),
             child: LumosSearchBar(
               controller: searchController,
               autoFocus: true,
@@ -125,9 +144,7 @@ class FlashcardListContent extends StatelessWidget {
       leadingSlivers.add(
         SliverToBoxAdapter(
           child: Padding(
-            padding: const EdgeInsets.only(
-              top: FlashcardContentSupportConst.sectionSpacing,
-            ),
+            padding: EdgeInsets.only(top: sectionSpacing),
             child: FlashcardStudyActionSection(actions: studyActions),
           ),
         ),
@@ -135,9 +152,7 @@ class FlashcardListContent extends StatelessWidget {
       leadingSlivers.add(
         SliverToBoxAdapter(
           child: Padding(
-            padding: const EdgeInsets.only(
-              top: FlashcardContentSupportConst.sectionSpacing,
-            ),
+            padding: EdgeInsets.only(top: sectionSpacing),
             child: FlashcardStudyProgressSection(
               title: l10n.flashcardProgressTitle,
               description: l10n.flashcardProgressDescription,
@@ -159,9 +174,7 @@ class FlashcardListContent extends StatelessWidget {
       leadingSlivers.add(
         SliverToBoxAdapter(
           child: Padding(
-            padding: const EdgeInsets.only(
-              top: FlashcardContentSupportConst.sectionSpacing,
-            ),
+            padding: EdgeInsets.only(top: sectionSpacing),
             child: FlashcardListHeader(
               title: l10n.flashcardCardSectionTitle,
               subtitle: l10n.flashcardTotalLabel(state.totalElements),
@@ -171,26 +184,25 @@ class FlashcardListContent extends StatelessWidget {
           ),
         ),
       );
-      leadingSlivers.add(
-        const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.md)),
-      );
+      leadingSlivers.add(SliverToBoxAdapter(child: SizedBox(height: mediumGap)));
     }
 
     final List<Widget> trailingSlivers = <Widget>[];
     if (state.isLoadingMore) {
       trailingSlivers.add(
-        const SliverToBoxAdapter(
+        SliverToBoxAdapter(
           child: Padding(
-            padding: EdgeInsets.only(top: AppSpacing.md, bottom: AppSpacing.sm),
-            child: Center(child: LumosLoadingIndicator()),
+            padding: EdgeInsets.only(
+              top: mediumGap,
+              bottom: loadingBottomGap,
+            ),
+            child: const Center(child: LumosLoadingIndicator()),
           ),
         ),
       );
     }
     trailingSlivers.add(
-      const SliverToBoxAdapter(
-        child: SizedBox(height: FlashcardContentSupportConst.listBottomSpacing),
-      ),
+      SliverToBoxAdapter(child: SizedBox(height: bottomSpacing)),
     );
 
     return LumosPagedSliverList(
@@ -203,9 +215,7 @@ class FlashcardListContent extends StatelessWidget {
         final bool isStarred = isStarredResolver(item);
         return Padding(
           key: ValueKey<int>(item.id),
-          padding: const EdgeInsets.only(
-            bottom: FlashcardContentSupportConst.listItemSpacing,
-          ),
+          padding: EdgeInsets.only(bottom: itemSpacing),
           child: FlashcardListCard(
             item: item,
             isStarred: isStarred,

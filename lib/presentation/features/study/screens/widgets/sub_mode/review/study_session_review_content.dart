@@ -8,6 +8,7 @@ import '../../../../../../../l10n/app_localizations.dart';
 import '../../../../../../shared/widgets/lumos_widgets.dart';
 import '../../../../providers/study_speech_playback_provider.dart';
 import '../study_session_sub_mode_const.dart';
+import '../widgets/study_session_layout_metrics.dart';
 import '../widgets/study_session_progress_row.dart';
 import 'widgets/study_session_review_card_viewport.dart';
 
@@ -88,18 +89,28 @@ class _StudySessionReviewContentState extends State<StudySessionReviewContent> {
 
   @override
   Widget build(BuildContext context) {
+    final EdgeInsets contentPadding = StudySessionLayoutMetrics.contentPadding(
+      context,
+    );
+    final EdgeInsets progressPadding = StudySessionLayoutMetrics.progressPadding(
+      context,
+    );
+    final double sectionSpacing = StudySessionLayoutMetrics.sectionSpacing(
+      context,
+      baseValue: StudySessionReviewContentConst.sectionSpacing,
+    );
     return Padding(
-      padding: StudySessionReviewContentConst.contentPadding,
+      padding: contentPadding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Padding(
-            padding: StudySessionReviewContentConst.progressPadding,
+            padding: progressPadding,
             child: StudySessionProgressRow(
               progressValue: widget.session.progress.sessionProgress,
             ),
           ),
-          const SizedBox(height: StudySessionReviewContentConst.sectionSpacing),
+          SizedBox(height: sectionSpacing),
           Expanded(
             child: StudySessionReviewCardViewport(
               session: widget.session,

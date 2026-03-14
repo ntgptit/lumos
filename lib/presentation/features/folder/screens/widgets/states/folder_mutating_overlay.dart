@@ -8,24 +8,44 @@ class FolderMutatingOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double overlayWidth = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.canvas * 2,
+      minScale: ResponsiveDimensions.compactLargeInsetScale,
+    );
+    final double overlayPadding = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.lg,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double skeletonSize = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.page,
+      minScale: ResponsiveDimensions.compactLargeInsetScale,
+    );
+    final double labelGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.md,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return Center(
       child: Container(
-        width: AppSpacing.canvas * 2,
-        padding: const EdgeInsets.all(AppSpacing.lg),
+        width: overlayWidth,
+        padding: EdgeInsets.all(overlayPadding),
         decoration: BoxDecoration(
           borderRadius: BorderRadii.large,
           color: Theme.of(context).colorScheme.surface,
         ),
-        child: const Column(
+        child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             LumosSkeletonBox(
-              width: AppSpacing.page,
-              height: AppSpacing.page,
+              width: skeletonSize,
+              height: skeletonSize,
               borderRadius: BorderRadii.large,
             ),
-            SizedBox(height: AppSpacing.md),
-            LumosSkeletonBox(height: AppSpacing.md),
+            SizedBox(height: labelGap),
+            LumosSkeletonBox(height: labelGap),
           ],
         ),
       ),

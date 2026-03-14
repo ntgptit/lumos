@@ -22,6 +22,51 @@ class FolderHeaderBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double leadingBoxSize = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.section,
+      minScale: ResponsiveDimensions.compactLargeInsetScale,
+    );
+    final double bannerPadding = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.md,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double titleGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.sm,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double rowGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.lg,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double pillGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.sm,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double blobLargeOffset = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.xxxl,
+      minScale: ResponsiveDimensions.compactLargeInsetScale,
+    );
+    final double blobLargeSize = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.canvas * 2,
+      minScale: ResponsiveDimensions.compactLargeInsetScale,
+    );
+    final double blobSmallOffset = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.xxl,
+      minScale: ResponsiveDimensions.compactLargeInsetScale,
+    );
+    final double blobSmallSize = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.canvas,
+      minScale: ResponsiveDimensions.compactLargeInsetScale,
+    );
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final String managerTitle = _buildManagerTitle();
     final String managerSubtitle = _buildManagerSubtitle();
@@ -34,8 +79,8 @@ class FolderHeaderBanner extends StatelessWidget {
     final Color secondaryPillForegroundColor =
         _buildSecondaryPillForegroundColor(colorScheme: colorScheme);
     final Widget leadingIconWidget = Container(
-      width: AppSpacing.section,
-      height: AppSpacing.section,
+      width: leadingBoxSize,
+      height: leadingBoxSize,
       decoration: BoxDecoration(
         color: colorScheme.primaryContainer,
         borderRadius: BorderRadii.medium,
@@ -61,16 +106,16 @@ class FolderHeaderBanner extends StatelessWidget {
               ],
               blobs: <LumosDecorativeBlob>[
                 LumosDecorativeBlob(
-                  top: -AppSpacing.xxxl,
-                  right: -AppSpacing.xxxl,
+                  top: -blobLargeOffset,
+                  right: -blobLargeOffset,
                   fill: colorScheme.tertiaryContainer,
-                  size: AppSpacing.canvas * 2,
+                  size: blobLargeSize,
                 ),
                 LumosDecorativeBlob(
-                  bottom: -AppSpacing.xxl,
-                  left: -AppSpacing.xxl,
+                  bottom: -blobSmallOffset,
+                  left: -blobSmallOffset,
                   fill: colorScheme.secondaryContainer,
-                  size: AppSpacing.canvas,
+                  size: blobSmallSize,
                 ),
               ],
             ),
@@ -89,25 +134,25 @@ class FolderHeaderBanner extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(AppSpacing.md),
+            padding: EdgeInsets.all(bannerPadding),
             child: Row(
               children: <Widget>[
                 leadingIconWidget,
-                const SizedBox(width: AppSpacing.lg),
+                SizedBox(width: rowGap),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       LumosText(managerTitle, style: LumosTextStyle.titleLarge),
-                      const SizedBox(height: AppSpacing.sm),
+                      SizedBox(height: titleGap),
                       LumosText(
                         managerSubtitle,
                         style: LumosTextStyle.bodySmall,
                       ),
-                      const SizedBox(height: AppSpacing.sm),
+                      SizedBox(height: titleGap),
                       Wrap(
-                        spacing: AppSpacing.sm,
-                        runSpacing: AppSpacing.sm,
+                        spacing: pillGap,
+                        runSpacing: pillGap,
                         children: <Widget>[
                           FolderHeaderMetaPill(
                             icon: Icons.home_rounded,

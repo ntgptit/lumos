@@ -8,19 +8,11 @@ import '../../../../mode/study_mode_view_model.dart';
 import '../../../../providers/study_fill_selection_provider.dart';
 import '../../../../providers/study_speech_playback_provider.dart';
 import '../widgets/study_session_progress_row.dart';
+import '../widgets/study_session_layout_metrics.dart';
 import 'widgets/study_session_fill_action_row.dart';
 import 'widgets/study_session_fill_body_panel.dart';
 import 'widgets/study_session_fill_prompt_card.dart';
 
-const EdgeInsetsGeometry _fillContentPadding = EdgeInsets.fromLTRB(
-  AppSpacing.lg,
-  AppSpacing.md,
-  AppSpacing.lg,
-  AppSpacing.xl,
-);
-const EdgeInsetsGeometry _fillProgressPadding = EdgeInsets.symmetric(
-  horizontal: AppSpacing.md,
-);
 const double _fillSectionSpacing = AppSpacing.lg;
 const double _fillActionSpacing = AppSpacing.xl;
 
@@ -58,20 +50,33 @@ class StudySessionFillContent extends StatelessWidget {
       viewModel: viewModel,
       fillSelectionState: fillSelectionState,
     );
+    final EdgeInsets contentPadding = StudySessionLayoutMetrics.contentPadding(
+      context,
+    );
+    final EdgeInsets progressPadding =
+        StudySessionLayoutMetrics.progressPadding(context);
+    final double sectionSpacing = StudySessionLayoutMetrics.sectionSpacing(
+      context,
+      baseValue: _fillSectionSpacing,
+    );
+    final double actionSpacing = StudySessionLayoutMetrics.actionSpacing(
+      context,
+      baseValue: _fillActionSpacing,
+    );
     final StudyModeActionViewModel? secondaryAction =
         contentState.secondaryAction;
     return Padding(
-      padding: _fillContentPadding,
+      padding: contentPadding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Padding(
-            padding: _fillProgressPadding,
+            padding: progressPadding,
             child: StudySessionProgressRow(
               progressValue: session.progress.sessionProgress,
             ),
           ),
-          const SizedBox(height: _fillSectionSpacing),
+          SizedBox(height: sectionSpacing),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -86,7 +91,7 @@ class StudySessionFillContent extends StatelessWidget {
                         : onPlaySpeech,
                   ),
                 ),
-                const SizedBox(height: _fillSectionSpacing),
+                SizedBox(height: sectionSpacing),
                 Expanded(
                   child: StudySessionFillBodyPanel(
                     viewModel: viewModel,
@@ -99,7 +104,7 @@ class StudySessionFillContent extends StatelessWidget {
                   ),
                 ),
                 if (contentState.showsBottomActions) ...<Widget>[
-                  const SizedBox(height: _fillActionSpacing),
+                  SizedBox(height: actionSpacing),
                   StudySessionFillActionRow(
                     actions: const <StudyModeActionViewModel>[],
                     secondaryLabel: secondaryAction?.label,

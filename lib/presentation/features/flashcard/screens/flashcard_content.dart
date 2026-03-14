@@ -82,6 +82,11 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
   @override
   Widget build(BuildContext context) {
     _syncSearchController();
+    final double screenVerticalPadding = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardContentSupportConst.screenVerticalPadding,
+      minScale: ResponsiveDimensions.compactVerticalInsetScale,
+    );
     final FlashcardState state = widget.state;
     final AppLocalizations l10n = AppLocalizations.of(context)!;
     final String title = _displayTitle(
@@ -128,8 +133,7 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
             RefreshIndicator(
               onRefresh: _controller.refresh,
               child: LumosScreenFrame(
-                verticalPadding:
-                    FlashcardContentSupportConst.screenVerticalPadding,
+                verticalPadding: screenVerticalPadding,
                 child: FlashcardListContent(
                   scrollController: _scrollController,
                   searchController: _searchController,

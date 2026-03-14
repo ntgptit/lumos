@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../../../domain/entities/study/study_models.dart';
 import '../../../../../providers/study_match_selection_provider.dart';
+import '../../widgets/study_session_layout_metrics.dart';
 import 'study_session_match_pair_button.dart';
 
 const double _matchColumnGap = AppSpacing.md;
@@ -32,13 +33,25 @@ class StudySessionMatchPairRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool isLeftMatched = selectionState.isLeftMatched(leftPair.leftId);
     final bool isRightMatched = selectionState.isRightMatched(rightPair.rightId);
+    final double columnGap = StudySessionLayoutMetrics.sectionSpacing(
+      context,
+      baseValue: _matchColumnGap,
+    );
+    final double minHeight = StudySessionLayoutMetrics.compactHeight(
+      context,
+      baseValue: _matchCardMinHeight,
+    );
+    final double maxHeight = StudySessionLayoutMetrics.compactHeight(
+      context,
+      baseValue: _matchCardMaxHeight,
+      minScale: ResponsiveDimensions.compactLargeInsetScale,
+    );
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        final double columnWidth =
-            (constraints.maxWidth - _matchColumnGap) / 2;
+        final double columnWidth = (constraints.maxWidth - columnGap) / 2;
         final double resolvedRowHeight = math.min(
-          _matchCardMaxHeight,
-          math.max(_matchCardMinHeight, columnWidth * _matchCardHeightFactor),
+          maxHeight,
+          math.max(minHeight, columnWidth * _matchCardHeightFactor),
         );
         return SizedBox(
           height: resolvedRowHeight,
@@ -64,7 +77,7 @@ class StudySessionMatchPairRow extends StatelessWidget {
                   onPressed: () => onSelectLeft(leftPair.leftId),
                 ),
               ),
-              const SizedBox(width: _matchColumnGap),
+              SizedBox(width: columnGap),
               Expanded(
                 child: StudySessionMatchPairButton(
                   label: rightPair.rightLabel,

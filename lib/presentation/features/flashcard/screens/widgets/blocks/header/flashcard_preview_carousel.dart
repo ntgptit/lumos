@@ -44,6 +44,51 @@ class FlashcardPreviewCarousel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
+    final double carouselHeight = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardPreviewCarouselConst.carouselHeight,
+      minScale: ResponsiveDimensions.compactLargeInsetScale,
+    );
+    final double titleHorizontalPadding = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardPreviewCarouselConst.titleHorizontalPadding,
+      minScale: ResponsiveDimensions.compactLargeInsetScale,
+    );
+    final double titleVerticalPadding = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardPreviewCarouselConst.titleVerticalPadding,
+      minScale: ResponsiveDimensions.compactLargeInsetScale,
+    );
+    final double expandButtonInset = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardPreviewCarouselConst.expandButtonInset,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double expandIconSize = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardPreviewCarouselConst.expandIconSize,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double frontTextFontSize = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardPreviewCarouselConst.frontTextFontSize,
+      minScale: ResponsiveDimensions.compactLargeInsetScale,
+    );
+    final double indicatorGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.sm,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double dotSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardPreviewCarouselConst.dotSpacing,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double dotSize = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardPreviewCarouselConst.dotSize,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     final int dotCount = _dotCount();
     final int safePreviewIndex = _safePreviewIndex(dotCount: dotCount);
     return RepaintBoundary(
@@ -51,7 +96,7 @@ class FlashcardPreviewCarousel extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           SizedBox(
-            height: FlashcardPreviewCarouselConst.carouselHeight,
+            height: carouselHeight,
             child: Listener(
               onPointerSignal: (PointerSignalEvent event) {
                 if (event is! PointerScrollEvent) {
@@ -91,11 +136,9 @@ class FlashcardPreviewCarousel extends StatelessWidget {
                           children: <Widget>[
                             Center(
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: FlashcardPreviewCarouselConst
-                                      .titleHorizontalPadding,
-                                  vertical: FlashcardPreviewCarouselConst
-                                      .titleVerticalPadding,
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: titleHorizontalPadding,
+                                  vertical: titleVerticalPadding,
                                 ),
                                 child: LumosInlineText(
                                   title,
@@ -104,8 +147,7 @@ class FlashcardPreviewCarousel extends StatelessWidget {
                                   overflow: TextOverflow.ellipsis,
                                   style: Theme.of(context).textTheme.titleMedium
                                       ?.copyWith(
-                                        fontSize: FlashcardPreviewCarouselConst
-                                            .frontTextFontSize,
+                                        fontSize: frontTextFontSize,
                                         height: FlashcardPreviewCarouselConst
                                             .frontTextHeight,
                                         letterSpacing: AppTypographyConst
@@ -117,16 +159,13 @@ class FlashcardPreviewCarousel extends StatelessWidget {
                               ),
                             ),
                             Positioned(
-                              right: FlashcardPreviewCarouselConst
-                                  .expandButtonInset,
-                              bottom: FlashcardPreviewCarouselConst
-                                  .expandButtonInset,
+                              right: expandButtonInset,
+                              bottom: expandButtonInset,
                               child: LumosIconButton(
                                 onPressed: () => onExpandPressed(index),
                                 tooltip: l10n.flashcardExpandPreviewTooltip,
                                 icon: Icons.fullscreen_rounded,
-                                size: FlashcardPreviewCarouselConst
-                                    .expandIconSize,
+                                size: expandIconSize,
                                 variant: LumosIconButtonVariant.tonal,
                               ),
                             ),
@@ -139,23 +178,18 @@ class FlashcardPreviewCarousel extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: AppSpacing.sm),
+          SizedBox(height: indicatorGap),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: List<Widget>.generate(dotCount, (int index) {
               final bool isActive = index == safePreviewIndex;
               final ColorScheme colorScheme = Theme.of(context).colorScheme;
               return Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: FlashcardPreviewCarouselConst.dotSpacing,
-                ),
+                padding: EdgeInsets.symmetric(horizontal: dotSpacing),
                 child: SizedBox(
-                  width:
-                      FlashcardPreviewCarouselConst.dotSize *
-                      FlashcardPreviewCarouselConst.activeDotScale,
+                  width: dotSize * FlashcardPreviewCarouselConst.activeDotScale,
                   height:
-                      FlashcardPreviewCarouselConst.dotSize *
-                      FlashcardPreviewCarouselConst.activeDotScale,
+                      dotSize * FlashcardPreviewCarouselConst.activeDotScale,
                   child: Center(
                     child: AnimatedScale(
                       duration: MotionDurations.animationFast,
@@ -163,8 +197,8 @@ class FlashcardPreviewCarousel extends StatelessWidget {
                           ? FlashcardPreviewCarouselConst.activeDotScale
                           : WidgetRatios.full,
                       child: Container(
-                        width: FlashcardPreviewCarouselConst.dotSize,
-                        height: FlashcardPreviewCarouselConst.dotSize,
+                        width: dotSize,
+                        height: dotSize,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: isActive

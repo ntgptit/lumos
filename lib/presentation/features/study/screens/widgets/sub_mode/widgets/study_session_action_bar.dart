@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../mode/study_mode_action_view_model.dart';
 import 'study_session_action_button.dart';
+import 'study_session_layout_metrics.dart';
 
 class StudySessionActionBar extends StatelessWidget {
   const StudySessionActionBar({
@@ -16,9 +17,13 @@ class StudySessionActionBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double actionGap = StudySessionLayoutMetrics.sectionSpacing(
+      context,
+      baseValue: AppSpacing.sm,
+    );
     return Wrap(
-      spacing: AppSpacing.sm,
-      runSpacing: AppSpacing.sm,
+      spacing: actionGap,
+      runSpacing: actionGap,
       children: actions
           .map(
             (StudyModeActionViewModel action) => StudySessionActionButton(
