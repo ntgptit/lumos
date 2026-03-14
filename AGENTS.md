@@ -33,10 +33,12 @@ Use Flutter guidance when the task touches:
 Load these in order:
 
 1. `C:\Users\ntgpt\.codex\skills\flutter-app-development\SKILL.md`
-2. the mode-specific Flutter skill if the task clearly fits one:
+2. if the task is implementing or reviewing Flutter UI from provided wireframe or mockup images, also load:
+   - `C:\Users\ntgpt\.codex\skills\flutter-wireframe-to-ui\SKILL.md`
+3. the mode-specific Flutter skill if the task clearly fits one:
    - `C:\Users\ntgpt\.codex\skills\flutter-full-app\SKILL.md`
    - `C:\Users\ntgpt\.codex\skills\flutter-frontend-client\SKILL.md`
-3. `C:\Users\ntgpt\.codex\flutter_architecture_checklist.md`
+4. `C:\Users\ntgpt\.codex\flutter_architecture_checklist.md`
 
 Repo-specific rules for Flutter:
 
@@ -45,6 +47,28 @@ Repo-specific rules for Flutter:
 - `retrofit + dio` is required for remote HTTP integration.
 - `pretty_dio_logger` is preferred for debug or personal-app development only.
 - `lib/common/widgets` must stay render-only.
+- For wireframe-driven UI work, AI must analyze the wireframe first and write a UI Contract before any code.
+- For wireframe-driven UI work, AI must convert the wireframe into a UI Section Table before writing hierarchy or code.
+- For wireframe-driven UI work, the UI Section Table must start with these columns: `Section`, `Position`, `Responsibility`, `Data Source`.
+- For wireframe-driven UI work, AI must analyze all interactions first, split Frontend versus Backend responsibility, explain why each interaction belongs to FE or BE, and identify logic that must not be placed in Flutter UI.
+- For wireframe-driven UI work, AI must write an Interaction Contract table with: `Interaction`, `FE Responsibility`, `BE Responsibility`, `Reason`.
+- For wireframe-driven UI work, AI must classify responsibilities into `Presentation`, `Application`, `Domain`, and `Infrastructure` before code generation.
+- For wireframe-driven UI work, AI must define API contracts before code generation.
+- For wireframe-driven UI work, AI must describe frontend ViewModel state binding before code generation.
+- For wireframe-driven UI work, AI must write an implementation plan for backend (`Controller`, `Service`, `Repository`) and frontend (`Screen`, `Widgets`, `ViewModel`) before code generation.
+- For wireframe-driven UI work, AI must preserve the architecture flow `Flutter UI -> ViewModel -> Repository -> API -> Backend service`.
+- For wireframe-driven UI work, AI must write the Widget Tree first before implementing code.
+- For wireframe-driven UI work, the Widget Tree order must match the wireframe exactly.
+- For wireframe-driven UI work, after generating the Widget Tree AI must validate it against the wireframe: compare it, confirm all sections exist, confirm order is identical, and confirm no section is missing.
+- For wireframe-driven UI work, AI must separate UI behavior by section and identify how sections react to each other before implementation.
+- For wireframe-driven UI work, AI must not redesign the layout, must not merge UI sections, must not reorder components, and must follow the wireframe layout exactly.
+- For wireframe-driven UI work, AI must use this UI validation checklist: `[ ] All wireframe sections implemented`, `[ ] Section order preserved`, `[ ] No layout redesign`, `[ ] No missing components`.
+- For wireframe-driven UI work, mapping to existing Shared Widget(s) is mandatory before creating any new widget.
+- Do not create a new Flutter widget by default if an existing Shared Widget can be adapted.
+- Shared widget prefixes may differ, but AI must explicitly look for existing equivalents of `AppScaffold`, `SectionContainer`, `PrimaryButton`, `SecondaryButton`, `AppTextField`, `AppDropdown`, `DataTableView`, `AppCard`, and `AppSpacing` before building custom UI pieces.
+- For wireframe-driven UI work, spacing must follow centralized design-common tokens and existing spacing helpers from the Flutter app architecture, not ad hoc `SizedBox` or `EdgeInsets` literals.
+- For wireframe-driven UI work, AI must prevent layout shift across loading, empty, error, validation, and interaction states by keeping the page shell and major regions structurally stable.
+- For wireframe-driven UI work, AI must follow the app's existing Flutter file structure strictly and place files only in the correct layer and feature folders.
 - Do not use `setState` as the main architecture.
 - Do not use `else`.
 - Use Material 3 theme, density, and component behavior.

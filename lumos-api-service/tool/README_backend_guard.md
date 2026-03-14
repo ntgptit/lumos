@@ -5,6 +5,7 @@
 ```bash
 python tool/verify_backend_checklists.py
 python tool/verify_backend_checklists.py --strict
+python tool/verify_backend_checklists.py --only=i18n --strict
 ```
 
 ## Output
@@ -53,8 +54,20 @@ python tool/verify_backend_checklists.py --strict
 - `JAVADOC_REQUIRED_FOR_CONTROLLER_AND_ENDPOINTS`
 - `JAVADOC_REQUIRED_FOR_SERVICE_METHODS`
 - `IF_STATEMENT_REQUIRES_PRECEDING_COMMENT`
+- `THROW_STATEMENT_REQUIRES_PRECEDING_COMMENT`
+- `FOR_STATEMENT_REQUIRES_PRECEDING_COMMENT`
+- `STREAM_CALL_REQUIRES_PRECEDING_COMMENT`
+- `RETURN_STATEMENT_REQUIRES_PRECEDING_COMMENT`
+- `EXCEPTION_MESSAGE_MUST_USE_I18N_KEY`
+- `ERROR_MESSAGE_KEYS_MUST_EXIST_IN_MESSAGE_BUNDLES`
+
+Comment-intent rules above are enforced for production behavior code under `src/main/java/**` in service, mode, security, and controller packages. The purpose is to explain business or behavioral intent, not to force synthetic comments into tests or thin persistence glue.
+
+Backend i18n rules above target user-facing error paths. Hardcoded natural-language text in exception or message-source resolution paths is forbidden; use `ErrorMessageKeys` plus `messages*.properties`. Purely technical invariant text may be allowed only when a nearby comment carries the marker `backend-guard: allow-technical-literal` and explains why the literal is not client-facing.
 
 ## Notes
 
 - Guard is regex/static-scan based (fail-fast, no AST dependency).
 - `--strict` will fail build on warnings.
+- `--only=i18n --strict` is the recommended backend localization gate when you want to block hardcoded user-facing text and missing message bundle keys without failing on unrelated style warnings.
+- Deprecated Apache Commons Lang3 APIs such as `StringUtils.equals(...)`, `StringUtils.equalsIgnoreCase(...)`, and `StringUtils.compareIgnoreCase(...)` should not be used. Prefer `Strings.CS.equals(...)`, `Strings.CI.equals(...)`, `Strings.CI.compare(...)`, or other non-deprecated utilities that match the intent.

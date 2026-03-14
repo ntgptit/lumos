@@ -4,11 +4,15 @@ import 'package:lumos/core/themes/foundation/app_spacing.dart';
 import 'app_breakpoint_tokens.dart';
 
 abstract final class ResponsiveDimensions {
-  static const double baseDesignWidth = 390.0;
+  static const double baseDesignWidth = 430.0;
   static const double minScaleFactor = 0.9;
   static const double maxScaleFactor = 1.2;
   static const double minPercentage = 0.0;
   static const double maxPercentage = 1.0;
+  static const double compactOuterInsetScale = 0.85;
+  static const double compactInsetScale = 0.84;
+  static const double compactLargeInsetScale = 0.82;
+  static const double compactVerticalInsetScale = 0.75;
 
   static double adaptive({
     required BuildContext context,
@@ -31,6 +35,37 @@ abstract final class ResponsiveDimensions {
     return EdgeInsets.symmetric(
       horizontal: adaptive(context: context, baseValue: AppSpacing.lg),
       vertical: adaptive(context: context, baseValue: AppSpacing.md),
+    );
+  }
+
+  static double compactValue({
+    required BuildContext context,
+    required double baseValue,
+    double minScale = minScaleFactor,
+  }) {
+    return adaptive(
+      context: context,
+      baseValue: baseValue,
+      minScale: minScale,
+      maxScale: maxPercentage,
+    );
+  }
+
+  static EdgeInsets compactInsets({
+    required BuildContext context,
+    required EdgeInsets baseInsets,
+    double minScale = compactInsetScale,
+  }) {
+    final double scale = compactValue(
+      context: context,
+      baseValue: 1,
+      minScale: minScale,
+    );
+    return EdgeInsets.fromLTRB(
+      baseInsets.left * scale,
+      baseInsets.top * scale,
+      baseInsets.right * scale,
+      baseInsets.bottom * scale,
     );
   }
 

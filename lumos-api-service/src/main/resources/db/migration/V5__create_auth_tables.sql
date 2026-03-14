@@ -1,0 +1,25 @@
+CREATE TABLE user_accounts (
+    id BIGSERIAL PRIMARY KEY,
+    username VARCHAR(40) NOT NULL UNIQUE,
+    email VARCHAR(120) NOT NULL UNIQUE,
+    password_hash VARCHAR(240) NOT NULL,
+    account_status VARCHAR(20) NOT NULL,
+    deleted_at TIMESTAMP WITH TIME ZONE NULL,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    version BIGINT NOT NULL DEFAULT 0
+);
+
+CREATE TABLE refresh_tokens (
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT NOT NULL REFERENCES user_accounts (id),
+    token_hash VARCHAR(128) NOT NULL UNIQUE,
+    token_status VARCHAR(20) NOT NULL,
+    expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    revoked_at TIMESTAMP WITH TIME ZONE NULL,
+    device_label VARCHAR(120) NULL,
+    deleted_at TIMESTAMP WITH TIME ZONE NULL,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    version BIGINT NOT NULL DEFAULT 0
+);

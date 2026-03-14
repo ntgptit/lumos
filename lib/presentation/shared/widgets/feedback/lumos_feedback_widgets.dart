@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../core/themes/extensions/theme_extensions.dart';
 import '../../../../core/themes/semantic/app_color_tokens.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../buttons/lumos_buttons.dart';
 import '../lumos_models.dart';
 import '../typography/lumos_text.dart';
@@ -82,6 +83,7 @@ class LumosCelebration extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     final AppColorTokens appColors = context.appColors;
     if (!isActive) {
       return const SizedBox.shrink();
@@ -109,7 +111,7 @@ class LumosCelebration extends StatelessWidget {
           ),
           const SizedBox(width: AppSpacing.sm),
           Text(
-            'Great job!',
+            l10n.feedbackGreatJob,
             style: context.textTheme.titleMedium.withResolvedColor(
               appColors.onSuccessContainer,
             ),
@@ -150,25 +152,26 @@ class LumosResultSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         LumosText(
-          '$correctCount / $totalCount correct',
+          l10n.feedbackResultSummaryCorrect(correctCount, totalCount),
           style: LumosTextStyle.headlineSmall,
           align: TextAlign.center,
         ),
         const SizedBox(height: AppSpacing.md),
         LumosText(
-          'XP earned: $xpEarned',
+          l10n.feedbackResultSummaryXpEarned(xpEarned),
           style: LumosTextStyle.bodyLarge,
           align: TextAlign.center,
         ),
-        ..._buildStreakBonus(),
+        ..._buildStreakBonus(l10n),
         ..._buildWeakWords(),
         const SizedBox(height: AppSpacing.xxl),
         LumosPrimaryButton(
-          label: 'Continue',
+          label: l10n.commonContinue,
           onPressed: onContinue,
           expanded: true,
         ),
@@ -176,14 +179,14 @@ class LumosResultSummary extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildStreakBonus() {
+  List<Widget> _buildStreakBonus(AppLocalizations l10n) {
     if (streakBonus == null) {
       return const <Widget>[];
     }
     return <Widget>[
       const SizedBox(height: AppSpacing.sm),
       LumosText(
-        'Streak bonus: +$streakBonus XP',
+        l10n.feedbackResultSummaryStreakBonus(streakBonus!),
         style: LumosTextStyle.labelLarge,
         align: TextAlign.center,
       ),

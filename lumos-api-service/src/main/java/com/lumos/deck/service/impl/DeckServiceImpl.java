@@ -58,6 +58,7 @@ public class DeckServiceImpl implements DeckService {
                 normalizedDescription,
                 DeckConstants.FLASHCARD_COUNT_DEFAULT);
         final var savedDeck = this.deckRepository.save(deck);
+        // Return the freshly created deck DTO after persistence has assigned its canonical state.
         return this.deckMapper.toDeckResponse(savedDeck);
     }
 
@@ -80,6 +81,7 @@ public class DeckServiceImpl implements DeckService {
 
         deck.setName(normalizedName);
         deck.setDescription(normalizedDescription);
+        // Return the updated deck DTO so the client sees normalized values from the managed entity.
         return this.deckMapper.toDeckResponse(deck);
     }
 
@@ -113,10 +115,13 @@ public class DeckServiceImpl implements DeckService {
         final var sortedPageable = DeckSpecifications.toSortedPageable(pageable, searchRequest.sortBy(),
                 searchRequest.sortType());
         final var page = this.deckRepository.findAll(specification, sortedPageable);
+        
+        // Convert page entities to API DTOs before returning them to the folder detail screen.
         return page.getContent().stream().map(this.deckMapper::toDeckResponse).toList();
     }
 
     private Folder findActiveFolder(Long folderId) {
+        // Return the active folder or fail so deck operations never run against deleted or missing folders.
         return this.folderRepository.findByIdAndDeletedAtIsNull(folderId)
                 .orElseThrow(() -> new FolderNotFoundException(folderId));
     }
@@ -127,8 +132,10 @@ public class DeckServiceImpl implements DeckService {
         final var deckFolderId = deck.getFolder().getId();
         // Ensure deck belongs to the requested folder scope.
         if (deckFolderId != null && folderId != null && deckFolderId.longValue() == folderId.longValue()) {
+            // Return the deck only when the nested folder path matches the deck ownership.
             return deck;
         }
+        // Hide decks outside the requested folder scope so callers cannot probe foreign deck ids.
         throw new DeckNotFoundException(deckId);
     }
 
@@ -136,8 +143,10 @@ public class DeckServiceImpl implements DeckService {
         final var hasChildFolders = this.folderRepository.existsByParentIdAndDeletedAtIsNull(folderId);
         // Deck creation is allowed only in leaf folders without subfolders.
         if (!hasChildFolders) {
+            // Return without error because the folder is a valid leaf for deck creation.
             return;
         }
+        // Prevent decks from being created in non-leaf folders because folders cannot mix decks and subfolders.
         throw new DeckParentHasSubfoldersException(folderId);
     }
 
@@ -145,16 +154,20 @@ public class DeckServiceImpl implements DeckService {
         final var exists = this.deckRepository.existsActiveNameByFolderId(folderId, deckName, excludeDeckId);
         // Reject duplicate deck name in the same folder scope.
         if (!exists) {
+            // Return without error because the folder does not yet contain this deck name.
             return;
         }
+        // Reject duplicate deck names inside the same folder to keep the deck list unambiguous.
         throw new DeckNameConflictException(deckName);
     }
 
     private String normalizeDescription(String description) {
         // Fallback to empty description when value is absent.
         if (description == null) {
+            // Return the shared empty-description token so deck responses stay null-safe.
             return DeckConstants.EMPTY_DESCRIPTION;
         }
+        // Return the trimmed description so storage does not preserve accidental outer whitespace.
         return StringUtils.trim(description);
     }
 }

@@ -15,6 +15,7 @@ public class FolderMapperSpringAdapter implements FolderMapper {
     public FolderResponse toFolderResponse(Folder folder) {
         final var parentId = resolveParentId(folder);
         final var audit = this.toAuditMetadata(folder);
+        
         return new FolderResponse(
                 folder.getId(),
                 folder.getName(),
@@ -35,6 +36,7 @@ public class FolderMapperSpringAdapter implements FolderMapper {
         folder.setColorHex(colorHex);
         folder.setParent(parent);
         folder.setDepth(depth);
+        
         return folder;
     }
 
@@ -42,8 +44,10 @@ public class FolderMapperSpringAdapter implements FolderMapper {
         final var parent = folder.getParent();
         // Parent id is absent when folder belongs to root.
         if (parent == null) {
+            
             return null;
         }
+        
         return parent.getId();
     }
 }

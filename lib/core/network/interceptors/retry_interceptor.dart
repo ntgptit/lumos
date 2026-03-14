@@ -2,11 +2,18 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 
+import '../../utils/string_utils.dart';
+
 abstract final class RetryInterceptorConst {
   RetryInterceptorConst._();
 
   static const String retryAttemptKey = 'retry_attempt';
   static const String bypassRetryKey = 'bypass_retry';
+  static const Set<String> safeRetryMethods = <String>{
+    'GET',
+    'HEAD',
+    'OPTIONS',
+  };
   static const int defaultMaxRetries = 3;
   static const int maxRetryLimit = 5;
   static const int baseDelayMs = 300;
@@ -79,6 +86,9 @@ class RetryInterceptor extends Interceptor {
   }
 
   bool _canRetry({required DioException error}) {
+    if (!_isRetryableMethod(error.requestOptions)) {
+      return false;
+    }
     if (error.type == DioExceptionType.connectionTimeout) {
       return true;
     }
@@ -99,6 +109,11 @@ class RetryInterceptor extends Interceptor {
       return false;
     }
     return statusCode >= 500;
+  }
+
+  bool _isRetryableMethod(RequestOptions requestOptions) {
+    final String method = StringUtils.normalizeUpper(requestOptions.method);
+    return RetryInterceptorConst.safeRetryMethods.contains(method);
   }
 
   int _readAttempt(RequestOptions requestOptions) {

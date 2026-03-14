@@ -234,6 +234,20 @@
   "flashcardMoreOptionsComingSoonToast": "Các tùy chọn bổ sung sẽ sớm có.",
   "flashcardStudyUnavailableToast": "Không có thẻ để học.",
   "flashcardStudyCompletedToast": "Đã hoàn thành phiên học.",
+  "flashcardLearnSheetTitle": "Chọn cách học",
+  "flashcardLearnSheetSubtitle": "Chọn phiên học bạn muốn bắt đầu cho bộ thẻ này.",
+  "flashcardLearnContinueOptionTitle": "Học tiếp từ chưa học/chưa pass",
+  "flashcardLearnContinueOptionSubtitle": "Học các từ vựng còn mới hoặc chưa vượt qua.",
+  "flashcardLearnReviewOptionTitle": "Review từ đến hạn SRS",
+  "flashcardLearnReviewOptionSubtitle": "Ôn tập các từ vựng đã đến hạn theo lịch SRS.",
+  "flashcardLearnResetOptionTitle": "Reset chế độ học",
+  "flashcardLearnResetOptionSubtitle": "Xóa tiến trình học của bộ thẻ này để bắt đầu lại.",
+  "flashcardLearnContinueUnavailableToast": "Hiện không có từ mới hoặc từ chưa pass để học.",
+  "flashcardLearnReviewUnavailableToast": "Hiện không có từ vựng nào đến hạn review.",
+  "flashcardLearnResetConfirmTitle": "Reset tiến trình học?",
+  "flashcardLearnResetConfirmMessage": "Thao tác này sẽ reset toàn bộ tiến trình học của bộ thẻ hiện tại.",
+  "flashcardLearnResetConfirmAction": "Reset tiến trình",
+  "flashcardLearnResetSuccessToast": "Đã reset tiến trình học.",
   "flashcardCloseTooltip": "Đóng màn hình học",
   "flashcardPreviousButton": "Trước",
   "flashcardNextButton": "Tiếp",
@@ -273,11 +287,271 @@
   "homeLibrarySubtitle": "Bộ thẻ, bài học và gói học đã tuyển chọn của bạn.",
   "homeProgressSubtitle": "Theo dõi chuỗi ngày, xu hướng XP và kỹ năng còn yếu.",
   "homeProfileSubtitle": "Quản lý mục tiêu và tùy chọn học tập của bạn.",
+  "profileAccountSectionTitle": "Tài khoản",
+  "profileAccountSectionSubtitle": "Xem lại thông tin nhận diện và trạng thái của tài khoản đang đăng nhập.",
   "profileThemeSectionTitle": "Giao diện",
   "profileThemeSectionSubtitle": "Chọn cách hiển thị chủ đề của ứng dụng.",
   "profileThemeSystem": "Theo hệ thống",
   "profileThemeLight": "Sáng",
   "profileThemeDark": "Tối",
   "profileThemeToggleToLight": "Chuyển nhanh sang chế độ sáng",
-  "profileThemeToggleToDark": "Chuyển nhanh sang chế độ tối"
+  "profileThemeToggleToDark": "Chuyển nhanh sang chế độ tối",
+  "commonLogout": "Đăng xuất",
+  "commonContinue": "Tiếp tục",
+  "commonNext": "Tiếp theo",
+  "commonSubmit": "Gửi",
+  "commonCheck": "Kiểm tra",
+  "commonReplay": "Phát lại",
+  "authTitle": "Lumos",
+  "authSubtitle": "Xác thực trước, sau đó tiếp tục học theo trạng thái chuẩn từ backend.",
+  "authLoginTab": "Đăng nhập",
+  "authRegisterTab": "Đăng ký",
+  "authSignInAction": "Đăng nhập",
+  "authCreateAccountAction": "Tạo tài khoản",
+  "authUsernameLabel": "Tên người dùng",
+  "authEmailLabel": "Email",
+  "authPasswordLabel": "Mật khẩu",
+  "authUsernameOrEmailLabel": "Tên người dùng hoặc email",
+  "authShowPasswordTooltip": "Hiện mật khẩu",
+  "authHidePasswordTooltip": "Ẩn mật khẩu",
+  "profileSpeechSectionTitle": "Tùy chọn giọng đọc",
+  "profileSpeechSectionSubtitle": "Chọn giọng đọc mặc định cho thiết bị này và nghe thử trước khi vào chế độ học.",
+  "profileSpeechEnabledLabel": "Bật giọng đọc tiếng Hàn",
+  "profileSpeechAutoPlayLabel": "Tự phát mục hiện tại",
+  "profileSpeechAdapterLabel": "Bộ máy đọc",
+  "profileSpeechAdapterFlutterTtsLabel": "TTS thiết bị (Flutter TTS)",
+  "profileSpeechVoiceLabel": "Giọng đọc",
+  "profileSpeechVoiceDefaultLabel": "Giọng mặc định của thiết bị",
+  "profileSpeechSpeedLabel": "Tốc độ",
+  "profileSpeechPitchLabel": "Độ trầm bổng",
+  "profileSpeechPreviewTitle": "Nghe thử giọng đọc",
+  "profileSpeechPreviewSubtitle": "Chỉnh nội dung mẫu bên dưới rồi nghe thử với giọng đọc, tốc độ và độ trầm bổng hiện tại.",
+  "profileSpeechPreviewTextLabel": "Nội dung nghe thử",
+  "profileSpeechPreviewPlayLabel": "Nghe thử",
+  "profileSpeechPreviewStopLabel": "Dừng",
+  "profileSpeechPreviewDefaultText": "안녕하세요. 이 문장은 현재 음성과 속도, 음높이를 테스트하기 위한 예시입니다.",
+  "profileSpeechPreviewPlaybackError": "Thiết bị không thể phát đoạn nghe thử.",
+  "profileStudySectionTitle": "Tùy chọn phiên học",
+  "profileStudySectionSubtitle": "Thiết lập số thẻ mới mà backend được phép nạp cho mỗi phiên FIRST_LEARNING.",
+  "profileStudyFirstLearningLimitLabel": "Số thẻ mới mỗi phiên FIRST_LEARNING",
+  "profileStudyFirstLearningLimitValue": "{count} thẻ",
+  "@profileStudyFirstLearningLimitValue": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profileStudyReviewHint": "Phiên REVIEW luôn lấy toàn bộ thẻ đã đến hạn.",
+  "studyProgressMomentumTitle": "Nhịp độ học tập",
+  "studyProgressMomentumSummary": "Đến hạn {dueCount} | Quá hạn {overdueCount} | Leo thang {escalationLevel}",
+  "@studyProgressMomentumSummary": {
+    "placeholders": {
+      "dueCount": {
+        "type": "int"
+      },
+      "overdueCount": {
+        "type": "int"
+      },
+      "escalationLevel": {}
+    }
+  },
+  "studyProgressRecommendedReviewTitle": "Ôn tập được đề xuất",
+  "studyProgressRecommendedReviewSummary": "{deckName} · {dueCount} thẻ đến hạn",
+  "@studyProgressRecommendedReviewSummary": {
+    "placeholders": {
+      "deckName": {},
+      "dueCount": {
+        "type": "int"
+      }
+    }
+  },
+  "studyProgressStartReviewAction": "Bắt đầu ôn tập",
+  "studyProgressBoxDistributionTitle": "Phân bố 7 hộp",
+  "studyProgressBoxLabel": "Hộp {boxIndex}",
+  "@studyProgressBoxLabel": {
+    "placeholders": {
+      "boxIndex": {
+        "type": "int"
+      }
+    }
+  },
+  "studyMatchCheckAction": "Kiểm tra",
+  "studyMatchCompletedItemLabel": "Đã ghép · {label}",
+  "@studyMatchCompletedItemLabel": {
+    "placeholders": {
+      "label": {}
+    }
+  },
+  "studySpeechPanelTitle": "Chuyển văn bản thành giọng nói · {locale}",
+  "@studySpeechPanelTitle": {
+    "placeholders": {
+      "locale": {}
+    }
+  },
+  "studySpeechPanelVoiceSummary": "Giọng: {voice} · Tốc độ: {speed}x",
+  "@studySpeechPanelVoiceSummary": {
+    "placeholders": {
+      "voice": {},
+      "speed": {}
+    }
+  },
+  "studySpeechPlayAction": "Nghe",
+  "studySpeechPlayingAction": "Đang phát",
+  "studySpeechReplayAction": "Phát lại",
+  "studyReviewFirstCardToast": "Đây là thẻ đầu tiên.",
+  "studyResetCurrentModeAction": "Đặt lại chế độ hiện tại",
+  "studyResetCurrentModeTitle": "Đặt lại chế độ hiện tại?",
+  "studyResetCurrentModeMessage": "Thao tác này sẽ xóa toàn bộ tiến độ trong chế độ học hiện tại và bắt đầu lại từ mục đầu tiên.",
+  "studyResetCurrentModeConfirm": "Đặt lại chế độ",
+  "deckEditTooltip": "Sửa deck",
+  "deckDeleteTooltip": "Xóa deck",
+  "flashcardAgainAction": "Học lại",
+  "flashcardKnownAction": "Đã biết",
+  "exerciseMatchPairsTitle": "Ghép cặp",
+  "exerciseCompletedLabel": "Hoàn thành",
+  "exerciseSubmitMatchesLabel": "Gửi cặp ghép",
+  "exerciseReorderWordsTitle": "Sắp xếp từ",
+  "exerciseCheckOrderLabel": "Kiểm tra thứ tự",
+  "exerciseListeningTitle": "Bài nghe",
+  "feedbackGreatJob": "Làm tốt lắm!",
+  "feedbackResultSummaryCorrect": "{correctCount} / {totalCount} câu đúng",
+  "@feedbackResultSummaryCorrect": {
+    "placeholders": {
+      "correctCount": {
+        "type": "int"
+      },
+      "totalCount": {
+        "type": "int"
+      }
+    }
+  },
+  "feedbackResultSummaryXpEarned": "XP nhận được: {xpEarned}",
+  "@feedbackResultSummaryXpEarned": {
+    "placeholders": {
+      "xpEarned": {
+        "type": "int"
+      }
+    }
+  },
+  "feedbackResultSummaryStreakBonus": "Thưởng chuỗi ngày: +{streakBonus} XP",
+  "@feedbackResultSummaryStreakBonus": {
+    "placeholders": {
+      "streakBonus": {
+        "type": "int"
+      }
+    }
+  },
+  "gamificationLevelLabel": "Cấp {level}",
+  "@gamificationLevelLabel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "gamificationXpLabel": "{xp} XP",
+  "@gamificationXpLabel": {
+    "placeholders": {
+      "xp": {
+        "type": "int"
+      }
+    }
+  },
+  "gamificationDailyGoalTitle": "Mục tiêu hằng ngày",
+  "gamificationDailyGoalProgress": "{current}/{goal} {unit}",
+  "@gamificationDailyGoalProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "goal": {
+        "type": "int"
+      },
+      "unit": {}
+    }
+  },
+  "learningReviewProgressLabel": "{completed} / {total} đã ôn",
+  "@learningReviewProgressLabel": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "learningEstimateMinutesLeft": "Còn {minutes} phút",
+  "@learningEstimateMinutesLeft": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "learningStatisticsTitle": "Thống kê",
+  "learningStatisticsTotal": "Tổng: {count}",
+  "@learningStatisticsTotal": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "learningStatisticsMastered": "Đã thành thạo: {count}",
+  "@learningStatisticsMastered": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "learningStatisticsLearning": "Đang học: {count}",
+  "@learningStatisticsLearning": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "learningStatisticsDue": "Đến hạn: {count}",
+  "@learningStatisticsDue": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "learningReviewQueueDueToday": "Đến hạn hôm nay: {count}",
+  "@learningReviewQueueDueToday": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "learningReviewQueueSize": "Kích thước hàng đợi: {count}",
+  "@learningReviewQueueSize": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "learningStartReviewAction": "Bắt đầu ôn tập",
+  "onboardingPlacementTestTitle": "Bài kiểm tra xếp lớp",
+  "onboardingQuestionCount": "{count} câu hỏi",
+  "@onboardingQuestionCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "onboardingCompleteTestAction": "Hoàn thành bài kiểm tra",
+  "formAnswerHint": "Nhập câu trả lời",
+  "studyFillAnswerRequiredValidation": "Câu trả lời là bắt buộc.",
+  "formTapToSpeakAction": "Chạm để nói",
+  "formFillBlankHint": "Điền vào chỗ trống"
 }

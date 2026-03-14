@@ -1,22 +1,13 @@
 package com.lumos.common.error;
 
-import java.time.Instant;
 import java.util.LinkedHashMap;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Strings;
-import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import com.lumos.deck.exception.DeckNameConflictException;
@@ -26,6 +17,16 @@ import com.lumos.flashcard.exception.FlashcardNotFoundException;
 import com.lumos.folder.exception.FolderHasDecksConflictException;
 import com.lumos.folder.exception.FolderNameConflictException;
 import com.lumos.folder.exception.FolderNotFoundException;
+import com.lumos.auth.exception.AccountDisabledException;
+import com.lumos.auth.exception.DuplicateEmailException;
+import com.lumos.auth.exception.DuplicateUsernameException;
+import com.lumos.auth.exception.InvalidCredentialsException;
+import com.lumos.auth.exception.InvalidRefreshTokenException;
+import com.lumos.auth.exception.UnauthorizedAccessException;
+import com.lumos.study.exception.StudyAnswerPayloadInvalidException;
+import com.lumos.study.exception.StudyCommandNotAllowedException;
+import com.lumos.study.exception.StudySessionNotFoundException;
+import com.lumos.study.exception.StudySessionUnavailableException;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
@@ -33,87 +34,129 @@ import jakarta.validation.ConstraintViolationException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    private final MessageSource messageSource;
+    private final ApiErrorResponseFactory apiErrorResponseFactory;
 
-    public GlobalExceptionHandler(MessageSource messageSource) {
-        this.messageSource = messageSource;
+    public GlobalExceptionHandler(ApiErrorResponseFactory apiErrorResponseFactory) {
+        this.apiErrorResponseFactory = apiErrorResponseFactory;
     }
 
     @ExceptionHandler(FolderNotFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleFolderNotFound(
             FolderNotFoundException exception,
             HttpServletRequest request) {
-        return buildErrorResponse(
-                HttpStatus.NOT_FOUND,
-                resolveMessage(exception.getMessageKey(), exception.getMessageArgs()),
-                request.getRequestURI(),
-                Map.of());
+        return handleApiException(HttpStatus.NOT_FOUND, exception, request);
     }
 
     @ExceptionHandler(FolderNameConflictException.class)
     public ResponseEntity<ApiErrorResponse> handleFolderNameConflict(
             FolderNameConflictException exception,
             HttpServletRequest request) {
-        return buildErrorResponse(
-                HttpStatus.CONFLICT,
-                resolveMessage(exception.getMessageKey(), exception.getMessageArgs()),
-                request.getRequestURI(),
-                Map.of());
+        return handleApiException(HttpStatus.CONFLICT, exception, request);
     }
 
     @ExceptionHandler(FolderHasDecksConflictException.class)
     public ResponseEntity<ApiErrorResponse> handleFolderHasDecksConflict(
             FolderHasDecksConflictException exception,
             HttpServletRequest request) {
-        return buildErrorResponse(
-                HttpStatus.CONFLICT,
-                resolveMessage(exception.getMessageKey(), exception.getMessageArgs()),
-                request.getRequestURI(),
-                Map.of());
+        return handleApiException(HttpStatus.CONFLICT, exception, request);
     }
 
     @ExceptionHandler(DeckNotFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleDeckNotFound(
             DeckNotFoundException exception,
             HttpServletRequest request) {
-        return buildErrorResponse(
-                HttpStatus.NOT_FOUND,
-                resolveMessage(exception.getMessageKey(), exception.getMessageArgs()),
-                request.getRequestURI(),
-                Map.of());
+        return handleApiException(HttpStatus.NOT_FOUND, exception, request);
     }
 
     @ExceptionHandler(DeckNameConflictException.class)
     public ResponseEntity<ApiErrorResponse> handleDeckNameConflict(
             DeckNameConflictException exception,
             HttpServletRequest request) {
-        return buildErrorResponse(
-                HttpStatus.CONFLICT,
-                resolveMessage(exception.getMessageKey(), exception.getMessageArgs()),
-                request.getRequestURI(),
-                Map.of());
+        return handleApiException(HttpStatus.CONFLICT, exception, request);
     }
 
     @ExceptionHandler(DeckParentHasSubfoldersException.class)
     public ResponseEntity<ApiErrorResponse> handleDeckParentHasSubfolders(
             DeckParentHasSubfoldersException exception,
             HttpServletRequest request) {
-        return buildErrorResponse(
-                HttpStatus.CONFLICT,
-                resolveMessage(exception.getMessageKey(), exception.getMessageArgs()),
-                request.getRequestURI(),
-                Map.of());
+        return handleApiException(HttpStatus.CONFLICT, exception, request);
     }
 
     @ExceptionHandler(FlashcardNotFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleFlashcardNotFound(
             FlashcardNotFoundException exception,
             HttpServletRequest request) {
-        return buildErrorResponse(
-                HttpStatus.NOT_FOUND,
-                resolveMessage(exception.getMessageKey(), exception.getMessageArgs()),
-                request.getRequestURI(),
-                Map.of());
+        return handleApiException(HttpStatus.NOT_FOUND, exception, request);
+    }
+
+    @ExceptionHandler(DuplicateUsernameException.class)
+    public ResponseEntity<ApiErrorResponse> handleDuplicateUsername(
+            DuplicateUsernameException exception,
+            HttpServletRequest request) {
+        return handleApiException(HttpStatus.CONFLICT, exception, request);
+    }
+
+    @ExceptionHandler(DuplicateEmailException.class)
+    public ResponseEntity<ApiErrorResponse> handleDuplicateEmail(
+            DuplicateEmailException exception,
+            HttpServletRequest request) {
+        return handleApiException(HttpStatus.CONFLICT, exception, request);
+    }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<ApiErrorResponse> handleInvalidCredentials(
+            InvalidCredentialsException exception,
+            HttpServletRequest request) {
+        return handleApiException(HttpStatus.UNAUTHORIZED, exception, request);
+    }
+
+    @ExceptionHandler(InvalidRefreshTokenException.class)
+    public ResponseEntity<ApiErrorResponse> handleInvalidRefreshToken(
+            InvalidRefreshTokenException exception,
+            HttpServletRequest request) {
+        return handleApiException(HttpStatus.UNAUTHORIZED, exception, request);
+    }
+
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    public ResponseEntity<ApiErrorResponse> handleUnauthorizedAccess(
+            UnauthorizedAccessException exception,
+            HttpServletRequest request) {
+        return handleApiException(HttpStatus.UNAUTHORIZED, exception, request);
+    }
+
+    @ExceptionHandler(AccountDisabledException.class)
+    public ResponseEntity<ApiErrorResponse> handleAccountDisabled(
+            AccountDisabledException exception,
+            HttpServletRequest request) {
+        return handleApiException(HttpStatus.FORBIDDEN, exception, request);
+    }
+
+    @ExceptionHandler(StudySessionNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleStudySessionNotFound(
+            StudySessionNotFoundException exception,
+            HttpServletRequest request) {
+        return handleApiException(HttpStatus.NOT_FOUND, exception, request);
+    }
+
+    @ExceptionHandler(StudySessionUnavailableException.class)
+    public ResponseEntity<ApiErrorResponse> handleStudySessionUnavailable(
+            StudySessionUnavailableException exception,
+            HttpServletRequest request) {
+        return handleApiException(HttpStatus.CONFLICT, exception, request);
+    }
+
+    @ExceptionHandler(StudyCommandNotAllowedException.class)
+    public ResponseEntity<ApiErrorResponse> handleStudyCommandNotAllowed(
+            StudyCommandNotAllowedException exception,
+            HttpServletRequest request) {
+        return handleApiException(HttpStatus.CONFLICT, exception, request);
+    }
+
+    @ExceptionHandler(StudyAnswerPayloadInvalidException.class)
+    public ResponseEntity<ApiErrorResponse> handleStudyAnswerPayloadInvalid(
+            StudyAnswerPayloadInvalidException exception,
+            HttpServletRequest request) {
+        return handleApiException(HttpStatus.BAD_REQUEST, exception, request);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -121,13 +164,14 @@ public class GlobalExceptionHandler {
             MethodArgumentNotValidException exception,
             HttpServletRequest request) {
         final Map<String, String> fieldErrors = new LinkedHashMap<>();
+        // Preserve the original validation order so the client can map field messages predictably.
         for (final FieldError fieldError : exception.getBindingResult().getFieldErrors()) {
-            final var resolvedFieldMessage = resolveFieldValidationMessage(fieldError);
+            final var resolvedFieldMessage = this.apiErrorResponseFactory.resolveFieldValidationMessage(fieldError);
             fieldErrors.put(fieldError.getField(), resolvedFieldMessage);
         }
-        return buildErrorResponse(
+        return this.apiErrorResponseFactory.build(
                 HttpStatus.BAD_REQUEST,
-                resolveMessage(ErrorMessageKeys.APP_VALIDATION_FAILED),
+                this.apiErrorResponseFactory.resolveMessage(ErrorMessageKeys.APP_VALIDATION_FAILED),
                 request.getRequestURI(),
                 fieldErrors);
     }
@@ -136,9 +180,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiErrorResponse> handleConstraintViolation(
             ConstraintViolationException exception,
             HttpServletRequest request) {
-        return buildErrorResponse(
+        return this.apiErrorResponseFactory.build(
                 HttpStatus.BAD_REQUEST,
-                resolveMessage(ErrorMessageKeys.APP_VALIDATION_FAILED),
+                this.apiErrorResponseFactory.resolveMessage(ErrorMessageKeys.APP_VALIDATION_FAILED),
                 request.getRequestURI(),
                 Map.of());
     }
@@ -147,9 +191,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiErrorResponse> handleNoResourceFound(
             NoResourceFoundException exception,
             HttpServletRequest request) {
-        return buildErrorResponse(
+        return this.apiErrorResponseFactory.build(
                 HttpStatus.NOT_FOUND,
-                resolveMessage(ErrorMessageKeys.COMMON_RESOURCE_NOT_FOUND),
+                this.apiErrorResponseFactory.resolveMessage(ErrorMessageKeys.COMMON_RESOURCE_NOT_FOUND),
                 request.getRequestURI(),
                 Map.of());
     }
@@ -158,60 +202,21 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiErrorResponse> handleUnhandledException(
             Exception exception,
             HttpServletRequest request) {
-        return buildErrorResponse(
+        return this.apiErrorResponseFactory.build(
                 HttpStatus.INTERNAL_SERVER_ERROR,
-                resolveMessage(ErrorMessageKeys.COMMON_UNEXPECTED_ERROR),
+                this.apiErrorResponseFactory.resolveMessage(ErrorMessageKeys.COMMON_UNEXPECTED_ERROR),
                 request.getRequestURI(),
                 Map.of());
     }
 
-    private ResponseEntity<ApiErrorResponse> buildErrorResponse(
+    private ResponseEntity<ApiErrorResponse> handleApiException(
             HttpStatus status,
-            String message,
-            String path,
-            Map<String, String> fieldErrors) {
-        final var response = new ApiErrorResponse(
-                Instant.now(),
-                status.value(),
-                status.getReasonPhrase(),
-                message,
-                path,
-                fieldErrors);
-        return ResponseEntity.status(status).body(response);
-    }
-
-    private String resolveFieldValidationMessage(FieldError fieldError) {
-        final String defaultMessage = fieldError.getDefaultMessage();
-        // Fallback to generic validation message when field-level message is unavailable.
-        if (StringUtils.isBlank(defaultMessage)) {
-            return resolveMessage(ErrorMessageKeys.APP_VALIDATION_FAILED);
-        }
-        final var messageKey = normalizeMessageKey(defaultMessage);
-        return resolveMessage(messageKey);
-    }
-
-    private String normalizeMessageKey(String rawValue) {
-        // Keep raw value when it is not a placeholder-style message key.
-        if (!Strings.CS.startsWith(rawValue, "{") || !Strings.CS.endsWith(rawValue, "}")) {
-            return rawValue;
-        }
-        return rawValue.substring(1, rawValue.length() - 1);
-    }
-
-    private String resolveMessage(String messageKey, Object... args) {
-        final var locale = resolveLocale();
-        return this.messageSource.getMessage(messageKey, args, messageKey, locale);
-    }
-
-    private Locale resolveLocale() {
-        final var attributes = (ServletRequestAttributes) RequestContextHolder
-                .getRequestAttributes();
-        // Fallback to JVM locale if request context is not available.
-        if (attributes == null) {
-            return Locale.getDefault();
-        }
-        final var request = attributes.getRequest();
-        final var requestLocale = request.getLocale();
-        return Objects.requireNonNullElse(requestLocale, Locale.getDefault());
+            BaseApiException exception,
+            HttpServletRequest request) {
+        return this.apiErrorResponseFactory.build(
+                status,
+                this.apiErrorResponseFactory.resolveMessage(exception.getMessageKey(), exception.getMessageArgs()),
+                request.getRequestURI(),
+                Map.of());
     }
 }

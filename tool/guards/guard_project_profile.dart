@@ -81,14 +81,6 @@ class GuardProjectProfile {
     return RegExp('\\b(${RegExp.escape(widgetClassPrefix)}[A-Z]\\w*)\\s*\\(');
   }
 
-  static GuardProjectProfile _fallback() {
-    return const GuardProjectProfile(
-      packageName: _fallbackPackageName,
-      widgetClassPrefix: 'App',
-      widgetFilePrefix: _fallbackPackageName,
-    );
-  }
-
   static YamlMap? _loadYamlDocument({required String path}) {
     final File file = File(path);
     if (!file.existsSync()) {

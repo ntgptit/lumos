@@ -69,6 +69,7 @@ public class ExecutionLoggingAspect extends OncePerRequestFilter {
     private void logRequest(ContentCachingRequestWrapper request) {
         // Skip request log when debug logging is disabled.
         if (!LOG.isDebugEnabled()) {
+            
             return;
         }
 
@@ -87,6 +88,7 @@ public class ExecutionLoggingAspect extends OncePerRequestFilter {
             builder.append(DIVIDER_LINE).append(EMPTY_LINE);
             builder.append(PIPE).append("  Body").append(EMPTY_LINE);
             builder.append(PIPE).append(EMPTY_LINE);
+            // Emit the cached request body line by line so the boxed log format stays readable.
             for (String line : body.split(EMPTY_LINE)) {
                 builder.append(PIPE).append("  ").append(line).append(EMPTY_LINE);
             }
@@ -113,6 +115,7 @@ public class ExecutionLoggingAspect extends OncePerRequestFilter {
 
         // Append response body lines only when payload exists.
         if (StringUtils.isNotBlank(body)) {
+            // Emit the cached response body line by line so large JSON payloads remain readable in logs.
             for (String line : body.split(EMPTY_LINE)) {
                 builder.append(PIPE).append("    ").append(line).append(EMPTY_LINE);
             }
@@ -124,27 +127,32 @@ public class ExecutionLoggingAspect extends OncePerRequestFilter {
         // Route 5xx responses to error level.
         if (status >= 500) {
             LOG.error("{}", builder);
+            
             return;
         }
         // Route 4xx responses to warn level.
         if (status >= 400) {
             LOG.warn("{}", builder);
+            
             return;
         }
         LOG.info("{}", builder);
     }
 
     private String boxTop(String content) {
+        
         return TOP_LEFT + CORNER_BADGE + " " + content;
     }
 
     private String badge(String label) {
+        
         return label;
     }
 
     private void appendHeaderLine(StringBuilder builder, String key, String value) {
         // Skip empty header values.
         if (StringUtils.isBlank(value)) {
+            
             return;
         }
         builder.append(PIPE).append("  ").append(key).append(": ").append(value).append(EMPTY_LINE);
@@ -154,8 +162,10 @@ public class ExecutionLoggingAspect extends OncePerRequestFilter {
         final var queryString = request.getQueryString();
         // Return URI only when query string is absent.
         if (StringUtils.isBlank(queryString)) {
+            
             return request.getRequestURI();
         }
+        
         return request.getRequestURI() + "?" + queryString;
     }
 
@@ -166,12 +176,14 @@ public class ExecutionLoggingAspect extends OncePerRequestFilter {
         if (StringUtils.isNotBlank(queryString)) {
             url.append("?").append(queryString);
         }
+        
         return url.toString();
     }
 
     private String readBody(byte[] bodyBytes) {
         // Return empty body when byte array is null or empty.
         if (bodyBytes == null || bodyBytes.length == 0) {
+            
             return StringUtils.EMPTY;
         }
 
@@ -181,8 +193,10 @@ public class ExecutionLoggingAspect extends OncePerRequestFilter {
 
         // Append truncation marker when payload exceeds log limit.
         if (shouldTruncate) {
+            
             return body + EMPTY_LINE + ELLIPSIS;
         }
+        
         return body;
     }
 }

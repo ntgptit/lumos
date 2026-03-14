@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/themes/foundation/app_foundation.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../buttons/lumos_buttons.dart';
 import '../lumos_models.dart';
 
@@ -22,6 +23,11 @@ class LumosTextField extends StatelessWidget {
     this.textInputAction,
     this.prefixIcon,
     this.suffixIcon,
+    this.expands = false,
+    this.textAlign = TextAlign.start,
+    this.textAlignVertical,
+    this.textStyle,
+    this.decoration,
   });
 
   final String? label;
@@ -39,16 +45,24 @@ class LumosTextField extends StatelessWidget {
   final TextInputAction? textInputAction;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
+  final bool expands;
+  final TextAlign textAlign;
+  final TextAlignVertical? textAlignVertical;
+  final TextStyle? textStyle;
+  final InputDecoration? decoration;
 
   @override
   Widget build(BuildContext context) {
-    final InputDecoration decoration = InputDecoration(
-      labelText: label,
-      hintText: hint,
-      prefixIcon: prefixIcon,
-      suffixIcon: suffixIcon,
-      alignLabelWithHint: maxLines != 1,
-    );
+    final int? resolvedMaxLines = expands ? null : maxLines;
+    final InputDecoration resolvedDecoration =
+        decoration ??
+        InputDecoration(
+          labelText: label,
+          hintText: hint,
+          prefixIcon: prefixIcon,
+          suffixIcon: suffixIcon,
+          alignLabelWithHint: expands || resolvedMaxLines != 1,
+        );
     return TextFormField(
       initialValue: initialValue,
       controller: controller,
@@ -56,12 +70,16 @@ class LumosTextField extends StatelessWidget {
       validator: validator,
       obscureText: obscureText,
       keyboardType: keyboardType,
-      maxLines: maxLines,
+      maxLines: resolvedMaxLines,
+      expands: expands,
       enabled: enabled,
       autofocus: autofocus,
       onFieldSubmitted: onSubmitted,
       textInputAction: textInputAction,
-      decoration: decoration,
+      textAlign: textAlign,
+      textAlignVertical: textAlignVertical,
+      style: textStyle,
+      decoration: resolvedDecoration,
     );
   }
 }
@@ -270,29 +288,31 @@ class LumosAnswerInput extends StatelessWidget {
       return _buildMultipleChoice();
     }
     if (mode == LumosAnswerMode.speaking) {
-      return _buildSpeaking();
+      return _buildSpeaking(context);
     }
-    return _buildTyping();
+    return _buildTyping(context);
   }
 
-  Widget _buildTyping() {
+  Widget _buildTyping(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         LumosTextField(
-          hint: 'Type your answer',
+          hint: l10n.formAnswerHint,
           initialValue: userAnswer,
           onChanged: onAnswerChanged,
         ),
         const SizedBox(height: AppSpacing.md),
-        LumosPrimaryButton(label: 'Submit', onPressed: onSubmit),
+        LumosPrimaryButton(label: l10n.commonSubmit, onPressed: onSubmit),
       ],
     );
   }
 
-  Widget _buildSpeaking() {
+  Widget _buildSpeaking(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     return LumosPrimaryButton(
-      label: 'Tap to speak',
+      label: l10n.formTapToSpeakAction,
       icon: Icons.mic,
       onPressed: onSubmit,
       expanded: true,
@@ -338,6 +358,7 @@ class LumosFillBlank extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
@@ -360,7 +381,7 @@ class LumosFillBlank extends StatelessWidget {
                 .toList(),
           ),
         if (options == null)
-          LumosTextField(hint: 'Fill the blank', onChanged: onAnswer),
+          LumosTextField(hint: l10n.formFillBlankHint, onChanged: onAnswer),
       ],
     );
   }

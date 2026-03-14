@@ -8,6 +8,7 @@ import 'guards/verify_common_widget_usage_contract.dart'
 import 'guards/verify_component_theme_usage_contract.dart'
     as component_theme_guard;
 import 'guards/verify_feature_surface_contract.dart' as feature_surface_guard;
+import 'guards/verify_l10n_usage_contract.dart' as l10n_usage_guard;
 import 'guards/verify_navigation_go_router_contract.dart' as navigation_guard;
 import 'guards/verify_opacity_constants_contract.dart' as opacity_guard;
 import 'guards/verify_riverpod_annotation.dart' as riverpod_annotation_guard;
@@ -15,6 +16,8 @@ import 'guards/verify_shared_widget_override_contract.dart'
     as shared_widget_override_guard;
 import 'guards/verify_shared_widgets_m3_coverage.dart'
     as shared_widgets_m3_coverage_guard;
+import 'guards/verify_spacing_ownership_contract.dart'
+    as spacing_ownership_guard;
 import 'guards/verify_state_management_contract.dart' as state_management_guard;
 import 'guards/verify_string_utils_contract.dart' as string_utils_guard;
 import 'guards/verify_theme_architecture_contract.dart'
@@ -171,6 +174,11 @@ List<_GuardTask> _buildDefaultTasks() {
       run: ui_logic_separation_guard.main,
     ),
     _GuardTask(
+      id: 'l10n-usage',
+      fileName: 'guards/verify_l10n_usage_contract.dart',
+      run: l10n_usage_guard.main,
+    ),
+    _GuardTask(
       id: 'navigation',
       fileName: 'guards/verify_navigation_go_router_contract.dart',
       run: navigation_guard.main,
@@ -194,6 +202,11 @@ List<_GuardTask> _buildDefaultTasks() {
       id: 'ui-constants',
       fileName: 'guards/verify_ui_constants_centralization.dart',
       run: ui_constants_centralization_guard.main,
+    ),
+    _GuardTask(
+      id: 'spacing-ownership',
+      fileName: 'guards/verify_spacing_ownership_contract.dart',
+      run: spacing_ownership_guard.main,
     ),
     _GuardTask(
       id: 'theme-architecture',

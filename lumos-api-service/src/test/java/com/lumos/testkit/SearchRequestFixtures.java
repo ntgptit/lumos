@@ -10,14 +10,17 @@ public final class SearchRequestFixtures {
     }
 
     public static SearchRequest byNameAsc(String keyword) {
+        
         return new SearchRequest(keyword, SortBy.NAME, SortType.ASC);
     }
 
     public static SearchRequest byFrontTextAsc(String keyword) {
+        
         return new SearchRequest(keyword, SortBy.FRONT_TEXT, SortType.ASC);
     }
 
     public static SearchRequest empty() {
+        
         return new SearchRequest(null, null, null);
     }
 }

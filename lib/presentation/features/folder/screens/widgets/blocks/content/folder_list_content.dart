@@ -1,0 +1,70 @@
+import 'package:flutter/material.dart';
+
+import '../../../../../../../core/themes/foundation/app_foundation.dart';
+import '../../../../../../../domain/entities/folder_models.dart';
+import '../../../../../../shared/widgets/lumos_widgets.dart';
+import '../../../folder_content_support.dart';
+import '../../states/folder_empty_view.dart';
+import '../../states/folder_load_more_indicator.dart';
+import 'folder_list_tile.dart';
+
+class FolderListContent extends StatelessWidget {
+  const FolderListContent({
+    required this.scrollController,
+    required this.visibleFolders,
+    required this.searchQuery,
+    required this.showLoadMore,
+    required this.leadingSlivers,
+    required this.onOpenFolder,
+    required this.onRenameFolder,
+    required this.onDeleteFolder,
+    super.key,
+  });
+
+  final ScrollController scrollController;
+  final List<FolderNode> visibleFolders;
+  final String searchQuery;
+  final bool showLoadMore;
+  final List<Widget> leadingSlivers;
+  final ValueChanged<FolderNode> onOpenFolder;
+  final void Function(BuildContext context, FolderNode item) onRenameFolder;
+  final void Function(BuildContext context, FolderNode item) onDeleteFolder;
+
+  @override
+  Widget build(BuildContext context) {
+    final List<Widget> trailingSlivers = <Widget>[
+      if (showLoadMore)
+        const SliverToBoxAdapter(
+          child: Padding(
+            padding: EdgeInsets.only(
+              top: FolderContentSupportConst.loadMoreTopSpacing,
+              bottom: FolderContentSupportConst.loadMoreBottomSpacing,
+            ),
+            child: FolderLoadMoreIndicator(),
+          ),
+        ),
+      const SliverToBoxAdapter(
+        child: SizedBox(height: FolderContentSupportConst.listBottomSpacing),
+      ),
+    ];
+    return LumosPagedSliverList(
+      controller: scrollController,
+      leadingSlivers: leadingSlivers,
+      trailingSlivers: trailingSlivers,
+      itemCount: visibleFolders.length,
+      itemBuilder: (BuildContext context, int index) {
+        final FolderNode item = visibleFolders[index];
+        return Padding(
+          padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+          child: FolderListTile(
+            item: item,
+            onOpen: () => onOpenFolder(item),
+            onRename: () => onRenameFolder(context, item),
+            onDelete: () => onDeleteFolder(context, item),
+          ),
+        );
+      },
+      emptySliver: FolderEmptyView(isSearchResult: searchQuery.isNotEmpty),
+    );
+  }
+}

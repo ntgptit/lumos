@@ -51,6 +51,7 @@ public class DeckController {
     public ResponseEntity<DeckResponse> createDeck(@PathVariable Long folderId,
             @Valid @RequestBody CreateDeckRequest request) {
         final var deck = this.deckService.createDeck(folderId, request);
+        // Return the created deck payload so the folder screen can append the new deck immediately.
         return ResponseEntity.status(HttpStatus.CREATED).body(deck);
     }
 
@@ -67,6 +68,7 @@ public class DeckController {
     public ResponseEntity<DeckResponse> updateDeck(@PathVariable Long folderId, @PathVariable Long deckId,
             @Valid @RequestBody UpdateDeckRequest request) {
         final var deck = this.deckService.updateDeck(folderId, deckId, request);
+        // Return the updated deck payload so the client reflects the saved metadata.
         return ResponseEntity.ok(deck);
     }
 
@@ -81,6 +83,7 @@ public class DeckController {
     @DeleteMapping("/{deckId}")
     public ResponseEntity<Void> deleteDeck(@PathVariable Long folderId, @PathVariable Long deckId) {
         this.deckService.deleteDeck(folderId, deckId);
+        // Return no-content because the deck was deleted and no response body is needed.
         return ResponseEntity.noContent().build();
     }
 
@@ -97,6 +100,7 @@ public class DeckController {
     public ResponseEntity<List<DeckResponse>> getDecks(@PathVariable Long folderId, @ModelAttribute SearchRequest searchRequest,
             Pageable pageable) {
         final var decks = this.deckService.getDecks(folderId, searchRequest, pageable);
+        // Return the deck list page slice for the selected folder scope.
         return ResponseEntity.ok(decks);
     }
 }

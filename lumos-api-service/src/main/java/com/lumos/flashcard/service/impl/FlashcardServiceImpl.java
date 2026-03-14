@@ -22,6 +22,7 @@ import com.lumos.flashcard.mapper.FlashcardMapper;
 import com.lumos.flashcard.repository.FlashcardRepository;
 import com.lumos.flashcard.repository.specification.FlashcardSpecifications;
 import com.lumos.flashcard.service.FlashcardService;
+import com.lumos.study.support.StudySessionFlashcardCleanupSupport;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,6 +36,7 @@ public class FlashcardServiceImpl implements FlashcardService {
     private final FlashcardRepository flashcardRepository;
     private final DeckRepository deckRepository;
     private final FlashcardMapper flashcardMapper;
+    private final StudySessionFlashcardCleanupSupport studySessionFlashcardCleanupSupport;
 
     /**
      * Create a flashcard in the target deck.
@@ -64,6 +66,7 @@ public class FlashcardServiceImpl implements FlashcardService {
                 FlashcardConstants.DEFAULT_IS_BOOKMARKED);
         final var savedFlashcard = this.flashcardRepository.save(flashcard);
         this.deckRepository.adjustFlashcardCount(deckId, FLASHCARD_COUNT_DELTA_CREATE, Instant.now());
+        // Return the created flashcard DTO after the deck count has been incremented.
         return this.flashcardMapper.toFlashcardResponse(savedFlashcard);
     }
 
@@ -89,6 +92,7 @@ public class FlashcardServiceImpl implements FlashcardService {
         flashcard.setBackText(normalizedBackText);
         flashcard.setFrontLangCode(normalizedFrontLangCode);
         flashcard.setBackLangCode(normalizedBackLangCode);
+        // Return the updated flashcard DTO so the client sees normalized multilingual fields.
         return this.flashcardMapper.toFlashcardResponse(flashcard);
     }
 
@@ -101,9 +105,11 @@ public class FlashcardServiceImpl implements FlashcardService {
     @Override
     @Transactional
     public void deleteFlashcard(Long deckId, Long flashcardId) {
+        final Instant deletedAt = Instant.now();
         this.findActiveFlashcard(deckId, flashcardId);
-        this.flashcardRepository.softDeleteFlashcard(deckId, flashcardId, Instant.now());
-        this.deckRepository.adjustFlashcardCount(deckId, FLASHCARD_COUNT_DELTA_DELETE, Instant.now());
+        this.studySessionFlashcardCleanupSupport.removeFlashcardFromAllModes(flashcardId, deletedAt);
+        this.flashcardRepository.softDeleteFlashcard(deckId, flashcardId, deletedAt);
+        this.deckRepository.adjustFlashcardCount(deckId, FLASHCARD_COUNT_DELTA_DELETE, deletedAt);
     }
 
     /**
@@ -125,7 +131,9 @@ public class FlashcardServiceImpl implements FlashcardService {
                 searchRequest.sortBy(),
                 searchRequest.sortType());
         final var page = this.flashcardRepository.findAll(specification, sortedPageable);
+        // Map the requested page to DTOs before attaching paging metadata for the flashcard screen.
         final var items = page.getContent().stream().map(this.flashcardMapper::toFlashcardResponse).toList();
+        // Return the paged flashcard payload that combines mapped items with repository paging metadata.
         return this.flashcardMapper.toFlashcardPageResponse(
                 items,
                 page.getNumber(),
@@ -137,6 +145,7 @@ public class FlashcardServiceImpl implements FlashcardService {
     }
 
     private Deck findActiveDeck(Long deckId) {
+        // Return the active deck or fail so flashcard mutations stay scoped to an existing deck.
         return this.deckRepository.findByIdAndDeletedAtIsNull(deckId).orElseThrow(() -> new DeckNotFoundException(deckId));
     }
 
@@ -146,20 +155,25 @@ public class FlashcardServiceImpl implements FlashcardService {
         final var flashcardDeckId = flashcard.getDeck().getId();
         // Ensure flashcard belongs to the requested deck scope.
         if (flashcardDeckId != null && deckId != null && flashcardDeckId.longValue() == deckId.longValue()) {
+            // Return the flashcard only when it belongs to the deck selected by the request path.
             return flashcard;
         }
+        // Hide flashcards outside the requested deck scope so ids cannot be resolved across decks.
         throw new FlashcardNotFoundException(flashcardId);
     }
 
     private String normalizeRequiredText(String value) {
+        // Return the trimmed study text so answer matching ignores accidental outer whitespace.
         return StringUtils.trim(value);
     }
 
     private String normalizeOptionalLanguageCode(String value) {
         // Persist null when optional language code is blank.
         if (StringUtils.isBlank(value)) {
+            // Return null so optional language metadata is omitted instead of stored as blank text.
             return null;
         }
+        // Return the trimmed language code so locale metadata stays normalized.
         return StringUtils.trim(value);
     }
 }

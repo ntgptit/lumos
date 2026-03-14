@@ -13,10 +13,10 @@ Hệ thống hỗ trợ:
 
 ## Tài liệu con
 
-- [Principles](/D:/workspace/learnwise/docs/auth/principles.md)
-- [Domain Model](/D:/workspace/learnwise/docs/auth/domain-model.md)
-- [Auth Lifecycle](/D:/workspace/learnwise/docs/auth/auth-lifecycle.md)
-- [Token Lifecycle](/D:/workspace/learnwise/docs/auth/token-lifecycle.md)
+- [Principles](/D:/workspace/lumos/docs/auth/principles.md)
+- [Domain Model](/D:/workspace/lumos/docs/auth/domain-model.md)
+- [Auth Lifecycle](/D:/workspace/lumos/docs/auth/auth-lifecycle.md)
+- [Token Lifecycle](/D:/workspace/lumos/docs/auth/token-lifecycle.md)
 
 ## Quy tắc sản phẩm
 

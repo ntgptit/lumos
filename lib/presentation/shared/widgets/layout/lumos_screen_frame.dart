@@ -26,9 +26,15 @@ class LumosScreenFrame extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double horizontalPadding = ResponsiveDimensions.adaptive(
+    final double horizontalPadding = ResponsiveDimensions.compactValue(
       context: context,
       baseValue: baseHorizontalPadding,
+      minScale: ResponsiveDimensions.compactOuterInsetScale,
+    );
+    final double resolvedVerticalPadding = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: verticalPadding,
+      minScale: ResponsiveDimensions.compactVerticalInsetScale,
     );
     return Align(
       alignment: Alignment.topCenter,
@@ -37,9 +43,9 @@ class LumosScreenFrame extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.fromLTRB(
             horizontalPadding,
-            verticalPadding,
+            resolvedVerticalPadding,
             horizontalPadding,
-            verticalPadding,
+            resolvedVerticalPadding,
           ),
           child: child,
         ),
@@ -53,9 +59,10 @@ class LumosScreenFrame extends StatelessWidget {
     double baseHorizontalPadding =
         LumosScreenFrameConst.defaultHorizontalPadding,
   }) {
-    final double horizontalPadding = ResponsiveDimensions.adaptive(
+    final double horizontalPadding = ResponsiveDimensions.compactValue(
       context: context,
       baseValue: baseHorizontalPadding,
+      minScale: ResponsiveDimensions.compactOuterInsetScale,
     );
     final double screenWidth = MediaQuery.sizeOf(context).width;
     if (screenWidth <= maxWidth) {

@@ -35,7 +35,7 @@ class CorsConfigTest {
         assertEquals(ConfigConstants.CORS_PATH_PATTERN, readField(registration, "pathPattern"));
 
         final var corsConfiguration = (CorsConfiguration) readField(registration, "config");
-        assertEquals(properties.allowedOrigins(), corsConfiguration.getAllowedOrigins());
+        assertEquals(properties.allowedOrigins(), corsConfiguration.getAllowedOriginPatterns());
         assertEquals(properties.allowedMethods(), corsConfiguration.getAllowedMethods());
         assertEquals(properties.allowedHeaders(), corsConfiguration.getAllowedHeaders());
         assertEquals(properties.exposedHeaders(), corsConfiguration.getExposedHeaders());
@@ -46,6 +46,7 @@ class CorsConfigTest {
     private Object readField(Object target, String fieldName) throws Exception {
         final Field field = target.getClass().getDeclaredField(fieldName);
         field.setAccessible(true);
+        
         return field.get(target);
     }
 }
