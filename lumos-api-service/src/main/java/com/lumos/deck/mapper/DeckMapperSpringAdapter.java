@@ -15,6 +15,7 @@ public class DeckMapperSpringAdapter implements DeckMapper {
     public DeckResponse toDeckResponse(Deck deck) {
         final var folderId = this.resolveFolderId(deck.getFolder());
         final var audit = this.toAuditMetadata(deck);
+        
         return new DeckResponse(
                 deck.getId(),
                 folderId,
@@ -31,14 +32,17 @@ public class DeckMapperSpringAdapter implements DeckMapper {
         deck.setName(name);
         deck.setDescription(description);
         deck.setFlashcardCount(flashcardCount);
+        
         return deck;
     }
 
     private Long resolveFolderId(Folder folder) {
         // Folder id is absent only when deck entity is incomplete.
         if (folder == null) {
+            
             return null;
         }
+        
         return folder.getId();
     }
 }

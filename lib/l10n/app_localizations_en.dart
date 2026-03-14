@@ -431,6 +431,48 @@ class AppLocalizationsEn extends AppLocalizations {
   String get flashcardStudyCompletedToast => 'Study session completed.';
 
   @override
+  String get flashcardLearnSheetTitle => 'Choose your study path';
+
+  @override
+  String get flashcardLearnSheetSubtitle => 'Pick the session you want to start for this deck.';
+
+  @override
+  String get flashcardLearnContinueOptionTitle => 'Continue learning';
+
+  @override
+  String get flashcardLearnContinueOptionSubtitle => 'Study vocabulary that is still new or not yet passed.';
+
+  @override
+  String get flashcardLearnReviewOptionTitle => 'Review due cards';
+
+  @override
+  String get flashcardLearnReviewOptionSubtitle => 'Review vocabulary that has reached its SRS deadline.';
+
+  @override
+  String get flashcardLearnResetOptionTitle => 'Reset study progress';
+
+  @override
+  String get flashcardLearnResetOptionSubtitle => 'Clear the learning progress for this deck and start again.';
+
+  @override
+  String get flashcardLearnContinueUnavailableToast => 'No new or unfinished vocabulary is available right now.';
+
+  @override
+  String get flashcardLearnReviewUnavailableToast => 'No vocabulary is currently due for review.';
+
+  @override
+  String get flashcardLearnResetConfirmTitle => 'Reset study progress?';
+
+  @override
+  String get flashcardLearnResetConfirmMessage => 'This will reset the learning progress for the current deck.';
+
+  @override
+  String get flashcardLearnResetConfirmAction => 'Reset progress';
+
+  @override
+  String get flashcardLearnResetSuccessToast => 'Study progress has been reset.';
+
+  @override
   String get flashcardCloseTooltip => 'Close study';
 
   @override
@@ -548,6 +590,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeProfileSubtitle => 'Manage your goals and learning preferences.';
 
   @override
+  String get profileAccountSectionTitle => 'Account';
+
+  @override
+  String get profileAccountSectionSubtitle => 'Review the identity and status for your current signed-in account.';
+
+  @override
   String get profileThemeSectionTitle => 'Appearance';
 
   @override
@@ -567,4 +615,330 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profileThemeToggleToDark => 'Quick switch to dark mode';
+
+  @override
+  String get commonLogout => 'Logout';
+
+  @override
+  String get commonContinue => 'Continue';
+
+  @override
+  String get commonNext => 'Next';
+
+  @override
+  String get commonSubmit => 'Submit';
+
+  @override
+  String get commonCheck => 'Check';
+
+  @override
+  String get commonReplay => 'Replay';
+
+  @override
+  String get authTitle => 'Lumos';
+
+  @override
+  String get authSubtitle => 'Authenticate first, then resume study from canonical backend state.';
+
+  @override
+  String get authLoginTab => 'Login';
+
+  @override
+  String get authRegisterTab => 'Register';
+
+  @override
+  String get authSignInAction => 'Sign in';
+
+  @override
+  String get authCreateAccountAction => 'Create account';
+
+  @override
+  String get authUsernameLabel => 'Username';
+
+  @override
+  String get authEmailLabel => 'Email';
+
+  @override
+  String get authPasswordLabel => 'Password';
+
+  @override
+  String get authUsernameOrEmailLabel => 'Username or email';
+
+  @override
+  String get authShowPasswordTooltip => 'Show password';
+
+  @override
+  String get authHidePasswordTooltip => 'Hide password';
+
+  @override
+  String get profileSpeechSectionTitle => 'Speech preference';
+
+  @override
+  String get profileSpeechSectionSubtitle => 'Choose the default reading voice for this device and test it before studying.';
+
+  @override
+  String get profileSpeechEnabledLabel => 'Enable Korean speech';
+
+  @override
+  String get profileSpeechAutoPlayLabel => 'Auto play current item';
+
+  @override
+  String get profileSpeechAdapterLabel => 'Speech engine';
+
+  @override
+  String get profileSpeechAdapterFlutterTtsLabel => 'Device TTS (Flutter TTS)';
+
+  @override
+  String get profileSpeechVoiceLabel => 'Voice';
+
+  @override
+  String get profileSpeechVoiceDefaultLabel => 'Device default voice';
+
+  @override
+  String get profileSpeechSpeedLabel => 'Speed';
+
+  @override
+  String get profileSpeechPitchLabel => 'Pitch';
+
+  @override
+  String get profileSpeechPreviewTitle => 'Voice preview';
+
+  @override
+  String get profileSpeechPreviewSubtitle => 'Edit the sample text below and listen with the current voice, speed, and pitch.';
+
+  @override
+  String get profileSpeechPreviewTextLabel => 'Preview text';
+
+  @override
+  String get profileSpeechPreviewPlayLabel => 'Play preview';
+
+  @override
+  String get profileSpeechPreviewStopLabel => 'Stop';
+
+  @override
+  String get profileSpeechPreviewDefaultText => '안녕하세요. 이 문장은 현재 음성과 속도, 음높이를 테스트하기 위한 예시입니다.';
+
+  @override
+  String get profileSpeechPreviewPlaybackError => 'The device could not play the preview audio.';
+
+  @override
+  String get profileStudySectionTitle => 'Study preference';
+
+  @override
+  String get profileStudySectionSubtitle => 'Set how many new cards a FIRST_LEARNING session can load from the backend.';
+
+  @override
+  String get profileStudyFirstLearningLimitLabel => 'New cards per FIRST_LEARNING session';
+
+  @override
+  String profileStudyFirstLearningLimitValue(int count) {
+    return '$count card(s)';
+  }
+
+  @override
+  String get profileStudyReviewHint => 'REVIEW sessions always include every due card.';
+
+  @override
+  String get studyProgressMomentumTitle => 'Study momentum';
+
+  @override
+  String studyProgressMomentumSummary(int dueCount, int overdueCount, Object escalationLevel) {
+    return 'Due $dueCount | Overdue $overdueCount | Escalation $escalationLevel';
+  }
+
+  @override
+  String get studyProgressRecommendedReviewTitle => 'Recommended review';
+
+  @override
+  String studyProgressRecommendedReviewSummary(Object deckName, int dueCount) {
+    return '$deckName · $dueCount due items';
+  }
+
+  @override
+  String get studyProgressStartReviewAction => 'Start review';
+
+  @override
+  String get studyProgressBoxDistributionTitle => '7-box distribution';
+
+  @override
+  String studyProgressBoxLabel(int boxIndex) {
+    return 'Box $boxIndex';
+  }
+
+  @override
+  String get studyMatchCheckAction => 'Check';
+
+  @override
+  String studyMatchCompletedItemLabel(Object label) {
+    return 'Matched · $label';
+  }
+
+  @override
+  String studySpeechPanelTitle(Object locale) {
+    return 'Text to speech · $locale';
+  }
+
+  @override
+  String studySpeechPanelVoiceSummary(Object voice, Object speed) {
+    return 'Voice: $voice · Speed: ${speed}x';
+  }
+
+  @override
+  String get studySpeechPlayAction => 'Listen';
+
+  @override
+  String get studySpeechPlayingAction => 'Playing';
+
+  @override
+  String get studySpeechReplayAction => 'Replay';
+
+  @override
+  String get studyReviewFirstCardToast => 'This is the first card.';
+
+  @override
+  String get studyResetCurrentModeAction => 'Reset current mode';
+
+  @override
+  String get studyResetCurrentModeTitle => 'Reset current mode?';
+
+  @override
+  String get studyResetCurrentModeMessage => 'This will clear all progress in the current mode and start that mode again from the first item.';
+
+  @override
+  String get studyResetCurrentModeConfirm => 'Reset mode';
+
+  @override
+  String get deckEditTooltip => 'Edit deck';
+
+  @override
+  String get deckDeleteTooltip => 'Delete deck';
+
+  @override
+  String get flashcardAgainAction => 'Again';
+
+  @override
+  String get flashcardKnownAction => 'Known';
+
+  @override
+  String get exerciseMatchPairsTitle => 'Match pairs';
+
+  @override
+  String get exerciseCompletedLabel => 'Completed';
+
+  @override
+  String get exerciseSubmitMatchesLabel => 'Submit matches';
+
+  @override
+  String get exerciseReorderWordsTitle => 'Reorder words';
+
+  @override
+  String get exerciseCheckOrderLabel => 'Check order';
+
+  @override
+  String get exerciseListeningTitle => 'Listening exercise';
+
+  @override
+  String get feedbackGreatJob => 'Great job!';
+
+  @override
+  String feedbackResultSummaryCorrect(int correctCount, int totalCount) {
+    return '$correctCount / $totalCount correct';
+  }
+
+  @override
+  String feedbackResultSummaryXpEarned(int xpEarned) {
+    return 'XP earned: $xpEarned';
+  }
+
+  @override
+  String feedbackResultSummaryStreakBonus(int streakBonus) {
+    return 'Streak bonus: +$streakBonus XP';
+  }
+
+  @override
+  String gamificationLevelLabel(int level) {
+    return 'Level $level';
+  }
+
+  @override
+  String gamificationXpLabel(int xp) {
+    return '$xp XP';
+  }
+
+  @override
+  String get gamificationDailyGoalTitle => 'Daily Goal';
+
+  @override
+  String gamificationDailyGoalProgress(int current, int goal, Object unit) {
+    return '$current/$goal $unit';
+  }
+
+  @override
+  String learningReviewProgressLabel(int completed, int total) {
+    return '$completed / $total reviewed';
+  }
+
+  @override
+  String learningEstimateMinutesLeft(int minutes) {
+    return '$minutes min left';
+  }
+
+  @override
+  String get learningStatisticsTitle => 'Statistics';
+
+  @override
+  String learningStatisticsTotal(int count) {
+    return 'Total: $count';
+  }
+
+  @override
+  String learningStatisticsMastered(int count) {
+    return 'Mastered: $count';
+  }
+
+  @override
+  String learningStatisticsLearning(int count) {
+    return 'Learning: $count';
+  }
+
+  @override
+  String learningStatisticsDue(int count) {
+    return 'Due: $count';
+  }
+
+  @override
+  String learningReviewQueueDueToday(int count) {
+    return 'Due today: $count';
+  }
+
+  @override
+  String learningReviewQueueSize(int count) {
+    return 'Queue size: $count';
+  }
+
+  @override
+  String get learningStartReviewAction => 'Start review';
+
+  @override
+  String get onboardingPlacementTestTitle => 'Placement Test';
+
+  @override
+  String onboardingQuestionCount(int count) {
+    return '$count questions';
+  }
+
+  @override
+  String get onboardingCompleteTestAction => 'Complete test';
+
+  @override
+  String get formAnswerHint => 'Type your answer';
+
+  @override
+  String get studyFillAnswerRequiredValidation => 'Answer is required.';
+
+  @override
+  String get formTapToSpeakAction => 'Tap to speak';
+
+  @override
+  String get formFillBlankHint => 'Fill the blank';
 }

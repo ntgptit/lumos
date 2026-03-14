@@ -10,31 +10,25 @@ import '../../../../../shared/widgets/lumos_widgets.dart';
 import '../../../providers/deck_provider.dart';
 import '../../../providers/states/deck_state.dart';
 
-typedef DeckUpsertSubmit =
+typedef DeckDialogsUpsertSubmit =
     Future<DeckSubmitResult> Function(DeckUpsertInput input);
-typedef DeckConfirmSubmit = Future<void> Function();
+typedef DeckDialogsConfirmSubmit = Future<void> Function();
 
-abstract final class DeckDialogConst {
-  DeckDialogConst._();
-
-  static const int deckNameMinLength = DeckStateConst.deckNameMinLength;
-  static const int deckNameMaxLength = DeckStateConst.deckNameMaxLength;
-  static const int deckDescriptionMaxLength =
-      DeckStateConst.deckDescriptionMaxLength;
-  static const String emptyValue = '';
-  static const int deckDescriptionMaxLines = 3;
-}
+const int _deckNameMinLength = DeckStateConst.deckNameMinLength;
+const int _deckNameMaxLength = DeckStateConst.deckNameMaxLength;
+const int _deckDescriptionMaxLength = DeckStateConst.deckDescriptionMaxLength;
+const String _emptyDeckDialogValue = '';
+const int _deckDescriptionMaxLines = 3;
 
 Future<void> showDeckEditorDialog({
   required BuildContext context,
   required String Function(AppLocalizations l10n) titleBuilder,
   required String Function(AppLocalizations l10n) actionLabelBuilder,
   required DeckNode? initialDeck,
-  required DeckUpsertSubmit onSubmitted,
+  required DeckDialogsUpsertSubmit onSubmitted,
 }) async {
-  String currentName = initialDeck?.name ?? DeckDialogConst.emptyValue;
-  String currentDescription =
-      initialDeck?.description ?? DeckDialogConst.emptyValue;
+  String currentName = initialDeck?.name ?? _emptyDeckDialogValue;
+  String currentDescription = initialDeck?.description ?? _emptyDeckDialogValue;
   bool isSubmitting = false;
 
   await showDialog<void>(
@@ -52,14 +46,17 @@ Future<void> showDeckEditorDialog({
                 cancelText: l10n.commonCancel,
                 confirmText: actionLabelBuilder(l10n),
                 initialValue: currentName,
-                additionalContent: _buildAdditionalContent(
-                  l10n: l10n,
-                  initialDescription: currentDescription,
-                  onDescriptionChanged: (String value) {
+                additionalContent: LumosTextField(
+                  initialValue: currentDescription,
+                  onChanged: (String value) {
                     setDialogState(() {
                       currentDescription = value;
                     });
                   },
+                  label: l10n.deckDescriptionLabel,
+                  hint: l10n.deckDescriptionHint,
+                  maxLines: _deckDescriptionMaxLines,
+                  textInputAction: TextInputAction.newline,
                 ),
                 isCancelEnabled: !isSubmitting,
                 isConfirmEnabled: !isSubmitting,
@@ -107,7 +104,7 @@ Future<void> showDeckConfirmDialog({
   required String Function(AppLocalizations l10n) titleBuilder,
   required String Function(AppLocalizations l10n) messageBuilder,
   required String Function(AppLocalizations l10n) confirmLabelBuilder,
-  required DeckConfirmSubmit onConfirmed,
+  required DeckDialogsConfirmSubmit onConfirmed,
 }) async {
   await showDialog<void>(
     context: context,
@@ -129,27 +126,12 @@ Future<void> showDeckConfirmDialog({
   );
 }
 
-Widget _buildAdditionalContent({
-  required AppLocalizations l10n,
-  required String initialDescription,
-  required ValueChanged<String> onDescriptionChanged,
-}) {
-  return LumosTextField(
-    initialValue: initialDescription,
-    onChanged: onDescriptionChanged,
-    label: l10n.deckDescriptionLabel,
-    hint: l10n.deckDescriptionHint,
-    maxLines: DeckDialogConst.deckDescriptionMaxLines,
-    textInputAction: TextInputAction.newline,
-  );
-}
-
 Future<void> _handleDeckEditorSubmit({
   required BuildContext dialogContext,
   required AppLocalizations l10n,
   required String rawName,
   required String rawDescription,
-  required DeckUpsertSubmit onSubmitted,
+  required DeckDialogsUpsertSubmit onSubmitted,
   required VoidCallback onSubmitDone,
 }) async {
   final String? validationMessage = _resolveFormValidationMessage(
@@ -208,10 +190,8 @@ String? _resolveFormValidationMessage({
   final String normalizedDescription = StringUtils.normalizeName(
     rawDescription,
   );
-  if (normalizedDescription.length > DeckDialogConst.deckDescriptionMaxLength) {
-    return l10n.deckDescriptionMaxLengthValidation(
-      DeckDialogConst.deckDescriptionMaxLength,
-    );
+  if (normalizedDescription.length > _deckDescriptionMaxLength) {
+    return l10n.deckDescriptionMaxLengthValidation(_deckDescriptionMaxLength);
   }
   return null;
 }
@@ -224,11 +204,11 @@ String? _resolveNameValidationMessage({
   if (normalized.isEmpty) {
     return l10n.deckNameRequiredValidation;
   }
-  if (normalized.length < DeckDialogConst.deckNameMinLength) {
-    return l10n.deckNameMinLengthValidation(DeckDialogConst.deckNameMinLength);
+  if (normalized.length < _deckNameMinLength) {
+    return l10n.deckNameMinLengthValidation(_deckNameMinLength);
   }
-  if (normalized.length > DeckDialogConst.deckNameMaxLength) {
-    return l10n.deckNameMaxLengthValidation(DeckDialogConst.deckNameMaxLength);
+  if (normalized.length > _deckNameMaxLength) {
+    return l10n.deckNameMaxLengthValidation(_deckNameMaxLength);
   }
   return null;
 }

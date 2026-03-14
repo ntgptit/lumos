@@ -8,9 +8,10 @@ import '../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../folder/providers/folder_ui_signal_provider.dart';
 import '../../folder/screens/folder_screen.dart';
+import '../../profile/screens/profile_content.dart';
+import '../../progress/screens/study_progress_screen.dart';
 import '../screens/home_content.dart';
-import '../screens/widgets/blocks/home_profile_tab.dart';
-import '../screens/widgets/blocks/home_placeholder_tab.dart';
+import '../screens/widgets/blocks/content/shell/home_placeholder_tab.dart';
 import 'states/home_state.dart';
 
 part 'home_provider.g.dart';
@@ -179,13 +180,8 @@ HomePageBuilder homeTabPage(Ref ref, HomeTabId selectedTab) {
     },
     HomeTabId.folders => (BuildContext context) => const FolderScreen(),
     HomeTabId.progress => (BuildContext context) {
-      final AppLocalizations l10n = AppLocalizations.of(context)!;
-      return HomePlaceholderTab(
-        title: l10n.homeTabProgress,
-        subtitle: l10n.homeProgressSubtitle,
-        icon: Icons.insights_rounded,
-      );
+      return const StudyProgressScreen();
     },
-    HomeTabId.profile => (BuildContext context) => const HomeProfileTab(),
+    HomeTabId.profile => (BuildContext context) => const ProfileContent(),
   };
 }

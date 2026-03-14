@@ -58,7 +58,7 @@ Hệ thống hỗ trợ 5 nhóm reminder chính:
 4. `Overdue escalation`
 5. `Weekly digest`
 
-Chi tiết loại reminder và rule kích hoạt của từng loại được mô tả tại [reminder-strategies.md](/D:/workspace/learnwise/docs/study/spaced-repetition/reminder-strategies.md).
+Chi tiết loại reminder và rule kích hoạt của từng loại được mô tả tại [reminder-strategies.md](/D:/workspace/lumos/docs/study/spaced-repetition/reminder-strategies.md).
 
 ## Nguyên tắc thực thi
 

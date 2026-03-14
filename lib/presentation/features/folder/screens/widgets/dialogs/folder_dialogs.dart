@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../core/utils/string_utils.dart';
 import '../../../../../../domain/entities/folder_models.dart';
 import '../../../../../../l10n/app_localizations.dart';
@@ -11,32 +10,27 @@ import '../../../../../shared/widgets/lumos_widgets.dart';
 import '../../../providers/folder_provider.dart';
 import '../../../providers/states/folder_state.dart';
 
-typedef FolderUpsertSubmit =
+typedef FolderDialogsUpsertSubmit =
     Future<FolderSubmitResult> Function(FolderUpsertInput input);
-typedef FolderConfirmSubmit = Future<void> Function();
+typedef FolderDialogsConfirmSubmit = Future<void> Function();
 
-abstract final class FolderDialogConst {
-  FolderDialogConst._();
-
-  static const int folderNameMinLength = FolderStateConst.folderNameMinLength;
-  static const int folderNameMaxLength = FolderStateConst.folderNameMaxLength;
-  static const int folderDescriptionMaxLength =
-      FolderStateConst.folderDescriptionMaxLength;
-  static const String emptyValue = '';
-  static const int folderDescriptionMaxLines = 3;
-  static const double sectionSpacing = AppSpacing.md;
-}
+const int _folderNameMinLength = FolderStateConst.folderNameMinLength;
+const int _folderNameMaxLength = FolderStateConst.folderNameMaxLength;
+const int _folderDescriptionMaxLength =
+    FolderStateConst.folderDescriptionMaxLength;
+const String _emptyFolderDialogValue = '';
+const int _folderDescriptionMaxLines = 3;
 
 Future<void> showFolderEditorDialog({
   required BuildContext context,
   required String Function(AppLocalizations l10n) titleBuilder,
   required String Function(AppLocalizations l10n) actionLabelBuilder,
   required FolderNode? initialFolder,
-  required FolderUpsertSubmit onSubmitted,
+  required FolderDialogsUpsertSubmit onSubmitted,
 }) async {
-  String currentName = initialFolder?.name ?? FolderDialogConst.emptyValue;
+  String currentName = initialFolder?.name ?? _emptyFolderDialogValue;
   String currentDescription =
-      initialFolder?.description ?? FolderDialogConst.emptyValue;
+      initialFolder?.description ?? _emptyFolderDialogValue;
   bool isSubmitting = false;
   await showDialog<void>(
     context: context,
@@ -53,14 +47,17 @@ Future<void> showFolderEditorDialog({
                 cancelText: l10n.commonCancel,
                 confirmText: actionLabelBuilder(l10n),
                 initialValue: currentName,
-                additionalContent: _buildEditorAdditionalContent(
-                  l10n: l10n,
-                  initialDescription: currentDescription,
-                  onDescriptionChanged: (String value) {
+                additionalContent: LumosTextField(
+                  initialValue: currentDescription,
+                  onChanged: (String value) {
                     setDialogState(() {
                       currentDescription = value;
                     });
                   },
+                  label: l10n.folderDescriptionLabel,
+                  hint: l10n.folderDescriptionHint,
+                  maxLines: _folderDescriptionMaxLines,
+                  textInputAction: TextInputAction.newline,
                 ),
                 isCancelEnabled: !isSubmitting,
                 isConfirmEnabled: !isSubmitting,
@@ -109,7 +106,7 @@ Future<void> showFolderConfirmDialog({
   required String Function(AppLocalizations l10n) titleBuilder,
   required String Function(AppLocalizations l10n) messageBuilder,
   required String Function(AppLocalizations l10n) confirmLabelBuilder,
-  required FolderConfirmSubmit onConfirmed,
+  required FolderDialogsConfirmSubmit onConfirmed,
 }) async {
   await showDialog<void>(
     context: context,
@@ -131,28 +128,13 @@ Future<void> showFolderConfirmDialog({
   );
 }
 
-Widget _buildEditorAdditionalContent({
-  required AppLocalizations l10n,
-  required String initialDescription,
-  required ValueChanged<String> onDescriptionChanged,
-}) {
-  return LumosTextField(
-    initialValue: initialDescription,
-    onChanged: onDescriptionChanged,
-    label: l10n.folderDescriptionLabel,
-    hint: l10n.folderDescriptionHint,
-    maxLines: FolderDialogConst.folderDescriptionMaxLines,
-    textInputAction: TextInputAction.newline,
-  );
-}
-
 Future<void> _handleFolderEditorSubmit({
   required BuildContext dialogContext,
   required AppLocalizations l10n,
   required String rawName,
   required String rawDescription,
   required int? parentId,
-  required FolderUpsertSubmit onSubmitted,
+  required FolderDialogsUpsertSubmit onSubmitted,
   required VoidCallback onSubmitDone,
 }) async {
   final String? validationMessage = _resolveFormValidationMessage(
@@ -215,10 +197,9 @@ String? _resolveFormValidationMessage({
   final String normalizedDescription = StringUtils.normalizeName(
     rawDescription,
   );
-  if (normalizedDescription.length >
-      FolderDialogConst.folderDescriptionMaxLength) {
+  if (normalizedDescription.length > _folderDescriptionMaxLength) {
     return l10n.folderDescriptionMaxLengthValidation(
-      FolderDialogConst.folderDescriptionMaxLength,
+      _folderDescriptionMaxLength,
     );
   }
   return null;
@@ -232,15 +213,11 @@ String? _resolveNameValidationMessage({
   if (normalized.isEmpty) {
     return l10n.folderNameRequiredValidation;
   }
-  if (normalized.length < FolderDialogConst.folderNameMinLength) {
-    return l10n.folderNameMinLengthValidation(
-      FolderDialogConst.folderNameMinLength,
-    );
+  if (normalized.length < _folderNameMinLength) {
+    return l10n.folderNameMinLengthValidation(_folderNameMinLength);
   }
-  if (normalized.length > FolderDialogConst.folderNameMaxLength) {
-    return l10n.folderNameMaxLengthValidation(
-      FolderDialogConst.folderNameMaxLength,
-    );
+  if (normalized.length > _folderNameMaxLength) {
+    return l10n.folderNameMaxLengthValidation(_folderNameMaxLength);
   }
   return null;
 }

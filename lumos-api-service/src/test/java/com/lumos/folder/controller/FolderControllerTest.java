@@ -92,6 +92,7 @@ class FolderControllerTest {
     }
 
     private FolderResponse sampleFolderResponse() {
+        
         return folderResponse(
                 FOLDER_ID,
                 "Folder A",

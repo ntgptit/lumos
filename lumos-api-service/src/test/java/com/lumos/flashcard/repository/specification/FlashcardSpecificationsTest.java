@@ -9,7 +9,6 @@ import static org.mockito.Mockito.when;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 
 import com.lumos.common.enums.SortBy;
 import com.lumos.common.enums.SortType;
@@ -26,62 +25,88 @@ class FlashcardSpecificationsTest {
 
     @Test
     void byDeckAndKeyword_returnsComposedSpecification() {
-        final Specification<Flashcard> specification = FlashcardSpecifications.byDeckAndKeyword(10L, "front");
+        final var specification = FlashcardSpecifications
+                .byDeckAndKeyword(10L, "front");
 
         assertNotNull(specification);
     }
 
     @Test
     void byDeckAndKeyword_withBlankKeyword_usesConjunctionPredicate() {
-        final var specification = FlashcardSpecifications.byDeckAndKeyword(10L, "   ");
-        final var root = mockRoot();
+        final var specification = FlashcardSpecifications
+                .byDeckAndKeyword(10L, "   ");
+        final var root = this
+                .mockRoot();
         final var query = mock(CriteriaQuery.class);
-        final var builder = mockBuilderForBlankKeyword(root);
+        final var builder = this
+                .mockBuilderForBlankKeyword(root);
 
-        final var predicate = specification.toPredicate(root, query, builder);
+        final var predicate = specification
+                .toPredicate(root, query, builder);
 
         assertNotNull(predicate);
     }
 
     @Test
     void byDeckAndKeyword_withKeyword_buildsOrLikePredicate() {
-        final var specification = FlashcardSpecifications.byDeckAndKeyword(10L, "  Front  ");
-        final var root = mockRoot();
+        final var specification = FlashcardSpecifications
+                .byDeckAndKeyword(10L, "  Front  ");
+        final var root = this
+                .mockRoot();
         final var query = mock(CriteriaQuery.class);
-        final var builder = mockBuilderForKeyword(root);
+        final var builder = this
+                .mockBuilderForKeyword(root);
 
-        final var predicate = specification.toPredicate(root, query, builder);
+        final var predicate = specification
+                .toPredicate(root, query, builder);
 
         assertNotNull(predicate);
     }
 
     @Test
     void toSortedPageable_defaultsToCreatedAtDescendingWhenSortIsNull() {
-        final var pageable = PageRequest.of(2, 25);
+        final var pageable = PageRequest
+                .of(2, 25);
 
-        final var sorted = FlashcardSpecifications.toSortedPageable(pageable, null, null);
+        final var sorted = FlashcardSpecifications
+                .toSortedPageable(pageable, null, null);
 
-        assertEquals(2, sorted.getPageNumber());
-        assertEquals(25, sorted.getPageSize());
-        assertEquals(Sort.Direction.DESC, sorted.getSort().getOrderFor("createdAt").getDirection());
+        assertEquals(2, sorted
+                .getPageNumber());
+        assertEquals(25, sorted
+                .getPageSize());
+        assertEquals(Sort.Direction.DESC, sorted
+                .getSort()
+                .getOrderFor("createdAt")
+                .getDirection());
     }
 
     @Test
     void toSortedPageable_supportsUpdatedAtAscending() {
-        final var pageable = PageRequest.of(0, 10);
+        final var pageable = PageRequest
+                .of(0, 10);
 
-        final var sorted = FlashcardSpecifications.toSortedPageable(pageable, SortBy.UPDATED_AT, SortType.ASC);
+        final var sorted = FlashcardSpecifications
+                .toSortedPageable(pageable, SortBy.UPDATED_AT, SortType.ASC);
 
-        assertEquals(Sort.Direction.ASC, sorted.getSort().getOrderFor("updatedAt").getDirection());
+        assertEquals(Sort.Direction.ASC, sorted
+                .getSort()
+                .getOrderFor("updatedAt")
+                .getDirection());
     }
 
     @Test
     void toSortedPageable_supportsFrontTextDescending() {
-        final var pageable = PageRequest.of(0, 10);
+        final var pageable = PageRequest
+                .of(0, 10);
 
-        final var sorted = FlashcardSpecifications.toSortedPageable(pageable, SortBy.FRONT_TEXT, SortType.DESC);
+        final var sorted = FlashcardSpecifications
+                .toSortedPageable(pageable, SortBy.FRONT_TEXT, SortType.DESC);
 
-        assertEquals(Sort.Direction.DESC, sorted.getSort().getOrderFor("frontText").getDirection());
+        assertEquals(Sort.Direction.DESC, sorted
+                .getSort()
+                .getOrderFor("frontText")
+                .getDirection());
     }
 
     @SuppressWarnings("unchecked")
@@ -92,60 +117,111 @@ class FlashcardSpecificationsTest {
         final Path<Object> deckIdPath = mock(Path.class);
         final Path<Object> frontTextPath = mock(Path.class);
         final Path<Object> backTextPath = mock(Path.class);
-        when(root.get("deletedAt")).thenReturn(deletedAtPath);
-        when(root.get("deck")).thenReturn(deckPath);
-        when(deckPath.get("id")).thenReturn(deckIdPath);
-        when(root.get("frontText")).thenReturn(frontTextPath);
-        when(root.get("backText")).thenReturn(backTextPath);
+        when(root
+                .get("deletedAt"))
+                .thenReturn(deletedAtPath);
+        when(root
+                .get("deck"))
+                .thenReturn(deckPath);
+        when(deckPath
+                .get("id"))
+                .thenReturn(deckIdPath);
+        when(root
+                .get("frontText"))
+                .thenReturn(frontTextPath);
+        when(root
+                .get("backText"))
+                .thenReturn(backTextPath);
+
         return root;
     }
 
-    @SuppressWarnings("unchecked")
     private CriteriaBuilder mockBuilderForBlankKeyword(Root<Flashcard> root) {
-        final CriteriaBuilder builder = mock(CriteriaBuilder.class);
-        final Predicate activePredicate = mock(Predicate.class);
-        final Predicate deckPredicate = mock(Predicate.class);
-        final Predicate conjunctionPredicate = mock(Predicate.class);
-        final Predicate finalPredicate = mock(Predicate.class);
-        final Path<Object> deletedAtPath = root.get("deletedAt");
-        final Path<Object> deckIdPath = root.get("deck").get("id");
-        when(builder.isNull(eq(deletedAtPath))).thenReturn(activePredicate);
-        when(builder.equal(eq(deckIdPath), eq(10L))).thenReturn(deckPredicate);
-        when(builder.conjunction()).thenReturn(conjunctionPredicate);
-        when(builder.and(activePredicate, deckPredicate)).thenReturn(finalPredicate);
-        when(builder.and(finalPredicate, conjunctionPredicate)).thenReturn(finalPredicate);
+        final var builder = mock(CriteriaBuilder.class);
+        final var activePredicate = mock(Predicate.class);
+        final var deckPredicate = mock(Predicate.class);
+        final var conjunctionPredicate = mock(Predicate.class);
+        final var finalPredicate = mock(Predicate.class);
+        final Path<Object> deletedAtPath = root
+                .get("deletedAt");
+        final Path<Object> deckIdPath = root
+                .get("deck")
+                .get("id");
+        when(builder
+                .isNull(eq(deletedAtPath)))
+                .thenReturn(activePredicate);
+        when(builder
+                .equal(eq(deckIdPath), eq(10L)))
+                .thenReturn(deckPredicate);
+        when(builder
+                .conjunction())
+                .thenReturn(conjunctionPredicate);
+        when(builder
+                .and(activePredicate, deckPredicate))
+                .thenReturn(finalPredicate);
+        when(builder
+                .and(finalPredicate, conjunctionPredicate))
+                .thenReturn(finalPredicate);
+
         return builder;
     }
 
     @SuppressWarnings("unchecked")
     private CriteriaBuilder mockBuilderForKeyword(Root<Flashcard> root) {
-        final CriteriaBuilder builder = mock(CriteriaBuilder.class);
-        final Predicate activePredicate = mock(Predicate.class);
-        final Predicate deckPredicate = mock(Predicate.class);
-        final Predicate frontLikePredicate = mock(Predicate.class);
-        final Predicate backLikePredicate = mock(Predicate.class);
-        final Predicate textPredicate = mock(Predicate.class);
-        final Predicate finalPredicate = mock(Predicate.class);
-        final Path<Object> deletedAtPath = root.get("deletedAt");
-        final Path<Object> deckIdPath = root.get("deck").get("id");
-        final Expression<String> frontTextPath = castToExpression(root.get("frontText"));
-        final Expression<String> backTextPath = castToExpression(root.get("backText"));
+        final var builder = mock(CriteriaBuilder.class);
+        final var activePredicate = mock(Predicate.class);
+        final var deckPredicate = mock(Predicate.class);
+        final var frontLikePredicate = mock(Predicate.class);
+        final var backLikePredicate = mock(Predicate.class);
+        final var textPredicate = mock(Predicate.class);
+        final var finalPredicate = mock(Predicate.class);
+        final Path<Object> deletedAtPath = root
+                .get("deletedAt");
+        final Path<Object> deckIdPath = root
+                .get("deck")
+                .get("id");
+        final var frontTextPath = this
+                .castToExpression(root
+                        .get("frontText"));
+        final var backTextPath = this
+                .castToExpression(root
+                        .get("backText"));
         final Expression<String> lowerFrontText = mock(Expression.class);
         final Expression<String> lowerBackText = mock(Expression.class);
-        when(builder.isNull(eq(deletedAtPath))).thenReturn(activePredicate);
-        when(builder.equal(eq(deckIdPath), eq(10L))).thenReturn(deckPredicate);
-        when(builder.lower(eq(frontTextPath))).thenReturn(lowerFrontText);
-        when(builder.lower(eq(backTextPath))).thenReturn(lowerBackText);
-        when(builder.like(eq(lowerFrontText), eq("%front%"))).thenReturn(frontLikePredicate);
-        when(builder.like(eq(lowerBackText), eq("%front%"))).thenReturn(backLikePredicate);
-        when(builder.or(frontLikePredicate, backLikePredicate)).thenReturn(textPredicate);
-        when(builder.and(activePredicate, deckPredicate)).thenReturn(finalPredicate);
-        when(builder.and(finalPredicate, textPredicate)).thenReturn(finalPredicate);
+        when(builder
+                .isNull(eq(deletedAtPath)))
+                .thenReturn(activePredicate);
+        when(builder
+                .equal(eq(deckIdPath), eq(10L)))
+                .thenReturn(deckPredicate);
+        when(builder
+                .lower(eq(frontTextPath)))
+                .thenReturn(lowerFrontText);
+        when(builder
+                .lower(eq(backTextPath)))
+                .thenReturn(lowerBackText);
+        when(builder
+                .like(eq(lowerFrontText), eq("%front%")))
+                .thenReturn(frontLikePredicate);
+        when(builder
+                .like(eq(lowerBackText), eq("%front%")))
+                .thenReturn(backLikePredicate);
+        when(builder
+                .or(frontLikePredicate, backLikePredicate))
+                .thenReturn(textPredicate);
+        when(builder
+                .and(activePredicate, deckPredicate))
+                .thenReturn(finalPredicate);
+        when(builder
+                .and(finalPredicate, textPredicate))
+                .thenReturn(finalPredicate);
+
         return builder;
     }
 
     @SuppressWarnings("unchecked")
     private Expression<String> castToExpression(Object value) {
+
         return (Expression<String>) value;
     }
 }

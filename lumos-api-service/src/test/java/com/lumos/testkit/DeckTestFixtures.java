@@ -13,10 +13,12 @@ public final class DeckTestFixtures {
     }
 
     public static CreateDeckRequest createDeckRequest(String name, String description) {
+        
         return new CreateDeckRequest(name, description);
     }
 
     public static UpdateDeckRequest updateDeckRequest(String name, String description) {
+        
         return new UpdateDeckRequest(name, description);
     }
 
@@ -26,6 +28,7 @@ public final class DeckTestFixtures {
             String name,
             String description,
             Integer flashcardCount) {
+        
         return new DeckResponse(
                 deckId,
                 folderId,

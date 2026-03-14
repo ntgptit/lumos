@@ -48,6 +48,7 @@ public class FolderController {
 	@PostMapping
 	public ResponseEntity<FolderResponse> createFolder(@Valid @RequestBody CreateFolderRequest request) {
 		final var folder = this.folderService.createFolder(request);
+		// Return the created folder payload so the tree view can insert the new node immediately.
 		return ResponseEntity.status(HttpStatus.CREATED).body(folder);
 	}
 
@@ -59,6 +60,7 @@ public class FolderController {
 	public ResponseEntity<FolderResponse> renameFolder(@PathVariable Long folderId,
 			@Valid @RequestBody RenameFolderRequest request) {
 		final var folder = this.folderService.renameFolder(folderId, request);
+		// Return the renamed folder payload so the tree label reflects the saved value.
 		return ResponseEntity.ok(folder);
 	}
 
@@ -70,6 +72,7 @@ public class FolderController {
 	public ResponseEntity<FolderResponse> updateFolder(@PathVariable Long folderId,
 			@Valid @RequestBody UpdateFolderRequest request) {
 		final var folder = this.folderService.updateFolder(folderId, request);
+		// Return the updated folder payload so the client reflects canonical metadata.
 		return ResponseEntity.ok(folder);
 	}
 
@@ -80,6 +83,7 @@ public class FolderController {
 	@DeleteMapping("/{folderId}")
 	public ResponseEntity<Void> deleteFolder(@PathVariable Long folderId) {
 		this.folderService.deleteFolder(folderId);
+		// Return no-content because the folder subtree was deleted and no body is needed.
 		return ResponseEntity.noContent().build();
 	}
 
@@ -93,6 +97,7 @@ public class FolderController {
 			@ModelAttribute SearchRequest searchRequest,
 			Pageable pageable) {
 		final var folders = this.folderService.getFolders(parentId, searchRequest, pageable);
+		// Return the folder list slice for the requested parent scope.
 		return ResponseEntity.ok(folders);
 	}
 }

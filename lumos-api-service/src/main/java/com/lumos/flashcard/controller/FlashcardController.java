@@ -50,6 +50,7 @@ public class FlashcardController {
     public ResponseEntity<FlashcardResponse> createFlashcard(@PathVariable Long deckId,
             @Valid @RequestBody CreateFlashcardRequest request) {
         final var flashcard = this.flashcardService.createFlashcard(deckId, request);
+        // Return the created flashcard payload so the deck detail screen can append it immediately.
         return ResponseEntity.status(HttpStatus.CREATED).body(flashcard);
     }
 
@@ -68,6 +69,7 @@ public class FlashcardController {
             @PathVariable Long flashcardId,
             @Valid @RequestBody UpdateFlashcardRequest request) {
         final var flashcard = this.flashcardService.updateFlashcard(deckId, flashcardId, request);
+        // Return the updated flashcard payload so the editor reflects the saved card.
         return ResponseEntity.ok(flashcard);
     }
 
@@ -82,6 +84,7 @@ public class FlashcardController {
     @DeleteMapping("/{flashcardId}")
     public ResponseEntity<Void> deleteFlashcard(@PathVariable Long deckId, @PathVariable Long flashcardId) {
         this.flashcardService.deleteFlashcard(deckId, flashcardId);
+        // Return no-content because the flashcard was removed and no body is required.
         return ResponseEntity.noContent().build();
     }
 
@@ -100,6 +103,7 @@ public class FlashcardController {
             @ModelAttribute SearchRequest searchRequest,
             Pageable pageable) {
         final var page = this.flashcardService.getFlashcards(deckId, searchRequest, pageable);
+        // Return the paged flashcard payload for the selected deck.
         return ResponseEntity.ok(page);
     }
 }

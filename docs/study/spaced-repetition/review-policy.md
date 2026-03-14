@@ -12,6 +12,14 @@ Trong đó:
 - `initial learning` dùng đủ 5 mode để hình thành trí nhớ ban đầu
 - `spaced review` chỉ dùng `fill` để kiểm tra recall chủ động
 
+Quy ước outcome chung:
+
+- `passed`: user nhớ được
+- `failed`: user cần học lại
+
+Không dùng outcome phụ như `revealed_without_pass` hoặc `skipped`.
+Các action hỗ trợ như reveal, help hoặc nghe audio không tự tạo review outcome.
+
 ## Luật di chuyển giữa các box
 
 ### Item mới
@@ -45,24 +53,12 @@ Ví dụ:
 - `box_3 -> box_2`
 - `box_1 -> box_1`
 
-### Outcome là revealed_without_pass
-
-- item không tăng box
-- item giữ nguyên box hiện tại
-- `next_review_at` có thể ngắn hơn tùy policy
-
-### Outcome là skipped
-
-- không thay đổi box
-- không thay đổi progress học thuật chính
-
 ## Chuẩn hóa outcome từ các mode
 
 ### Review
 
 - nhớ -> `passed`
 - cần học lại -> `failed`
-- chỉ xem mà không đánh giá -> `revealed_without_pass`
 
 Review mode thuộc `initial learning`.
 
@@ -75,9 +71,8 @@ Guess mode thuộc `initial learning`.
 
 ### Recall
 
-- `markRemembered` -> `passed`
-- `markForgotten` -> `failed`
-- reveal nhưng chưa xác nhận -> `revealed_without_pass`
+- sau khi user tự đánh giá là nhớ được -> `passed`
+- sau khi user tự đánh giá là cần học lại -> `failed`
 
 Recall mode thuộc `initial learning`.
 
@@ -85,7 +80,6 @@ Recall mode thuộc `initial learning`.
 
 - điền đúng -> `passed`
 - điền sai -> `failed`
-- chỉ hiện đáp án gợi ý nhưng chưa đạt -> `revealed_without_pass`
 
 Fill mode có hai vai trò:
 

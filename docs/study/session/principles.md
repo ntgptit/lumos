@@ -30,10 +30,25 @@ Hệ thống hỗ trợ 5 mode:
 4. `recall`
 5. `fill`
 
+Tên hiển thị tương ứng trên UI:
+
+- `review`: `Xem lại`
+- `match`: `Ghép đôi`
+- `guess`: `Đoán`
+- `recall`: `Nhớ lại`
+- `fill`: `Điền`
+
 Policy sử dụng mode:
 
 - `first-learning session`: đi qua đủ 5 mode
 - `review session`: chỉ dùng `fill`
+
+Quy tắc outcome:
+
+- chỉ có `passed` và `failed`
+- `passed` nghĩa là user nhớ được
+- `failed` nghĩa là user cần học lại
+- các action hỗ trợ như reveal, help, replay audio không tạo outcome riêng
 
 ## Phân chia trách nhiệm
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../core/themes/extensions/theme_extensions.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../buttons/lumos_buttons.dart';
 import '../cards/lumos_card.dart';
 import '../feedback/lumos_progress_bar.dart';
@@ -22,6 +23,7 @@ class LumosReviewProgress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     final double progress = _buildProgress();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -29,10 +31,10 @@ class LumosReviewProgress extends StatelessWidget {
         LumosProgressBar(value: progress),
         const SizedBox(height: AppSpacing.sm),
         LumosText(
-          '$completed / $total reviewed',
+          l10n.learningReviewProgressLabel(completed, total),
           style: LumosTextStyle.labelLarge,
         ),
-        ..._buildEstimate(),
+        ..._buildEstimate(l10n),
       ],
     );
   }
@@ -44,14 +46,17 @@ class LumosReviewProgress extends StatelessWidget {
     return completed / total;
   }
 
-  List<Widget> _buildEstimate() {
+  List<Widget> _buildEstimate(AppLocalizations l10n) {
     if (estimatedTime == null) {
       return const <Widget>[];
     }
     final int minutes = estimatedTime!.inMinutes;
     return <Widget>[
       const SizedBox(height: AppSpacing.xs),
-      LumosText('$minutes min left', style: LumosTextStyle.labelSmall),
+      LumosText(
+        l10n.learningEstimateMinutesLeft(minutes),
+        style: LumosTextStyle.labelSmall,
+      ),
     ];
   }
 }
@@ -162,16 +167,32 @@ class LumosStatsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     return LumosCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          const LumosText('Statistics', style: LumosTextStyle.titleLarge),
+          LumosText(
+            l10n.learningStatisticsTitle,
+            style: LumosTextStyle.titleLarge,
+          ),
           const SizedBox(height: AppSpacing.md),
-          LumosText('Total: $totalCards', style: LumosTextStyle.bodyMedium),
-          LumosText('Mastered: $mastered', style: LumosTextStyle.bodyMedium),
-          LumosText('Learning: $learning', style: LumosTextStyle.bodyMedium),
-          LumosText('Due: $due', style: LumosTextStyle.bodyMedium),
+          LumosText(
+            l10n.learningStatisticsTotal(totalCards),
+            style: LumosTextStyle.bodyMedium,
+          ),
+          LumosText(
+            l10n.learningStatisticsMastered(mastered),
+            style: LumosTextStyle.bodyMedium,
+          ),
+          LumosText(
+            l10n.learningStatisticsLearning(learning),
+            style: LumosTextStyle.bodyMedium,
+          ),
+          LumosText(
+            l10n.learningStatisticsDue(due),
+            style: LumosTextStyle.bodyMedium,
+          ),
           const SizedBox(height: AppSpacing.md),
           LumosProgressBar(value: retentionRate / 100),
         ],
@@ -196,20 +217,24 @@ class LumosReviewQueue extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     return LumosCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          LumosText('Due today: $dueCount', style: LumosTextStyle.titleMedium),
+          LumosText(
+            l10n.learningReviewQueueDueToday(dueCount),
+            style: LumosTextStyle.titleMedium,
+          ),
           const SizedBox(height: AppSpacing.sm),
           LumosText(
-            'Queue size: $totalForReview',
+            l10n.learningReviewQueueSize(totalForReview),
             style: LumosTextStyle.bodySmall,
           ),
           ..._buildPreview(),
           const SizedBox(height: AppSpacing.md),
           LumosPrimaryButton(
-            label: 'Start review',
+            label: l10n.learningStartReviewAction,
             onPressed: onStartReview,
             expanded: true,
           ),

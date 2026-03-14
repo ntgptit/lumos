@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../core/themes/extensions/theme_extensions.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../buttons/lumos_buttons.dart';
 import '../feedback/lumos_progress_bar.dart';
 import '../lumos_models.dart';
@@ -121,7 +122,7 @@ class LumosFlashcardBack extends StatelessWidget {
           LumosText(answer, style: LumosTextStyle.titleLarge),
           ..._buildExplanation(),
           ..._buildExample(),
-          ..._buildActions(),
+          ..._buildActions(context),
         ],
       ),
     );
@@ -157,17 +158,18 @@ class LumosFlashcardBack extends StatelessWidget {
     ];
   }
 
-  List<Widget> _buildActions() {
+  List<Widget> _buildActions(BuildContext context) {
     if (onKnown == null && onAgain == null) {
       return const <Widget>[];
     }
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     return <Widget>[
       const SizedBox(height: AppSpacing.xxl),
       Row(
         children: <Widget>[
           Expanded(
             child: LumosOutlineButton(
-              label: 'Again',
+              label: l10n.flashcardAgainAction,
               onPressed: onAgain,
               size: LumosButtonSize.small,
             ),
@@ -175,7 +177,7 @@ class LumosFlashcardBack extends StatelessWidget {
           const SizedBox(width: AppSpacing.md),
           Expanded(
             child: LumosPrimaryButton(
-              label: 'Known',
+              label: l10n.flashcardKnownAction,
               onPressed: onKnown,
               size: LumosButtonSize.small,
             ),

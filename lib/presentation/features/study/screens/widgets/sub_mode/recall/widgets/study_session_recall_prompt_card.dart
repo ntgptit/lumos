@@ -1,0 +1,79 @@
+import 'package:flutter/material.dart';
+
+import '../../../../../../../../core/constants/text_styles.dart';
+import '../../../../../../../../core/themes/foundation/app_foundation.dart';
+import '../../../../../../../../domain/entities/study/study_models.dart';
+import '../../../../../../../shared/widgets/lumos_widgets.dart';
+import '../../../../../providers/study_speech_playback_provider.dart';
+import '../../widgets/study_session_content_card.dart';
+import '../../widgets/study_session_layout_metrics.dart';
+
+const double _recallPromptIconSize = IconSizes.iconMedium;
+const double _recallPromptLineHeight =
+    AppTypographyConst.headlineLargeLineHeight /
+    AppTypographyConst.headlineLargeFontSize;
+const int _recallPromptMaxLines = 3;
+
+class StudySessionRecallPromptCard extends StatelessWidget {
+  const StudySessionRecallPromptCard({
+    required this.prompt,
+    required this.speech,
+    required this.playbackState,
+    required this.onPlayPressed,
+    super.key,
+  });
+
+  final String prompt;
+  final SpeechCapability speech;
+  final StudySpeechPlaybackState playbackState;
+  final VoidCallback onPlayPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
+    final bool isSpeechEnabled = speech.available && !playbackState.isBusy;
+    final double iconSize = StudySessionLayoutMetrics.compactIcon(
+      context,
+      baseValue: _recallPromptIconSize,
+    );
+    final EdgeInsets cardPadding = StudySessionLayoutMetrics.cardPadding(
+      context,
+      horizontal: AppSpacing.xl,
+      vertical: AppSpacing.xl,
+    );
+    final EdgeInsets topTrailingPadding =
+        StudySessionLayoutMetrics.topTrailingPadding(context);
+    final EdgeInsets bottomTrailingPadding =
+        StudySessionLayoutMetrics.bottomTrailingPadding(context);
+    return StudySessionContentCard(
+      variant: LumosCardVariant.filled,
+      topTrailing: LumosIcon(Icons.edit_outlined, size: iconSize),
+      topTrailingPadding: topTrailingPadding,
+      bottomTrailing: LumosIconButton(
+        icon: Icons.volume_up_rounded,
+        tooltip: speech.available ? speech.speechText : null,
+        onPressed: isSpeechEnabled ? onPlayPressed : null,
+      ),
+      bottomTrailingPadding: bottomTrailingPadding,
+      child: Padding(
+        padding: cardPadding,
+        child: Center(
+          child: SingleChildScrollView(
+            child: LumosInlineText(
+              prompt,
+              align: TextAlign.center,
+              maxLines: _recallPromptMaxLines,
+              overflow: TextOverflow.ellipsis,
+              style: theme.textTheme.headlineLarge?.copyWith(
+                color: colorScheme.onSurface,
+                fontWeight: FontWeight.w400,
+                height: _recallPromptLineHeight,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

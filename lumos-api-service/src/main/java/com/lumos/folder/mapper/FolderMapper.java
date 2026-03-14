@@ -28,6 +28,7 @@ public interface FolderMapper {
 
     default FolderResponse toFolderResponse(Folder folder, Integer childFolderCount) {
         final var response = toFolderResponse(folder);
+        
         return new FolderResponse(
                 response.id(),
                 response.name(),
@@ -41,10 +42,12 @@ public interface FolderMapper {
     }
 
     default AuditMetadataResponse toAuditMetadata(Folder folder) {
+        
         return new AuditMetadataResponse(folder.getCreatedAt(), folder.getUpdatedAt());
     }
 
     default Integer defaultChildFolderCount() {
+        
         return FolderConstants.DEFAULT_CHILD_FOLDER_COUNT;
     }
 }

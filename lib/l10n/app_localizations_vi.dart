@@ -431,6 +431,48 @@ class AppLocalizationsVi extends AppLocalizations {
   String get flashcardStudyCompletedToast => 'Đã hoàn thành phiên học.';
 
   @override
+  String get flashcardLearnSheetTitle => 'Chọn cách học';
+
+  @override
+  String get flashcardLearnSheetSubtitle => 'Chọn phiên học bạn muốn bắt đầu cho bộ thẻ này.';
+
+  @override
+  String get flashcardLearnContinueOptionTitle => 'Học tiếp từ chưa học/chưa pass';
+
+  @override
+  String get flashcardLearnContinueOptionSubtitle => 'Học các từ vựng còn mới hoặc chưa vượt qua.';
+
+  @override
+  String get flashcardLearnReviewOptionTitle => 'Review từ đến hạn SRS';
+
+  @override
+  String get flashcardLearnReviewOptionSubtitle => 'Ôn tập các từ vựng đã đến hạn theo lịch SRS.';
+
+  @override
+  String get flashcardLearnResetOptionTitle => 'Reset chế độ học';
+
+  @override
+  String get flashcardLearnResetOptionSubtitle => 'Xóa tiến trình học của bộ thẻ này để bắt đầu lại.';
+
+  @override
+  String get flashcardLearnContinueUnavailableToast => 'Hiện không có từ mới hoặc từ chưa pass để học.';
+
+  @override
+  String get flashcardLearnReviewUnavailableToast => 'Hiện không có từ vựng nào đến hạn review.';
+
+  @override
+  String get flashcardLearnResetConfirmTitle => 'Reset tiến trình học?';
+
+  @override
+  String get flashcardLearnResetConfirmMessage => 'Thao tác này sẽ reset toàn bộ tiến trình học của bộ thẻ hiện tại.';
+
+  @override
+  String get flashcardLearnResetConfirmAction => 'Reset tiến trình';
+
+  @override
+  String get flashcardLearnResetSuccessToast => 'Đã reset tiến trình học.';
+
+  @override
   String get flashcardCloseTooltip => 'Đóng màn hình học';
 
   @override
@@ -548,6 +590,12 @@ class AppLocalizationsVi extends AppLocalizations {
   String get homeProfileSubtitle => 'Quản lý mục tiêu và tùy chọn học tập của bạn.';
 
   @override
+  String get profileAccountSectionTitle => 'Tài khoản';
+
+  @override
+  String get profileAccountSectionSubtitle => 'Xem lại thông tin nhận diện và trạng thái của tài khoản đang đăng nhập.';
+
+  @override
   String get profileThemeSectionTitle => 'Giao diện';
 
   @override
@@ -567,4 +615,330 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get profileThemeToggleToDark => 'Chuyển nhanh sang chế độ tối';
+
+  @override
+  String get commonLogout => 'Đăng xuất';
+
+  @override
+  String get commonContinue => 'Tiếp tục';
+
+  @override
+  String get commonNext => 'Tiếp theo';
+
+  @override
+  String get commonSubmit => 'Gửi';
+
+  @override
+  String get commonCheck => 'Kiểm tra';
+
+  @override
+  String get commonReplay => 'Phát lại';
+
+  @override
+  String get authTitle => 'Lumos';
+
+  @override
+  String get authSubtitle => 'Xác thực trước, sau đó tiếp tục học theo trạng thái chuẩn từ backend.';
+
+  @override
+  String get authLoginTab => 'Đăng nhập';
+
+  @override
+  String get authRegisterTab => 'Đăng ký';
+
+  @override
+  String get authSignInAction => 'Đăng nhập';
+
+  @override
+  String get authCreateAccountAction => 'Tạo tài khoản';
+
+  @override
+  String get authUsernameLabel => 'Tên người dùng';
+
+  @override
+  String get authEmailLabel => 'Email';
+
+  @override
+  String get authPasswordLabel => 'Mật khẩu';
+
+  @override
+  String get authUsernameOrEmailLabel => 'Tên người dùng hoặc email';
+
+  @override
+  String get authShowPasswordTooltip => 'Hiện mật khẩu';
+
+  @override
+  String get authHidePasswordTooltip => 'Ẩn mật khẩu';
+
+  @override
+  String get profileSpeechSectionTitle => 'Tùy chọn giọng đọc';
+
+  @override
+  String get profileSpeechSectionSubtitle => 'Chọn giọng đọc mặc định cho thiết bị này và nghe thử trước khi vào chế độ học.';
+
+  @override
+  String get profileSpeechEnabledLabel => 'Bật giọng đọc tiếng Hàn';
+
+  @override
+  String get profileSpeechAutoPlayLabel => 'Tự phát mục hiện tại';
+
+  @override
+  String get profileSpeechAdapterLabel => 'Bộ máy đọc';
+
+  @override
+  String get profileSpeechAdapterFlutterTtsLabel => 'TTS thiết bị (Flutter TTS)';
+
+  @override
+  String get profileSpeechVoiceLabel => 'Giọng đọc';
+
+  @override
+  String get profileSpeechVoiceDefaultLabel => 'Giọng mặc định của thiết bị';
+
+  @override
+  String get profileSpeechSpeedLabel => 'Tốc độ';
+
+  @override
+  String get profileSpeechPitchLabel => 'Độ trầm bổng';
+
+  @override
+  String get profileSpeechPreviewTitle => 'Nghe thử giọng đọc';
+
+  @override
+  String get profileSpeechPreviewSubtitle => 'Chỉnh nội dung mẫu bên dưới rồi nghe thử với giọng đọc, tốc độ và độ trầm bổng hiện tại.';
+
+  @override
+  String get profileSpeechPreviewTextLabel => 'Nội dung nghe thử';
+
+  @override
+  String get profileSpeechPreviewPlayLabel => 'Nghe thử';
+
+  @override
+  String get profileSpeechPreviewStopLabel => 'Dừng';
+
+  @override
+  String get profileSpeechPreviewDefaultText => '안녕하세요. 이 문장은 현재 음성과 속도, 음높이를 테스트하기 위한 예시입니다.';
+
+  @override
+  String get profileSpeechPreviewPlaybackError => 'Thiết bị không thể phát đoạn nghe thử.';
+
+  @override
+  String get profileStudySectionTitle => 'Tùy chọn phiên học';
+
+  @override
+  String get profileStudySectionSubtitle => 'Thiết lập số thẻ mới mà backend được phép nạp cho mỗi phiên FIRST_LEARNING.';
+
+  @override
+  String get profileStudyFirstLearningLimitLabel => 'Số thẻ mới mỗi phiên FIRST_LEARNING';
+
+  @override
+  String profileStudyFirstLearningLimitValue(int count) {
+    return '$count thẻ';
+  }
+
+  @override
+  String get profileStudyReviewHint => 'Phiên REVIEW luôn lấy toàn bộ thẻ đã đến hạn.';
+
+  @override
+  String get studyProgressMomentumTitle => 'Nhịp độ học tập';
+
+  @override
+  String studyProgressMomentumSummary(int dueCount, int overdueCount, Object escalationLevel) {
+    return 'Đến hạn $dueCount | Quá hạn $overdueCount | Leo thang $escalationLevel';
+  }
+
+  @override
+  String get studyProgressRecommendedReviewTitle => 'Ôn tập được đề xuất';
+
+  @override
+  String studyProgressRecommendedReviewSummary(Object deckName, int dueCount) {
+    return '$deckName · $dueCount thẻ đến hạn';
+  }
+
+  @override
+  String get studyProgressStartReviewAction => 'Bắt đầu ôn tập';
+
+  @override
+  String get studyProgressBoxDistributionTitle => 'Phân bố 7 hộp';
+
+  @override
+  String studyProgressBoxLabel(int boxIndex) {
+    return 'Hộp $boxIndex';
+  }
+
+  @override
+  String get studyMatchCheckAction => 'Kiểm tra';
+
+  @override
+  String studyMatchCompletedItemLabel(Object label) {
+    return 'Đã ghép · $label';
+  }
+
+  @override
+  String studySpeechPanelTitle(Object locale) {
+    return 'Chuyển văn bản thành giọng nói · $locale';
+  }
+
+  @override
+  String studySpeechPanelVoiceSummary(Object voice, Object speed) {
+    return 'Giọng: $voice · Tốc độ: ${speed}x';
+  }
+
+  @override
+  String get studySpeechPlayAction => 'Nghe';
+
+  @override
+  String get studySpeechPlayingAction => 'Đang phát';
+
+  @override
+  String get studySpeechReplayAction => 'Phát lại';
+
+  @override
+  String get studyReviewFirstCardToast => 'Đây là thẻ đầu tiên.';
+
+  @override
+  String get studyResetCurrentModeAction => 'Đặt lại chế độ hiện tại';
+
+  @override
+  String get studyResetCurrentModeTitle => 'Đặt lại chế độ hiện tại?';
+
+  @override
+  String get studyResetCurrentModeMessage => 'Thao tác này sẽ xóa toàn bộ tiến độ trong chế độ học hiện tại và bắt đầu lại từ mục đầu tiên.';
+
+  @override
+  String get studyResetCurrentModeConfirm => 'Đặt lại chế độ';
+
+  @override
+  String get deckEditTooltip => 'Sửa deck';
+
+  @override
+  String get deckDeleteTooltip => 'Xóa deck';
+
+  @override
+  String get flashcardAgainAction => 'Học lại';
+
+  @override
+  String get flashcardKnownAction => 'Đã biết';
+
+  @override
+  String get exerciseMatchPairsTitle => 'Ghép cặp';
+
+  @override
+  String get exerciseCompletedLabel => 'Hoàn thành';
+
+  @override
+  String get exerciseSubmitMatchesLabel => 'Gửi cặp ghép';
+
+  @override
+  String get exerciseReorderWordsTitle => 'Sắp xếp từ';
+
+  @override
+  String get exerciseCheckOrderLabel => 'Kiểm tra thứ tự';
+
+  @override
+  String get exerciseListeningTitle => 'Bài nghe';
+
+  @override
+  String get feedbackGreatJob => 'Làm tốt lắm!';
+
+  @override
+  String feedbackResultSummaryCorrect(int correctCount, int totalCount) {
+    return '$correctCount / $totalCount câu đúng';
+  }
+
+  @override
+  String feedbackResultSummaryXpEarned(int xpEarned) {
+    return 'XP nhận được: $xpEarned';
+  }
+
+  @override
+  String feedbackResultSummaryStreakBonus(int streakBonus) {
+    return 'Thưởng chuỗi ngày: +$streakBonus XP';
+  }
+
+  @override
+  String gamificationLevelLabel(int level) {
+    return 'Cấp $level';
+  }
+
+  @override
+  String gamificationXpLabel(int xp) {
+    return '$xp XP';
+  }
+
+  @override
+  String get gamificationDailyGoalTitle => 'Mục tiêu hằng ngày';
+
+  @override
+  String gamificationDailyGoalProgress(int current, int goal, Object unit) {
+    return '$current/$goal $unit';
+  }
+
+  @override
+  String learningReviewProgressLabel(int completed, int total) {
+    return '$completed / $total đã ôn';
+  }
+
+  @override
+  String learningEstimateMinutesLeft(int minutes) {
+    return 'Còn $minutes phút';
+  }
+
+  @override
+  String get learningStatisticsTitle => 'Thống kê';
+
+  @override
+  String learningStatisticsTotal(int count) {
+    return 'Tổng: $count';
+  }
+
+  @override
+  String learningStatisticsMastered(int count) {
+    return 'Đã thành thạo: $count';
+  }
+
+  @override
+  String learningStatisticsLearning(int count) {
+    return 'Đang học: $count';
+  }
+
+  @override
+  String learningStatisticsDue(int count) {
+    return 'Đến hạn: $count';
+  }
+
+  @override
+  String learningReviewQueueDueToday(int count) {
+    return 'Đến hạn hôm nay: $count';
+  }
+
+  @override
+  String learningReviewQueueSize(int count) {
+    return 'Kích thước hàng đợi: $count';
+  }
+
+  @override
+  String get learningStartReviewAction => 'Bắt đầu ôn tập';
+
+  @override
+  String get onboardingPlacementTestTitle => 'Bài kiểm tra xếp lớp';
+
+  @override
+  String onboardingQuestionCount(int count) {
+    return '$count câu hỏi';
+  }
+
+  @override
+  String get onboardingCompleteTestAction => 'Hoàn thành bài kiểm tra';
+
+  @override
+  String get formAnswerHint => 'Nhập câu trả lời';
+
+  @override
+  String get studyFillAnswerRequiredValidation => 'Câu trả lời là bắt buộc.';
+
+  @override
+  String get formTapToSpeakAction => 'Chạm để nói';
+
+  @override
+  String get formFillBlankHint => 'Điền vào chỗ trống';
 }

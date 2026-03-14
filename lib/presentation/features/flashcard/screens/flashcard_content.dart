@@ -8,35 +8,20 @@ import '../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../core/constants/route_names.dart';
 import '../../../../core/utils/string_utils.dart';
 import '../../../../domain/entities/flashcard_models.dart';
+import '../../../../domain/entities/study/study_models.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../shared/widgets/lumos_widgets.dart';
-import '../../home/screens/widgets/blocks/home_bottom_nav.dart';
+import '../../home/screens/widgets/blocks/footer/home_bottom_nav.dart';
+import '../../study/providers/study_session_launcher_provider.dart';
 import '../providers/flashcard_provider.dart';
 import '../providers/states/flashcard_state.dart';
-import '../../study/screens/flashcard_flip_study_screen.dart';
-import 'widgets/blocks/flashcard_card_section_header.dart';
-import 'widgets/blocks/flashcard_preview_carousel.dart';
-import 'widgets/blocks/flashcard_set_metadata_section.dart';
-import 'widgets/blocks/flashcard_study_action_section.dart';
-import 'widgets/blocks/flashcard_study_progress_section.dart';
-import 'widgets/blocks/flashcard_tile.dart';
+import 'flashcard_content_support.dart';
+import 'widgets/blocks/content/flashcard_list_content.dart';
+import 'widgets/blocks/header/flashcard_study_action_section.dart';
 import 'widgets/dialogs/flashcard_dialogs.dart';
-import 'widgets/states/flashcard_empty_view.dart';
-
-abstract final class FlashcardContentConst {
-  FlashcardContentConst._();
-
-  static const Duration searchDebounceDuration = AppDurations.medium;
-  static const double listBottomSpacing = AppSpacing.canvas;
-  static const double loadMoreThreshold = AppSpacing.canvas;
-  static const double listItemSpacing = AppSpacing.sm;
-  static const double sectionSpacing = AppSpacing.lg;
-  static const double progressMaskTopInset = AppSpacing.sm;
-  static const double progressMaskHeight = WidgetSizes.progressTrackHeight;
-  static const double previewViewportFraction = 0.96;
-  static const double screenVerticalPadding = AppSpacing.lg;
-  static const int defaultLearningProgressCount = 0;
-}
+import 'widgets/dialogs/flashcard_learn_options_sheet.dart';
+import 'widgets/states/flashcard_loading_mask.dart';
+import 'widgets/states/flashcard_mutating_overlay.dart';
 
 class FlashcardContent extends ConsumerStatefulWidget {
   const FlashcardContent({required this.state, super.key});
@@ -72,7 +57,7 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
     _searchController = TextEditingController(text: initialState.searchQuery);
     _previewController = PageController(
       initialPage: initialState.safePreviewIndex,
-      viewportFraction: FlashcardContentConst.previewViewportFraction,
+      viewportFraction: FlashcardContentSupportConst.previewViewportFraction,
     );
   }
 
@@ -97,12 +82,22 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
   @override
   Widget build(BuildContext context) {
     _syncSearchController();
+    final double screenVerticalPadding = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardContentSupportConst.screenVerticalPadding,
+      minScale: ResponsiveDimensions.compactVerticalInsetScale,
+    );
     final FlashcardState state = widget.state;
     final AppLocalizations l10n = AppLocalizations.of(context)!;
     final String title = _displayTitle(
       deckName: state.deckName,
       fallbackTitle: l10n.flashcardTitle,
     );
+    final String sortLabel = _buildSortLabel(l10n: l10n, state: state);
+    final List<FlashcardStudyActionSectionItem> studyActions =
+        _buildStudyActions(l10n: l10n);
+    final int notStartedCount = _notStartedCount(state: state);
+    final int masteredCount = _masteredCount(state: state);
     final ThemeData screenTheme = _buildScreenTheme(context: context);
     return Theme(
       data: screenTheme,
@@ -138,16 +133,73 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
             RefreshIndicator(
               onRefresh: _controller.refresh,
               child: LumosScreenFrame(
-                verticalPadding: FlashcardContentConst.screenVerticalPadding,
-                child: _buildPagedList(
-                  context: context,
+                verticalPadding: screenVerticalPadding,
+                child: FlashcardListContent(
+                  scrollController: _scrollController,
+                  searchController: _searchController,
+                  previewController: _previewController,
                   state: state,
                   l10n: l10n,
+                  title: title,
+                  sortLabel: sortLabel,
+                  studyActions: studyActions,
+                  notStartedCount: notStartedCount,
+                  masteredCount: masteredCount,
+                  onSearchChanged: _onSearchChanged,
+                  onSearchCleared: _onSearchCleared,
+                  onOpenCreateDialog: () {
+                    unawaited(_openCreateDialog(context: context, l10n: l10n));
+                  },
+                  onShowSortSheet: () {
+                    unawaited(_showSortSheet(context: context));
+                  },
+                  onSetPreviewIndex: _controller.setPreviewIndex,
+                  onOpenStudyFromPreview: _openStudyScreenFromPreview,
+                  onOpenStudyAtPreview: () {
+                    _openStudyScreen(
+                      initialIndex: widget.state.safePreviewIndex,
+                    );
+                  },
+                  isStarredResolver: (FlashcardNode item) {
+                    return _starredStateForItem(item: item, state: state);
+                  },
+                  onAudioPressed: (FlashcardNode item) {
+                    _controller.startAudioPlayingIndicator(item.id);
+                    _showInfoSnackBar(
+                      context: context,
+                      message: l10n.flashcardAudioPlayToast(item.frontText),
+                    );
+                  },
+                  onStarPressed: (FlashcardNode item) {
+                    final bool isStarred = _starredStateForItem(
+                      item: item,
+                      state: state,
+                    );
+                    _controller.toggleStar(item.id);
+                    final String message = isStarred
+                        ? l10n.flashcardUnbookmarkToast
+                        : l10n.flashcardBookmarkToast;
+                    _showInfoSnackBar(context: context, message: message);
+                  },
+                  onEditPressed: (FlashcardNode item) {
+                    unawaited(
+                      _openEditDialog(context: context, l10n: l10n, item: item),
+                    );
+                  },
+                  onDeletePressed: (FlashcardNode item) {
+                    unawaited(
+                      _openDeleteDialog(
+                        context: context,
+                        l10n: l10n,
+                        item: item,
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
-            _buildLoadingMask(isVisible: state.isRefreshing),
-            _buildMutatingOverlay(isVisible: state.isMutating),
+            FlashcardLoadingMask(isVisible: state.isRefreshing),
+            FlashcardMutatingOverlay(isVisible: state.isMutating),
           ],
         ),
         bottomNavigationBar: context.deviceType == DeviceType.mobile
@@ -168,298 +220,47 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
     );
   }
 
-  Widget _buildPagedList({
-    required BuildContext context,
-    required FlashcardState state,
+  List<FlashcardStudyActionSectionItem> _buildStudyActions({
     required AppLocalizations l10n,
   }) {
-    return LumosPagedSliverList(
-      controller: _scrollController,
-      leadingSlivers: _buildLeadingSlivers(
-        context: context,
-        state: state,
-        l10n: l10n,
-      ),
-      trailingSlivers: _buildTrailingSlivers(state: state),
-      itemCount: state.items.length,
-      itemBuilder: (BuildContext context, int index) {
-        final FlashcardNode item = state.items[index];
-        return Padding(
-          key: ValueKey<int>(item.id),
-          padding: const EdgeInsets.only(
-            bottom: FlashcardContentConst.listItemSpacing,
-          ),
-          child: _buildFlashcardTile(
-            context: context,
-            l10n: l10n,
-            item: item,
-            state: state,
-          ),
-        );
-      },
-      emptySliver: FlashcardEmptyView(
-        isSearchResult: state.searchQuery.isNotEmpty,
-        onCreatePressed: () => _openCreateDialog(context: context, l10n: l10n),
-      ),
-    );
-  }
-
-  List<Widget> _buildLeadingSlivers({
-    required BuildContext context,
-    required FlashcardState state,
-    required AppLocalizations l10n,
-  }) {
-    final List<Widget> slivers = <Widget>[];
-    if (state.inlineErrorMessage case final String message) {
-      slivers.add(
-        SliverToBoxAdapter(child: _FlashcardErrorBanner(message: message)),
-      );
-      slivers.add(
-        const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.md)),
-      );
-    }
-    if (state.hasItems) {
-      slivers.add(
-        SliverToBoxAdapter(
-          child: FlashcardPreviewCarousel(
-            items: state.items,
-            pageController: _previewController,
-            previewIndex: state.safePreviewIndex,
-            onPageChanged: _controller.setPreviewIndex,
-            onExpandPressed: _openStudyScreenFromPreview,
-          ),
-        ),
-      );
-      slivers.add(
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.only(
-              top: FlashcardContentConst.sectionSpacing,
-            ),
-            child: FlashcardSetMetadataSection(
-              title: _displayTitle(
-                deckName: state.deckName,
-                fallbackTitle: l10n.flashcardTitle,
-              ),
-              totalFlashcards: state.totalElements,
-            ),
-          ),
-        ),
-      );
-    }
-    if (state.isSearchVisible) {
-      slivers.add(
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.only(
-              top: FlashcardContentConst.sectionSpacing,
-            ),
-            child: LumosSearchBar(
-              controller: _searchController,
-              autoFocus: true,
-              hint: l10n.flashcardSearchHint,
-              clearTooltip: l10n.flashcardSearchClearTooltip,
-              onSearch: _onSearchChanged,
-              onClear: _onSearchCleared,
-            ),
-          ),
-        ),
-      );
-    }
-    if (state.hasItems) {
-      slivers.add(
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.only(
-              top: FlashcardContentConst.sectionSpacing,
-            ),
-            child: FlashcardStudyActionSection(
-              actions: _buildStudyActions(l10n: l10n),
-            ),
-          ),
-        ),
-      );
-      slivers.add(
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.only(
-              top: FlashcardContentConst.sectionSpacing,
-            ),
-            child: FlashcardStudyProgressSection(
-              title: l10n.flashcardProgressTitle,
-              description: l10n.flashcardProgressDescription,
-              notStartedLabel: l10n.flashcardProgressNotStartedLabel,
-              learningLabel: l10n.flashcardProgressLearningLabel,
-              masteredLabel: l10n.flashcardProgressMasteredLabel,
-              notStartedCount: _notStartedCount(state: state),
-              learningCount: FlashcardContentConst.defaultLearningProgressCount,
-              masteredCount: _masteredCount(state: state),
-              totalCount: state.totalElements,
-              onNotStartedPressed: () {
-                _openStudyScreen(initialIndex: widget.state.safePreviewIndex);
-              },
-              onLearningPressed: () {
-                _openStudyScreen(initialIndex: widget.state.safePreviewIndex);
-              },
-              onMasteredPressed: () {
-                _openStudyScreen(initialIndex: widget.state.safePreviewIndex);
-              },
-            ),
-          ),
-        ),
-      );
-      slivers.add(
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.only(
-              top: FlashcardContentConst.sectionSpacing,
-            ),
-            child: FlashcardCardSectionHeader(
-              title: l10n.flashcardCardSectionTitle,
-              subtitle: l10n.flashcardTotalLabel(state.totalElements),
-              sortLabel: _buildSortLabel(l10n: l10n, state: state),
-              onSortPressed: () => _showSortSheet(context: context),
-            ),
-          ),
-        ),
-      );
-      slivers.add(
-        const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.md)),
-      );
-    }
-    return slivers;
-  }
-
-  List<Widget> _buildTrailingSlivers({required FlashcardState state}) {
-    final List<Widget> slivers = <Widget>[];
-    if (state.isLoadingMore) {
-      slivers.add(
-        const SliverToBoxAdapter(
-          child: Padding(
-            padding: EdgeInsets.only(top: AppSpacing.md, bottom: AppSpacing.sm),
-            child: Center(child: LumosLoadingIndicator()),
-          ),
-        ),
-      );
-    }
-    slivers.add(
-      const SliverToBoxAdapter(
-        child: SizedBox(height: FlashcardContentConst.listBottomSpacing),
-      ),
-    );
-    return slivers;
-  }
-
-  Widget _buildFlashcardTile({
-    required BuildContext context,
-    required AppLocalizations l10n,
-    required FlashcardNode item,
-    required FlashcardState state,
-  }) {
-    final bool isStarred = _starredStateForItem(item: item, state: state);
-    final bool isAudioPlaying = state.playingFlashcardId == item.id;
-    return FlashcardTile(
-      item: item,
-      isStarred: isStarred,
-      isAudioPlaying: isAudioPlaying,
-      onAudioPressed: () {
-        _controller.startAudioPlayingIndicator(item.id);
-        _showInfoSnackBar(
-          context: context,
-          message: l10n.flashcardAudioPlayToast(item.frontText),
-        );
-      },
-      onStarPressed: () {
-        _controller.toggleStar(item.id);
-        final String message = isStarred
-            ? l10n.flashcardUnbookmarkToast
-            : l10n.flashcardBookmarkToast;
-        _showInfoSnackBar(context: context, message: message);
-      },
-      onEditPressed: () =>
-          _openEditDialog(context: context, l10n: l10n, item: item),
-      onDeletePressed: () =>
-          _openDeleteDialog(context: context, l10n: l10n, item: item),
-    );
-  }
-
-  List<FlashcardStudyAction> _buildStudyActions({
-    required AppLocalizations l10n,
-  }) {
-    return <FlashcardStudyAction>[
-      FlashcardStudyAction(
+    return <FlashcardStudyActionSectionItem>[
+      FlashcardStudyActionSectionItem(
         label: l10n.flashcardReviewActionLabel,
         icon: Icons.layers_rounded,
         onPressed: () =>
             _openStudyScreen(initialIndex: widget.state.safePreviewIndex),
-        tone: FlashcardStudyActionTone.primary,
+        tone: FlashcardStudyActionSectionTone.primary,
       ),
-      FlashcardStudyAction(
+      FlashcardStudyActionSectionItem(
         label: l10n.flashcardLearnActionLabel,
         icon: Icons.refresh_rounded,
-        onPressed: () =>
-            _openStudyScreen(initialIndex: widget.state.safePreviewIndex),
-        tone: FlashcardStudyActionTone.info,
+        onPressed: () {
+          unawaited(_showLearnOptionsSheet());
+        },
+        tone: FlashcardStudyActionSectionTone.info,
       ),
-      FlashcardStudyAction(
+      FlashcardStudyActionSectionItem(
         label: l10n.flashcardQuizActionLabel,
         icon: Icons.description_outlined,
         onPressed: () =>
             _openStudyScreen(initialIndex: widget.state.safePreviewIndex),
-        tone: FlashcardStudyActionTone.warning,
+        tone: FlashcardStudyActionSectionTone.warning,
       ),
-      FlashcardStudyAction(
+      FlashcardStudyActionSectionItem(
         label: l10n.flashcardMatchActionLabel,
         icon: Icons.compare_arrows_rounded,
         onPressed: () =>
             _openStudyScreen(initialIndex: widget.state.safePreviewIndex),
-        tone: FlashcardStudyActionTone.success,
+        tone: FlashcardStudyActionSectionTone.success,
       ),
-      FlashcardStudyAction(
+      FlashcardStudyActionSectionItem(
         label: l10n.flashcardBlastActionLabel,
         icon: Icons.rocket_launch_rounded,
         onPressed: () =>
             _openStudyScreen(initialIndex: widget.state.safePreviewIndex),
-        tone: FlashcardStudyActionTone.primary,
+        tone: FlashcardStudyActionSectionTone.primary,
       ),
     ];
-  }
-
-  Widget _buildLoadingMask({required bool isVisible}) {
-    if (!isVisible) {
-      return const SizedBox.shrink();
-    }
-    return IgnorePointer(
-      child: Align(
-        alignment: Alignment.topCenter,
-        child: Padding(
-          padding: const EdgeInsets.only(
-            top: FlashcardContentConst.progressMaskTopInset,
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadii.medium,
-            child: const LumosLoadingIndicator(
-              isLinear: true,
-              size: FlashcardContentConst.progressMaskHeight,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMutatingOverlay({required bool isVisible}) {
-    if (!isVisible) {
-      return const SizedBox.shrink();
-    }
-    return Positioned.fill(
-      child: IgnorePointer(
-        child: ColoredBox(
-          color: Theme.of(context).colorScheme.scrim,
-          child: const Center(child: LumosLoadingIndicator()),
-        ),
-      ),
-    );
   }
 
   int _masteredCount({required FlashcardState state}) {
@@ -539,7 +340,7 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
   void _onSearchChanged(String value) {
     _searchDebounceTimer?.cancel();
     _searchDebounceTimer = Timer(
-      FlashcardContentConst.searchDebounceDuration,
+      FlashcardContentSupportConst.searchDebounceDuration,
       () {
         _controller.updateSearchQuery(value);
       },
@@ -568,7 +369,7 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
       return;
     }
     final double remainingScroll = position.maxScrollExtent - position.pixels;
-    if (remainingScroll > FlashcardContentConst.loadMoreThreshold) {
+    if (remainingScroll > FlashcardContentSupportConst.loadMoreThreshold) {
       return;
     }
     unawaited(_controller.loadMore());
@@ -666,16 +467,14 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
       initialValue: state.sortBy,
       directionSectionTitle: l10n.commonDirection,
       initialDirectionIndex: _directionIndexFromValue(state.sortDirection),
-      directionLabelBuilder: (
-        FlashcardSortBy selectedSortBy,
-        int directionIndex,
-      ) {
-        return _directionLabelForIndex(
-          l10n: l10n,
-          sortBy: selectedSortBy,
-          directionIndex: directionIndex,
-        );
-      },
+      directionLabelBuilder:
+          (FlashcardSortBy selectedSortBy, int directionIndex) {
+            return _directionLabelForIndex(
+              l10n: l10n,
+              sortBy: selectedSortBy,
+              directionIndex: directionIndex,
+            );
+          },
       applyLabel: l10n.flashcardSortSaveButton,
       onApply: (FlashcardSortBy selectedSortBy, int directionIndex) {
         _applySort(
@@ -742,37 +541,117 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
       );
       return;
     }
-    final int safeIndex = _safeStudyIndex(
-      initialIndex: initialIndex,
-      itemCount: state.items.length,
-    );
-    final FlashcardFlipStudyRouteExtra extra = FlashcardFlipStudyRouteExtra(
-      items: state.items,
-      initialIndex: safeIndex,
-      starredFlashcardIds: state.starredFlashcardIds.toSet(),
-    );
     context.pushNamed(
-      AppRouteName.flashcardStudy,
+      AppRouteName.studySession,
       pathParameters: <String, String>{
         AppRouteParam.deckId: state.deckId.toString(),
       },
       queryParameters: <String, String>{AppRouteQuery.deckName: state.deckName},
-      extra: extra,
     );
   }
 
-  int _safeStudyIndex({required int initialIndex, required int itemCount}) {
-    if (itemCount == 0) {
-      return FlashcardStateConst.firstPage;
+  Future<void> _showLearnOptionsSheet() async {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
+    final FlashcardState state = widget.state;
+    if (state.items.isEmpty) {
+      _showInfoSnackBar(
+        context: context,
+        message: l10n.flashcardStudyUnavailableToast,
+      );
+      return;
     }
-    final int maxIndex = itemCount - 1;
-    if (initialIndex < FlashcardStateConst.firstPage) {
-      return FlashcardStateConst.firstPage;
+    final FlashcardLearnOptionsSheetAction? action =
+        await showFlashcardLearnOptionsSheet(context: context);
+    if (!mounted || action == null) {
+      return;
     }
-    if (initialIndex > maxIndex) {
-      return maxIndex;
+    if (action == FlashcardLearnOptionsSheetAction.firstLearning) {
+      await _startStudySession(
+        preferredSessionType: StudySessionTypeOption.firstLearning,
+        unavailableMessage: l10n.flashcardLearnContinueUnavailableToast,
+      );
+      return;
     }
-    return initialIndex;
+    if (action == FlashcardLearnOptionsSheetAction.review) {
+      await _startStudySession(
+        preferredSessionType: StudySessionTypeOption.review,
+        unavailableMessage: l10n.flashcardLearnReviewUnavailableToast,
+      );
+      return;
+    }
+    await _showResetStudyProgressDialog();
+  }
+
+  Future<void> _startStudySession({
+    required StudySessionTypeOption preferredSessionType,
+    required String unavailableMessage,
+  }) async {
+    final FlashcardState state = widget.state;
+    try {
+      final StudySessionData session = await ref
+          .read(studySessionLauncherProvider.notifier)
+          .startSession(
+            deckId: state.deckId,
+            preferredSessionType: preferredSessionType,
+          );
+      if (!mounted) {
+        return;
+      }
+      context.pushNamed(
+        AppRouteName.studySession,
+        pathParameters: <String, String>{
+          AppRouteParam.deckId: state.deckId.toString(),
+        },
+        queryParameters: <String, String>{
+          AppRouteQuery.deckName: state.deckName,
+          AppRouteQuery.sessionId: session.sessionId.toString(),
+        },
+      );
+    } catch (_) {
+      if (!mounted) {
+        return;
+      }
+      _showErrorSnackBar(context: context, message: unavailableMessage);
+    }
+  }
+
+  Future<void> _showResetStudyProgressDialog() {
+    return showFlashcardConfirmDialog(
+      context: context,
+      titleBuilder: (AppLocalizations l10n) {
+        return l10n.flashcardLearnResetConfirmTitle;
+      },
+      messageBuilder: (AppLocalizations l10n) {
+        return l10n.flashcardLearnResetConfirmMessage;
+      },
+      confirmLabelBuilder: (AppLocalizations l10n) {
+        return l10n.flashcardLearnResetConfirmAction;
+      },
+      onConfirmed: _resetDeckStudyProgress,
+    );
+  }
+
+  Future<void> _resetDeckStudyProgress() async {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
+    final FlashcardState state = widget.state;
+    try {
+      await ref
+          .read(studySessionLauncherProvider.notifier)
+          .resetDeckProgress(deckId: state.deckId);
+      await _controller.refresh();
+      if (!mounted) {
+        return;
+      }
+      _showInfoSnackBar(
+        context: context,
+        message: l10n.flashcardLearnResetSuccessToast,
+      );
+    } catch (_) {
+      if (!mounted) {
+        return;
+      }
+      _showErrorSnackBar(context: context, message: l10n.commonRetry);
+    }
   }
 
   bool _starredStateForItem({
@@ -809,26 +688,16 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
       ),
     );
   }
-}
 
-class _FlashcardErrorBanner extends StatelessWidget {
-  const _FlashcardErrorBanner({required this.message});
-
-  final String message;
-
-  @override
-  Widget build(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(
-        color: colorScheme.errorContainer,
-        borderRadius: BorderRadii.medium,
-      ),
-      child: LumosText(
-        message,
-        style: LumosTextStyle.bodySmall,
-        containerRole: LumosTextContainerRole.errorContainer,
+  void _showErrorSnackBar({
+    required BuildContext context,
+    required String message,
+  }) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      LumosSnackbar(
+        context: context,
+        message: message,
+        type: LumosSnackbarType.error,
       ),
     );
   }

@@ -49,6 +49,7 @@ public interface FlashcardMapper {
             boolean hasPrevious);
 
     default AuditMetadataResponse toAuditMetadata(Flashcard flashcard) {
+        
         return new AuditMetadataResponse(flashcard.getCreatedAt(), flashcard.getUpdatedAt());
     }
 }

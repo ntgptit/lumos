@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../core/themes/extensions/theme_extensions.dart';
 import '../../../../core/themes/semantic/app_color_tokens.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../cards/lumos_card.dart';
 import '../feedback/lumos_progress_bar.dart';
 import '../typography/lumos_text.dart';
@@ -23,6 +24,7 @@ class LumosXPBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     final double badgeSize = size ?? IconSizes.iconXLarge;
     final double progress = _buildProgress();
     return LumosCard(
@@ -34,8 +36,14 @@ class LumosXPBadge extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                LumosText('Level $level', style: LumosTextStyle.titleMedium),
-                LumosText('$currentXP XP', style: LumosTextStyle.bodySmall),
+                LumosText(
+                  l10n.gamificationLevelLabel(level),
+                  style: LumosTextStyle.titleMedium,
+                ),
+                LumosText(
+                  l10n.gamificationXpLabel(currentXP),
+                  style: LumosTextStyle.bodySmall,
+                ),
                 const SizedBox(height: AppSpacing.xs),
                 LumosProgressBar(value: progress),
               ],
@@ -192,14 +200,21 @@ class LumosDailyGoal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     final double progress = _buildProgress();
     return LumosCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          const LumosText('Daily Goal', style: LumosTextStyle.titleMedium),
+          LumosText(
+            l10n.gamificationDailyGoalTitle,
+            style: LumosTextStyle.titleMedium,
+          ),
           const SizedBox(height: AppSpacing.sm),
-          LumosText('$current/$goal $unit', style: LumosTextStyle.bodyMedium),
+          LumosText(
+            l10n.gamificationDailyGoalProgress(current, goal, unit),
+            style: LumosTextStyle.bodyMedium,
+          ),
           const SizedBox(height: AppSpacing.sm),
           LumosProgressBar(value: progress),
         ],

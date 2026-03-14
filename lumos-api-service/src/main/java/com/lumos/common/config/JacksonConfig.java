@@ -25,6 +25,7 @@ public class JacksonConfig {
                                 .construct(
                                         JsonInclude.Include.NON_NULL,
                                         JsonInclude.Include.NON_NULL));
+        // Return the shared JSON mapper configured for ISO date output and null-field omission.
         return objectMapper;
     }
 }

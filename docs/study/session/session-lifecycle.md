@@ -39,6 +39,12 @@ Mỗi command trả về:
 - progress summary
 - next allowed actions
 
+Lưu ý:
+
+- canonical learning outcome chỉ có `passed` hoặc `failed`
+- các command hỗ trợ như `revealAnswer` không tự sinh ra outcome riêng
+- outcome chỉ được chốt khi user hoàn tất bước đánh giá hoặc kiểm tra của mode hiện tại
+
 ## Tạo session
 
 Backend quyết định loại session cần mở:

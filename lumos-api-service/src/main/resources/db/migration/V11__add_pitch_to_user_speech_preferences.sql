@@ -1,0 +1,2 @@
+ALTER TABLE user_speech_preferences
+    ADD COLUMN pitch DOUBLE PRECISION NOT NULL DEFAULT 1.0;

@@ -23,6 +23,7 @@ public class DeckSpecifications {
     private static final String LIKE_PATTERN_TEMPLATE = "%%%s%%";
 
     public static Specification<Deck> byFolderAndKeyword(Long folderId, String searchQuery) {
+        
         return Specification
                 .where(isActive())
                 .and(hasFolder(folderId))
@@ -33,25 +34,31 @@ public class DeckSpecifications {
         final var resolvedSortBy = resolveSortBy(sortBy);
         final var resolvedSortType = resolveSortType(sortType);
         final var resolvedSort = resolveSort(resolvedSortBy, resolvedSortType);
+        
         return PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), resolvedSort);
     }
 
     private static Specification<Deck> isActive() {
+        
         return (root, query, builder) -> builder.isNull(root.get(ATTRIBUTE_DELETED_AT));
     }
 
     private static Specification<Deck> hasFolder(Long folderId) {
+        
         return (root, query, builder) -> builder.equal(root.get(ATTRIBUTE_FOLDER).get(ATTRIBUTE_ID), folderId);
     }
 
     private static Specification<Deck> nameContains(String searchQuery) {
+        
         return (root, query, builder) -> {
-            // Skip keyword filter when search query is blank.
+            // Keep the specification broad when the caller did not provide a keyword filter.
             if (StringUtils.isBlank(searchQuery)) {
+                
                 return builder.conjunction();
             }
             final var normalizedKeyword = StringUtils.lowerCase(StringUtils.trim(searchQuery));
             final var likePattern = String.format(LIKE_PATTERN_TEMPLATE, normalizedKeyword);
+            
             return builder.like(builder.lower(root.get(ATTRIBUTE_NAME)), likePattern);
         };
     }
@@ -59,40 +66,50 @@ public class DeckSpecifications {
     private static SortBy resolveSortBy(SortBy sortBy) {
         // Default sort field is name when client omits sortBy.
         if (sortBy == null) {
+            
             return SortBy.NAME;
         }
+        
         return sortBy;
     }
 
     private static SortType resolveSortType(SortType sortType) {
         // Default sort direction is ascending when client omits sortType.
         if (sortType == null) {
+            
             return SortType.ASC;
         }
+        
         return sortType;
     }
 
     private static Sort resolveSort(SortBy sortBy, SortType sortType) {
         // CREATED_AT field uses timestamp order with id as stable tie-breaker.
         if (sortBy == SortBy.CREATED_AT) {
+            
             return resolveCreatedAtSort(sortType);
         }
+        
         return resolveNameSort(sortType);
     }
 
     private static Sort resolveNameSort(SortType sortType) {
         // Descending token maps to case-insensitive name descending.
         if (sortType == SortType.DESC) {
+            
             return Sort.by(Sort.Order.desc(ATTRIBUTE_NAME).ignoreCase(), Sort.Order.asc(ATTRIBUTE_ID));
         }
+        
         return Sort.by(Sort.Order.asc(ATTRIBUTE_NAME).ignoreCase(), Sort.Order.asc(ATTRIBUTE_ID));
     }
 
     private static Sort resolveCreatedAtSort(SortType sortType) {
         // Descending token maps to newest deck first.
         if (sortType == SortType.DESC) {
+            
             return Sort.by(Sort.Order.desc(ATTRIBUTE_CREATED_AT), Sort.Order.asc(ATTRIBUTE_ID));
         }
+        
         return Sort.by(Sort.Order.asc(ATTRIBUTE_CREATED_AT), Sort.Order.asc(ATTRIBUTE_ID));
     }
 }

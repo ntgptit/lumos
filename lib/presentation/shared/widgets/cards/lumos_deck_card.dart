@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../core/themes/extensions/theme_extensions.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../buttons/lumos_buttons.dart';
 import '../feedback/lumos_progress_bar.dart';
 import '../typography/lumos_text.dart';
@@ -304,6 +305,7 @@ class _LumosDeckCardState extends State<LumosDeckCard>
   }
 
   Widget _buildInlineActions() {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
@@ -311,13 +313,13 @@ class _LumosDeckCardState extends State<LumosDeckCard>
           LumosIconButton(
             icon: Icons.edit_outlined,
             onPressed: widget.onEdit,
-            tooltip: 'Edit deck',
+            tooltip: l10n.deckEditTooltip,
           ),
         if (widget.onDelete != null)
           LumosIconButton(
             icon: Icons.delete_outline,
             onPressed: widget.onDelete,
-            tooltip: 'Delete deck',
+            tooltip: l10n.deckDeleteTooltip,
           ),
       ],
     );
@@ -337,6 +339,7 @@ class _SwipeActionPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     final ColorScheme colorScheme = context.colorScheme;
 
     return Row(
@@ -347,7 +350,7 @@ class _SwipeActionPanel extends StatelessWidget {
             icon: Icons.edit_outlined,
             color: colorScheme.surfaceContainerHigh,
             iconColor: colorScheme.onSurfaceVariant,
-            tooltip: 'Edit deck',
+            tooltip: l10n.deckEditTooltip,
             onPressed: () {
               onClose();
               onEdit!();
@@ -358,7 +361,7 @@ class _SwipeActionPanel extends StatelessWidget {
             icon: Icons.delete_outline,
             color: colorScheme.errorContainer,
             iconColor: colorScheme.onErrorContainer,
-            tooltip: 'Delete deck',
+            tooltip: l10n.deckDeleteTooltip,
             onPressed: () {
               onClose();
               onDelete!();
