@@ -1361,6 +1361,12 @@ abstract class AppLocalizations {
   /// **'Speech preference'**
   String get profileSpeechSectionTitle;
 
+  /// No description provided for @profileSpeechSectionSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the default reading voice for this device and test it before studying.'**
+  String get profileSpeechSectionSubtitle;
+
   /// No description provided for @profileSpeechEnabledLabel.
   ///
   /// In en, this message translates to:
@@ -1373,17 +1379,83 @@ abstract class AppLocalizations {
   /// **'Auto play current item'**
   String get profileSpeechAutoPlayLabel;
 
+  /// No description provided for @profileSpeechAdapterLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Speech engine'**
+  String get profileSpeechAdapterLabel;
+
+  /// No description provided for @profileSpeechAdapterFlutterTtsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Device TTS (Flutter TTS)'**
+  String get profileSpeechAdapterFlutterTtsLabel;
+
   /// No description provided for @profileSpeechVoiceLabel.
   ///
   /// In en, this message translates to:
   /// **'Voice'**
   String get profileSpeechVoiceLabel;
 
+  /// No description provided for @profileSpeechVoiceDefaultLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Device default voice'**
+  String get profileSpeechVoiceDefaultLabel;
+
   /// No description provided for @profileSpeechSpeedLabel.
   ///
   /// In en, this message translates to:
   /// **'Speed'**
   String get profileSpeechSpeedLabel;
+
+  /// No description provided for @profileSpeechPitchLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Pitch'**
+  String get profileSpeechPitchLabel;
+
+  /// No description provided for @profileSpeechPreviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice preview'**
+  String get profileSpeechPreviewTitle;
+
+  /// No description provided for @profileSpeechPreviewSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit the sample text below and listen with the current voice, speed, and pitch.'**
+  String get profileSpeechPreviewSubtitle;
+
+  /// No description provided for @profileSpeechPreviewTextLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview text'**
+  String get profileSpeechPreviewTextLabel;
+
+  /// No description provided for @profileSpeechPreviewPlayLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Play preview'**
+  String get profileSpeechPreviewPlayLabel;
+
+  /// No description provided for @profileSpeechPreviewStopLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop'**
+  String get profileSpeechPreviewStopLabel;
+
+  /// No description provided for @profileSpeechPreviewDefaultText.
+  ///
+  /// In en, this message translates to:
+  /// **'안녕하세요. 이 문장은 현재 음성과 속도, 음높이를 테스트하기 위한 예시입니다.'**
+  String get profileSpeechPreviewDefaultText;
+
+  /// No description provided for @profileSpeechPreviewPlaybackError.
+  ///
+  /// In en, this message translates to:
+  /// **'The device could not play the preview audio.'**
+  String get profileSpeechPreviewPlaybackError;
 
   /// No description provided for @profileStudySectionTitle.
   ///

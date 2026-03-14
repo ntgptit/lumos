@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.util.List;
 
 import com.lumos.study.enums.StudyMode;
+import com.lumos.study.enums.TtsAdapterType;
 
 import lombok.experimental.UtilityClass;
 
@@ -11,8 +12,10 @@ import lombok.experimental.UtilityClass;
 public class StudyConstants {
 
     public static final String SPEECH_LOCALE = "ko-KR";
-    public static final String DEFAULT_SPEECH_VOICE = "ko-KR-neutral";
+    public static final TtsAdapterType DEFAULT_TTS_ADAPTER = TtsAdapterType.FLUTTER_TTS;
+    public static final String DEFAULT_SPEECH_VOICE = "";
     public static final double DEFAULT_SPEECH_SPEED = 1.0D;
+    public static final double DEFAULT_SPEECH_PITCH = 1.0D;
     public static final int DEFAULT_FIRST_LEARNING_CARD_LIMIT = 20;
     public static final int MIN_FIRST_LEARNING_CARD_LIMIT = 1;
     public static final int MAX_FIRST_LEARNING_CARD_LIMIT = 100;

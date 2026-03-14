@@ -1,9 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_tts/flutter_tts.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../../core/speech/providers/tts_engine_registry_provider.dart';
+import '../../../../core/speech/tts_engine_catalog.dart';
+import '../../../../core/speech/tts_engine_registry.dart';
+import '../../../../core/speech/tts_engine_speak_request.dart';
 import '../../../../domain/entities/study/study_models.dart';
 
 part 'study_speech_playback_provider.g.dart';
@@ -64,45 +67,14 @@ class StudySpeechPlaybackState {
 const Object _unsetSpeechValue = Object();
 
 @Riverpod(keepAlive: true)
-FlutterTts studySpeechEngine(Ref ref) {
-  final FlutterTts speechEngine = FlutterTts();
-  ref.onDispose(() {
-    unawaited(speechEngine.stop());
-  });
-  return speechEngine;
-}
-
-@Riverpod(keepAlive: true)
 class StudySpeechPlaybackController extends _$StudySpeechPlaybackController {
   @override
   StudySpeechPlaybackState build(int sessionId) {
-    final FlutterTts speechEngine = ref.watch(studySpeechEngineProvider);
-    speechEngine.setStartHandler(() {
-      state = state.copyWith(
-        isBusy: false,
-        isPlaying: true,
-        errorMessage: null,
-      );
-    });
-    speechEngine.setCompletionHandler(() {
-      state = state.copyWith(
-        isBusy: false,
-        isPlaying: false,
-        errorMessage: null,
-      );
-    });
-    speechEngine.setCancelHandler(() {
-      state = state.copyWith(isBusy: false, isPlaying: false);
-    });
-    speechEngine.setErrorHandler((dynamic message) {
-      state = state.copyWith(
-        isBusy: false,
-        isPlaying: false,
-        errorMessage: message?.toString(),
-      );
-    });
+    final TtsEngineRegistry engineRegistry = ref.read(
+      ttsEngineRegistryProvider,
+    );
     ref.onDispose(() {
-      unawaited(speechEngine.stop());
+      unawaited(engineRegistry.stopAll());
     });
     return const StudySpeechPlaybackState.initial();
   }
@@ -114,8 +86,10 @@ class StudySpeechPlaybackController extends _$StudySpeechPlaybackController {
     if (state.activeFlashcardId == flashcardId) {
       return;
     }
-    final FlutterTts speechEngine = ref.read(studySpeechEngineProvider);
-    await speechEngine.stop();
+    final TtsEngineRegistry engineRegistry = ref.read(
+      ttsEngineRegistryProvider,
+    );
+    await engineRegistry.stopAll();
     state = state.copyWith(
       isBusy: false,
       isPlaying: false,
@@ -149,16 +123,29 @@ class StudySpeechPlaybackController extends _$StudySpeechPlaybackController {
       activeFlashcardId: flashcardId,
       errorMessage: null,
     );
-    final FlutterTts speechEngine = ref.read(studySpeechEngineProvider);
+    final TtsEngineRegistry engineRegistry = ref.read(
+      ttsEngineRegistryProvider,
+    );
+    final String resolvedAdapter = normalizeTtsAdapter(speech.adapter);
     try {
-      await speechEngine.awaitSpeakCompletion(true);
-      await speechEngine.setLanguage(speech.locale);
-      await speechEngine.setSpeechRate(speech.speed / 2);
-      await speechEngine.setVoice(<String, String>{
-        'name': speech.voice,
-        'locale': speech.locale,
-      });
-      await speechEngine.speak(speech.speechText);
+      await engineRegistry.stopAll();
+      state = state.copyWith(isBusy: false, isPlaying: true);
+      await engineRegistry
+          .resolve(resolvedAdapter)
+          .speak(
+            request: TtsEngineSpeakRequest(
+              text: speech.speechText,
+              locale: speech.locale,
+              voice: speech.voice,
+              speed: speech.speed,
+              pitch: speech.pitch,
+            ),
+          );
+      state = state.copyWith(
+        isBusy: false,
+        isPlaying: false,
+        errorMessage: null,
+      );
       if (isAutoPlay) {
         state = state.copyWith(autoPlayedFlashcardId: flashcardId);
       }
@@ -172,8 +159,10 @@ class StudySpeechPlaybackController extends _$StudySpeechPlaybackController {
   }
 
   Future<void> stop() async {
-    final FlutterTts speechEngine = ref.read(studySpeechEngineProvider);
-    await speechEngine.stop();
+    final TtsEngineRegistry engineRegistry = ref.read(
+      ttsEngineRegistryProvider,
+    );
+    await engineRegistry.stopAll();
     state = state.copyWith(isBusy: false, isPlaying: false);
   }
 }

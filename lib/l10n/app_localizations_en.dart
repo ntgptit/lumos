@@ -674,16 +674,52 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileSpeechSectionTitle => 'Speech preference';
 
   @override
+  String get profileSpeechSectionSubtitle => 'Choose the default reading voice for this device and test it before studying.';
+
+  @override
   String get profileSpeechEnabledLabel => 'Enable Korean speech';
 
   @override
   String get profileSpeechAutoPlayLabel => 'Auto play current item';
 
   @override
+  String get profileSpeechAdapterLabel => 'Speech engine';
+
+  @override
+  String get profileSpeechAdapterFlutterTtsLabel => 'Device TTS (Flutter TTS)';
+
+  @override
   String get profileSpeechVoiceLabel => 'Voice';
 
   @override
+  String get profileSpeechVoiceDefaultLabel => 'Device default voice';
+
+  @override
   String get profileSpeechSpeedLabel => 'Speed';
+
+  @override
+  String get profileSpeechPitchLabel => 'Pitch';
+
+  @override
+  String get profileSpeechPreviewTitle => 'Voice preview';
+
+  @override
+  String get profileSpeechPreviewSubtitle => 'Edit the sample text below and listen with the current voice, speed, and pitch.';
+
+  @override
+  String get profileSpeechPreviewTextLabel => 'Preview text';
+
+  @override
+  String get profileSpeechPreviewPlayLabel => 'Play preview';
+
+  @override
+  String get profileSpeechPreviewStopLabel => 'Stop';
+
+  @override
+  String get profileSpeechPreviewDefaultText => '안녕하세요. 이 문장은 현재 음성과 속도, 음높이를 테스트하기 위한 예시입니다.';
+
+  @override
+  String get profileSpeechPreviewPlaybackError => 'The device could not play the preview audio.';
 
   @override
   String get profileStudySectionTitle => 'Study preference';

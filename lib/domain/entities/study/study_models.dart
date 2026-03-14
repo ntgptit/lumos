@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 
+import 'study_speech_contract.dart';
+
 enum StudySessionTypeOption {
   firstLearning('FIRST_LEARNING'),
   review('REVIEW');
@@ -66,9 +68,11 @@ class SpeechCapability {
     required this.enabled,
     required this.autoPlay,
     required this.available,
+    required this.adapter,
     required this.locale,
     required this.voice,
     required this.speed,
+    required this.pitch,
     required this.fieldName,
     required this.sourceType,
     required this.audioUrl,
@@ -81,9 +85,11 @@ class SpeechCapability {
       enabled: json['enabled'] as bool? ?? false,
       autoPlay: json['autoPlay'] as bool? ?? false,
       available: json['available'] as bool? ?? false,
+      adapter: json['adapter'] as String? ?? studySpeechAdapterFlutterTts,
       locale: json['locale'] as String? ?? '',
-      voice: json['voice'] as String? ?? '',
+      voice: json['voice'] as String? ?? studySpeechVoiceUnspecified,
       speed: (json['speed'] as num?)?.toDouble() ?? 1,
+      pitch: (json['pitch'] as num?)?.toDouble() ?? 1,
       fieldName: json['fieldName'] as String? ?? '',
       sourceType: json['sourceType'] as String? ?? '',
       audioUrl: json['audioUrl'] as String? ?? '',
@@ -96,9 +102,11 @@ class SpeechCapability {
   final bool enabled;
   final bool autoPlay;
   final bool available;
+  final String adapter;
   final String locale;
   final String voice;
   final double speed;
+  final double pitch;
   final String fieldName;
   final String sourceType;
   final String audioUrl;
@@ -350,8 +358,10 @@ class SpeechPreference {
   const SpeechPreference({
     required this.enabled,
     required this.autoPlay,
+    required this.adapter,
     required this.voice,
     required this.speed,
+    required this.pitch,
     required this.locale,
   });
 
@@ -359,39 +369,49 @@ class SpeechPreference {
     return SpeechPreference(
       enabled: json['enabled'] as bool? ?? false,
       autoPlay: json['autoPlay'] as bool? ?? false,
-      voice: json['voice'] as String? ?? '',
+      adapter: json['adapter'] as String? ?? studySpeechAdapterFlutterTts,
+      voice: json['voice'] as String? ?? studySpeechVoiceUnspecified,
       speed: (json['speed'] as num?)?.toDouble() ?? 1,
+      pitch: (json['pitch'] as num?)?.toDouble() ?? 1,
       locale: json['locale'] as String? ?? '',
     );
   }
 
   final bool enabled;
   final bool autoPlay;
+  final String adapter;
   final String voice;
   final double speed;
+  final double pitch;
   final String locale;
 
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'enabled': enabled,
       'autoPlay': autoPlay,
+      'adapter': adapter,
       'voice': voice,
       'speed': speed,
+      'pitch': pitch,
     };
   }
 
   SpeechPreference copyWith({
     bool? enabled,
     bool? autoPlay,
+    String? adapter,
     String? voice,
     double? speed,
+    double? pitch,
     String? locale,
   }) {
     return SpeechPreference(
       enabled: enabled ?? this.enabled,
       autoPlay: autoPlay ?? this.autoPlay,
+      adapter: adapter ?? this.adapter,
       voice: voice ?? this.voice,
       speed: speed ?? this.speed,
+      pitch: pitch ?? this.pitch,
       locale: locale ?? this.locale,
     );
   }

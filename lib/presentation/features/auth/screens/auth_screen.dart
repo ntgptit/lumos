@@ -65,13 +65,18 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             context.goNamed(AppRouteName.home);
           });
         }
+        final double screenPadding = ResponsiveDimensions.compactValue(
+          context: context,
+          baseValue: AppSpacing.xl,
+          minScale: ResponsiveDimensions.compactLargeInsetScale,
+        );
         return Scaffold(
           body: SafeArea(
             child: Center(
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 520),
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(AppSpacing.xl),
+                  padding: EdgeInsets.all(screenPadding),
                   child: AuthFormCard(
                     mode: mode,
                     authState: authState,

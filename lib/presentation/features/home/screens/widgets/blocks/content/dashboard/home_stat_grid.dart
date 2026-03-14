@@ -25,6 +25,16 @@ class HomeStatGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
+    final double cardPadding = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.lg,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double itemGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.md,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     final List<_HomeStatItem> stats = <_HomeStatItem>[
       _HomeStatItem(
         label: l10n.homeStreakLabel,
@@ -51,10 +61,10 @@ class HomeStatGrid extends StatelessWidget {
             children: stats
                 .map(
                   (_HomeStatItem stat) => Padding(
-                    padding: const EdgeInsets.only(bottom: AppSpacing.md),
+                    padding: EdgeInsets.only(bottom: itemGap),
                     child: LumosSectionCard(
                       variant: LumosCardVariant.outlined,
-                      padding: const EdgeInsets.all(AppSpacing.lg),
+                      padding: EdgeInsets.all(cardPadding),
                       margin: EdgeInsets.zero,
                       elevation: HomeStatGridConst.cardElevation,
                       child: Row(
@@ -114,7 +124,7 @@ class HomeStatGrid extends StatelessWidget {
                     ),
                     child: LumosSectionCard(
                       variant: LumosCardVariant.outlined,
-                      padding: const EdgeInsets.all(AppSpacing.lg),
+                      padding: EdgeInsets.all(cardPadding),
                       margin: EdgeInsets.zero,
                       elevation: HomeStatGridConst.cardElevation,
                       child: Row(

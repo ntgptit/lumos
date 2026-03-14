@@ -28,10 +28,20 @@ class ProfileStudySection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
+    final double cardPadding = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.lg,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double sectionGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.lg,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return LumosCard(
       margin: EdgeInsets.zero,
       child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
+        padding: EdgeInsets.all(cardPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -44,7 +54,7 @@ class ProfileStudySection extends StatelessWidget {
               l10n.profileStudySectionSubtitle,
               style: LumosTextStyle.bodyMedium,
             ),
-            const SizedBox(height: AppSpacing.lg),
+            SizedBox(height: sectionGap),
             LumosDropdown<int>(
               value: preference.firstLearningCardLimit,
               label: l10n.profileStudyFirstLearningLimitLabel,

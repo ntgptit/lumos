@@ -15,6 +15,35 @@ abstract final class StringUtils {
     return normalized.toUpperCase();
   }
 
+  static String normalizeLocaleTag(String rawValue) {
+    final String normalized = normalizeName(rawValue);
+    return normalized.replaceAll('_', '-');
+  }
+
+  static String localeLanguageCode(String rawValue) {
+    final String normalized = normalizeLower(normalizeLocaleTag(rawValue));
+    if (normalized.isEmpty) {
+      return '';
+    }
+    final int separatorIndex = normalized.indexOf('-');
+    if (separatorIndex < 0) {
+      return normalized;
+    }
+    return prefix(normalized, separatorIndex);
+  }
+
+  static String firstLine(String rawValue) {
+    final String normalized = normalizeName(rawValue);
+    if (normalized.isEmpty) {
+      return '';
+    }
+    final int lineBreakIndex = normalized.indexOf('\n');
+    if (lineBreakIndex < 0) {
+      return normalized;
+    }
+    return prefix(normalized, lineBreakIndex);
+  }
+
   static int compareNormalizedLower(String left, String right) {
     final String normalizedLeft = normalizeLower(left);
     final String normalizedRight = normalizeLower(right);

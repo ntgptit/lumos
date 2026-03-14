@@ -51,8 +51,10 @@ public class SpeechPreferenceServiceImpl implements SpeechPreferenceService {
         final UserSpeechPreference preference = resolvePreference();
         preference.setEnabled(request.enabled());
         preference.setAutoPlay(request.autoPlay());
+        preference.setAdapter(request.adapter());
         preference.setVoice(request.voice());
         preference.setSpeed(request.speed());
+        preference.setPitch(request.pitch());
         // Return the saved preference snapshot so the client stays aligned with the backend canonical state.
         return toResponse(preference);
     }
@@ -73,8 +75,10 @@ public class SpeechPreferenceServiceImpl implements SpeechPreferenceService {
         preference.setUserAccount(userAccount);
         preference.setEnabled(Boolean.TRUE);
         preference.setAutoPlay(Boolean.FALSE);
+        preference.setAdapter(StudyConstants.DEFAULT_TTS_ADAPTER);
         preference.setVoice(StudyConstants.DEFAULT_SPEECH_VOICE);
         preference.setSpeed(StudyConstants.DEFAULT_SPEECH_SPEED);
+        preference.setPitch(StudyConstants.DEFAULT_SPEECH_PITCH);
         preference.setLocale(StudyConstants.SPEECH_LOCALE);
         // Return the newly persisted default preference so later reads and updates reuse the same record.
         return this.userSpeechPreferenceRepository.save(preference);

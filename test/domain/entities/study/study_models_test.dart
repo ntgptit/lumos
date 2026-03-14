@@ -1,68 +1,74 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lumos/domain/entities/study/study_models.dart';
+import 'package:lumos/domain/entities/study/study_speech_contract.dart';
 
 void main() {
   group('Study models', () {
     test('fromJson maps study session payload', () {
-      final StudySessionData session = StudySessionData.fromJson(<String, dynamic>{
-        'sessionId': 33,
-        'deckId': 10,
-        'deckName': 'Korean Basics',
-        'sessionType': 'FIRST_LEARNING',
-        'activeMode': 'REVIEW',
-        'modeState': 'IN_PROGRESS',
-        'modePlan': const <String>['REVIEW', 'MATCH'],
-        'allowedActions': const <String>['REVEAL_ANSWER'],
-        'progress': <String, dynamic>{
-          'completedItems': 1,
-          'totalItems': 2,
-          'completedModes': 0,
-          'totalModes': 5,
-          'itemProgress': 0.5,
-          'modeProgress': 0.0,
-          'sessionProgress': 0.1,
-        },
-        'currentItem': <String, dynamic>{
-          'flashcardId': 101,
-          'prompt': '안녕하세요',
-          'answer': 'xin chao',
-          'note': 'note',
-          'pronunciation': 'annyeonghaseyo',
-          'instruction': 'Reveal the answer',
-          'inputPlaceholder': '',
-          'choices': <Map<String, dynamic>>[
-            <String, dynamic>{'id': 'choice-0', 'label': 'xin chao'},
-          ],
-          'matchPairs': <Map<String, dynamic>>[
-            <String, dynamic>{
-              'leftId': 'left-101',
-              'leftLabel': '안녕하세요',
-              'rightId': 'right-101',
-              'rightLabel': 'xin chao',
-            },
-          ],
-          'speech': <String, dynamic>{
-            'enabled': true,
-            'autoPlay': false,
-            'available': true,
-            'locale': 'ko-KR',
-            'voice': 'ko-KR-neutral',
-            'speed': 1.0,
-            'fieldName': 'prompt',
-            'sourceType': 'text',
-            'audioUrl': '',
-            'allowedActions': const <String>['play_speech', 'replay_speech'],
-            'speechText': '안녕하세요',
+      final StudySessionData session = StudySessionData.fromJson(
+        <String, dynamic>{
+          'sessionId': 33,
+          'deckId': 10,
+          'deckName': 'Korean Basics',
+          'sessionType': 'FIRST_LEARNING',
+          'activeMode': 'REVIEW',
+          'modeState': 'IN_PROGRESS',
+          'modePlan': const <String>['REVIEW', 'MATCH'],
+          'allowedActions': const <String>['REVEAL_ANSWER'],
+          'progress': <String, dynamic>{
+            'completedItems': 1,
+            'totalItems': 2,
+            'completedModes': 0,
+            'totalModes': 5,
+            'itemProgress': 0.5,
+            'modeProgress': 0.0,
+            'sessionProgress': 0.1,
           },
+          'currentItem': <String, dynamic>{
+            'flashcardId': 101,
+            'prompt': '안녕하세요',
+            'answer': 'xin chao',
+            'note': 'note',
+            'pronunciation': 'annyeonghaseyo',
+            'instruction': 'Reveal the answer',
+            'inputPlaceholder': '',
+            'choices': <Map<String, dynamic>>[
+              <String, dynamic>{'id': 'choice-0', 'label': 'xin chao'},
+            ],
+            'matchPairs': <Map<String, dynamic>>[
+              <String, dynamic>{
+                'leftId': 'left-101',
+                'leftLabel': '안녕하세요',
+                'rightId': 'right-101',
+                'rightLabel': 'xin chao',
+              },
+            ],
+            'speech': <String, dynamic>{
+              'enabled': true,
+              'autoPlay': false,
+              'available': true,
+              'adapter': studySpeechAdapterFlutterTts,
+              'locale': 'ko-KR',
+              'voice': 'ko-KR-neutral',
+              'speed': 1.0,
+              'pitch': 1.0,
+              'fieldName': 'prompt',
+              'sourceType': 'text',
+              'audioUrl': '',
+              'allowedActions': const <String>['play_speech', 'replay_speech'],
+              'speechText': '안녕하세요',
+            },
+          },
+          'sessionCompleted': false,
         },
-        'sessionCompleted': false,
-      });
+      );
 
       expect(session.sessionId, 33);
       expect(session.currentItem.flashcardId, 101);
       expect(session.currentItem.choices.single.label, 'xin chao');
       expect(session.currentItem.matchPairs.single.leftId, 'left-101');
       expect(session.currentItem.speech.locale, 'ko-KR');
+      expect(session.currentItem.speech.pitch, 1.0);
     });
 
     test('StudyReminderSummary.fromJson maps nullable recommendation', () {
@@ -88,15 +94,16 @@ void main() {
     });
 
     test('StudyAnalyticsOverview.fromJson maps boxDistribution keys', () {
-      final StudyAnalyticsOverview overview =
-          StudyAnalyticsOverview.fromJson(<String, dynamic>{
-            'totalLearnedItems': 12,
-            'dueCount': 4,
-            'overdueCount': 2,
-            'passedAttempts': 9,
-            'failedAttempts': 3,
-            'boxDistribution': <String, dynamic>{'1': 3, '2': 4},
-          });
+      final StudyAnalyticsOverview overview = StudyAnalyticsOverview.fromJson(
+        <String, dynamic>{
+          'totalLearnedItems': 12,
+          'dueCount': 4,
+          'overdueCount': 2,
+          'passedAttempts': 9,
+          'failedAttempts': 3,
+          'boxDistribution': <String, dynamic>{'1': 3, '2': 4},
+        },
+      );
 
       expect(overview.boxDistribution[1], 3);
       expect(overview.boxDistribution[2], 4);
@@ -106,28 +113,35 @@ void main() {
       const SpeechPreference preference = SpeechPreference(
         enabled: true,
         autoPlay: false,
+        adapter: studySpeechAdapterFlutterTts,
         voice: 'ko-KR-neutral',
         speed: 1,
+        pitch: 1,
         locale: 'ko-KR',
       );
 
       final SpeechPreference updated = preference.copyWith(
         enabled: false,
         autoPlay: true,
+        adapter: studySpeechAdapterFlutterTts,
         voice: 'ko-KR-female',
         speed: 1.2,
+        pitch: 1.2,
       );
       final Map<String, dynamic> json = updated.toJson();
 
       expect(updated.enabled, isFalse);
       expect(updated.autoPlay, isTrue);
       expect(updated.voice, 'ko-KR-female');
+      expect(updated.pitch, 1.2);
       expect(updated.locale, 'ko-KR');
       expect(json, <String, dynamic>{
         'enabled': false,
         'autoPlay': true,
+        'adapter': studySpeechAdapterFlutterTts,
         'voice': 'ko-KR-female',
         'speed': 1.2,
+        'pitch': 1.2,
       });
     });
   });

@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lumos/data/repositories/profile/profile_repository_impl.dart';
 import 'package:lumos/domain/entities/study/study_models.dart';
+import 'package:lumos/domain/entities/study/study_speech_contract.dart';
 
 void main() {
   group('DioProfileRepository', () {
@@ -28,8 +29,10 @@ void main() {
                         'speechPreference': <String, dynamic>{
                           'enabled': true,
                           'autoPlay': false,
-                          'voice': 'ko-KR-neutral',
+                          'adapter': studySpeechAdapterFlutterTts,
+                          'voice': studySpeechVoiceUnspecified,
                           'speed': 1.0,
+                          'pitch': 1.0,
                           'locale': 'ko-KR',
                         },
                       },
@@ -45,8 +48,10 @@ void main() {
                       data: <String, dynamic>{
                         'enabled': true,
                         'autoPlay': false,
-                        'voice': 'ko-KR-neutral',
+                        'adapter': studySpeechAdapterFlutterTts,
+                        'voice': studySpeechVoiceUnspecified,
                         'speed': 1.0,
+                        'pitch': 1.0,
                         'locale': 'ko-KR',
                       },
                     ),
@@ -80,7 +85,9 @@ void main() {
 
       expect(profile.user.username, 'tester');
       expect(profile.studyPreference.firstLearningCardLimit, 20);
-      expect(profile.speechPreference.voice, 'ko-KR-neutral');
+      expect(profile.speechPreference.adapter, studySpeechAdapterFlutterTts);
+      expect(profile.speechPreference.voice, studySpeechVoiceUnspecified);
+      expect(profile.speechPreference.pitch, 1.0);
       expect(speechPreference.enabled, isTrue);
       expect(updatedSpeech.autoPlay, isFalse);
       expect(studyPreference.firstLearningCardLimit, 20);

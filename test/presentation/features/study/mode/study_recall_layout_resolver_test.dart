@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lumos/domain/entities/study/study_models.dart';
+import 'package:lumos/domain/entities/study/study_speech_contract.dart';
 import 'package:lumos/presentation/features/study/mode/recall_study_mode_view_strategy.dart';
 import 'package:lumos/presentation/features/study/mode/study_mode_action_button_style.dart';
 import 'package:lumos/presentation/features/study/mode/study_mode_action_view_model.dart';
@@ -9,7 +10,8 @@ void main() {
   test(
     'timeout branch creates fallback next action when backend omits GO_NEXT',
     () {
-      const RecallStudyModeViewStrategy strategy = RecallStudyModeViewStrategy();
+      const RecallStudyModeViewStrategy strategy =
+          RecallStudyModeViewStrategy();
       final StudySessionData session = _buildSession(
         allowedActions: const <String>[
           'REVEAL_ANSWER',
@@ -68,9 +70,11 @@ StudySessionData _buildSession({required List<String> allowedActions}) {
         enabled: true,
         autoPlay: false,
         available: true,
+        adapter: studySpeechAdapterFlutterTts,
         locale: 'ko-KR',
         voice: 'ko-KR-neutral',
         speed: 1,
+        pitch: 1,
         fieldName: 'prompt',
         sourceType: 'text',
         audioUrl: '',

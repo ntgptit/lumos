@@ -16,6 +16,11 @@ class HomeContent extends StatelessWidget {
     final DeviceType deviceType = context.deviceType;
     final AppLocalizations l10n = AppLocalizations.of(context)!;
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final double sectionGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.xxl,
+      minScale: ResponsiveDimensions.compactLargeInsetScale,
+    );
     return ColoredBox(
       color: colorScheme.surface,
       child: SingleChildScrollView(
@@ -27,9 +32,9 @@ class HomeContent extends StatelessWidget {
                 order: 0,
                 child: HomeHeroCard(deviceType: deviceType, l10n: l10n),
               ),
-              const SizedBox(height: AppSpacing.xxl),
+              SizedBox(height: sectionGap),
               const HomeAnimatedReveal(order: 1, child: HomeStatGrid()),
-              const SizedBox(height: AppSpacing.xxl),
+              SizedBox(height: sectionGap),
               HomeAnimatedReveal(
                 order: 2,
                 child: HomeSplitSection(deviceType: deviceType),

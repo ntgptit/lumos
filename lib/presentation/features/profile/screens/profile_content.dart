@@ -3,9 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/speech/providers/tts_voice_options_provider.dart';
+import '../../../../core/speech/tts_voice_option.dart';
 import '../../../../core/providers/theme_provider.dart';
 import '../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../domain/entities/profile/profile_models.dart';
+import '../../../../domain/entities/study/study_speech_contract.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../shared/widgets/lumos_widgets.dart';
 import '../../auth/providers/auth_session_provider.dart';
@@ -29,6 +32,16 @@ class ProfileContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
+    final double screenPadding = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.lg,
+      minScale: ResponsiveDimensions.compactOuterInsetScale,
+    );
+    final double sectionGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.lg,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     final AsyncValue<ProfileData> profileAsync = ref.watch(
       profileControllerProvider,
     );
@@ -41,7 +54,7 @@ class ProfileContent extends ConsumerWidget {
             maxWidth: ProfileContentConst.maxWidth,
           ),
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(AppSpacing.lg),
+            padding: EdgeInsets.all(screenPadding),
             child: profileAsync.when(
               loading: () => const Center(child: LumosLoadingIndicator()),
               error: (Object error, StackTrace stackTrace) {
@@ -55,11 +68,28 @@ class ProfileContent extends ConsumerWidget {
                 );
               },
               data: (ProfileData profile) {
+                final AsyncValue<List<TtsVoiceOption>> voiceOptionsAsync = ref
+                    .watch(
+                      ttsVoiceOptionsProvider(
+                        profile.speechPreference.adapter,
+                        profile.speechPreference.locale,
+                      ),
+                    );
+                final List<TtsVoiceOption> voiceOptions =
+                    voiceOptionsAsync.asData?.value ?? const <TtsVoiceOption>[];
+                String selectedVoiceId = studySpeechVoiceUnspecified;
+                for (final TtsVoiceOption option in voiceOptions) {
+                  if (option.id != profile.speechPreference.voice) {
+                    continue;
+                  }
+                  selectedVoiceId = option.id;
+                  break;
+                }
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     ProfileAccountCard(user: profile.user),
-                    const SizedBox(height: AppSpacing.lg),
+                    SizedBox(height: sectionGap),
                     ProfileThemeSection(
                       themeMode: themeMode,
                       onPreferenceChanged: (AppThemePreference preference) {
@@ -75,7 +105,7 @@ class ProfileContent extends ConsumerWidget {
                         );
                       },
                     ),
-                    const SizedBox(height: AppSpacing.lg),
+                    SizedBox(height: sectionGap),
                     ProfileStudySection(
                       preference: profile.studyPreference,
                       onLimitChanged: (int limit) {
@@ -90,7 +120,7 @@ class ProfileContent extends ConsumerWidget {
                         );
                       },
                     ),
-                    const SizedBox(height: AppSpacing.lg),
+                    SizedBox(height: sectionGap),
                     ProfileSpeechSection(
                       preference: profile.speechPreference,
                       onEnabledChanged: (bool enabled) {
@@ -115,6 +145,20 @@ class ProfileContent extends ConsumerWidget {
                               ),
                         );
                       },
+                      onAdapterChanged: (String adapter) {
+                        unawaited(
+                          ref
+                              .read(profileControllerProvider.notifier)
+                              .updateSpeechPreference(
+                                profile.speechPreference.copyWith(
+                                  adapter: adapter,
+                                  voice: studySpeechVoiceUnspecified,
+                                ),
+                              ),
+                        );
+                      },
+                      voiceOptions: voiceOptions,
+                      selectedVoiceId: selectedVoiceId,
                       onVoiceChanged: (String voice) {
                         unawaited(
                           ref
@@ -133,8 +177,17 @@ class ProfileContent extends ConsumerWidget {
                               ),
                         );
                       },
+                      onPitchChanged: (double pitch) {
+                        unawaited(
+                          ref
+                              .read(profileControllerProvider.notifier)
+                              .updateSpeechPreference(
+                                profile.speechPreference.copyWith(pitch: pitch),
+                              ),
+                        );
+                      },
                     ),
-                    const SizedBox(height: AppSpacing.lg),
+                    SizedBox(height: sectionGap),
                     ProfileLogoutButton(
                       label: l10n.commonLogout,
                       onPressed: () {

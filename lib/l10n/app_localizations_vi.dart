@@ -674,16 +674,52 @@ class AppLocalizationsVi extends AppLocalizations {
   String get profileSpeechSectionTitle => 'Tùy chọn giọng đọc';
 
   @override
+  String get profileSpeechSectionSubtitle => 'Chọn giọng đọc mặc định cho thiết bị này và nghe thử trước khi vào chế độ học.';
+
+  @override
   String get profileSpeechEnabledLabel => 'Bật giọng đọc tiếng Hàn';
 
   @override
   String get profileSpeechAutoPlayLabel => 'Tự phát mục hiện tại';
 
   @override
+  String get profileSpeechAdapterLabel => 'Bộ máy đọc';
+
+  @override
+  String get profileSpeechAdapterFlutterTtsLabel => 'TTS thiết bị (Flutter TTS)';
+
+  @override
   String get profileSpeechVoiceLabel => 'Giọng đọc';
 
   @override
+  String get profileSpeechVoiceDefaultLabel => 'Giọng mặc định của thiết bị';
+
+  @override
   String get profileSpeechSpeedLabel => 'Tốc độ';
+
+  @override
+  String get profileSpeechPitchLabel => 'Độ trầm bổng';
+
+  @override
+  String get profileSpeechPreviewTitle => 'Nghe thử giọng đọc';
+
+  @override
+  String get profileSpeechPreviewSubtitle => 'Chỉnh nội dung mẫu bên dưới rồi nghe thử với giọng đọc, tốc độ và độ trầm bổng hiện tại.';
+
+  @override
+  String get profileSpeechPreviewTextLabel => 'Nội dung nghe thử';
+
+  @override
+  String get profileSpeechPreviewPlayLabel => 'Nghe thử';
+
+  @override
+  String get profileSpeechPreviewStopLabel => 'Dừng';
+
+  @override
+  String get profileSpeechPreviewDefaultText => '안녕하세요. 이 문장은 현재 음성과 속도, 음높이를 테스트하기 위한 예시입니다.';
+
+  @override
+  String get profileSpeechPreviewPlaybackError => 'Thiết bị không thể phát đoạn nghe thử.';
 
   @override
   String get profileStudySectionTitle => 'Tùy chọn phiên học';

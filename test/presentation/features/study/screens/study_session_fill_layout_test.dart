@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lumos/domain/entities/study/study_models.dart';
+import 'package:lumos/domain/entities/study/study_speech_contract.dart';
 import 'package:lumos/l10n/app_localizations.dart';
 import 'package:lumos/presentation/features/study/mode/fill_study_mode_view_strategy.dart';
 import 'package:lumos/presentation/features/study/mode/study_mode_view_model.dart';
@@ -268,9 +269,11 @@ StudySessionData _buildFillSession({
         enabled: true,
         autoPlay: false,
         available: true,
+        adapter: studySpeechAdapterFlutterTts,
         locale: 'ko-KR',
         voice: 'ko-KR-neutral',
         speed: 1,
+        pitch: 1,
         fieldName: 'prompt',
         sourceType: 'text',
         audioUrl: '',

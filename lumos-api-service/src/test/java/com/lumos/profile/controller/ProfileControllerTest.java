@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.lumos.profile.service.ProfileService;
+import com.lumos.study.enums.TtsAdapterType;
 import com.lumos.study.service.SpeechPreferenceService;
 import com.lumos.study.service.StudyPreferenceService;
 
@@ -58,7 +59,13 @@ class ProfileControllerTest {
 
     @Test
     void updateSpeechPreference_returnsOkResponse() {
-        final var request = updateSpeechPreferenceRequest(true, true, "ko-KR-female", 1.2D);
+        final var request = updateSpeechPreferenceRequest(
+                true,
+                true,
+                TtsAdapterType.FLUTTER_TTS,
+                "ko-KR-female",
+                1.2D,
+                1.1D);
         final var response = speechPreferenceResponse();
         when(this.speechPreferenceService.updateSpeechPreference(request)).thenReturn(response);
 

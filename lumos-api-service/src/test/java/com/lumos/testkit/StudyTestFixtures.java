@@ -8,6 +8,7 @@ import com.lumos.study.dto.request.SubmitAnswerRequest;
 import com.lumos.study.dto.request.StudyMatchPairRequest;
 import com.lumos.study.dto.request.UpdateStudyPreferenceRequest;
 import com.lumos.study.dto.request.UpdateSpeechPreferenceRequest;
+import com.lumos.study.enums.TtsAdapterType;
 import com.lumos.study.enums.StudySessionType;
 import com.lumos.reminder.dto.response.ReminderRecommendationResponse;
 import com.lumos.reminder.dto.response.ReminderSummaryResponse;
@@ -49,10 +50,12 @@ public final class StudyTestFixtures {
     public static UpdateSpeechPreferenceRequest updateSpeechPreferenceRequest(
             boolean enabled,
             boolean autoPlay,
+            TtsAdapterType adapter,
             String voice,
-            Double speed) {
+            Double speed,
+            Double pitch) {
         
-        return new UpdateSpeechPreferenceRequest(enabled, autoPlay, voice, speed);
+        return new UpdateSpeechPreferenceRequest(enabled, autoPlay, adapter, voice, speed, pitch);
     }
 
     public static UpdateStudyPreferenceRequest updateStudyPreferenceRequest(int firstLearningCardLimit) {
@@ -86,8 +89,10 @@ public final class StudyTestFixtures {
                                 true,
                                 false,
                                 true,
+                                TtsAdapterType.FLUTTER_TTS,
                                 "ko-KR",
                                 "ko-KR-neutral",
+                                1.0D,
                                 1.0D,
                                 "prompt",
                                 "text",
@@ -120,7 +125,14 @@ public final class StudyTestFixtures {
 
     public static SpeechPreferenceResponse speechPreferenceResponse() {
         
-        return new SpeechPreferenceResponse(true, false, "ko-KR-neutral", 1.0D, "ko-KR");
+        return new SpeechPreferenceResponse(
+                true,
+                false,
+                TtsAdapterType.FLUTTER_TTS,
+                "ko-KR-neutral",
+                1.0D,
+                1.0D,
+                "ko-KR");
     }
 
     public static StudyPreferenceResponse studyPreferenceResponse() {

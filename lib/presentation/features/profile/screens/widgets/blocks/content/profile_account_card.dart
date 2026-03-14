@@ -14,10 +14,20 @@ class ProfileAccountCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
     final ThemeData theme = Theme.of(context);
+    final double cardPadding = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.lg,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double sectionGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.lg,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return LumosCard(
       margin: EdgeInsets.zero,
       child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
+        padding: EdgeInsets.all(cardPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -30,7 +40,7 @@ class ProfileAccountCard extends StatelessWidget {
               l10n.profileAccountSectionSubtitle,
               style: LumosTextStyle.bodyMedium,
             ),
-            const SizedBox(height: AppSpacing.lg),
+            SizedBox(height: sectionGap),
             LumosInlineText(
               user.username,
               style: theme.textTheme.headlineSmall,

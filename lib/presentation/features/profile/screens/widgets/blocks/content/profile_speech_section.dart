@@ -1,44 +1,63 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../../../core/speech/tts_engine_catalog.dart';
+import '../../../../../../../core/speech/tts_voice_option.dart';
 import '../../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../../domain/entities/study/study_models.dart';
+import '../../../../../../../domain/entities/study/study_speech_contract.dart';
 import '../../../../../../../l10n/app_localizations.dart';
 import '../../../../../../shared/widgets/lumos_widgets.dart';
-
-abstract final class ProfileSpeechSectionConst {
-  ProfileSpeechSectionConst._();
-
-  static const List<String> speechVoices = <String>[
-    'ko-KR-neutral',
-    'ko-KR-female',
-    'ko-KR-male',
-  ];
-  static const List<double> speechSpeeds = <double>[0.8, 1.0, 1.2, 1.5];
-}
+import 'profile_speech_preview_panel.dart';
 
 class ProfileSpeechSection extends StatelessWidget {
   const ProfileSpeechSection({
     required this.preference,
     required this.onEnabledChanged,
     required this.onAutoPlayChanged,
+    required this.onAdapterChanged,
+    required this.voiceOptions,
+    required this.selectedVoiceId,
     required this.onVoiceChanged,
     required this.onSpeedChanged,
+    required this.onPitchChanged,
     super.key,
   });
 
   final SpeechPreference preference;
   final ValueChanged<bool> onEnabledChanged;
   final ValueChanged<bool> onAutoPlayChanged;
+  final ValueChanged<String> onAdapterChanged;
+  final List<TtsVoiceOption> voiceOptions;
+  final String selectedVoiceId;
   final ValueChanged<String> onVoiceChanged;
   final ValueChanged<double> onSpeedChanged;
+  final ValueChanged<double> onPitchChanged;
 
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
+    final String resolvedAdapter = normalizeTtsAdapter(preference.adapter);
+    final double resolvedSpeed = normalizeTtsSpeed(preference.speed);
+    final double resolvedPitch = normalizeTtsPitch(preference.pitch);
+    final double cardPadding = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.lg,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double sectionGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.md,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double footerGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.lg,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return LumosCard(
       margin: EdgeInsets.zero,
       child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
+        padding: EdgeInsets.all(cardPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -47,6 +66,11 @@ class ProfileSpeechSection extends StatelessWidget {
               style: LumosTextStyle.titleLarge,
             ),
             const SizedBox(height: AppSpacing.sm),
+            LumosText(
+              l10n.profileSpeechSectionSubtitle,
+              style: LumosTextStyle.bodyMedium,
+            ),
+            const SizedBox(height: AppSpacing.md),
             SwitchListTile.adaptive(
               contentPadding: EdgeInsets.zero,
               title: LumosText(
@@ -65,18 +89,54 @@ class ProfileSpeechSection extends StatelessWidget {
               value: preference.autoPlay,
               onChanged: onAutoPlayChanged,
             ),
-            const SizedBox(height: AppSpacing.sm),
+            SizedBox(height: sectionGap),
             LumosDropdown<String>(
-              value: preference.voice,
-              label: l10n.profileSpeechVoiceLabel,
-              items: ProfileSpeechSectionConst.speechVoices
-                  .map(
-                    (String voice) => DropdownMenuItem<String>(
-                      value: voice,
-                      child: LumosText(voice, style: LumosTextStyle.bodyMedium),
-                    ),
-                  )
+              value: resolvedAdapter,
+              label: l10n.profileSpeechAdapterLabel,
+              items: supportedTtsAdapters
+                  .map((String adapter) {
+                    final String adapterLabel =
+                        adapter == studySpeechAdapterFlutterTts
+                        ? l10n.profileSpeechAdapterFlutterTtsLabel
+                        : adapter;
+                    return DropdownMenuItem<String>(
+                      value: adapter,
+                      child: LumosText(
+                        adapterLabel,
+                        style: LumosTextStyle.bodyMedium,
+                      ),
+                    );
+                  })
                   .toList(growable: false),
+              onChanged: (String? adapter) {
+                if (adapter == null) {
+                  return;
+                }
+                onAdapterChanged(adapter);
+              },
+            ),
+            SizedBox(height: sectionGap),
+            LumosDropdown<String>(
+              value: selectedVoiceId,
+              label: l10n.profileSpeechVoiceLabel,
+              items: <DropdownMenuItem<String>>[
+                DropdownMenuItem<String>(
+                  value: studySpeechVoiceUnspecified,
+                  child: LumosText(
+                    l10n.profileSpeechVoiceDefaultLabel,
+                    style: LumosTextStyle.bodyMedium,
+                  ),
+                ),
+                ...voiceOptions.map(
+                  (TtsVoiceOption voice) => DropdownMenuItem<String>(
+                    value: voice.id,
+                    child: LumosText(
+                      voice.label,
+                      style: LumosTextStyle.bodyMedium,
+                    ),
+                  ),
+                ),
+              ],
               onChanged: (String? voice) {
                 if (voice == null) {
                   return;
@@ -84,11 +144,11 @@ class ProfileSpeechSection extends StatelessWidget {
                 onVoiceChanged(voice);
               },
             ),
-            const SizedBox(height: AppSpacing.md),
+            SizedBox(height: sectionGap),
             LumosDropdown<double>(
-              value: preference.speed,
+              value: resolvedSpeed,
               label: l10n.profileSpeechSpeedLabel,
-              items: ProfileSpeechSectionConst.speechSpeeds
+              items: supportedTtsSpeeds
                   .map(
                     (double speed) => DropdownMenuItem<double>(
                       value: speed,
@@ -106,6 +166,30 @@ class ProfileSpeechSection extends StatelessWidget {
                 onSpeedChanged(speed);
               },
             ),
+            SizedBox(height: sectionGap),
+            LumosDropdown<double>(
+              value: resolvedPitch,
+              label: l10n.profileSpeechPitchLabel,
+              items: supportedTtsPitches
+                  .map(
+                    (double pitch) => DropdownMenuItem<double>(
+                      value: pitch,
+                      child: LumosText(
+                        '${pitch.toStringAsFixed(1)}x',
+                        style: LumosTextStyle.bodyMedium,
+                      ),
+                    ),
+                  )
+                  .toList(growable: false),
+              onChanged: (double? pitch) {
+                if (pitch == null) {
+                  return;
+                }
+                onPitchChanged(pitch);
+              },
+            ),
+            SizedBox(height: footerGap),
+            ProfileSpeechPreviewPanel(preference: preference),
           ],
         ),
       ),

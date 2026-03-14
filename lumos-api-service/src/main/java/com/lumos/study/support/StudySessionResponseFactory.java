@@ -120,8 +120,10 @@ public class StudySessionResponseFactory {
                     final UserSpeechPreference preference = new UserSpeechPreference();
                     preference.setEnabled(Boolean.TRUE);
                     preference.setAutoPlay(Boolean.FALSE);
+                    preference.setAdapter(StudyConstants.DEFAULT_TTS_ADAPTER);
                     preference.setVoice(StudyConstants.DEFAULT_SPEECH_VOICE);
                     preference.setSpeed(StudyConstants.DEFAULT_SPEECH_SPEED);
+                    preference.setPitch(StudyConstants.DEFAULT_SPEECH_PITCH);
                     preference.setLocale(StudyConstants.SPEECH_LOCALE);
                     return preference;
                 });
@@ -137,9 +139,11 @@ public class StudySessionResponseFactory {
                 speechPreference.getEnabled(),
                 speechPreference.getAutoPlay(),
                 available,
+                speechPreference.getAdapter(),
                 speechPreference.getLocale(),
                 speechPreference.getVoice(),
                 speechPreference.getSpeed(),
+                speechPreference.getPitch(),
                 SPEECH_FIELD_PROMPT,
                 SPEECH_SOURCE_TEXT,
                 "",

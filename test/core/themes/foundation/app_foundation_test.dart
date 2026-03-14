@@ -56,6 +56,53 @@ void main() {
     expect(heightValue, 200);
   });
 
+  testWidgets(
+    'compact value scales down on narrow screens without scaling up',
+    (WidgetTester tester) async {
+      tester.view.devicePixelRatio = 1;
+      tester.view.physicalSize = const Size(320, 800);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      addTearDown(tester.view.resetPhysicalSize);
+
+      double compactValue = AppSpacing.none;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Builder(
+            builder: (BuildContext context) {
+              compactValue = ResponsiveDimensions.compactValue(
+                context: context,
+                baseValue: AppSpacing.lg,
+                minScale: ResponsiveDimensions.compactInsetScale,
+              );
+              return const SizedBox.shrink();
+            },
+          ),
+        ),
+      );
+
+      expect(compactValue, lessThan(AppSpacing.lg));
+
+      tester.view.physicalSize = const Size(430, 800);
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Builder(
+            builder: (BuildContext context) {
+              compactValue = ResponsiveDimensions.compactValue(
+                context: context,
+                baseValue: AppSpacing.lg,
+                minScale: ResponsiveDimensions.compactInsetScale,
+              );
+              return const SizedBox.shrink();
+            },
+          ),
+        ),
+      );
+
+      expect(compactValue, AppSpacing.lg);
+    },
+  );
+
   test('screen percentage helper fails fast for invalid input', () {
     expect(
       () => ResponsiveDimensions.screenWidthPercentage(

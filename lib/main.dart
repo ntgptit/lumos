@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'core/localization/locale_provider.dart';
 import 'core/routes/app_router.dart';
+import 'core/themes/builders/app_adaptive_theme_builder.dart';
 import 'core/utils/google_fonts_bootstrap.dart';
 import 'core/providers/theme_provider.dart';
 import 'l10n/app_localizations.dart';
@@ -99,9 +100,16 @@ class _AppEntryPointState extends ConsumerState<AppEntryPoint> {
         final MediaQueryData mediaQueryData = MediaQuery.of(
           context,
         ).copyWith(textScaler: textScaler);
+        final ThemeData adaptiveTheme = AppAdaptiveThemeBuilder.adapt(
+          theme: Theme.of(context),
+          screenWidth: mediaQueryData.size.width,
+        );
         return MediaQuery(
           data: mediaQueryData,
-          child: TickerMode(enabled: !disableAnimations, child: child),
+          child: Theme(
+            data: adaptiveTheme,
+            child: TickerMode(enabled: !disableAnimations, child: child),
+          ),
         );
       },
       theme: lightTheme,

@@ -19,9 +19,14 @@ class StudyProgressRecommendationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double cardPadding = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.lg,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return LumosCard(
       child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
+        padding: EdgeInsets.all(cardPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[

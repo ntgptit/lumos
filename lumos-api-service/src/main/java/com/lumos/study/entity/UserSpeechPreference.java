@@ -2,9 +2,12 @@ package com.lumos.study.entity;
 
 import com.lumos.auth.entity.UserAccount;
 import com.lumos.common.entity.AuditEntity;
+import com.lumos.study.enums.TtsAdapterType;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -36,11 +39,18 @@ public class UserSpeechPreference extends AuditEntity {
     @Column(name = "auto_play", nullable = false)
     private Boolean autoPlay;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "adapter", nullable = false, length = 40)
+    private TtsAdapterType adapter;
+
     @Column(name = "voice", nullable = false, length = 120)
     private String voice;
 
     @Column(name = "speed", nullable = false)
     private Double speed;
+
+    @Column(name = "pitch", nullable = false)
+    private Double pitch;
 
     @Column(name = "locale", nullable = false, length = 20)
     private String locale;

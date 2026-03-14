@@ -1,0 +1,2 @@
+ALTER TABLE user_speech_preferences
+    ADD COLUMN adapter VARCHAR(40) NOT NULL DEFAULT 'FLUTTER_TTS';

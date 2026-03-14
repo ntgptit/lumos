@@ -25,6 +25,16 @@ class HomeHeroCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final bool isMobile = deviceType == DeviceType.mobile;
+    final double heroPadding = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.xxl,
+      minScale: ResponsiveDimensions.compactLargeInsetScale,
+    );
+    final double titleGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.lg,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     final Color secondaryBlend = Color.alphaBlend(
       colorScheme.secondaryContainer.withValues(alpha: AppOpacity.strong),
       colorScheme.surfaceContainerLowest,
@@ -64,7 +74,7 @@ class HomeHeroCard extends StatelessWidget {
         child: ClipRRect(
           borderRadius: BorderRadii.large,
           child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.xxl),
+            padding: EdgeInsets.all(heroPadding),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,7 +110,7 @@ class HomeHeroCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: AppSpacing.lg),
+                SizedBox(height: titleGap),
                 LumosText(
                   l10n.homeHeroTitle,
                   style: LumosTextStyle.headlineMedium,
@@ -114,7 +124,7 @@ class HomeHeroCard extends StatelessWidget {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: AppSpacing.lg),
+                SizedBox(height: titleGap),
                 Wrap(
                   spacing: AppSpacing.sm,
                   runSpacing: AppSpacing.sm,

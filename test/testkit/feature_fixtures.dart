@@ -1,6 +1,7 @@
 import 'package:lumos/domain/entities/auth/auth_models.dart';
 import 'package:lumos/domain/entities/profile/profile_models.dart';
 import 'package:lumos/domain/entities/study/study_models.dart';
+import 'package:lumos/domain/entities/study/study_speech_contract.dart';
 import 'package:lumos/domain/repositories/auth/auth_repository.dart';
 import 'package:lumos/domain/repositories/profile/profile_repository.dart';
 import 'package:lumos/domain/repositories/study/study_repository.dart';
@@ -78,9 +79,11 @@ StudySessionData sampleStudySession({
         enabled: true,
         autoPlay: false,
         available: true,
+        adapter: studySpeechAdapterFlutterTts,
         locale: 'ko-KR',
         voice: 'ko-KR-neutral',
         speed: 1,
+        pitch: 1,
         fieldName: 'prompt',
         sourceType: 'text',
         audioUrl: '',
@@ -127,8 +130,10 @@ SpeechPreference sampleSpeechPreference() {
   return const SpeechPreference(
     enabled: true,
     autoPlay: false,
-    voice: 'ko-KR-neutral',
+    adapter: studySpeechAdapterFlutterTts,
+    voice: studySpeechVoiceUnspecified,
     speed: 1,
+    pitch: 1,
     locale: 'ko-KR',
   );
 }

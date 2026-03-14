@@ -24,9 +24,14 @@ class StudyProgressMomentumCard extends StatelessWidget {
     final double progressValue = analytics.totalLearnedItems == 0
         ? 0
         : analytics.passedAttempts / totalAttempts;
+    final double cardPadding = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.lg,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return LumosCard(
       child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
+        padding: EdgeInsets.all(cardPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[

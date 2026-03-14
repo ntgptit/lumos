@@ -21,11 +21,16 @@ class HomePlaceholderTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final double screenPadding = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.lg,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 560),
         child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.lg),
+          padding: EdgeInsets.all(screenPadding),
           child: LumosCard(
             margin: EdgeInsets.zero,
             elevation: AppElevationTokens.level1,

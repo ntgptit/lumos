@@ -33,16 +33,31 @@ class AuthFormCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
+    final double cardPadding = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.xl,
+      minScale: ResponsiveDimensions.compactLargeInsetScale,
+    );
+    final double sectionGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.lg,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double titleGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.xl,
+      minScale: ResponsiveDimensions.compactLargeInsetScale,
+    );
     return LumosCard(
       child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.xl),
+        padding: EdgeInsets.all(cardPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             LumosText(l10n.authTitle, style: LumosTextStyle.displaySmall),
             const SizedBox(height: AppSpacing.sm),
             LumosText(l10n.authSubtitle, style: LumosTextStyle.bodyMedium),
-            const SizedBox(height: AppSpacing.xl),
+            SizedBox(height: titleGap),
             SegmentedButton<AuthScreenModeState>(
               segments: <ButtonSegment<AuthScreenModeState>>[
                 ButtonSegment<AuthScreenModeState>(
@@ -59,7 +74,7 @@ class AuthFormCard extends StatelessWidget {
                 onModeChanged(nextValue.first);
               },
             ),
-            const SizedBox(height: AppSpacing.lg),
+            SizedBox(height: sectionGap),
             AuthFormFields(
               mode: mode,
               usernameController: usernameController,
@@ -73,7 +88,7 @@ class AuthFormCard extends StatelessWidget {
               const SizedBox(height: AppSpacing.md),
               LumosText(errorMessage, style: LumosTextStyle.bodySmall),
             ],
-            const SizedBox(height: AppSpacing.lg),
+            SizedBox(height: sectionGap),
             LumosPrimaryButton(
               onPressed: authState.isBusy ? null : onSubmit,
               label: mode == AuthScreenModeState.login

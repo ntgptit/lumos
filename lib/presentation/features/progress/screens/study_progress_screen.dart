@@ -18,6 +18,16 @@ class StudyProgressScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
+    final double screenPadding = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.lg,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double sectionGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.lg,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     final AsyncValue<StudyOverviewData> overviewAsync = ref.watch(
       studyOverviewProvider,
     );
@@ -33,14 +43,14 @@ class StudyProgressScreen extends ConsumerWidget {
       },
       data: (StudyOverviewData data) {
         return ListView(
-          padding: const EdgeInsets.all(AppSpacing.lg),
+          padding: EdgeInsets.all(screenPadding),
           children: <Widget>[
             StudyProgressMomentumCard(
               analytics: data.analytics,
               reminder: data.reminder,
               l10n: l10n,
             ),
-            const SizedBox(height: AppSpacing.lg),
+            SizedBox(height: sectionGap),
             if (data.reminder.recommendation case final recommendation?)
               StudyProgressRecommendationCard(
                 recommendation: recommendation,
@@ -57,7 +67,7 @@ class StudyProgressScreen extends ConsumerWidget {
                   );
                 },
               ),
-            const SizedBox(height: AppSpacing.lg),
+            SizedBox(height: sectionGap),
             StudyProgressDistributionCard(
               analytics: data.analytics,
               l10n: l10n,

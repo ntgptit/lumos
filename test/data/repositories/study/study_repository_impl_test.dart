@@ -95,6 +95,7 @@ void main() {
                           'locale': 'ko-KR',
                           'voice': 'ko-KR-neutral',
                           'speed': 1.0,
+                          'pitch': 1.0,
                           'speechText': '안녕하세요',
                         },
                       },

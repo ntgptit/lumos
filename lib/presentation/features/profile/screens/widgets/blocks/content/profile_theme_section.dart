@@ -23,10 +23,25 @@ class ProfileThemeSection extends StatelessWidget {
     final AppThemePreference selectedPreference = _themePreferenceFromMode(
       mode: themeMode,
     );
+    final double cardPadding = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.lg,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double sectionGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.lg,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double actionGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.sm,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return LumosCard(
       margin: EdgeInsets.zero,
       child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
+        padding: EdgeInsets.all(cardPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -39,7 +54,7 @@ class ProfileThemeSection extends StatelessWidget {
               l10n.profileThemeSectionSubtitle,
               style: LumosTextStyle.bodyMedium,
             ),
-            const SizedBox(height: AppSpacing.lg),
+            SizedBox(height: sectionGap),
             LumosRadioGroup<AppThemePreference>(
               options: AppThemePreference.values,
               value: selectedPreference,
@@ -53,7 +68,7 @@ class ProfileThemeSection extends StatelessWidget {
                 return _themeLabel(l10n: l10n, preference: preference);
               },
             ),
-            const SizedBox(height: AppSpacing.sm),
+            SizedBox(height: actionGap),
             LumosOutlineButton(
               label: _quickToggleLabel(l10n: l10n, mode: themeMode),
               icon: Icons.brightness_6_outlined,

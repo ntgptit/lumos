@@ -19,6 +19,7 @@ import com.lumos.auth.repository.UserAccountRepository;
 import com.lumos.auth.security.AuthenticatedUserProvider;
 import com.lumos.study.constant.StudyConstants;
 import com.lumos.study.entity.UserSpeechPreference;
+import com.lumos.study.enums.TtsAdapterType;
 import com.lumos.study.mapper.SpeechPreferenceMapper;
 import com.lumos.study.repository.UserSpeechPreferenceRepository;
 
@@ -60,7 +61,9 @@ class SpeechPreferenceServiceImplTest {
         final var response = this.speechPreferenceService.getSpeechPreference();
 
         assertEquals(true, response.enabled());
+        assertEquals(TtsAdapterType.FLUTTER_TTS, response.adapter());
         assertEquals("ko-KR-neutral", response.voice());
+        assertEquals(1.0D, response.pitch());
         assertEquals("ko-KR", response.locale());
     }
 
@@ -76,13 +79,21 @@ class SpeechPreferenceServiceImplTest {
         when(this.userSpeechPreferenceRepository.save(any(UserSpeechPreference.class))).thenReturn(savedPreference);
 
         final var response = this.speechPreferenceService.updateSpeechPreference(
-                new com.lumos.study.dto.request.UpdateSpeechPreferenceRequest(false, true, "ko-KR-female", 1.25D));
+                new com.lumos.study.dto.request.UpdateSpeechPreferenceRequest(
+                        false,
+                        true,
+                        TtsAdapterType.FLUTTER_TTS,
+                        "ko-KR-female",
+                        1.25D,
+                        1.2D));
 
         verify(this.userSpeechPreferenceRepository).save(any(UserSpeechPreference.class));
         assertEquals(false, response.enabled());
         assertEquals(true, response.autoPlay());
+        assertEquals(TtsAdapterType.FLUTTER_TTS, response.adapter());
         assertEquals("ko-KR-female", response.voice());
         assertEquals(1.25D, response.speed());
+        assertEquals(1.2D, response.pitch());
         assertEquals(StudyConstants.SPEECH_LOCALE, response.locale());
     }
 
@@ -90,8 +101,10 @@ class SpeechPreferenceServiceImplTest {
         final UserSpeechPreference preference = new UserSpeechPreference();
         preference.setEnabled(true);
         preference.setAutoPlay(false);
+        preference.setAdapter(TtsAdapterType.FLUTTER_TTS);
         preference.setVoice("ko-KR-neutral");
         preference.setSpeed(1.0D);
+        preference.setPitch(1.0D);
         preference.setLocale("ko-KR");
         
         return preference;
