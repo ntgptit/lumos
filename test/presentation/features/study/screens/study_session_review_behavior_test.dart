@@ -60,8 +60,7 @@ void main() {
     );
 
     await tester.drag(find.text('안녕하세요'), const Offset(600, 0));
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 300));
+    await tester.pumpAndSettle();
 
     expect(actions, isEmpty);
     expect(find.text('Đây là thẻ đầu tiên.'), findsOneWidget);

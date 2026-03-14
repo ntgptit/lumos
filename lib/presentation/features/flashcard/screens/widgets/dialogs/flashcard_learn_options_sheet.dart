@@ -5,7 +5,7 @@ import '../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../l10n/app_localizations.dart';
 import '../../../../../shared/widgets/lumos_widgets.dart';
 
-enum FlashcardLearnSheetAction { firstLearning, review, resetProgress }
+enum FlashcardLearnOptionsSheetAction { firstLearning, review, resetProgress }
 
 abstract final class FlashcardLearnOptionsSheetConst {
   FlashcardLearnOptionsSheetConst._();
@@ -16,10 +16,10 @@ abstract final class FlashcardLearnOptionsSheetConst {
   static const double iconSize = IconSizes.iconSmall;
 }
 
-Future<FlashcardLearnSheetAction?> showFlashcardLearnOptionsSheet({
+Future<FlashcardLearnOptionsSheetAction?> showFlashcardLearnOptionsSheet({
   required BuildContext context,
 }) {
-  return showModalBottomSheet<FlashcardLearnSheetAction>(
+  return showModalBottomSheet<FlashcardLearnOptionsSheetAction>(
     context: context,
     isScrollControlled: true,
     backgroundColor: Theme.of(
@@ -47,36 +47,156 @@ Future<FlashcardLearnSheetAction?> showFlashcardLearnOptionsSheet({
               const SizedBox(
                 height: FlashcardLearnOptionsSheetConst.sectionSpacing,
               ),
-              _FlashcardLearnOptionTile(
-                icon: Icons.school_rounded,
-                title: l10n.flashcardLearnContinueOptionTitle,
-                subtitle: l10n.flashcardLearnContinueOptionSubtitle,
+              LumosCard(
+                variant: LumosCardVariant.elevated,
                 onTap: () {
-                  sheetContext.pop(FlashcardLearnSheetAction.firstLearning);
+                  sheetContext.pop(
+                    FlashcardLearnOptionsSheetAction.firstLearning,
+                  );
                 },
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      width: FlashcardLearnOptionsSheetConst.iconContainerSize,
+                      height: FlashcardLearnOptionsSheetConst.iconContainerSize,
+                      decoration: BoxDecoration(
+                        color: Theme.of(
+                          sheetContext,
+                        ).colorScheme.secondaryContainer,
+                        borderRadius: BorderRadii.medium,
+                      ),
+                      child: IconTheme(
+                        data: IconThemeData(
+                          color: Theme.of(
+                            sheetContext,
+                          ).colorScheme.onSecondaryContainer,
+                          size: FlashcardLearnOptionsSheetConst.iconSize,
+                        ),
+                        child: const LumosIcon(Icons.school_rounded),
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.md),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          LumosInlineText(
+                            l10n.flashcardLearnContinueOptionTitle,
+                            style: Theme.of(sheetContext).textTheme.titleMedium,
+                          ),
+                          const SizedBox(height: AppSpacing.xs),
+                          LumosInlineText(
+                            l10n.flashcardLearnContinueOptionSubtitle,
+                            style: Theme.of(sheetContext).textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(
                 height: FlashcardLearnOptionsSheetConst.optionSpacing,
               ),
-              _FlashcardLearnOptionTile(
-                icon: Icons.schedule_rounded,
-                title: l10n.flashcardLearnReviewOptionTitle,
-                subtitle: l10n.flashcardLearnReviewOptionSubtitle,
+              LumosCard(
+                variant: LumosCardVariant.elevated,
                 onTap: () {
-                  sheetContext.pop(FlashcardLearnSheetAction.review);
+                  sheetContext.pop(FlashcardLearnOptionsSheetAction.review);
                 },
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      width: FlashcardLearnOptionsSheetConst.iconContainerSize,
+                      height: FlashcardLearnOptionsSheetConst.iconContainerSize,
+                      decoration: BoxDecoration(
+                        color: Theme.of(
+                          sheetContext,
+                        ).colorScheme.secondaryContainer,
+                        borderRadius: BorderRadii.medium,
+                      ),
+                      child: IconTheme(
+                        data: IconThemeData(
+                          color: Theme.of(
+                            sheetContext,
+                          ).colorScheme.onSecondaryContainer,
+                          size: FlashcardLearnOptionsSheetConst.iconSize,
+                        ),
+                        child: const LumosIcon(Icons.schedule_rounded),
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.md),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          LumosInlineText(
+                            l10n.flashcardLearnReviewOptionTitle,
+                            style: Theme.of(sheetContext).textTheme.titleMedium,
+                          ),
+                          const SizedBox(height: AppSpacing.xs),
+                          LumosInlineText(
+                            l10n.flashcardLearnReviewOptionSubtitle,
+                            style: Theme.of(sheetContext).textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(
                 height: FlashcardLearnOptionsSheetConst.optionSpacing,
               ),
-              _FlashcardLearnOptionTile(
-                icon: Icons.restart_alt_rounded,
-                title: l10n.flashcardLearnResetOptionTitle,
-                subtitle: l10n.flashcardLearnResetOptionSubtitle,
-                isDestructive: true,
+              LumosCard(
+                variant: LumosCardVariant.elevated,
                 onTap: () {
-                  sheetContext.pop(FlashcardLearnSheetAction.resetProgress);
+                  sheetContext.pop(
+                    FlashcardLearnOptionsSheetAction.resetProgress,
+                  );
                 },
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      width: FlashcardLearnOptionsSheetConst.iconContainerSize,
+                      height: FlashcardLearnOptionsSheetConst.iconContainerSize,
+                      decoration: BoxDecoration(
+                        color: Theme.of(
+                          sheetContext,
+                        ).colorScheme.errorContainer,
+                        borderRadius: BorderRadii.medium,
+                      ),
+                      child: IconTheme(
+                        data: IconThemeData(
+                          color: Theme.of(
+                            sheetContext,
+                          ).colorScheme.onErrorContainer,
+                          size: FlashcardLearnOptionsSheetConst.iconSize,
+                        ),
+                        child: const LumosIcon(Icons.restart_alt_rounded),
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.md),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          LumosInlineText(
+                            l10n.flashcardLearnResetOptionTitle,
+                            style: Theme.of(sheetContext).textTheme.titleMedium,
+                          ),
+                          const SizedBox(height: AppSpacing.xs),
+                          LumosInlineText(
+                            l10n.flashcardLearnResetOptionSubtitle,
+                            style: Theme.of(sheetContext).textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -84,72 +204,4 @@ Future<FlashcardLearnSheetAction?> showFlashcardLearnOptionsSheet({
       );
     },
   );
-}
-
-class _FlashcardLearnOptionTile extends StatelessWidget {
-  const _FlashcardLearnOptionTile({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-    required this.onTap,
-    this.isDestructive = false,
-  });
-
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final VoidCallback onTap;
-  final bool isDestructive;
-
-  @override
-  Widget build(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
-    final Color containerColor = isDestructive
-        ? colorScheme.errorContainer
-        : colorScheme.secondaryContainer;
-    final Color iconColor = isDestructive
-        ? colorScheme.onErrorContainer
-        : colorScheme.onSecondaryContainer;
-    return LumosCard(
-      variant: LumosCardVariant.elevated,
-      onTap: onTap,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            width: FlashcardLearnOptionsSheetConst.iconContainerSize,
-            height: FlashcardLearnOptionsSheetConst.iconContainerSize,
-            decoration: BoxDecoration(
-              color: containerColor,
-              borderRadius: BorderRadii.medium,
-            ),
-            child: IconTheme(
-              data: IconThemeData(
-                color: iconColor,
-                size: FlashcardLearnOptionsSheetConst.iconSize,
-              ),
-              child: LumosIcon(icon),
-            ),
-          ),
-          const SizedBox(width: AppSpacing.md),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                LumosInlineText(
-                  title,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const SizedBox(height: AppSpacing.xs),
-                LumosInlineText(
-                  subtitle,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }

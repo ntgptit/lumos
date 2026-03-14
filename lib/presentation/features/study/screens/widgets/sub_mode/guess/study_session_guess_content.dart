@@ -26,6 +26,8 @@ const double _guessPromptHeightFactor = 0.45;
 const double _guessSectionSpacing = AppSpacing.md;
 const double _guessBottomSpacing = AppSpacing.none;
 const double _guessMinimumChoiceHeight = 56;
+const double _guessScrollableSectionSpacing = AppSpacing.md;
+const double _guessScrollableBottomSpacing = AppSpacing.none;
 
 class StudySessionGuessContent extends StatelessWidget {
   const StudySessionGuessContent({
@@ -72,18 +74,45 @@ class StudySessionGuessContent extends StatelessWidget {
           Expanded(
             child: LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
+                final ScrollBehavior scrollBehavior = ScrollConfiguration.of(
+                  context,
+                ).copyWith(scrollbars: false);
+                final Widget scrollableContent = ScrollConfiguration(
+                  behavior: scrollBehavior,
+                  child: ListView(
+                    padding: EdgeInsets.zero,
+                    children: <Widget>[
+                      StudySessionGuessPromptCard(
+                        prompt: viewModel.prompt,
+                        speech: session.currentItem.speech,
+                        playbackState: speechPlaybackState,
+                        onPlayPressed: speechPlaybackState.isPlaying
+                            ? onReplaySpeech
+                            : onPlaySpeech,
+                      ),
+                      if (viewModel.choices.isNotEmpty) ...<Widget>[
+                        const SizedBox(height: _guessScrollableSectionSpacing),
+                        StudySessionGuessChoiceList(
+                          choices: viewModel.choices,
+                          selectionState: guessSelectionState,
+                          isInteractive: canSubmitChoice,
+                          onChoicePressed: onChoicePressed,
+                        ),
+                      ],
+                      if (viewModel.actions.isNotEmpty &&
+                          !guessSelectionState.isInteractionLocked) ...<Widget>[
+                        const SizedBox(height: _guessScrollableSectionSpacing),
+                        StudySessionActionBar(
+                          actions: viewModel.actions,
+                          onActionPressed: onActionPressed,
+                        ),
+                      ],
+                      const SizedBox(height: _guessScrollableBottomSpacing),
+                    ],
+                  ),
+                );
                 if (viewModel.choices.isEmpty || showsActionBar) {
-                  return _GuessScrollableContent(
-                    viewModel: viewModel,
-                    session: session,
-                    guessSelectionState: guessSelectionState,
-                    speechPlaybackState: speechPlaybackState,
-                    canSubmitChoice: canSubmitChoice,
-                    onChoicePressed: onChoicePressed,
-                    onActionPressed: onActionPressed,
-                    onPlaySpeech: onPlaySpeech,
-                    onReplaySpeech: onReplaySpeech,
-                  );
+                  return scrollableContent;
                 }
                 final int choiceCount = viewModel.choices.length;
                 final double promptHeight =
@@ -99,17 +128,7 @@ class StudySessionGuessContent extends StatelessWidget {
                             math.max(0, choiceCount - 1))) /
                     math.max(1, choiceCount);
                 if (choiceHeight < _guessMinimumChoiceHeight) {
-                  return _GuessScrollableContent(
-                    viewModel: viewModel,
-                    session: session,
-                    guessSelectionState: guessSelectionState,
-                    speechPlaybackState: speechPlaybackState,
-                    canSubmitChoice: canSubmitChoice,
-                    onChoicePressed: onChoicePressed,
-                    onActionPressed: onActionPressed,
-                    onPlaySpeech: onPlaySpeech,
-                    onReplaySpeech: onReplaySpeech,
-                  );
+                  return scrollableContent;
                 }
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -137,71 +156,6 @@ class StudySessionGuessContent extends StatelessWidget {
               },
             ),
           ),
-        ],
-      ),
-    );
-  }
-}
-
-class _GuessScrollableContent extends StatelessWidget {
-  const _GuessScrollableContent({
-    required this.viewModel,
-    required this.session,
-    required this.guessSelectionState,
-    required this.speechPlaybackState,
-    required this.canSubmitChoice,
-    required this.onChoicePressed,
-    required this.onActionPressed,
-    required this.onPlaySpeech,
-    required this.onReplaySpeech,
-  });
-
-  final StudyModeViewModel viewModel;
-  final StudySessionData session;
-  final StudyGuessSelectionState guessSelectionState;
-  final StudySpeechPlaybackState speechPlaybackState;
-  final bool canSubmitChoice;
-  final ValueChanged<String> onChoicePressed;
-  final Future<void> Function(String) onActionPressed;
-  final VoidCallback onPlaySpeech;
-  final VoidCallback onReplaySpeech;
-
-  @override
-  Widget build(BuildContext context) {
-    final ScrollBehavior scrollBehavior = ScrollConfiguration.of(
-      context,
-    ).copyWith(scrollbars: false);
-    return ScrollConfiguration(
-      behavior: scrollBehavior,
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: <Widget>[
-          StudySessionGuessPromptCard(
-            prompt: viewModel.prompt,
-            speech: session.currentItem.speech,
-            playbackState: speechPlaybackState,
-            onPlayPressed: speechPlaybackState.isPlaying
-                ? onReplaySpeech
-                : onPlaySpeech,
-          ),
-          if (viewModel.choices.isNotEmpty) ...<Widget>[
-            const SizedBox(height: _guessSectionSpacing),
-            StudySessionGuessChoiceList(
-              choices: viewModel.choices,
-              selectionState: guessSelectionState,
-              isInteractive: canSubmitChoice,
-              onChoicePressed: onChoicePressed,
-            ),
-          ],
-          if (viewModel.actions.isNotEmpty &&
-              !guessSelectionState.isInteractionLocked) ...<Widget>[
-            const SizedBox(height: _guessSectionSpacing),
-            StudySessionActionBar(
-              actions: viewModel.actions,
-              onActionPressed: onActionPressed,
-            ),
-          ],
-          const SizedBox(height: _guessBottomSpacing),
         ],
       ),
     );

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../../shared/widgets/lumos_widgets.dart';
+import '../../../../../mode/study_mode_action_button_style.dart';
 import '../../../../../mode/study_mode_action_view_model.dart';
-import 'study_session_fill_action_button.dart';
 
 const double _fillSingleActionWidthFactor = 0.42;
 const double _fillActionGap = AppSpacing.lg;
@@ -84,10 +84,29 @@ class StudySessionFillActionRow extends StatelessWidget {
     }
     if (actionButtons.isEmpty && showsSubmitAction) {
       actionButtons = <Widget>[
-        StudySessionFillActionButton(
-          action: actions.first,
-          onActionPressed: onActionPressed,
-        ),
+        switch (actions.first.style) {
+          StudyModeActionButtonStyle.primary => LumosPrimaryButton(
+            label: actions.first.label,
+            onPressed: () => onActionPressed(actions.first.actionId),
+            size: LumosButtonSize.large,
+            icon: actions.first.icon,
+            expanded: true,
+          ),
+          StudyModeActionButtonStyle.secondary => LumosSecondaryButton(
+            label: actions.first.label,
+            onPressed: () => onActionPressed(actions.first.actionId),
+            size: LumosButtonSize.large,
+            icon: actions.first.icon,
+            expanded: true,
+          ),
+          StudyModeActionButtonStyle.outline => LumosOutlineButton(
+            label: actions.first.label,
+            onPressed: () => onActionPressed(actions.first.actionId),
+            size: LumosButtonSize.large,
+            icon: actions.first.icon,
+            expanded: true,
+          ),
+        },
         LumosPrimaryButton(
           label: resolvedSubmitLabel,
           onPressed: resolvedSubmitPressed,
@@ -99,10 +118,29 @@ class StudySessionFillActionRow extends StatelessWidget {
     if (actionButtons.isEmpty) {
       actionButtons = actions
           .map(
-            (StudyModeActionViewModel action) => StudySessionFillActionButton(
-              action: action,
-              onActionPressed: onActionPressed,
-            ),
+            (StudyModeActionViewModel action) => switch (action.style) {
+              StudyModeActionButtonStyle.primary => LumosPrimaryButton(
+                label: action.label,
+                onPressed: () => onActionPressed(action.actionId),
+                size: LumosButtonSize.large,
+                icon: action.icon,
+                expanded: true,
+              ),
+              StudyModeActionButtonStyle.secondary => LumosSecondaryButton(
+                label: action.label,
+                onPressed: () => onActionPressed(action.actionId),
+                size: LumosButtonSize.large,
+                icon: action.icon,
+                expanded: true,
+              ),
+              StudyModeActionButtonStyle.outline => LumosOutlineButton(
+                label: action.label,
+                onPressed: () => onActionPressed(action.actionId),
+                size: LumosButtonSize.large,
+                icon: action.icon,
+                expanded: true,
+              ),
+            },
           )
           .toList(growable: false);
     }

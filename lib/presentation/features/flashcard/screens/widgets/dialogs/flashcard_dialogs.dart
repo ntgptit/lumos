@@ -12,12 +12,12 @@ import '../../../providers/flashcard_dialog_form_provider.dart';
 import '../../../providers/flashcard_provider.dart';
 import '../../../providers/states/flashcard_dialog_form_state.dart';
 
-typedef FlashcardUpsertSubmit =
+typedef FlashcardDialogsUpsertSubmit =
     Future<FlashcardSubmitResult> Function(FlashcardUpsertInput input);
-typedef FlashcardConfirmSubmit = Future<void> Function();
+typedef FlashcardDialogsConfirmSubmit = Future<void> Function();
 
-abstract final class FlashcardDialogConst {
-  FlashcardDialogConst._();
+abstract final class FlashcardDialogsConst {
+  FlashcardDialogsConst._();
 
   static const int backTextMaxLines = 4;
   static const String emptyValue = '';
@@ -28,12 +28,12 @@ Future<void> showFlashcardEditorDialog({
   required String Function(AppLocalizations l10n) titleBuilder,
   required String Function(AppLocalizations l10n) actionLabelBuilder,
   required FlashcardNode? initialFlashcard,
-  required FlashcardUpsertSubmit onSubmitted,
+  required FlashcardDialogsUpsertSubmit onSubmitted,
 }) async {
   final String initialFrontText =
-      initialFlashcard?.frontText ?? FlashcardDialogConst.emptyValue;
+      initialFlashcard?.frontText ?? FlashcardDialogsConst.emptyValue;
   final String initialBackText =
-      initialFlashcard?.backText ?? FlashcardDialogConst.emptyValue;
+      initialFlashcard?.backText ?? FlashcardDialogsConst.emptyValue;
 
   await showDialog<void>(
     context: context,
@@ -66,7 +66,7 @@ Future<void> showFlashcardEditorDialog({
               controller: formController.backTextController,
               label: l10n.flashcardBackLabel,
               hint: l10n.flashcardBackHint,
-              maxLines: FlashcardDialogConst.backTextMaxLines,
+              maxLines: FlashcardDialogsConst.backTextMaxLines,
               textInputAction: TextInputAction.newline,
             ),
             isCancelEnabled: !formState.isSubmitting,
@@ -110,7 +110,7 @@ Future<void> showFlashcardConfirmDialog({
   required String Function(AppLocalizations l10n) titleBuilder,
   required String Function(AppLocalizations l10n) messageBuilder,
   required String Function(AppLocalizations l10n) confirmLabelBuilder,
-  required FlashcardConfirmSubmit onConfirmed,
+  required FlashcardDialogsConfirmSubmit onConfirmed,
 }) async {
   await showDialog<void>(
     context: context,
@@ -137,7 +137,7 @@ Future<void> _handleSubmit({
   required AppLocalizations l10n,
   required String rawFrontText,
   required String rawBackText,
-  required FlashcardUpsertSubmit onSubmitted,
+  required FlashcardDialogsUpsertSubmit onSubmitted,
   required VoidCallback onSubmitDone,
 }) async {
   final String? validationMessage = _resolveValidationMessage(

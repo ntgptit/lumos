@@ -316,6 +316,13 @@ class _UiLogicSemanticVisitor extends RecursiveAstVisitor<void> {
     if (_isPublicWidgetClass(node)) {
       publicWidgetClasses.add(node);
     }
+    if (_isPrivateWidgetClass(node)) {
+      _addViolation(
+        node: node,
+        reason:
+            'Feature UI files must not declare private widget classes. Extract this widget into its own file and keep only the main widget plus its companion State<T> in the current file.',
+      );
+    }
 
     final ExtendsClause? extendsClause = node.extendsClause;
     if (extendsClause == null) {
@@ -613,6 +620,23 @@ bool _isPublicWidgetClass(ClassDeclaration node) {
     return false;
   }
 
+  if (_isFlutterStateSubclass(superType)) {
+    return false;
+  }
+
+  return true;
+}
+
+bool _isPrivateWidgetClass(ClassDeclaration node) {
+  final String className = node.name.lexeme;
+  if (!className.startsWith('_')) {
+    return false;
+  }
+
+  final DartType? superType = node.extendsClause?.superclass.type;
+  if (!_isWidgetLikeType(superType)) {
+    return false;
+  }
   if (_isFlutterStateSubclass(superType)) {
     return false;
   }

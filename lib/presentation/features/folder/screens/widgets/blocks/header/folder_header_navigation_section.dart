@@ -120,7 +120,52 @@ class _FolderHeaderNavigationSectionState
         children: <Widget>[
           Row(
             children: <Widget>[
-              _buildNavigationSummary(),
+              SegmentedButton<_FolderNavigationAction>(
+                showSelectedIcon: false,
+                selected: const <_FolderNavigationAction>{},
+                emptySelectionAllowed: true,
+                style: const ButtonStyle(
+                  visualDensity: VisualDensity.compact,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                segments: <ButtonSegment<_FolderNavigationAction>>[
+                  ButtonSegment<_FolderNavigationAction>(
+                    value: _FolderNavigationAction.root,
+                    enabled:
+                        widget.currentDepth != FolderStateConst.rootDepth &&
+                        !_isNavigating,
+                    label: Tooltip(
+                      message: widget.l10n.folderRoot,
+                      child: widget.isNavigatingRoot
+                          ? const LumosLoadingIndicator(
+                              size: IconSizes.iconSmall,
+                            )
+                          : const LumosIcon(
+                              Icons.home_rounded,
+                              size: IconSizes.iconSmall,
+                            ),
+                    ),
+                  ),
+                  ButtonSegment<_FolderNavigationAction>(
+                    value: _FolderNavigationAction.parent,
+                    enabled:
+                        widget.currentDepth != FolderStateConst.rootDepth &&
+                        !_isNavigating,
+                    label: Tooltip(
+                      message: widget.l10n.folderOpenParentTooltip,
+                      child: widget.isNavigatingParent
+                          ? const LumosLoadingIndicator(
+                              size: IconSizes.iconSmall,
+                            )
+                          : const LumosIcon(
+                              Icons.keyboard_arrow_up_rounded,
+                              size: IconSizes.iconSmall,
+                            ),
+                    ),
+                  ),
+                ],
+                onSelectionChanged: _onNavigationGroupChanged,
+              ),
               const Spacer(),
               const SizedBox(width: AppSpacing.sm),
               SizedBox(
@@ -136,72 +181,28 @@ class _FolderHeaderNavigationSectionState
             ],
           ),
           const SizedBox(height: AppSpacing.sm),
-          _buildControlRow(context: context),
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: LumosSearchBar(
+                  controller: _searchController,
+                  hint: _buildSearchHint(),
+                  onSearch: widget.onSearchChanged,
+                  onClear: widget.searchQuery.isNotEmpty ? _clearSearch : null,
+                  clearTooltip: _buildSearchClearTooltip(),
+                ),
+              ),
+              const SizedBox(width: AppSpacing.xs),
+              LumosIconButton(
+                icon: Icons.sort_rounded,
+                tooltip: currentSortLabel,
+                variant: LumosIconButtonVariant.outlined,
+                onPressed: () => _onSortPressed(context),
+              ),
+            ],
+          ),
         ],
       ),
-    );
-  }
-
-  Widget _buildNavigationSummary() {
-    final bool isAtRoot = widget.currentDepth == FolderStateConst.rootDepth;
-    final bool canNavigate = !_isNavigating;
-    final bool canOpenRoot = !isAtRoot && canNavigate;
-    final bool canOpenParent = !isAtRoot && canNavigate;
-    final Widget rootLabel = widget.isNavigatingRoot
-        ? const LumosLoadingIndicator(size: IconSizes.iconSmall)
-        : const LumosIcon(Icons.home_rounded, size: IconSizes.iconSmall);
-    final Widget parentLabel = widget.isNavigatingParent
-        ? const LumosLoadingIndicator(size: IconSizes.iconSmall)
-        : const LumosIcon(
-            Icons.keyboard_arrow_up_rounded,
-            size: IconSizes.iconSmall,
-          );
-
-    return SegmentedButton<_FolderNavigationAction>(
-      showSelectedIcon: false,
-      selected: const <_FolderNavigationAction>{},
-      emptySelectionAllowed: true,
-      style: const ButtonStyle(
-        visualDensity: VisualDensity.compact,
-        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      ),
-      segments: <ButtonSegment<_FolderNavigationAction>>[
-        ButtonSegment<_FolderNavigationAction>(
-          value: _FolderNavigationAction.root,
-          enabled: canOpenRoot,
-          label: Tooltip(message: widget.l10n.folderRoot, child: rootLabel),
-        ),
-        ButtonSegment<_FolderNavigationAction>(
-          value: _FolderNavigationAction.parent,
-          enabled: canOpenParent,
-          label: Tooltip(
-            message: widget.l10n.folderOpenParentTooltip,
-            child: parentLabel,
-          ),
-        ),
-      ],
-      onSelectionChanged: _onNavigationGroupChanged,
-    );
-  }
-
-  Widget _buildControlRow({required BuildContext context}) {
-    return Row(
-      children: <Widget>[
-        Expanded(child: _buildSearchBar()),
-        const SizedBox(width: AppSpacing.xs),
-        _buildSortButton(context: context),
-      ],
-    );
-  }
-
-  Widget _buildSearchBar() {
-    final bool canClearSearch = widget.searchQuery.isNotEmpty;
-    return LumosSearchBar(
-      controller: _searchController,
-      hint: _buildSearchHint(),
-      onSearch: widget.onSearchChanged,
-      onClear: canClearSearch ? _clearSearch : null,
-      clearTooltip: _buildSearchClearTooltip(),
     );
   }
 
@@ -217,15 +218,6 @@ class _FolderHeaderNavigationSectionState
       return widget.l10n.deckSearchClearTooltip;
     }
     return widget.l10n.folderSearchClearTooltip;
-  }
-
-  Widget _buildSortButton({required BuildContext context}) {
-    return LumosIconButton(
-      icon: Icons.sort_rounded,
-      tooltip: _buildCurrentSortLabel(),
-      variant: LumosIconButtonVariant.outlined,
-      onPressed: () => _onSortPressed(context),
-    );
   }
 
   void _clearSearch() {

@@ -23,112 +23,17 @@ class FolderHeaderBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
-    return ClipRRect(
-      borderRadius: BorderRadii.large,
-      child: Stack(
-        children: <Widget>[
-          _buildBannerBackground(colorScheme: colorScheme),
-          _buildBannerOverlay(colorScheme: colorScheme),
-          _buildBannerContent(colorScheme: colorScheme),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBannerBackground({required ColorScheme colorScheme}) {
-    return Positioned.fill(
-      child: LumosDecorativeBackground(
-        gradientColors: <Color>[
-          colorScheme.primaryContainer,
-          colorScheme.surfaceContainerHigh,
-        ],
-        blobs: <LumosDecorativeBlob>[
-          LumosDecorativeBlob(
-            top: -AppSpacing.xxxl,
-            right: -AppSpacing.xxxl,
-            fill: colorScheme.tertiaryContainer,
-            size: AppSpacing.canvas * 2,
-          ),
-          LumosDecorativeBlob(
-            bottom: -AppSpacing.xxl,
-            left: -AppSpacing.xxl,
-            fill: colorScheme.secondaryContainer,
-            size: AppSpacing.canvas,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBannerOverlay({required ColorScheme colorScheme}) {
-    return Positioned.fill(
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: colorScheme.surface.withValues(
-            alpha: AppOpacity.scrimLight,
-          ),
-          border: Border.all(
-            color: colorScheme.outlineVariant,
-            width: WidgetSizes.borderWidthRegular,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBannerContent({required ColorScheme colorScheme}) {
-    return Padding(
-      padding: const EdgeInsets.all(AppSpacing.md),
-      child: Row(
-        children: <Widget>[
-          _buildHeaderLeadingIcon(colorScheme: colorScheme),
-          const SizedBox(width: AppSpacing.lg),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                LumosText(
-                  _buildManagerTitle(),
-                  style: LumosTextStyle.titleLarge,
-                ),
-                const SizedBox(height: AppSpacing.sm),
-                LumosText(
-                  _buildManagerSubtitle(),
-                  style: LumosTextStyle.bodySmall,
-                ),
-                const SizedBox(height: AppSpacing.sm),
-                Wrap(
-                  spacing: AppSpacing.sm,
-                  runSpacing: AppSpacing.sm,
-                  children: <Widget>[
-                    FolderHeaderMetaPill(
-                      icon: Icons.home_rounded,
-                      label: l10n.folderRoot,
-                      backgroundColor: colorScheme.secondaryContainer,
-                      foregroundColor: colorScheme.onSecondaryContainer,
-                    ),
-                    FolderHeaderMetaPill(
-                      icon: _buildSecondaryPillIcon(),
-                      label: _buildSecondaryPillLabel(),
-                      backgroundColor: _buildSecondaryPillBackgroundColor(
-                        colorScheme: colorScheme,
-                      ),
-                      foregroundColor: _buildSecondaryPillForegroundColor(
-                        colorScheme: colorScheme,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildHeaderLeadingIcon({required ColorScheme colorScheme}) {
-    return Container(
+    final String managerTitle = _buildManagerTitle();
+    final String managerSubtitle = _buildManagerSubtitle();
+    final IconData leadingIcon = _buildLeadingIcon();
+    final Color leadingIconColor = _buildLeadingIconColor(colorScheme);
+    final IconData secondaryPillIcon = _buildSecondaryPillIcon();
+    final String secondaryPillLabel = _buildSecondaryPillLabel();
+    final Color secondaryPillBackgroundColor =
+        _buildSecondaryPillBackgroundColor(colorScheme: colorScheme);
+    final Color secondaryPillForegroundColor =
+        _buildSecondaryPillForegroundColor(colorScheme: colorScheme);
+    final Widget leadingIconWidget = Container(
       width: AppSpacing.section,
       height: AppSpacing.section,
       decoration: BoxDecoration(
@@ -140,8 +45,91 @@ class FolderHeaderBanner extends StatelessWidget {
         ),
       ),
       child: IconTheme(
-        data: IconThemeData(color: _buildLeadingIconColor(colorScheme)),
-        child: LumosIcon(_buildLeadingIcon(), size: IconSizes.iconMedium),
+        data: IconThemeData(color: leadingIconColor),
+        child: LumosIcon(leadingIcon, size: IconSizes.iconMedium),
+      ),
+    );
+    return ClipRRect(
+      borderRadius: BorderRadii.large,
+      child: Stack(
+        children: <Widget>[
+          Positioned.fill(
+            child: LumosDecorativeBackground(
+              gradientColors: <Color>[
+                colorScheme.primaryContainer,
+                colorScheme.surfaceContainerHigh,
+              ],
+              blobs: <LumosDecorativeBlob>[
+                LumosDecorativeBlob(
+                  top: -AppSpacing.xxxl,
+                  right: -AppSpacing.xxxl,
+                  fill: colorScheme.tertiaryContainer,
+                  size: AppSpacing.canvas * 2,
+                ),
+                LumosDecorativeBlob(
+                  bottom: -AppSpacing.xxl,
+                  left: -AppSpacing.xxl,
+                  fill: colorScheme.secondaryContainer,
+                  size: AppSpacing.canvas,
+                ),
+              ],
+            ),
+          ),
+          Positioned.fill(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: colorScheme.surface.withValues(
+                  alpha: AppOpacity.scrimLight,
+                ),
+                border: Border.all(
+                  color: colorScheme.outlineVariant,
+                  width: WidgetSizes.borderWidthRegular,
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(AppSpacing.md),
+            child: Row(
+              children: <Widget>[
+                leadingIconWidget,
+                const SizedBox(width: AppSpacing.lg),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      LumosText(managerTitle, style: LumosTextStyle.titleLarge),
+                      const SizedBox(height: AppSpacing.sm),
+                      LumosText(
+                        managerSubtitle,
+                        style: LumosTextStyle.bodySmall,
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      Wrap(
+                        spacing: AppSpacing.sm,
+                        runSpacing: AppSpacing.sm,
+                        children: <Widget>[
+                          FolderHeaderMetaPill(
+                            icon: Icons.home_rounded,
+                            label: l10n.folderRoot,
+                            backgroundColor: colorScheme.secondaryContainer,
+                            foregroundColor: colorScheme.onSecondaryContainer,
+                          ),
+                          FolderHeaderMetaPill(
+                            icon: secondaryPillIcon,
+                            label: secondaryPillLabel,
+                            backgroundColor: secondaryPillBackgroundColor,
+                            foregroundColor: secondaryPillForegroundColor,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

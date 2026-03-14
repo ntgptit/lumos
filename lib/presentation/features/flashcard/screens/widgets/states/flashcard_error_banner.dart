@@ -1,0 +1,27 @@
+import 'package:flutter/material.dart';
+
+import '../../../../../../core/themes/foundation/app_foundation.dart';
+import '../../../../../shared/widgets/lumos_widgets.dart';
+
+class FlashcardErrorBanner extends StatelessWidget {
+  const FlashcardErrorBanner({required this.message, super.key});
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        color: colorScheme.errorContainer,
+        borderRadius: BorderRadii.medium,
+      ),
+      child: LumosText(
+        message,
+        style: LumosTextStyle.bodySmall,
+        containerRole: LumosTextContainerRole.errorContainer,
+      ),
+    );
+  }
+}

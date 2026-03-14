@@ -1,0 +1,70 @@
+import 'package:flutter/material.dart';
+
+import '../../../../../../../core/themes/foundation/app_foundation.dart';
+import '../../../../../../shared/widgets/lumos_widgets.dart';
+
+abstract final class FlashcardListHeaderConst {
+  FlashcardListHeaderConst._();
+
+  static const double titleBottomSpacing = AppSpacing.xs;
+  static const double sortGap = AppSpacing.sm;
+}
+
+class FlashcardListHeader extends StatelessWidget {
+  const FlashcardListHeader({
+    required this.title,
+    required this.subtitle,
+    required this.sortLabel,
+    required this.onSortPressed,
+    super.key,
+  });
+
+  final String title;
+  final String subtitle;
+  final String sortLabel;
+  final VoidCallback onSortPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              LumosInlineText(title, style: theme.textTheme.titleMedium),
+              const SizedBox(
+                height: FlashcardListHeaderConst.titleBottomSpacing,
+              ),
+              LumosInlineText(
+                subtitle,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+        ),
+        InkWell(
+          onTap: onSortPressed,
+          borderRadius: BorderRadii.large,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.sm,
+              vertical: AppSpacing.xs,
+            ),
+            child: Row(
+              children: <Widget>[
+                LumosInlineText(sortLabel, style: theme.textTheme.titleMedium),
+                const SizedBox(width: FlashcardListHeaderConst.sortGap),
+                const LumosIcon(Icons.tune_rounded),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}

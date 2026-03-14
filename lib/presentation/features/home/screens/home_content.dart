@@ -3,18 +3,10 @@ import 'package:flutter/material.dart';
 import '../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../shared/widgets/lumos_widgets.dart';
-import '../constants/home_contract.dart';
-import 'widgets/blocks/home_sections_block.dart';
-
-abstract final class HomeContentConst {
-  HomeContentConst._();
-
-  static const double heroMinHeightMobile = 280;
-  static const double heroMinHeightLarge = 250;
-  static const double emphasizedBorderWidth = AppStroke.thin;
-  static const double heroShadowBlurRadius = AppSpacing.xxl;
-  static const double heroShadowOffsetY = AppSpacing.sm;
-}
+import 'widgets/blocks/content/dashboard/home_animated_reveal.dart';
+import 'widgets/blocks/content/dashboard/home_hero_card.dart';
+import 'widgets/blocks/content/dashboard/home_split_section.dart';
+import 'widgets/blocks/content/dashboard/home_stat_grid.dart';
 
 class HomeContent extends StatelessWidget {
   const HomeContent({super.key});
@@ -31,14 +23,14 @@ class HomeContent extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              _buildAnimatedReveal(
+              HomeAnimatedReveal(
                 order: 0,
                 child: HomeHeroCard(deviceType: deviceType, l10n: l10n),
               ),
               const SizedBox(height: AppSpacing.xxl),
-              _buildAnimatedReveal(order: 1, child: const HomeStatGrid()),
+              const HomeAnimatedReveal(order: 1, child: HomeStatGrid()),
               const SizedBox(height: AppSpacing.xxl),
-              _buildAnimatedReveal(
+              HomeAnimatedReveal(
                 order: 2,
                 child: HomeSplitSection(deviceType: deviceType),
               ),
@@ -46,192 +38,6 @@ class HomeContent extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildAnimatedReveal({required int order, required Widget child}) {
-    final int durationMs = 420 + (order * 120);
-    return TweenAnimationBuilder<double>(
-      duration: Duration(milliseconds: durationMs),
-      tween: Tween<double>(begin: 0, end: 1),
-      builder: (BuildContext context, double value, Widget? animatedChild) {
-        final double dy = AppSpacing.lg * (1 - value);
-        return Transform.translate(
-          offset: Offset(AppSpacing.none, dy),
-          child: animatedChild,
-        );
-      },
-      child: child,
-    );
-  }
-}
-
-class HomePageTitleBand extends StatelessWidget {
-  const HomePageTitleBand({
-    required this.l10n,
-    required this.deviceType,
-    super.key,
-  });
-
-  final AppLocalizations l10n;
-  final DeviceType deviceType;
-
-  @override
-  Widget build(BuildContext context) {
-    return const SizedBox.shrink();
-  }
-}
-
-class HomeHeaderBlock extends StatelessWidget {
-  const HomeHeaderBlock({required this.l10n, super.key});
-
-  final AppLocalizations l10n;
-
-  @override
-  Widget build(BuildContext context) {
-    return const SizedBox.shrink();
-  }
-}
-
-class HomeHeroCard extends StatelessWidget {
-  const HomeHeroCard({required this.deviceType, required this.l10n, super.key});
-
-  final DeviceType deviceType;
-  final AppLocalizations l10n;
-
-  @override
-  Widget build(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
-    final bool isMobile = deviceType == DeviceType.mobile;
-    return Semantics(
-      label: HomeScreenSemantics.heroCard,
-      container: true,
-      excludeSemantics: true,
-      child: _buildContainer(colorScheme: colorScheme, isMobile: isMobile),
-    );
-  }
-
-  Widget _buildContainer({
-    required ColorScheme colorScheme,
-    required bool isMobile,
-  }) {
-    return Container(
-      constraints: BoxConstraints(
-        minHeight: isMobile
-            ? HomeContentConst.heroMinHeightMobile
-            : HomeContentConst.heroMinHeightLarge,
-      ),
-      decoration: _buildDecoration(colorScheme: colorScheme),
-      child: ClipRRect(
-        borderRadius: BorderRadii.large,
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.xxl),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              _buildHeroBadge(colorScheme: colorScheme),
-              const SizedBox(height: AppSpacing.lg),
-              LumosText(
-                l10n.homeHeroTitle,
-                style: LumosTextStyle.headlineMedium,
-                containerRole: LumosTextContainerRole.primaryContainer,
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              LumosText(
-                l10n.homeHeroBody,
-                style: LumosTextStyle.bodyMedium,
-                containerRole: LumosTextContainerRole.primaryContainer,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              _buildActionButtons(l10n: l10n, colorScheme: colorScheme),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  BoxDecoration _buildDecoration({required ColorScheme colorScheme}) {
-    final Color secondaryBlend = Color.alphaBlend(
-      colorScheme.secondaryContainer.withValues(alpha: AppOpacity.strong),
-      colorScheme.surfaceContainerLowest,
-    );
-    return BoxDecoration(
-      borderRadius: BorderRadii.large,
-      gradient: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: <Color>[colorScheme.primaryContainer, secondaryBlend],
-      ),
-      border: Border.all(
-        color: colorScheme.outlineVariant,
-        width: HomeContentConst.emphasizedBorderWidth,
-      ),
-      boxShadow: <BoxShadow>[
-        BoxShadow(
-          color: colorScheme.shadow.withValues(alpha: AppOpacity.subtle),
-          blurRadius: HomeContentConst.heroShadowBlurRadius,
-          offset: const Offset(
-            AppSpacing.none,
-            HomeContentConst.heroShadowOffsetY,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildHeroBadge({required ColorScheme colorScheme}) {
-    return Row(
-      children: <Widget>[
-        IconTheme(
-          data: IconThemeData(color: colorScheme.primary),
-          child: const LumosIcon(
-            Icons.auto_awesome_rounded,
-            size: IconSizes.iconMedium,
-          ),
-        ),
-        const SizedBox(width: AppSpacing.sm),
-        Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.sm,
-            vertical: AppSpacing.xs,
-          ),
-          decoration: BoxDecoration(
-            color: colorScheme.surfaceContainerLowest,
-            borderRadius: BorderRadii.large,
-            border: Border.all(
-              color: colorScheme.outlineVariant,
-              width: HomeContentConst.emphasizedBorderWidth,
-            ),
-          ),
-          child: LumosText(
-            l10n.homeAiLearningPath,
-            style: LumosTextStyle.labelSmall,
-            tone: LumosTextTone.primary,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildActionButtons({
-    required AppLocalizations l10n,
-    required ColorScheme colorScheme,
-  }) {
-    return Wrap(
-      spacing: AppSpacing.sm,
-      runSpacing: AppSpacing.sm,
-      children: <Widget>[
-        LumosPrimaryButton(
-          label: l10n.homePrimaryAction,
-          onPressed: () {},
-          icon: Icons.play_arrow_rounded,
-        ),
-        LumosSecondaryButton(label: l10n.homeSecondaryAction, onPressed: () {}),
-      ],
     );
   }
 }

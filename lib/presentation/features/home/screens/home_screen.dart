@@ -7,7 +7,7 @@ import '../../../../core/themes/foundation/app_foundation.dart';
 import '../../../shared/widgets/lumos_widgets.dart';
 import '../../auth/providers/auth_session_provider.dart';
 import '../providers/home_provider.dart';
-import 'widgets/blocks/home_navigation_scaffold.dart';
+import 'widgets/blocks/content/shell/home_navigation_scaffold.dart';
 
 export '../constants/home_contract.dart'
     show HomeScreenKeys, HomeScreenSemantics;
@@ -22,7 +22,8 @@ class HomeScreen extends ConsumerWidget {
       authSessionControllerProvider,
     );
     return authAsync.when(
-      loading: () => const Scaffold(body: Center(child: LumosLoadingIndicator())),
+      loading: () =>
+          const Scaffold(body: Center(child: LumosLoadingIndicator())),
       error: (Object error, StackTrace stackTrace) {
         return const Scaffold(body: Center(child: LumosLoadingIndicator()));
       },

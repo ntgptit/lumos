@@ -4,9 +4,9 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/route_names.dart';
 import '../../../../core/themes/foundation/app_foundation.dart';
-import '../../../../l10n/app_localizations.dart';
 import '../../../shared/widgets/lumos_widgets.dart';
 import '../providers/auth_session_provider.dart';
+import 'widgets/blocks/content/auth_form_card.dart';
 
 class AuthScreen extends ConsumerStatefulWidget {
   const AuthScreen({super.key});
@@ -32,7 +32,6 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final AppLocalizations l10n = AppLocalizations.of(context)!;
     final AsyncValue<AuthViewState> authAsync = ref.watch(
       authSessionControllerProvider,
     );
@@ -73,73 +72,22 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                 constraints: const BoxConstraints(maxWidth: 520),
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.all(AppSpacing.xl),
-                  child: LumosCard(
-                    child: Padding(
-                      padding: const EdgeInsets.all(AppSpacing.xl),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: <Widget>[
-                          LumosText(
-                            l10n.authTitle,
-                            style: LumosTextStyle.displaySmall,
-                          ),
-                          const SizedBox(height: AppSpacing.sm),
-                          LumosText(
-                            l10n.authSubtitle,
-                            style: LumosTextStyle.bodyMedium,
-                          ),
-                          const SizedBox(height: AppSpacing.xl),
-                          SegmentedButton<AuthScreenModeState>(
-                            segments: <ButtonSegment<AuthScreenModeState>>[
-                              ButtonSegment<AuthScreenModeState>(
-                                value: AuthScreenModeState.login,
-                                label: LumosText(l10n.authLoginTab),
-                              ),
-                              ButtonSegment<AuthScreenModeState>(
-                                value: AuthScreenModeState.register,
-                                label: LumosText(l10n.authRegisterTab),
-                              ),
-                            ],
-                            selected: <AuthScreenModeState>{mode},
-                            onSelectionChanged:
-                                (Set<AuthScreenModeState> nextValue) {
-                                  ref
-                                      .read(
-                                        authScreenModeControllerProvider
-                                            .notifier,
-                                      )
-                                      .setMode(nextValue.first);
-                                },
-                          ),
-                          const SizedBox(height: AppSpacing.lg),
-                          ..._buildFields(
-                            context: context,
-                            mode: mode,
-                            passwordObscured: passwordObscured,
-                          ),
-                          if (authState.errorMessage
-                              case final String errorMessage) ...<Widget>[
-                            const SizedBox(height: AppSpacing.md),
-                            LumosText(
-                              errorMessage,
-                              style: LumosTextStyle.bodySmall,
-                            ),
-                          ],
-                          const SizedBox(height: AppSpacing.lg),
-                          LumosPrimaryButton(
-                            onPressed: authState.isBusy
-                                ? null
-                                : () => _submit(mode: mode),
-                            label: mode == AuthScreenModeState.login
-                                ? l10n.authSignInAction
-                                : l10n.authCreateAccountAction,
-                            icon: mode == AuthScreenModeState.login
-                                ? Icons.login_rounded
-                                : Icons.person_add_alt_1_rounded,
-                          ),
-                        ],
-                      ),
-                    ),
+                  child: AuthFormCard(
+                    mode: mode,
+                    authState: authState,
+                    usernameController: _usernameController,
+                    emailController: _emailController,
+                    identifierController: _identifierController,
+                    passwordController: _passwordController,
+                    passwordObscured: passwordObscured,
+                    onModeChanged: (AuthScreenModeState nextMode) {
+                      ref
+                          .read(authScreenModeControllerProvider.notifier)
+                          .setMode(nextMode);
+                    },
+                    onSubmit: () {
+                      _submit(mode: mode);
+                    },
                   ),
                 ),
               ),
@@ -147,62 +95,6 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
           ),
         );
       },
-    );
-  }
-
-  List<Widget> _buildFields({
-    required BuildContext context,
-    required AuthScreenModeState mode,
-    required bool passwordObscured,
-  }) {
-    final AppLocalizations l10n = AppLocalizations.of(context)!;
-    if (mode == AuthScreenModeState.register) {
-      return <Widget>[
-        LumosTextField(
-          controller: _usernameController,
-          label: l10n.authUsernameLabel,
-        ),
-        const SizedBox(height: AppSpacing.md),
-        LumosTextField(controller: _emailController, label: l10n.authEmailLabel),
-        const SizedBox(height: AppSpacing.md),
-        LumosTextField(
-          controller: _passwordController,
-          obscureText: passwordObscured,
-          label: l10n.authPasswordLabel,
-          suffixIcon: _buildPasswordToggle(context),
-        ),
-      ];
-    }
-    return <Widget>[
-      LumosTextField(
-        controller: _identifierController,
-        label: l10n.authUsernameOrEmailLabel,
-      ),
-      const SizedBox(height: AppSpacing.md),
-      LumosTextField(
-        controller: _passwordController,
-        obscureText: passwordObscured,
-        label: l10n.authPasswordLabel,
-        suffixIcon: _buildPasswordToggle(context),
-      ),
-    ];
-  }
-
-  Widget _buildPasswordToggle(BuildContext context) {
-    final AppLocalizations l10n = AppLocalizations.of(context)!;
-    final bool passwordObscured = ref.watch(
-      authPasswordVisibilityControllerProvider,
-    );
-    return LumosIconButton(
-      onPressed: () {
-        ref.read(authPasswordVisibilityControllerProvider.notifier).toggle();
-      },
-      icon: Icons.visibility_rounded,
-      selectedIcon: Icons.visibility_off_rounded,
-      selected: !passwordObscured,
-      tooltip: passwordObscured
-          ? l10n.authShowPasswordTooltip
-          : l10n.authHidePasswordTooltip,
     );
   }
 

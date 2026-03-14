@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
 import '../../../../core/themes/foundation/app_foundation.dart';
@@ -36,17 +37,22 @@ class LumosHorizontalPager extends StatelessWidget {
       onKeyEvent: _handleKeyEvent,
       child: Listener(
         onPointerSignal: _handlePointerSignal,
-        child: NotificationListener<OverscrollNotification>(
-          onNotification: _handleOverscrollNotification,
-          child: ScrollConfiguration(
-            behavior: const _LumosHorizontalPagerScrollBehavior(),
-            child: PageView.builder(
-              controller: controller,
-              scrollDirection: Axis.horizontal,
-              physics: const BouncingScrollPhysics(parent: PageScrollPhysics()),
-              itemCount: itemCount,
-              onPageChanged: onPageChanged,
-              itemBuilder: itemBuilder,
+        child: NotificationListener<UserScrollNotification>(
+          onNotification: _handleUserScrollNotification,
+          child: NotificationListener<OverscrollNotification>(
+            onNotification: _handleOverscrollNotification,
+            child: ScrollConfiguration(
+              behavior: const _LumosHorizontalPagerScrollBehavior(),
+              child: PageView.builder(
+                controller: controller,
+                scrollDirection: Axis.horizontal,
+                physics: const BouncingScrollPhysics(
+                  parent: PageScrollPhysics(),
+                ),
+                itemCount: itemCount,
+                onPageChanged: onPageChanged,
+                itemBuilder: itemBuilder,
+              ),
             ),
           ),
         ),
@@ -135,7 +141,21 @@ class LumosHorizontalPager extends StatelessWidget {
     if (notification.metrics.pixels > notification.metrics.minScrollExtent) {
       return false;
     }
-    if (notification.overscroll >= AppSpacing.none) {
+    if (notification.overscroll == AppSpacing.none) {
+      return false;
+    }
+    onLeadingEdgeAttempt?.call();
+    return false;
+  }
+
+  bool _handleUserScrollNotification(UserScrollNotification notification) {
+    if (notification.metrics.axis != Axis.horizontal) {
+      return false;
+    }
+    if (notification.direction != ScrollDirection.forward) {
+      return false;
+    }
+    if (notification.metrics.pixels > notification.metrics.minScrollExtent) {
       return false;
     }
     onLeadingEdgeAttempt?.call();

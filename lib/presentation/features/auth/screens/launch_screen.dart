@@ -16,9 +16,8 @@ class LaunchScreen extends ConsumerWidget {
       authSessionControllerProvider,
     );
     return authAsync.when(
-      loading: () => const Scaffold(
-        body: Center(child: LumosLoadingIndicator()),
-      ),
+      loading: () =>
+          const Scaffold(body: Center(child: LumosLoadingIndicator())),
       error: (Object error, StackTrace stackTrace) {
         return Scaffold(
           body: Center(
@@ -43,9 +42,7 @@ class LaunchScreen extends ConsumerWidget {
           }
           context.goNamed(AppRouteName.auth);
         });
-        return const Scaffold(
-          body: Center(child: LumosLoadingIndicator()),
-        );
+        return const Scaffold(body: Center(child: LumosLoadingIndicator()));
       },
     );
   }

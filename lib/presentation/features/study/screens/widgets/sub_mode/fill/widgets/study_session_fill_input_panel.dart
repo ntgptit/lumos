@@ -5,12 +5,12 @@ import '../../../../../../../../l10n/app_localizations.dart';
 import '../../../../../../../shared/widgets/lumos_widgets.dart';
 import 'study_session_fill_panel_style.dart';
 
-const EdgeInsetsGeometry _fillErrorBannerPadding = EdgeInsets.symmetric(
-  horizontal: AppSpacing.lg,
-  vertical: AppSpacing.sm,
-);
 const EdgeInsetsGeometry _fillErrorFieldPadding = EdgeInsets.only(
   bottom: AppSpacing.xxxl,
+);
+const EdgeInsetsGeometry _fillInputErrorBannerPadding = EdgeInsets.symmetric(
+  horizontal: AppSpacing.lg,
+  vertical: AppSpacing.sm,
 );
 
 class StudySessionFillInputPanel extends StatelessWidget {
@@ -77,56 +77,47 @@ class StudySessionFillInputPanel extends StatelessWidget {
                   switchInCurve: Curves.easeOut,
                   switchOutCurve: Curves.easeIn,
                   child: showsRequiredInputError
-                      ? _StudySessionFillInputErrorBanner(
-                          message: l10n.studyFillAnswerRequiredValidation,
+                      ? Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            padding: _fillInputErrorBannerPadding,
+                            decoration: BoxDecoration(
+                              color: colorScheme.errorContainer,
+                              borderRadius: BorderRadii.pill,
+                              border: Border.all(
+                                color: colorScheme.error.withValues(
+                                  alpha: AppOpacity.stateHover,
+                                ),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                IconTheme(
+                                  data: IconThemeData(
+                                    color: colorScheme.onErrorContainer,
+                                  ),
+                                  child: const LumosIcon(
+                                    Icons.error_outline_rounded,
+                                    size: IconSizes.iconSmall,
+                                  ),
+                                ),
+                                const SizedBox(width: AppSpacing.sm),
+                                Flexible(
+                                  child: LumosText(
+                                    l10n.studyFillAnswerRequiredValidation,
+                                    style: LumosTextStyle.bodySmall,
+                                    containerRole:
+                                        LumosTextContainerRole.errorContainer,
+                                    align: TextAlign.center,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         )
                       : const SizedBox.shrink(),
                 ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _StudySessionFillInputErrorBanner extends StatelessWidget {
-  const _StudySessionFillInputErrorBanner({required this.message});
-
-  final String message;
-
-  @override
-  Widget build(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Container(
-        padding: _fillErrorBannerPadding,
-        decoration: BoxDecoration(
-          color: colorScheme.errorContainer,
-          borderRadius: BorderRadii.pill,
-          border: Border.all(
-            color: colorScheme.error.withValues(alpha: AppOpacity.stateHover),
-          ),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            IconTheme(
-              data: IconThemeData(color: colorScheme.onErrorContainer),
-              child: const LumosIcon(
-                Icons.error_outline_rounded,
-                size: IconSizes.iconSmall,
-              ),
-            ),
-            const SizedBox(width: AppSpacing.sm),
-            Flexible(
-              child: LumosText(
-                message,
-                style: LumosTextStyle.bodySmall,
-                containerRole: LumosTextContainerRole.errorContainer,
-                align: TextAlign.center,
               ),
             ),
           ],
