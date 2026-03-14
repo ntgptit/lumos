@@ -53,22 +53,6 @@ void main() {
                   );
                   return;
                 }
-                if (options.path ==
-                    StudyRepositoryImplConst.speechPreferencePath) {
-                  handler.resolve(
-                    Response<dynamic>(
-                      requestOptions: options,
-                      data: <String, dynamic>{
-                        'enabled': true,
-                        'autoPlay': false,
-                        'voice': 'ko-KR-neutral',
-                        'speed': 1.0,
-                        'locale': 'ko-KR',
-                      },
-                    ),
-                  );
-                  return;
-                }
                 handler.resolve(
                   Response<dynamic>(
                     requestOptions: options,
@@ -147,12 +131,6 @@ void main() {
       await repository.resetDeckProgress(deckId: 10);
       final reminder = await repository.getReminderSummary();
       final analytics = await repository.getAnalyticsOverview();
-      final SpeechPreference preference = await repository
-          .getSpeechPreference();
-      final SpeechPreference updated = await repository.updateSpeechPreference(
-        preference: preference.copyWith(autoPlay: true),
-      );
-
       expect(started.sessionId, 33);
       expect(resumed.deckName, 'Korean Basics');
       expect(submitted.currentItem.answer, 'xin chao');
@@ -162,8 +140,6 @@ void main() {
       expect(next.progress.completedItems, 1);
       expect(reminder.recommendation!.deckId, 10);
       expect(analytics.boxDistribution[1], 3);
-      expect(preference.voice, 'ko-KR-neutral');
-      expect(updated.autoPlay, isFalse);
     });
   });
 }

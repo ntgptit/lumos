@@ -167,30 +167,6 @@ class _SequencedFillStudyRepository implements StudyRepository {
   Future<StudyAnalyticsOverview> getAnalyticsOverview() async {
     throw UnimplementedError();
   }
-
-  @override
-  Future<SpeechPreference> getSpeechPreference() async {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<SpeechPreference> updateSpeechPreference({
-    required SpeechPreference preference,
-  }) async {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<StudyPreference> getStudyPreference() async {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<StudyPreference> updateStudyPreference({
-    required StudyPreference preference,
-  }) async {
-    throw UnimplementedError();
-  }
 }
 
 StudySessionData _buildFillSession({

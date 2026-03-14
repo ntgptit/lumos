@@ -290,6 +290,8 @@
   "homeLibrarySubtitle": "Your decks, lessons, and curated packs.",
   "homeProgressSubtitle": "Track streaks, XP trends, and weak skills.",
   "homeProfileSubtitle": "Manage your goals and learning preferences.",
+  "profileAccountSectionTitle": "Account",
+  "profileAccountSectionSubtitle": "Review the identity and status for your current signed-in account.",
   "profileThemeSectionTitle": "Appearance",
   "profileThemeSectionSubtitle": "Choose how the app theme is displayed.",
   "profileThemeSystem": "Follow system",

@@ -1,12 +1,8 @@
 package com.lumos.study.controller;
 
-import static com.lumos.testkit.StudyTestFixtures.speechPreferenceResponse;
 import static com.lumos.testkit.StudyTestFixtures.startStudySessionRequest;
-import static com.lumos.testkit.StudyTestFixtures.studyPreferenceResponse;
 import static com.lumos.testkit.StudyTestFixtures.studySessionResponse;
 import static com.lumos.testkit.StudyTestFixtures.submitAnswerRequest;
-import static com.lumos.testkit.StudyTestFixtures.updateStudyPreferenceRequest;
-import static com.lumos.testkit.StudyTestFixtures.updateSpeechPreferenceRequest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -17,8 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.lumos.study.service.SpeechPreferenceService;
-import com.lumos.study.service.StudyPreferenceService;
 import com.lumos.study.service.StudySessionService;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,12 +23,6 @@ class StudySessionControllerTest {
 
     @Mock
     private StudySessionService studySessionService;
-
-    @Mock
-    private SpeechPreferenceService speechPreferenceService;
-
-    @Mock
-    private StudyPreferenceService studyPreferenceService;
 
     @InjectMocks
     private StudySessionController studySessionController;
@@ -148,51 +136,4 @@ class StudySessionControllerTest {
         assertEquals(response, entity.getBody());
     }
 
-    @Test
-    void getSpeechPreference_returnsOkResponse() {
-        final var response = speechPreferenceResponse();
-        when(this.speechPreferenceService.getSpeechPreference()).thenReturn(response);
-
-        final var entity = this.studySessionController.getSpeechPreference();
-
-        assertEquals(200, entity.getStatusCode().value());
-        assertEquals(response, entity.getBody());
-    }
-
-    @Test
-    void updateSpeechPreference_returnsOkResponse() {
-        final var request = updateSpeechPreferenceRequest(true, true, "ko-KR-female", 1.2D);
-        final var response = speechPreferenceResponse();
-        when(this.speechPreferenceService.updateSpeechPreference(request)).thenReturn(response);
-
-        final var entity = this.studySessionController.updateSpeechPreference(request);
-
-        verify(this.speechPreferenceService).updateSpeechPreference(request);
-        assertEquals(200, entity.getStatusCode().value());
-        assertEquals(response, entity.getBody());
-    }
-
-    @Test
-    void getStudyPreference_returnsOkResponse() {
-        final var response = studyPreferenceResponse();
-        when(this.studyPreferenceService.getStudyPreference()).thenReturn(response);
-
-        final var entity = this.studySessionController.getStudyPreference();
-
-        assertEquals(200, entity.getStatusCode().value());
-        assertEquals(response, entity.getBody());
-    }
-
-    @Test
-    void updateStudyPreference_returnsOkResponse() {
-        final var request = updateStudyPreferenceRequest(20);
-        final var response = studyPreferenceResponse();
-        when(this.studyPreferenceService.updateStudyPreference(request)).thenReturn(response);
-
-        final var entity = this.studySessionController.updateStudyPreference(request);
-
-        verify(this.studyPreferenceService).updateStudyPreference(request);
-        assertEquals(200, entity.getStatusCode().value());
-        assertEquals(response, entity.getBody());
-    }
 }

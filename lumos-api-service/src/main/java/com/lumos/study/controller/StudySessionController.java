@@ -6,19 +6,12 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lumos.study.dto.request.StartStudySessionRequest;
 import com.lumos.study.dto.request.SubmitAnswerRequest;
-import com.lumos.study.dto.request.UpdateStudyPreferenceRequest;
-import com.lumos.study.dto.request.UpdateSpeechPreferenceRequest;
-import com.lumos.study.dto.response.StudyPreferenceResponse;
-import com.lumos.study.dto.response.SpeechPreferenceResponse;
 import com.lumos.study.dto.response.StudySessionResponse;
-import com.lumos.study.service.SpeechPreferenceService;
-import com.lumos.study.service.StudyPreferenceService;
 import com.lumos.study.service.StudySessionService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,7 +20,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 /**
- * Study session and speech preference endpoints.
+ * Study session endpoints.
  */
 @Validated
 @RestController
@@ -36,8 +29,6 @@ import lombok.RequiredArgsConstructor;
 public class StudySessionController {
 
     private final StudySessionService studySessionService;
-    private final SpeechPreferenceService speechPreferenceService;
-    private final StudyPreferenceService studyPreferenceService;
 
     /**
      * Start a canonical study session for the selected deck.
@@ -51,7 +42,8 @@ public class StudySessionController {
     @RequestBody StartStudySessionRequest request) {
         final var response = this.studySessionService
                 .startSession(request);
-        // Return the created session snapshot so the study screen can bootstrap from backend state.
+        // Return the created session snapshot so the study screen can bootstrap from
+        // backend state.
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(response);
@@ -68,7 +60,8 @@ public class StudySessionController {
     public ResponseEntity<StudySessionResponse> resumeSession(@PathVariable Long sessionId) {
         final var response = this.studySessionService
                 .resumeSession(sessionId);
-        // Return the persisted session snapshot so the client can resume without rebuilding state locally.
+        // Return the persisted session snapshot so the client can resume without
+        // rebuilding state locally.
         return ResponseEntity
                 .ok(response);
     }
@@ -88,7 +81,8 @@ public class StudySessionController {
             @RequestBody SubmitAnswerRequest request) {
         final var response = this.studySessionService
                 .submitAnswer(sessionId, request);
-        // Return the post-submit session snapshot so the client can render feedback from backend truth.
+        // Return the post-submit session snapshot so the client can render feedback
+        // from backend truth.
         return ResponseEntity
                 .ok(response);
     }
@@ -120,7 +114,8 @@ public class StudySessionController {
     public ResponseEntity<StudySessionResponse> markRemembered(@PathVariable Long sessionId) {
         final var response = this.studySessionService
                 .markRemembered(sessionId);
-        // Return the session snapshot after recording a remembered outcome for the current item.
+        // Return the session snapshot after recording a remembered outcome for the
+        // current item.
         return ResponseEntity
                 .ok(response);
     }
@@ -136,7 +131,8 @@ public class StudySessionController {
     public ResponseEntity<StudySessionResponse> retryItem(@PathVariable Long sessionId) {
         final var response = this.studySessionService
                 .retryItem(sessionId);
-        // Return the session snapshot after moving the current item into the retry path.
+        // Return the session snapshot after moving the current item into the retry
+        // path.
         return ResponseEntity
                 .ok(response);
     }
@@ -152,7 +148,8 @@ public class StudySessionController {
     public ResponseEntity<StudySessionResponse> goNext(@PathVariable Long sessionId) {
         final var response = this.studySessionService
                 .goNext(sessionId);
-        // Return the advanced session snapshot so the study screen can render the next backend-selected item.
+        // Return the advanced session snapshot so the study screen can render the next
+        // backend-selected item.
         return ResponseEntity
                 .ok(response);
     }
@@ -168,7 +165,8 @@ public class StudySessionController {
     public ResponseEntity<StudySessionResponse> resetCurrentMode(@PathVariable Long sessionId) {
         final var response = this.studySessionService
                 .resetCurrentMode(sessionId);
-        // Return the reset mode snapshot so the client can restart the active mode from backend truth.
+        // Return the reset mode snapshot so the client can restart the active mode from
+        // backend truth.
         return ResponseEntity
                 .ok(response);
     }
@@ -182,9 +180,13 @@ public class StudySessionController {
     @Operation(summary = "Reset deck learning progress")
     @PostMapping("/api/v1/study/decks/{deckId}/reset-progress")
     public ResponseEntity<Void> resetDeckProgress(@PathVariable Long deckId) {
-        this.studySessionService.resetDeckProgress(deckId);
-        // Return no content because the reset command completes without a response body.
-        return ResponseEntity.noContent().build();
+        this.studySessionService
+                .resetDeckProgress(deckId);
+        // Return no content because the reset command completes without a response
+        // body.
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 
     /**
@@ -198,74 +200,10 @@ public class StudySessionController {
     public ResponseEntity<StudySessionResponse> completeMode(@PathVariable Long sessionId) {
         final var response = this.studySessionService
                 .completeMode(sessionId);
-        // Return the next-mode or completed-session snapshot after backend mode completion logic runs.
+        // Return the next-mode or completed-session snapshot after backend mode
+        // completion logic runs.
         return ResponseEntity
                 .ok(response);
     }
 
-    /**
-     * Return the current user's speech preference.
-     *
-     * @return speech preference response
-     */
-    @Operation(summary = "Get speech preference")
-    @GetMapping("/api/v1/profile/speech-preference")
-    public ResponseEntity<SpeechPreferenceResponse> getSpeechPreference() {
-        final var response = this.speechPreferenceService
-                .getSpeechPreference();
-        // Return the current speech preference so profile and study screens stay in sync.
-        return ResponseEntity
-                .ok(response);
-    }
-
-    /**
-     * Update the current user's speech preference.
-     *
-     * @param request speech preference update payload
-     * @return updated speech preference response
-     */
-    @Operation(summary = "Update speech preference")
-    @PutMapping("/api/v1/profile/speech-preference")
-    public ResponseEntity<SpeechPreferenceResponse> updateSpeechPreference(
-            @Valid
-            @RequestBody UpdateSpeechPreferenceRequest request) {
-        final var response = this.speechPreferenceService
-                .updateSpeechPreference(request);
-        // Return the saved speech preference so the client reflects canonical audio settings.
-        return ResponseEntity
-                .ok(response);
-    }
-
-    /**
-     * Return the current user's study preference.
-     *
-     * @return study preference response
-     */
-    @Operation(summary = "Get study preference")
-    @GetMapping("/api/v1/profile/study-preference")
-    public ResponseEntity<StudyPreferenceResponse> getStudyPreference() {
-        final var response = this.studyPreferenceService
-                .getStudyPreference();
-        // Return the current study preference so the profile screen can render the first-learning session size.
-        return ResponseEntity
-                .ok(response);
-    }
-
-    /**
-     * Update the current user's study preference.
-     *
-     * @param request study preference update payload
-     * @return updated study preference response
-     */
-    @Operation(summary = "Update study preference")
-    @PutMapping("/api/v1/profile/study-preference")
-    public ResponseEntity<StudyPreferenceResponse> updateStudyPreference(
-            @Valid
-            @RequestBody UpdateStudyPreferenceRequest request) {
-        final var response = this.studyPreferenceService
-                .updateStudyPreference(request);
-        // Return the saved study preference so first-learning session size stays aligned with backend truth.
-        return ResponseEntity
-                .ok(response);
-    }
 }

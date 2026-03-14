@@ -33,16 +33,4 @@ abstract class StudyRepository {
   Future<StudyReminderSummary> getReminderSummary();
 
   Future<StudyAnalyticsOverview> getAnalyticsOverview();
-
-  Future<SpeechPreference> getSpeechPreference();
-
-  Future<SpeechPreference> updateSpeechPreference({
-    required SpeechPreference preference,
-  });
-
-  Future<StudyPreference> getStudyPreference();
-
-  Future<StudyPreference> updateStudyPreference({
-    required StudyPreference preference,
-  });
 }

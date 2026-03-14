@@ -1193,6 +1193,18 @@ abstract class AppLocalizations {
   /// **'Manage your goals and learning preferences.'**
   String get homeProfileSubtitle;
 
+  /// No description provided for @profileAccountSectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get profileAccountSectionTitle;
+
+  /// No description provided for @profileAccountSectionSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Review the identity and status for your current signed-in account.'**
+  String get profileAccountSectionSubtitle;
+
   /// No description provided for @profileThemeSectionTitle.
   ///
   /// In en, this message translates to:

@@ -590,6 +590,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeProfileSubtitle => 'Manage your goals and learning preferences.';
 
   @override
+  String get profileAccountSectionTitle => 'Account';
+
+  @override
+  String get profileAccountSectionSubtitle => 'Review the identity and status for your current signed-in account.';
+
+  @override
   String get profileThemeSectionTitle => 'Appearance';
 
   @override

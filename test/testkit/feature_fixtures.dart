@@ -1,6 +1,8 @@
 import 'package:lumos/domain/entities/auth/auth_models.dart';
+import 'package:lumos/domain/entities/profile/profile_models.dart';
 import 'package:lumos/domain/entities/study/study_models.dart';
 import 'package:lumos/domain/repositories/auth/auth_repository.dart';
+import 'package:lumos/domain/repositories/profile/profile_repository.dart';
 import 'package:lumos/domain/repositories/study/study_repository.dart';
 
 AuthSession sampleAuthSession({
@@ -135,6 +137,14 @@ StudyPreference sampleStudyPreference({int firstLearningCardLimit = 20}) {
   return StudyPreference(firstLearningCardLimit: firstLearningCardLimit);
 }
 
+ProfileData sampleProfileData() {
+  return ProfileData(
+    user: sampleAuthSession().user,
+    studyPreference: sampleStudyPreference(),
+    speechPreference: sampleSpeechPreference(),
+  );
+}
+
 class FakeAuthRepository implements AuthRepository {
   FakeAuthRepository({
     this.bootstrapResult,
@@ -206,27 +216,19 @@ class FakeStudyRepository implements StudyRepository {
     StudySessionData? session,
     StudyReminderSummary? reminder,
     StudyAnalyticsOverview? analytics,
-    SpeechPreference? preference,
-    StudyPreference? studyPreference,
     this.actionDelay = Duration.zero,
   }) : _session = session ?? sampleStudySession(),
        _reminder = reminder ?? sampleReminderSummary(),
-       _analytics = analytics ?? sampleAnalyticsOverview(),
-       _preference = preference ?? sampleSpeechPreference(),
-       _studyPreference = studyPreference ?? sampleStudyPreference();
+       _analytics = analytics ?? sampleAnalyticsOverview();
 
   StudySessionData _session;
   final StudyReminderSummary _reminder;
   final StudyAnalyticsOverview _analytics;
-  SpeechPreference _preference;
-  StudyPreference _studyPreference;
   final Duration actionDelay;
 
   int? lastDeckId;
   int? lastSessionId;
   String? lastAnswer;
-  SpeechPreference? lastPreference;
-  StudyPreference? lastStudyPreference;
   int resetCurrentModeCallCount = 0;
   int resetDeckProgressCallCount = 0;
   StudySessionTypeOption? lastPreferredSessionType;
@@ -372,23 +374,44 @@ class FakeStudyRepository implements StudyRepository {
     return _analytics;
   }
 
+  Future<void> _delayAction() async {
+    if (actionDelay <= Duration.zero) {
+      return;
+    }
+    await Future<void>.delayed(actionDelay);
+  }
+}
+
+class FakeProfileRepository implements ProfileRepository {
+  FakeProfileRepository({ProfileData? profile})
+    : _profile = profile ?? sampleProfileData();
+
+  ProfileData _profile;
+  SpeechPreference? lastSpeechPreference;
+  StudyPreference? lastStudyPreference;
+
+  @override
+  Future<ProfileData> getProfile() async {
+    return _profile;
+  }
+
   @override
   Future<SpeechPreference> getSpeechPreference() async {
-    return _preference;
+    return _profile.speechPreference;
   }
 
   @override
   Future<SpeechPreference> updateSpeechPreference({
     required SpeechPreference preference,
   }) async {
-    lastPreference = preference;
-    _preference = preference;
-    return _preference;
+    lastSpeechPreference = preference;
+    _profile = _profile.copyWith(speechPreference: preference);
+    return _profile.speechPreference;
   }
 
   @override
   Future<StudyPreference> getStudyPreference() async {
-    return _studyPreference;
+    return _profile.studyPreference;
   }
 
   @override
@@ -396,14 +419,7 @@ class FakeStudyRepository implements StudyRepository {
     required StudyPreference preference,
   }) async {
     lastStudyPreference = preference;
-    _studyPreference = preference;
-    return _studyPreference;
-  }
-
-  Future<void> _delayAction() async {
-    if (actionDelay <= Duration.zero) {
-      return;
-    }
-    await Future<void>.delayed(actionDelay);
+    _profile = _profile.copyWith(studyPreference: preference);
+    return _profile.studyPreference;
   }
 }

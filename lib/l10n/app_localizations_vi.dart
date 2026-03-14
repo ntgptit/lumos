@@ -590,6 +590,12 @@ class AppLocalizationsVi extends AppLocalizations {
   String get homeProfileSubtitle => 'Quản lý mục tiêu và tùy chọn học tập của bạn.';
 
   @override
+  String get profileAccountSectionTitle => 'Tài khoản';
+
+  @override
+  String get profileAccountSectionSubtitle => 'Xem lại thông tin nhận diện và trạng thái của tài khoản đang đăng nhập.';
+
+  @override
   String get profileThemeSectionTitle => 'Giao diện';
 
   @override

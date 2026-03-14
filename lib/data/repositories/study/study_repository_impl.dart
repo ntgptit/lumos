@@ -15,9 +15,6 @@ abstract final class StudyRepositoryImplConst {
   static const String remindersSummaryPath = '/api/v1/study/reminders/summary';
   static const String analyticsOverviewPath =
       '/api/v1/study/analytics/overview';
-  static const String speechPreferencePath =
-      '/api/v1/profile/speech-preference';
-  static const String studyPreferencePath = '/api/v1/profile/study-preference';
 }
 
 class DioStudyRepository implements StudyRepository {
@@ -138,44 +135,6 @@ class DioStudyRepository implements StudyRepository {
       StudyRepositoryImplConst.analyticsOverviewPath,
     );
     return StudyAnalyticsOverview.fromJson(_castMap(response.data));
-  }
-
-  @override
-  Future<SpeechPreference> getSpeechPreference() async {
-    final Response<dynamic> response = await _dio.get<dynamic>(
-      StudyRepositoryImplConst.speechPreferencePath,
-    );
-    return SpeechPreference.fromJson(_castMap(response.data));
-  }
-
-  @override
-  Future<SpeechPreference> updateSpeechPreference({
-    required SpeechPreference preference,
-  }) async {
-    final Response<dynamic> response = await _dio.put<dynamic>(
-      StudyRepositoryImplConst.speechPreferencePath,
-      data: preference.toJson(),
-    );
-    return SpeechPreference.fromJson(_castMap(response.data));
-  }
-
-  @override
-  Future<StudyPreference> getStudyPreference() async {
-    final Response<dynamic> response = await _dio.get<dynamic>(
-      StudyRepositoryImplConst.studyPreferencePath,
-    );
-    return StudyPreference.fromJson(_castMap(response.data));
-  }
-
-  @override
-  Future<StudyPreference> updateStudyPreference({
-    required StudyPreference preference,
-  }) async {
-    final Response<dynamic> response = await _dio.put<dynamic>(
-      StudyRepositoryImplConst.studyPreferencePath,
-      data: preference.toJson(),
-    );
-    return StudyPreference.fromJson(_castMap(response.data));
   }
 
   Map<String, dynamic> _castMap(dynamic rawValue) {
