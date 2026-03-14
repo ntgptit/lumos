@@ -4,8 +4,8 @@ import '../../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../../domain/entities/study/study_models.dart';
 import '../../../../mode/study_mode_view_model.dart';
 import '../../../../providers/study_match_selection_provider.dart';
+import '../widgets/study_session_progress_row.dart';
 import 'widgets/study_session_match_pairs.dart';
-import 'widgets/study_session_match_progress_row.dart';
 
 const EdgeInsetsGeometry _matchContentPadding = EdgeInsets.fromLTRB(
   AppSpacing.lg,
@@ -47,7 +47,7 @@ class StudySessionMatchContent extends StatelessWidget {
         children: <Widget>[
           Padding(
             padding: _matchProgressPadding,
-            child: StudySessionMatchProgressRow(
+            child: StudySessionProgressRow(
               progressValue: session.progress.sessionProgress,
             ),
           ),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../mode/study_fill_answer_comparison.dart';
 import '../../../../../../../shared/widgets/lumos_widgets.dart';
+import '../../widgets/study_session_content_card.dart';
 import 'study_session_fill_panel_style.dart';
 
 const double _fillComparisonSpacing = AppSpacing.canvas;
@@ -70,11 +71,8 @@ class StudySessionFillAnswerPanel extends StatelessWidget {
               ),
             ],
           );
-    return LumosCard(
-      margin: EdgeInsets.zero,
+    return StudySessionContentCard(
       variant: LumosCardVariant.filled,
-      borderRadius: BorderRadii.xLarge,
-      padding: EdgeInsets.zero,
       child: SizedBox.expand(
         child: Center(child: SingleChildScrollView(child: answerContent)),
       ),

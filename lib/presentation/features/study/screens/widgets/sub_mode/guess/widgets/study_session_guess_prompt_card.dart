@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 import '../../../../../../../../core/constants/text_styles.dart';
 import '../../../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../../../domain/entities/study/study_models.dart';
-import '../../../../../providers/study_speech_playback_provider.dart';
 import '../../../../../../../shared/widgets/lumos_widgets.dart';
+import '../../../../../providers/study_speech_playback_provider.dart';
+import '../../widgets/study_session_content_card.dart';
 
 const double _guessHeroCardMinHeight = 184;
 const double _guessHeroCardMaxHeight = 240;
@@ -61,52 +62,34 @@ class StudySessionGuessPromptCard extends StatelessWidget {
                 constraints.maxWidth * _guessHeroCardHeightFactor,
               ),
             );
-        return LumosCard(
-          margin: EdgeInsets.zero,
-          borderRadius: BorderRadii.xLarge,
-          padding: EdgeInsets.zero,
-          child: SizedBox(
-            height: resolvedHeight,
-            child: Stack(
-              children: <Widget>[
-                const Align(
-                  alignment: Alignment.topRight,
-                  child: Padding(
-                    padding: _guessHeroTopIconPadding,
-                    child: LumosIcon(
-                      Icons.edit_outlined,
-                      size: _guessHeroIconSize,
-                    ),
-                  ),
+        return StudySessionContentCard(
+          height: resolvedHeight,
+          expandToFill: false,
+          topTrailing: const LumosIcon(
+            Icons.edit_outlined,
+            size: _guessHeroIconSize,
+          ),
+          topTrailingPadding: _guessHeroTopIconPadding,
+          bottomTrailing: LumosIconButton(
+            icon: Icons.volume_up_rounded,
+            tooltip: speech.available ? speech.speechText : null,
+            onPressed: isSpeechEnabled ? onPlayPressed : null,
+          ),
+          bottomTrailingPadding: _guessHeroBottomIconPadding,
+          child: Padding(
+            padding: _guessHeroCardPadding,
+            child: Center(
+              child: LumosInlineText(
+                prompt,
+                align: TextAlign.center,
+                maxLines: _guessHeroPromptMaxLines,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.headlineLarge?.copyWith(
+                  color: colorScheme.onSurface,
+                  fontWeight: FontWeight.w500,
+                  height: _guessHeroPromptLineHeight,
                 ),
-                Padding(
-                  padding: _guessHeroCardPadding,
-                  child: Center(
-                    child: LumosInlineText(
-                      prompt,
-                      align: TextAlign.center,
-                      maxLines: _guessHeroPromptMaxLines,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.headlineLarge?.copyWith(
-                        color: colorScheme.onSurface,
-                        fontWeight: FontWeight.w500,
-                        height: _guessHeroPromptLineHeight,
-                      ),
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: Padding(
-                    padding: _guessHeroBottomIconPadding,
-                    child: LumosIconButton(
-                      icon: Icons.volume_up_rounded,
-                      tooltip: speech.available ? speech.speechText : null,
-                      onPressed: isSpeechEnabled ? onPlayPressed : null,
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         );

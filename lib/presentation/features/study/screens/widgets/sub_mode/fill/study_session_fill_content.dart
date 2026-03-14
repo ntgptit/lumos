@@ -7,9 +7,9 @@ import '../../../../mode/study_mode_action_view_model.dart';
 import '../../../../mode/study_mode_view_model.dart';
 import '../../../../providers/study_fill_selection_provider.dart';
 import '../../../../providers/study_speech_playback_provider.dart';
+import '../widgets/study_session_progress_row.dart';
 import 'widgets/study_session_fill_action_row.dart';
 import 'widgets/study_session_fill_body_panel.dart';
-import 'widgets/study_session_fill_progress_row.dart';
 import 'widgets/study_session_fill_prompt_card.dart';
 
 const EdgeInsetsGeometry _fillContentPadding = EdgeInsets.fromLTRB(
@@ -67,7 +67,7 @@ class StudySessionFillContent extends StatelessWidget {
         children: <Widget>[
           Padding(
             padding: _fillProgressPadding,
-            child: StudySessionFillProgressRow(
+            child: StudySessionProgressRow(
               progressValue: session.progress.sessionProgress,
             ),
           ),

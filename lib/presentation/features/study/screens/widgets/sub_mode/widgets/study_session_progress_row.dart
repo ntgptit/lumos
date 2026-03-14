@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../../../core/themes/foundation/app_foundation.dart';
-import '../../../../../../../shared/widgets/lumos_widgets.dart';
+import '../../../../../../../core/themes/foundation/app_foundation.dart';
+import '../../../../../../shared/widgets/lumos_widgets.dart';
 
-const double _fillProgressBarHeight = AppSpacing.md;
+const double _studySessionProgressBarHeight = AppSpacing.md;
 
-class StudySessionFillProgressRow extends StatelessWidget {
-  const StudySessionFillProgressRow({
-    required this.progressValue,
-    super.key,
-  });
+class StudySessionProgressRow extends StatelessWidget {
+  const StudySessionProgressRow({required this.progressValue, super.key});
 
   final double progressValue;
 
@@ -23,12 +20,13 @@ class StudySessionFillProgressRow extends StatelessWidget {
         Expanded(
           child: LumosProgressBar(
             value: progressValue,
-            height: _fillProgressBarHeight,
+            height: _studySessionProgressBarHeight,
           ),
         ),
         const SizedBox(width: AppSpacing.md),
         LumosInlineText(
           '$progressPercentage%',
+          align: TextAlign.center,
           style: theme.textTheme.titleLarge?.copyWith(
             color: colorScheme.primary,
             fontWeight: FontWeight.w600,

@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../mode/study_mode_action_view_model.dart';
 import '../../../../../providers/study_recall_selection_provider.dart';
+import '../../widgets/study_session_action_row_layout.dart';
 import 'study_session_recall_action_button.dart';
-
-const double _recallSingleActionWidthFactor = 0.42;
-const double _recallActionGap = AppSpacing.lg;
-const double _recallActionRowHeight = 64;
 
 class StudySessionRecallActionRow extends StatelessWidget {
   const StudySessionRecallActionRow({
@@ -23,59 +19,13 @@ class StudySessionRecallActionRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (actions.isEmpty) {
-      return const SizedBox.shrink();
-    }
-    if (actions.length == 1) {
-      return SizedBox(
-        height: _recallActionRowHeight,
-        child: Center(
-          child: FractionallySizedBox(
-            widthFactor: _recallSingleActionWidthFactor,
-            child: StudySessionRecallActionButton(
-              action: actions.first,
-              selectionState: selectionState,
-              onActionPressed: onActionPressed,
-            ),
-          ),
-        ),
-      );
-    }
-    if (actions.length == 2) {
-      return SizedBox(
-        height: _recallActionRowHeight,
-        child: Row(
-          children: <Widget>[
-            Expanded(
-              child: StudySessionRecallActionButton(
-                action: actions.first,
-                selectionState: selectionState,
-                onActionPressed: onActionPressed,
-              ),
-            ),
-            const SizedBox(width: _recallActionGap),
-            Expanded(
-              child: StudySessionRecallActionButton(
-                action: actions.last,
-                selectionState: selectionState,
-                onActionPressed: onActionPressed,
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-    return Column(
-      mainAxisSize: MainAxisSize.min,
+    return StudySessionActionRowLayout(
       children: actions
           .map(
-            (StudyModeActionViewModel action) => Padding(
-              padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-              child: StudySessionRecallActionButton(
-                action: action,
-                selectionState: selectionState,
-                onActionPressed: onActionPressed,
-              ),
+            (StudyModeActionViewModel action) => StudySessionRecallActionButton(
+              action: action,
+              selectionState: selectionState,
+              onActionPressed: onActionPressed,
             ),
           )
           .toList(growable: false),

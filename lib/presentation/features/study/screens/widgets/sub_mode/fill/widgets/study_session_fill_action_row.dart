@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../../shared/widgets/lumos_widgets.dart';
 import '../../../../../mode/study_mode_action_button_style.dart';
 import '../../../../../mode/study_mode_action_view_model.dart';
-
-const double _fillSingleActionWidthFactor = 0.42;
-const double _fillActionGap = AppSpacing.lg;
-const double _fillActionRowHeight = 64;
+import '../../widgets/study_session_action_row_layout.dart';
 
 class StudySessionFillActionRow extends StatelessWidget {
   const StudySessionFillActionRow({
@@ -147,26 +143,6 @@ class StudySessionFillActionRow extends StatelessWidget {
     if (actionButtons.isEmpty) {
       return const SizedBox.shrink();
     }
-    if (actionButtons.length == 1) {
-      return SizedBox(
-        height: _fillActionRowHeight,
-        child: Center(
-          child: FractionallySizedBox(
-            widthFactor: _fillSingleActionWidthFactor,
-            child: actionButtons.first,
-          ),
-        ),
-      );
-    }
-    return SizedBox(
-      height: _fillActionRowHeight,
-      child: Row(
-        children: <Widget>[
-          Expanded(child: actionButtons.first),
-          const SizedBox(width: _fillActionGap),
-          Expanded(child: actionButtons.last),
-        ],
-      ),
-    );
+    return StudySessionActionRowLayout(children: actionButtons);
   }
 }

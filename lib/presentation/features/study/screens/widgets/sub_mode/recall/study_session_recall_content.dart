@@ -9,9 +9,9 @@ import '../../../../mode/study_mode_action_view_model.dart';
 import '../../../../mode/study_mode_view_model.dart';
 import '../../../../providers/study_recall_selection_provider.dart';
 import '../../../../providers/study_speech_playback_provider.dart';
+import '../widgets/study_session_progress_row.dart';
 import 'widgets/study_session_recall_action_row.dart';
 import 'widgets/study_session_recall_answer_panel.dart';
-import 'widgets/study_session_recall_progress_row.dart';
 import 'widgets/study_session_recall_prompt_card.dart';
 
 const EdgeInsetsGeometry _recallContentPadding = EdgeInsets.fromLTRB(
@@ -67,7 +67,7 @@ class StudySessionRecallContent extends StatelessWidget {
         children: <Widget>[
           Padding(
             padding: _recallProgressPadding,
-            child: StudySessionRecallProgressRow(
+            child: StudySessionProgressRow(
               progressValue: session.progress.sessionProgress,
             ),
           ),

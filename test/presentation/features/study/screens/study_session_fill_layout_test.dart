@@ -11,8 +11,8 @@ import 'package:lumos/presentation/features/study/screens/widgets/sub_mode/fill/
 import 'package:lumos/presentation/features/study/screens/widgets/sub_mode/fill/widgets/study_session_fill_action_row.dart';
 import 'package:lumos/presentation/features/study/screens/widgets/sub_mode/fill/widgets/study_session_fill_body_panel.dart';
 import 'package:lumos/presentation/features/study/screens/widgets/sub_mode/fill/widgets/study_session_fill_input_panel.dart';
-import 'package:lumos/presentation/features/study/screens/widgets/sub_mode/fill/widgets/study_session_fill_progress_row.dart';
 import 'package:lumos/presentation/features/study/screens/widgets/sub_mode/fill/widgets/study_session_fill_prompt_card.dart';
+import 'package:lumos/presentation/features/study/screens/widgets/sub_mode/widgets/study_session_progress_row.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -88,7 +88,7 @@ void main() {
       expect(find.text('안녕하세요'), findsNothing);
 
       final double progressTop = tester
-          .getTopLeft(find.byType(StudySessionFillProgressRow))
+          .getTopLeft(find.byType(StudySessionProgressRow))
           .dy;
       final double promptTop = tester
           .getTopLeft(find.byType(StudySessionFillPromptCard))

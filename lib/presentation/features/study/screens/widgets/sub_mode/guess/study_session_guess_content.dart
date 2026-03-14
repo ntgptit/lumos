@@ -8,8 +8,8 @@ import '../../../../mode/study_mode_view_model.dart';
 import '../../../../providers/study_guess_selection_provider.dart';
 import '../../../../providers/study_speech_playback_provider.dart';
 import '../widgets/study_session_action_bar.dart';
+import '../widgets/study_session_progress_row.dart';
 import 'widgets/study_session_guess_choice_list.dart';
-import 'widgets/study_session_guess_progress_row.dart';
 import 'widgets/study_session_guess_prompt_card.dart';
 
 const String _submitAnswerActionId = 'SUBMIT_ANSWER';
@@ -66,7 +66,7 @@ class StudySessionGuessContent extends StatelessWidget {
         children: <Widget>[
           Padding(
             padding: _guessProgressPadding,
-            child: StudySessionGuessProgressRow(
+            child: StudySessionProgressRow(
               progressValue: session.progress.sessionProgress,
             ),
           ),

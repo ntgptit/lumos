@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../../../../../core/constants/text_styles.dart';
 import '../../../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../../shared/widgets/lumos_widgets.dart';
+import '../../widgets/study_session_content_card.dart';
 
 const double _recallAnswerLineHeight =
     AppTypographyConst.titleLargeLineHeight /
@@ -72,18 +73,13 @@ class StudySessionRecallAnswerPanel extends StatelessWidget {
               ),
             ),
           );
-    return LumosCard(
-      margin: EdgeInsets.zero,
+    return StudySessionContentCard(
       variant: LumosCardVariant.filled,
-      borderRadius: BorderRadii.xLarge,
-      padding: EdgeInsets.zero,
-      child: SizedBox.expand(
-        child: AnimatedSwitcher(
-          duration: AppDurations.medium,
-          switchInCurve: Curves.easeOutCubic,
-          switchOutCurve: Curves.easeInCubic,
-          child: panelContent,
-        ),
+      child: AnimatedSwitcher(
+        duration: AppDurations.medium,
+        switchInCurve: Curves.easeOutCubic,
+        switchOutCurve: Curves.easeInCubic,
+        child: panelContent,
       ),
     );
   }

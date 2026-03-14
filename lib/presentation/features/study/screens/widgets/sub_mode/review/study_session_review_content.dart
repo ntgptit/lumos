@@ -8,8 +8,8 @@ import '../../../../../../../l10n/app_localizations.dart';
 import '../../../../../../shared/widgets/lumos_widgets.dart';
 import '../../../../providers/study_speech_playback_provider.dart';
 import '../study_session_sub_mode_const.dart';
+import '../widgets/study_session_progress_row.dart';
 import 'widgets/study_session_review_card_viewport.dart';
-import 'widgets/study_session_review_progress_row.dart';
 
 abstract final class StudySessionReviewContentConst {
   StudySessionReviewContentConst._();
@@ -95,7 +95,7 @@ class _StudySessionReviewContentState extends State<StudySessionReviewContent> {
         children: <Widget>[
           Padding(
             padding: StudySessionReviewContentConst.progressPadding,
-            child: StudySessionReviewProgressRow(
+            child: StudySessionProgressRow(
               progressValue: widget.session.progress.sessionProgress,
             ),
           ),

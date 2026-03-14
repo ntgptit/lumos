@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import '../../../../../../../../core/constants/text_styles.dart';
 import '../../../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../../../domain/entities/study/study_models.dart';
-import '../../../../../providers/study_speech_playback_provider.dart';
 import '../../../../../../../shared/widgets/lumos_widgets.dart';
+import '../../../../../providers/study_speech_playback_provider.dart';
+import '../../widgets/study_session_content_card.dart';
 
 const double _recallPromptIconSize = IconSizes.iconMedium;
 const double _recallPromptLineHeight =
@@ -43,54 +44,35 @@ class StudySessionRecallPromptCard extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colorScheme = theme.colorScheme;
     final bool isSpeechEnabled = speech.available && !playbackState.isBusy;
-    return LumosCard(
-      margin: EdgeInsets.zero,
+    return StudySessionContentCard(
       variant: LumosCardVariant.filled,
-      borderRadius: BorderRadii.xLarge,
-      padding: EdgeInsets.zero,
-      child: SizedBox.expand(
-        child: Stack(
-          children: <Widget>[
-            const Align(
-              alignment: Alignment.topRight,
-              child: Padding(
-                padding: _recallPromptTopIconPadding,
-                child: LumosIcon(
-                  Icons.edit_outlined,
-                  size: _recallPromptIconSize,
-                ),
+      topTrailing: const LumosIcon(
+        Icons.edit_outlined,
+        size: _recallPromptIconSize,
+      ),
+      topTrailingPadding: _recallPromptTopIconPadding,
+      bottomTrailing: LumosIconButton(
+        icon: Icons.volume_up_rounded,
+        tooltip: speech.available ? speech.speechText : null,
+        onPressed: isSpeechEnabled ? onPlayPressed : null,
+      ),
+      bottomTrailingPadding: _recallPromptBottomIconPadding,
+      child: Padding(
+        padding: _recallPromptCardPadding,
+        child: Center(
+          child: SingleChildScrollView(
+            child: LumosInlineText(
+              prompt,
+              align: TextAlign.center,
+              maxLines: _recallPromptMaxLines,
+              overflow: TextOverflow.ellipsis,
+              style: theme.textTheme.headlineLarge?.copyWith(
+                color: colorScheme.onSurface,
+                fontWeight: FontWeight.w400,
+                height: _recallPromptLineHeight,
               ),
             ),
-            Padding(
-              padding: _recallPromptCardPadding,
-              child: Center(
-                child: SingleChildScrollView(
-                  child: LumosInlineText(
-                    prompt,
-                    align: TextAlign.center,
-                    maxLines: _recallPromptMaxLines,
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.headlineLarge?.copyWith(
-                      color: colorScheme.onSurface,
-                      fontWeight: FontWeight.w400,
-                      height: _recallPromptLineHeight,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: Padding(
-                padding: _recallPromptBottomIconPadding,
-                child: LumosIconButton(
-                  icon: Icons.volume_up_rounded,
-                  tooltip: speech.available ? speech.speechText : null,
-                  onPressed: isSpeechEnabled ? onPlayPressed : null,
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
