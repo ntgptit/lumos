@@ -16,13 +16,13 @@ abstract final class AppAdaptiveThemeConst {
 
   static const double baseCompactWidth = ResponsiveDimensions.baseDesignWidth;
   static const double minimumComponentScale = 0.85;
-  static const double minimumDisplayScale = 0.8;
-  static const double minimumHeadlineScale = 0.84;
-  static const double minimumTitleScale = 0.88;
+  static const double minimumDisplayScale = 0.78;
+  static const double minimumHeadlineScale = 0.8;
+  static const double minimumTitleScale = 0.84;
   static const double minimumBodyScale = 0.86;
   static const double minimumRadiusScale = 0.94;
   static const double maximumScale = 1.0;
-  static const double maximumCompactDensity = -1.0;
+  static const double maximumCompactDensity = -1.1;
 }
 
 final class AppAdaptiveThemeBuilder {
