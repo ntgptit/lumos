@@ -3,6 +3,7 @@ package com.lumos.deck.mapper;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
+import com.lumos.deck.dto.response.DeckImportResponse;
 import com.lumos.deck.dto.response.DeckResponse;
 import com.lumos.deck.entity.Deck;
 import com.lumos.folder.entity.Folder;
@@ -34,6 +35,16 @@ public class DeckMapperSpringAdapter implements DeckMapper {
         deck.setFlashcardCount(flashcardCount);
         
         return deck;
+    }
+
+    @Override
+    public DeckImportResponse toDeckImportResponse(
+            Long folderId,
+            Integer processedDeckCount,
+            Integer createdDeckCount,
+            Integer importedFlashcardCount) {
+        
+        return new DeckImportResponse(folderId, processedDeckCount, createdDeckCount, importedFlashcardCount);
     }
 
     private Long resolveFolderId(Folder folder) {

@@ -3,10 +3,12 @@ package com.lumos.deck.service;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.lumos.common.dto.request.SearchRequest;
 import com.lumos.deck.dto.request.CreateDeckRequest;
 import com.lumos.deck.dto.request.UpdateDeckRequest;
+import com.lumos.deck.dto.response.DeckImportResponse;
 import com.lumos.deck.dto.response.DeckResponse;
 
 public interface DeckService {
@@ -18,4 +20,6 @@ public interface DeckService {
     void deleteDeck(Long folderId, Long deckId);
 
     List<DeckResponse> getDecks(Long folderId, SearchRequest searchRequest, Pageable pageable);
+
+    DeckImportResponse importDecks(Long folderId, MultipartFile file);
 }

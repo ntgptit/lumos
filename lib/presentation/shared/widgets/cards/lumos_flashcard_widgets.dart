@@ -27,26 +27,36 @@ class LumosFlashcardFront extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double sectionSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.md,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double chipSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.sm,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return LumosCard(
       onTap: onFlip,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           LumosText(question, style: LumosTextStyle.titleLarge),
-          ..._buildExample(),
-          ..._buildTags(),
-          ..._buildImageHint(),
+          ..._buildExample(sectionSpacing),
+          ..._buildTags(sectionSpacing, chipSpacing),
+          ..._buildImageHint(sectionSpacing),
         ],
       ),
     );
   }
 
-  List<Widget> _buildExample() {
+  List<Widget> _buildExample(double sectionSpacing) {
     if (example == null) {
       return const <Widget>[];
     }
     return <Widget>[
-      const SizedBox(height: AppSpacing.md),
+      SizedBox(height: sectionSpacing),
       LumosText(
         example!,
         style: LumosTextStyle.bodyMedium,
@@ -56,7 +66,7 @@ class LumosFlashcardFront extends StatelessWidget {
     ];
   }
 
-  List<Widget> _buildTags() {
+  List<Widget> _buildTags(double sectionSpacing, double chipSpacing) {
     if (tags == null) {
       return const <Widget>[];
     }
@@ -64,10 +74,10 @@ class LumosFlashcardFront extends StatelessWidget {
       return const <Widget>[];
     }
     return <Widget>[
-      const SizedBox(height: AppSpacing.md),
+      SizedBox(height: sectionSpacing),
       Wrap(
-        spacing: AppSpacing.sm,
-        runSpacing: AppSpacing.sm,
+        spacing: chipSpacing,
+        runSpacing: chipSpacing,
         children: tags!
             .map(
               (String tag) =>
@@ -78,12 +88,12 @@ class LumosFlashcardFront extends StatelessWidget {
     ];
   }
 
-  List<Widget> _buildImageHint() {
+  List<Widget> _buildImageHint(double sectionSpacing) {
     if (imageUrl == null) {
       return const <Widget>[];
     }
     return <Widget>[
-      const SizedBox(height: AppSpacing.md),
+      SizedBox(height: sectionSpacing),
       LumosText(
         imageUrl!,
         style: LumosTextStyle.labelSmall,
@@ -114,26 +124,45 @@ class LumosFlashcardBack extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double sectionSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.md,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double actionSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.xxl,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double buttonSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.md,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return LumosCard(
       onTap: onFlip,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           LumosText(answer, style: LumosTextStyle.titleLarge),
-          ..._buildExplanation(),
-          ..._buildExample(),
-          ..._buildActions(context),
+          ..._buildExplanation(sectionSpacing),
+          ..._buildExample(sectionSpacing),
+          ..._buildActions(
+            context,
+            actionSpacing: actionSpacing,
+            buttonSpacing: buttonSpacing,
+          ),
         ],
       ),
     );
   }
 
-  List<Widget> _buildExplanation() {
+  List<Widget> _buildExplanation(double sectionSpacing) {
     if (explanation == null) {
       return const <Widget>[];
     }
     return <Widget>[
-      const SizedBox(height: AppSpacing.md),
+      SizedBox(height: sectionSpacing),
       LumosText(
         explanation!,
         style: LumosTextStyle.bodyMedium,
@@ -143,12 +172,12 @@ class LumosFlashcardBack extends StatelessWidget {
     ];
   }
 
-  List<Widget> _buildExample() {
+  List<Widget> _buildExample(double sectionSpacing) {
     if (example == null) {
       return const <Widget>[];
     }
     return <Widget>[
-      const SizedBox(height: AppSpacing.md),
+      SizedBox(height: sectionSpacing),
       LumosText(
         example!,
         style: LumosTextStyle.bodySmall,
@@ -158,13 +187,17 @@ class LumosFlashcardBack extends StatelessWidget {
     ];
   }
 
-  List<Widget> _buildActions(BuildContext context) {
+  List<Widget> _buildActions(
+    BuildContext context, {
+    required double actionSpacing,
+    required double buttonSpacing,
+  }) {
     if (onKnown == null && onAgain == null) {
       return const <Widget>[];
     }
     final AppLocalizations l10n = AppLocalizations.of(context)!;
     return <Widget>[
-      const SizedBox(height: AppSpacing.xxl),
+      SizedBox(height: actionSpacing),
       Row(
         children: <Widget>[
           Expanded(
@@ -174,7 +207,7 @@ class LumosFlashcardBack extends StatelessWidget {
               size: LumosButtonSize.small,
             ),
           ),
-          const SizedBox(width: AppSpacing.md),
+          SizedBox(width: buttonSpacing),
           Expanded(
             child: LumosPrimaryButton(
               label: l10n.flashcardKnownAction,
@@ -214,13 +247,29 @@ class LumosFlashcard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Widget child = _buildContent(context);
+    final double borderRadius = context.appCard.radius;
+    final double sectionSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.md,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double compactSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.sm,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final Widget child = _buildContent(
+      context,
+      borderRadius: borderRadius,
+      sectionSpacing: sectionSpacing,
+      compactSpacing: compactSpacing,
+    );
     if (!isInteractive) {
       return child;
     }
     return InkWell(
       onTap: _resolveTapAction(),
-      borderRadius: BorderRadii.large,
+      borderRadius: BorderRadii.circular(borderRadius),
       child: child,
     );
   }
@@ -234,35 +283,40 @@ class LumosFlashcard extends StatelessWidget {
     };
   }
 
-  Widget _buildContent(BuildContext context) {
+  Widget _buildContent(
+    BuildContext context, {
+    required double borderRadius,
+    required double sectionSpacing,
+    required double compactSpacing,
+  }) {
     return AnimatedContainer(
       duration: MotionDurations.animationMedium,
       curve: Curves.easeInOut,
       decoration: BoxDecoration(
-        borderRadius: BorderRadii.large,
+        borderRadius: BorderRadii.circular(borderRadius),
         color: _resolveStatusColor(context),
       ),
       child: LumosCard(
-        borderRadius: BorderRadii.large,
+        borderRadius: BorderRadii.circular(borderRadius),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             LumosText(promptText, style: LumosTextStyle.headlineSmall),
-            ..._buildPronunciation(),
-            ..._buildTranslation(),
-            ..._buildImageHint(),
+            ..._buildPronunciation(sectionSpacing),
+            ..._buildTranslation(sectionSpacing),
+            ..._buildImageHint(compactSpacing),
           ],
         ),
       ),
     );
   }
 
-  List<Widget> _buildPronunciation() {
+  List<Widget> _buildPronunciation(double sectionSpacing) {
     if (pronunciation == null) {
       return const <Widget>[];
     }
     return <Widget>[
-      const SizedBox(height: AppSpacing.md),
+      SizedBox(height: sectionSpacing),
       LumosText(
         pronunciation!,
         style: LumosTextStyle.labelMedium,
@@ -272,7 +326,7 @@ class LumosFlashcard extends StatelessWidget {
     ];
   }
 
-  List<Widget> _buildTranslation() {
+  List<Widget> _buildTranslation(double sectionSpacing) {
     final bool shouldShowTranslation = isFlipped || showResultImmediately;
     if (!shouldShowTranslation) {
       return const <Widget>[];
@@ -281,7 +335,7 @@ class LumosFlashcard extends StatelessWidget {
       return const <Widget>[];
     }
     return <Widget>[
-      const SizedBox(height: AppSpacing.md),
+      SizedBox(height: sectionSpacing),
       LumosText(
         translation!,
         style: LumosTextStyle.bodyLarge,
@@ -291,12 +345,12 @@ class LumosFlashcard extends StatelessWidget {
     ];
   }
 
-  List<Widget> _buildImageHint() {
+  List<Widget> _buildImageHint(double compactSpacing) {
     if (imageUrl == null) {
       return const <Widget>[];
     }
     return <Widget>[
-      const SizedBox(height: AppSpacing.sm),
+      SizedBox(height: compactSpacing),
       LumosText(
         imageUrl!,
         style: LumosTextStyle.labelSmall,
@@ -338,6 +392,11 @@ class LumosFlashcardStack extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double sectionSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.xxl,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     if (cards.isEmpty) {
       return const SizedBox.shrink();
     }
@@ -355,7 +414,7 @@ class LumosFlashcardStack extends StatelessWidget {
           imageUrl: currentCard.imageUrl,
           isFlipped: false,
         ),
-        const SizedBox(height: AppSpacing.xxl),
+        SizedBox(height: sectionSpacing),
         LumosProgressBar(value: (currentIndex + 1) / cards.length),
       ],
     );

@@ -32,4 +32,22 @@ class DeckExceptionsTest {
         assertEquals(ErrorMessageKeys.DECK_PARENT_HAS_SUBFOLDERS, exception.getMessageKey());
         assertArrayEquals(new Object[] { 20L }, exception.getMessageArgs());
     }
+
+    @Test
+    void deckImportFileInvalidException_setsMessageKeyAndArgs() {
+        final var exception = new DeckImportFileInvalidException(
+                ErrorMessageKeys.DECK_IMPORT_FILE_EMPTY,
+                2);
+
+        assertEquals(ErrorMessageKeys.DECK_IMPORT_FILE_EMPTY, exception.getMessageKey());
+        assertArrayEquals(new Object[] { 2 }, exception.getMessageArgs());
+    }
+
+    @Test
+    void deckImportPayloadTooLargeException_setsMessageKeyAndArgs() {
+        final var exception = new DeckImportPayloadTooLargeException(50);
+
+        assertEquals(ErrorMessageKeys.DECK_IMPORT_FILE_TOO_LARGE, exception.getMessageKey());
+        assertArrayEquals(new Object[] { 50 }, exception.getMessageArgs());
+    }
 }

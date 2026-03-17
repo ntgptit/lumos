@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../../../domain/entities/study/study_models.dart';
 import '../../../../../providers/study_speech_playback_provider.dart';
 import 'study_session_review_card_deck.dart';
@@ -33,25 +34,39 @@ class StudySessionReviewCardViewport extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Widget cards = StudySessionReviewCardDeck(
-      session: session,
-      speechPlaybackState: speechPlaybackState,
-      onPlaySpeech: onPlaySpeech,
-      onReplaySpeech: onReplaySpeech,
-    );
-    if (!canSwipeHorizontally) {
-      return cards;
-    }
-    return LumosHorizontalPager(
-      controller: controller,
-      itemCount: itemCount,
-      onPageChanged: onPageChanged,
-      onLeadingEdgeAttempt: onLeadingEdgeAttempt,
-      itemBuilder: (BuildContext contextValue, int index) {
-        if (index == currentPageIndex) {
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final double horizontalInset = ResponsiveDimensions.compactValue(
+          context: context,
+          baseValue: constraints.maxWidth > 480
+              ? AppSpacing.sm
+              : AppSpacing.none,
+          minScale: ResponsiveDimensions.compactInsetScale,
+        );
+        final Widget cards = Padding(
+          padding: EdgeInsets.symmetric(horizontal: horizontalInset),
+          child: StudySessionReviewCardDeck(
+            session: session,
+            speechPlaybackState: speechPlaybackState,
+            onPlaySpeech: onPlaySpeech,
+            onReplaySpeech: onReplaySpeech,
+          ),
+        );
+        if (!canSwipeHorizontally) {
           return cards;
         }
-        return const SizedBox.shrink();
+        return LumosHorizontalPager(
+          controller: controller,
+          itemCount: itemCount,
+          onPageChanged: onPageChanged,
+          onLeadingEdgeAttempt: onLeadingEdgeAttempt,
+          itemBuilder: (BuildContext contextValue, int index) {
+            if (index == currentPageIndex) {
+              return cards;
+            }
+            return const SizedBox.shrink();
+          },
+        );
       },
     );
   }

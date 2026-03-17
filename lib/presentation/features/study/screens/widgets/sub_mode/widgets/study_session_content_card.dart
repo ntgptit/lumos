@@ -27,38 +27,45 @@ class StudySessionContentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Widget stackedChild = Stack(
-      children: <Widget>[
-        child,
-        if (topTrailing != null)
-          Align(
-            alignment: Alignment.topRight,
-            child: Padding(padding: topTrailingPadding, child: topTrailing),
-          ),
-        if (bottomTrailing != null)
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Padding(
-              padding: bottomTrailingPadding,
-              child: bottomTrailing,
-            ),
-          ),
-      ],
-    );
-    final Widget sizedChild;
-    if (height != null) {
-      sizedChild = SizedBox(height: height, child: stackedChild);
-    } else if (expandToFill) {
-      sizedChild = SizedBox.expand(child: stackedChild);
-    } else {
-      sizedChild = stackedChild;
-    }
-    return LumosCard(
-      margin: EdgeInsets.zero,
-      variant: variant,
-      borderRadius: BorderRadii.xLarge,
-      padding: EdgeInsets.zero,
-      child: sizedChild,
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final BorderRadius borderRadius = constraints.maxWidth < 390
+            ? BorderRadii.large
+            : BorderRadii.xLarge;
+        final Widget stackedChild = Stack(
+          children: <Widget>[
+            child,
+            if (topTrailing != null)
+              Align(
+                alignment: Alignment.topRight,
+                child: Padding(padding: topTrailingPadding, child: topTrailing),
+              ),
+            if (bottomTrailing != null)
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Padding(
+                  padding: bottomTrailingPadding,
+                  child: bottomTrailing,
+                ),
+              ),
+          ],
+        );
+        final Widget sizedChild;
+        if (height != null) {
+          sizedChild = SizedBox(height: height, child: stackedChild);
+        } else if (expandToFill) {
+          sizedChild = SizedBox.expand(child: stackedChild);
+        } else {
+          sizedChild = stackedChild;
+        }
+        return LumosCard(
+          margin: EdgeInsets.zero,
+          variant: variant,
+          borderRadius: borderRadius,
+          padding: EdgeInsets.zero,
+          child: sizedChild,
+        );
+      },
     );
   }
 }

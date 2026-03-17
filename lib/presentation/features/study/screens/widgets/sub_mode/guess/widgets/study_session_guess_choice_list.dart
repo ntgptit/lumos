@@ -27,32 +27,40 @@ class StudySessionGuessChoiceList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final int choiceCount = choices.length;
-    final double choiceGap = StudySessionLayoutMetrics.sectionSpacing(
-      context,
-      baseValue: studySessionGuessChoiceGap,
-    );
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: List<Widget>.generate(choiceCount, (int index) {
-        final StudyChoice choice = choices[index];
-        final bool isLastChoice = index == choiceCount - 1;
-        return Padding(
-          padding: EdgeInsets.only(
-            bottom: isLastChoice ? AppSpacing.none : choiceGap,
-          ),
-          child: StudySessionGuessChoiceCard(
-            label: choice.label,
-            height: cardHeight,
-            isSelected: selectionState.isChoiceSelected(choice.label),
-            isSuccessFeedback: selectionState.isSuccessFeedbackFor(
-              choice.label,
-            ),
-            isErrorFeedback: selectionState.isErrorFeedbackFor(choice.label),
-            isInteractive: isInteractive,
-            onPressed: () => onChoicePressed(choice.label),
-          ),
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final double choiceGap = StudySessionLayoutMetrics.sectionSpacing(
+          context,
+          baseValue: constraints.maxWidth < 380
+              ? AppSpacing.xs
+              : studySessionGuessChoiceGap,
         );
-      }, growable: false),
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: List<Widget>.generate(choiceCount, (int index) {
+            final StudyChoice choice = choices[index];
+            final bool isLastChoice = index == choiceCount - 1;
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: isLastChoice ? AppSpacing.none : choiceGap,
+              ),
+              child: StudySessionGuessChoiceCard(
+                label: choice.label,
+                height: cardHeight,
+                isSelected: selectionState.isChoiceSelected(choice.label),
+                isSuccessFeedback: selectionState.isSuccessFeedbackFor(
+                  choice.label,
+                ),
+                isErrorFeedback: selectionState.isErrorFeedbackFor(
+                  choice.label,
+                ),
+                isInteractive: isInteractive,
+                onPressed: () => onChoicePressed(choice.label),
+              ),
+            );
+          }, growable: false),
+        );
+      },
     );
   }
 }

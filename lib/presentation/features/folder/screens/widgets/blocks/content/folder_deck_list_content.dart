@@ -37,10 +37,28 @@ class FolderDeckListContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> trailingSlivers = const <Widget>[
-      SliverToBoxAdapter(
-        child: SizedBox(height: FolderContentSupportConst.listBottomSpacing),
-      ),
+    final double listBottomSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FolderContentSupportConst.listBottomSpacing,
+      minScale: ResponsiveDimensions.compactVerticalInsetScale,
+    );
+    final double emptyStateVerticalPadding = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.lg,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double inlineErrorSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.md,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double rowSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.sm,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final List<Widget> trailingSlivers = <Widget>[
+      SliverToBoxAdapter(child: SizedBox(height: listBottomSpacing)),
     ];
     if (currentFolderId == null || deckAsync == null) {
       return LumosPagedSliverList(
@@ -65,9 +83,9 @@ class FolderDeckListContent extends StatelessWidget {
           itemBuilder: (BuildContext context, int index) {
             return const SizedBox.shrink();
           },
-          emptySliver: const Padding(
-            padding: EdgeInsets.symmetric(vertical: AppSpacing.lg),
-            child: FolderDeckLoading(),
+          emptySliver: Padding(
+            padding: EdgeInsets.symmetric(vertical: emptyStateVerticalPadding),
+            child: const FolderDeckLoading(),
           ),
         );
       },
@@ -92,7 +110,7 @@ class FolderDeckListContent extends StatelessWidget {
             SliverToBoxAdapter(child: FolderErrorBanner(message: message)),
           );
           deckLeadingSlivers.add(
-            const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.md)),
+            SliverToBoxAdapter(child: SizedBox(height: inlineErrorSpacing)),
           );
         }
         return LumosPagedSliverList(
@@ -103,7 +121,7 @@ class FolderDeckListContent extends StatelessWidget {
           itemBuilder: (BuildContext context, int index) {
             final DeckNode item = deckState.decks[index];
             return Padding(
-              padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+              padding: EdgeInsets.only(bottom: rowSpacing),
               child: DeckListTile(
                 item: item,
                 onOpen: () => onOpenDeck(item),

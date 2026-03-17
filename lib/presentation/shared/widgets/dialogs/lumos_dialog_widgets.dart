@@ -59,17 +59,13 @@ class LumosDialog extends StatelessWidget {
     final BoxConstraints resolvedConstraints =
         constraints ?? _resolveDialogConstraints(context: context);
     final EdgeInsets resolvedInsetPadding =
-        insetPadding ??
-        _resolveDialogInsetPadding(
-          context: context,
-          constraints: resolvedConstraints,
-        );
+        insetPadding ?? _resolveDialogInsetPadding(context: context);
     return AlertDialog(
       constraints: resolvedConstraints,
       insetPadding: resolvedInsetPadding,
       scrollable: true,
-      actionsPadding: LumosDialogSizingConst.dialogActionsPadding,
-      buttonPadding: LumosDialogSizingConst.dialogActionButtonPadding,
+      actionsPadding: _resolveDialogActionsPadding(context),
+      buttonPadding: _resolveDialogActionButtonPadding(context),
       title: Text(title, overflow: TextOverflow.ellipsis),
       content: _buildContent(),
       actions: _buildActions(),
@@ -152,17 +148,13 @@ class LumosPromptDialog extends StatelessWidget {
     final BoxConstraints resolvedConstraints =
         constraints ?? _resolveDialogConstraints(context: context);
     final EdgeInsets resolvedInsetPadding =
-        insetPadding ??
-        _resolveDialogInsetPadding(
-          context: context,
-          constraints: resolvedConstraints,
-        );
+        insetPadding ?? _resolveDialogInsetPadding(context: context);
     return AlertDialog(
       constraints: resolvedConstraints,
       insetPadding: resolvedInsetPadding,
       scrollable: true,
-      actionsPadding: LumosDialogSizingConst.dialogActionsPadding,
-      buttonPadding: LumosDialogSizingConst.dialogActionButtonPadding,
+      actionsPadding: _resolveDialogActionsPadding(context),
+      buttonPadding: _resolveDialogActionButtonPadding(context),
       title: Text(title, overflow: TextOverflow.ellipsis),
       content: _buildContent(controller: resolvedController),
       actions: <Widget>[
@@ -199,7 +191,17 @@ class LumosPromptDialog extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         textField,
-        const SizedBox(height: LumosDialogSizingConst.promptContentSpacing),
+        Builder(
+          builder: (BuildContext context) {
+            final double promptContentSpacing =
+                ResponsiveDimensions.compactValue(
+                  context: context,
+                  baseValue: LumosDialogSizingConst.promptContentSpacing,
+                  minScale: ResponsiveDimensions.compactInsetScale,
+                );
+            return SizedBox(height: promptContentSpacing);
+          },
+        ),
         additionalContent!,
       ],
     );
@@ -207,46 +209,63 @@ class LumosPromptDialog extends StatelessWidget {
 }
 
 BoxConstraints _resolveDialogConstraints({required BuildContext context}) {
+  final double screenWidth = MediaQuery.sizeOf(context).width;
+  final EdgeInsets resolvedInsetPadding = _resolveDialogInsetPadding(
+    context: context,
+  );
+  final double maxAvailableWidth =
+      screenWidth - resolvedInsetPadding.horizontal;
   final double dialogWidth = _resolveDialogWidth(context: context);
-  return BoxConstraints(minWidth: dialogWidth, maxWidth: dialogWidth);
+  if (context.isMobile) {
+    return BoxConstraints(maxWidth: dialogWidth);
+  }
+  final double resolvedMinWidth = dialogWidth.clamp(
+    LumosDialogSizingConst.dialogMinWidth,
+    maxAvailableWidth,
+  );
+  return BoxConstraints(minWidth: resolvedMinWidth, maxWidth: dialogWidth);
 }
 
-EdgeInsets _resolveDialogInsetPadding({
-  required BuildContext context,
-  required BoxConstraints constraints,
-}) {
-  final double screenWidth = MediaQuery.sizeOf(context).width;
-  final double dialogWidth = constraints.maxWidth;
-  final double rawInset = (screenWidth - dialogWidth) / 2;
-  final double horizontalInset = rawInset
-      .clamp(LumosDialogSizingConst.dialogMinScreenInset, screenWidth)
-      .toDouble();
-  return EdgeInsets.symmetric(
-    horizontal: horizontalInset,
-    vertical: LumosDialogSizingConst.dialogVerticalInset,
+EdgeInsets _resolveDialogInsetPadding({required BuildContext context}) {
+  final EdgeInsets baseInsets = switch (context.deviceType) {
+    DeviceType.mobile => context.appDialog.insetPaddingMobile,
+    DeviceType.tablet => context.appDialog.insetPaddingTablet,
+    DeviceType.desktop => context.appDialog.insetPaddingDesktop,
+  };
+  if (!context.isMobile) {
+    return baseInsets;
+  }
+  return ResponsiveDimensions.compactInsets(
+    context: context,
+    baseInsets: baseInsets,
+    minScale: ResponsiveDimensions.compactLargeInsetScale,
   );
 }
 
 double _resolveDialogWidth({required BuildContext context}) {
+  final dialogTokens = context.appDialog;
   final double screenWidth = MediaQuery.sizeOf(context).width;
-  final double maxAvailableWidth =
-      screenWidth - (LumosDialogSizingConst.dialogHorizontalInset * 2);
+  final EdgeInsets insetPadding = _resolveDialogInsetPadding(context: context);
+  final double maxAvailableWidth = screenWidth - insetPadding.horizontal;
   if (maxAvailableWidth <= LumosDialogSizingConst.dialogMinWidth) {
     return maxAvailableWidth;
   }
 
   final double scaledWidth =
       screenWidth * LumosDialogSizingConst.dialogWidthFactor;
-  if (scaledWidth < LumosDialogSizingConst.dialogMinWidth) {
-    return LumosDialogSizingConst.dialogMinWidth;
-  }
-  if (scaledWidth > LumosDialogSizingConst.dialogMaxWidth) {
-    return LumosDialogSizingConst.dialogMaxWidth;
-  }
-  if (scaledWidth > maxAvailableWidth) {
+  final double tokenMaxWidth = switch (context.deviceType) {
+    DeviceType.mobile => maxAvailableWidth,
+    DeviceType.tablet => dialogTokens.maxWidthTablet,
+    DeviceType.desktop => dialogTokens.maxWidthDesktop,
+  };
+  final double boundedWidth = scaledWidth.clamp(
+    LumosDialogSizingConst.dialogMinWidth,
+    tokenMaxWidth,
+  );
+  if (boundedWidth > maxAvailableWidth) {
     return maxAvailableWidth;
   }
-  return scaledWidth;
+  return boundedWidth;
 }
 
 class LumosBottomSheet extends StatelessWidget {
@@ -274,26 +293,56 @@ class LumosBottomSheet extends StatelessWidget {
         .clamp(WidgetSizes.minTouchTarget, screenHeight)
         .toDouble();
     final ColorScheme colorScheme = context.colorScheme;
+    final EdgeInsets outerInset = ResponsiveDimensions.compactInsets(
+      context: context,
+      baseInsets: const EdgeInsets.fromLTRB(
+        LumosDialogSizingConst.bottomSheetHorizontalInset,
+        LumosDialogSizingConst.bottomSheetTopInset,
+        LumosDialogSizingConst.bottomSheetHorizontalInset,
+        LumosDialogSizingConst.bottomSheetBottomInset,
+      ),
+      minScale: ResponsiveDimensions.compactLargeInsetScale,
+    );
+    final EdgeInsets innerInset = ResponsiveDimensions.compactInsets(
+      context: context,
+      baseInsets: const EdgeInsets.fromLTRB(
+        AppSpacing.lg,
+        AppSpacing.sm,
+        AppSpacing.lg,
+        AppSpacing.lg,
+      ),
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double handleSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.md,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double handleWidth = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.xxl,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double handleHeight = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.xxs,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return SafeArea(
       top: false,
       child: Padding(
         padding: EdgeInsets.fromLTRB(
-          LumosDialogSizingConst.bottomSheetHorizontalInset,
-          LumosDialogSizingConst.bottomSheetTopInset,
-          LumosDialogSizingConst.bottomSheetHorizontalInset,
-          LumosDialogSizingConst.bottomSheetBottomInset + bottomInset,
+          outerInset.left,
+          outerInset.top,
+          outerInset.right,
+          outerInset.bottom + bottomInset,
         ),
         child: Container(
           constraints: BoxConstraints(
             minHeight: WidgetSizes.minTouchTarget,
             maxHeight: maxHeight,
           ),
-          padding: const EdgeInsets.fromLTRB(
-            AppSpacing.lg,
-            AppSpacing.sm,
-            AppSpacing.lg,
-            AppSpacing.lg,
-          ),
+          padding: innerInset,
           decoration: BoxDecoration(
             color: colorScheme.surfaceContainerLow,
             borderRadius: BorderRadii.xLarge,
@@ -305,8 +354,8 @@ class LumosBottomSheet extends StatelessWidget {
               if (showHandle)
                 Align(
                   child: Container(
-                    width: AppSpacing.xxl,
-                    height: AppSpacing.xxs,
+                    width: handleWidth,
+                    height: handleHeight,
                     decoration: BoxDecoration(
                       color: colorScheme.onSurfaceVariant.withValues(
                         alpha: AppOpacity.stateFocus,
@@ -315,7 +364,7 @@ class LumosBottomSheet extends StatelessWidget {
                     ),
                   ),
                 ),
-              if (showHandle) const SizedBox(height: AppSpacing.md),
+              if (showHandle) SizedBox(height: handleSpacing),
               Flexible(child: child),
             ],
           ),
@@ -323,6 +372,27 @@ class LumosBottomSheet extends StatelessWidget {
       ),
     );
   }
+}
+
+EdgeInsets _resolveDialogActionsPadding(BuildContext context) {
+  return ResponsiveDimensions.compactInsets(
+    context: context,
+    baseInsets: const EdgeInsets.fromLTRB(
+      AppSpacing.lg,
+      AppSpacing.none,
+      AppSpacing.lg,
+      AppSpacing.lg,
+    ),
+    minScale: ResponsiveDimensions.compactInsetScale,
+  );
+}
+
+EdgeInsets _resolveDialogActionButtonPadding(BuildContext context) {
+  return ResponsiveDimensions.compactInsets(
+    context: context,
+    baseInsets: const EdgeInsets.only(left: AppSpacing.sm),
+    minScale: ResponsiveDimensions.compactInsetScale,
+  );
 }
 
 class LumosActionSheet extends StatelessWidget {
@@ -339,14 +409,21 @@ class LumosActionSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double cancelSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.md,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        ...actions.map(_buildActionButton),
+        ...actions.map((LumosActionItem action) {
+          return _buildActionButton(context, action);
+        }),
         if (cancelText != null)
           Padding(
-            padding: const EdgeInsets.only(top: AppSpacing.md),
+            padding: EdgeInsets.only(top: cancelSpacing),
             child: LumosButtonFactory.text(
               label: cancelText!,
               onPressed: onCancel,
@@ -356,10 +433,15 @@ class LumosActionSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildActionButton(LumosActionItem action) {
+  Widget _buildActionButton(BuildContext context, LumosActionItem action) {
     final LumosButtonType buttonType = _resolveActionButtonType(action: action);
+    final double actionSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.sm,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+      padding: EdgeInsets.only(bottom: actionSpacing),
       child: LumosButtonFactory.build(
         type: buttonType,
         label: action.label,

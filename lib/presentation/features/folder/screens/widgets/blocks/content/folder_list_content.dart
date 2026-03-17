@@ -32,20 +32,38 @@ class FolderListContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double loadMoreTopSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FolderContentSupportConst.loadMoreTopSpacing,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double loadMoreBottomSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FolderContentSupportConst.loadMoreBottomSpacing,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double listBottomSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FolderContentSupportConst.listBottomSpacing,
+      minScale: ResponsiveDimensions.compactVerticalInsetScale,
+    );
+    final double rowSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.sm,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     final List<Widget> trailingSlivers = <Widget>[
       if (showLoadMore)
-        const SliverToBoxAdapter(
+        SliverToBoxAdapter(
           child: Padding(
             padding: EdgeInsets.only(
-              top: FolderContentSupportConst.loadMoreTopSpacing,
-              bottom: FolderContentSupportConst.loadMoreBottomSpacing,
+              top: loadMoreTopSpacing,
+              bottom: loadMoreBottomSpacing,
             ),
-            child: FolderLoadMoreIndicator(),
+            child: const FolderLoadMoreIndicator(),
           ),
         ),
-      const SliverToBoxAdapter(
-        child: SizedBox(height: FolderContentSupportConst.listBottomSpacing),
-      ),
+      SliverToBoxAdapter(child: SizedBox(height: listBottomSpacing)),
     ];
     return LumosPagedSliverList(
       controller: scrollController,
@@ -55,7 +73,7 @@ class FolderListContent extends StatelessWidget {
       itemBuilder: (BuildContext context, int index) {
         final FolderNode item = visibleFolders[index];
         return Padding(
-          padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+          padding: EdgeInsets.only(bottom: rowSpacing),
           child: FolderListTile(
             item: item,
             onOpen: () => onOpenFolder(item),

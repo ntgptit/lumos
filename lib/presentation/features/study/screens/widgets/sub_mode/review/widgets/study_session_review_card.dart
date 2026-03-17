@@ -18,41 +18,54 @@ class StudySessionReviewCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LumosCard(
-      margin: EdgeInsets.zero,
-      padding: EdgeInsets.zero,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(
-          AppSpacing.xl,
-          AppSpacing.lg,
-          AppSpacing.xl,
-          AppSpacing.xl,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Align(alignment: Alignment.topRight, child: trailing),
-            Expanded(
-              child: Center(
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.md,
-                    ),
-                    child: LumosInlineText(
-                      content,
-                      align: TextAlign.center,
-                      style: textStyle?.copyWith(
-                        color: context.colorScheme.onSurface,
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final EdgeInsets cardPadding = ResponsiveDimensions.compactInsets(
+          context: context,
+          baseInsets: EdgeInsets.fromLTRB(
+            constraints.maxHeight < 260 ? AppSpacing.lg : AppSpacing.xl,
+            AppSpacing.lg,
+            constraints.maxHeight < 260 ? AppSpacing.lg : AppSpacing.xl,
+            constraints.maxHeight < 260 ? AppSpacing.lg : AppSpacing.xl,
+          ),
+        );
+        final double horizontalInset = ResponsiveDimensions.compactValue(
+          context: context,
+          baseValue: constraints.maxWidth < 360 ? AppSpacing.sm : AppSpacing.md,
+          minScale: ResponsiveDimensions.compactInsetScale,
+        );
+        return LumosCard(
+          margin: EdgeInsets.zero,
+          padding: EdgeInsets.zero,
+          child: Padding(
+            padding: cardPadding,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Align(alignment: Alignment.topRight, child: trailing),
+                Expanded(
+                  child: Center(
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: horizontalInset,
+                        ),
+                        child: LumosInlineText(
+                          content,
+                          align: TextAlign.center,
+                          style: textStyle?.copyWith(
+                            color: context.colorScheme.onSurface,
+                          ),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

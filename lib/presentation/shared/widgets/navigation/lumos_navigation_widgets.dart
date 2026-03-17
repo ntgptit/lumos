@@ -75,7 +75,7 @@ class LumosAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final bool isCompact =
-        MediaQuery.sizeOf(context).width < Breakpoints.kMobileMaxWidth;
+        MediaQuery.sizeOf(context).width < ResponsiveDimensions.baseDesignWidth;
     return AppBar(
       automaticallyImplyLeading: automaticallyImplyLeading,
       toolbarHeight: _resolvedToolbarHeight,
@@ -172,18 +172,31 @@ class _LumosAppBarTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     final TextTheme textTheme = context.textTheme;
     final ColorScheme colorScheme = context.colorScheme;
+    final double titleGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: isCompact
+          ? LumosAppBarConst.compactTitleGap
+          : LumosAppBarConst.regularTitleGap,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double trailingGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.md,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double leadingSize = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: titleLeadingSize ?? LumosAppBarConst.titleLeadingSize,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return Row(
       children: <Widget>[
         if (leading case final Widget leadingWidget) ...<Widget>[
           SizedBox.square(
-            dimension: titleLeadingSize ?? LumosAppBarConst.titleLeadingSize,
+            dimension: leadingSize,
             child: Center(child: leadingWidget),
           ),
-          SizedBox(
-            width: isCompact
-                ? LumosAppBarConst.compactTitleGap
-                : LumosAppBarConst.regularTitleGap,
-          ),
+          SizedBox(width: titleGap),
         ],
         Expanded(
           child: Column(
@@ -218,7 +231,7 @@ class _LumosAppBarTitle extends StatelessWidget {
           ),
         ),
         if (trailing case final Widget trailingWidget) ...<Widget>[
-          const SizedBox(width: AppSpacing.md),
+          SizedBox(width: trailingGap),
           trailingWidget,
         ],
       ],
@@ -238,6 +251,16 @@ class _LumosAppBarActionGroup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = context.colorScheme;
+    final double actionSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.xs,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double minHeight = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: LumosAppBarConst.actionGroupMinHeight,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return DecoratedBox(
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerLow,
@@ -248,29 +271,38 @@ class _LumosAppBarActionGroup extends StatelessWidget {
         ),
       ),
       child: ConstrainedBox(
-        constraints: const BoxConstraints(
-          minHeight: LumosAppBarConst.actionGroupMinHeight,
-        ),
+        constraints: BoxConstraints(minHeight: minHeight),
         child: Padding(
-          padding: isCompact
-              ? LumosAppBarConst.compactActionGroupPadding
-              : LumosAppBarConst.actionGroupPadding,
+          padding: _resolveActionPadding(context),
           child: Row(
             mainAxisSize: MainAxisSize.min,
-            children: _buildSpacedActions(),
+            children: _buildSpacedActions(actionSpacing: actionSpacing),
           ),
         ),
       ),
     );
   }
 
-  List<Widget> _buildSpacedActions() {
+  EdgeInsets _resolveActionPadding(BuildContext context) {
+    final EdgeInsets basePadding =
+        (isCompact
+                ? LumosAppBarConst.compactActionGroupPadding
+                : LumosAppBarConst.actionGroupPadding)
+            as EdgeInsets;
+    return ResponsiveDimensions.compactInsets(
+      context: context,
+      baseInsets: basePadding,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+  }
+
+  List<Widget> _buildSpacedActions({required double actionSpacing}) {
     return actions
         .asMap()
         .entries
         .expand((MapEntry<int, Widget> entry) sync* {
           if (entry.key > 0) {
-            yield const SizedBox(width: AppSpacing.xs);
+            yield SizedBox(width: actionSpacing);
           }
           yield entry.value;
         })
@@ -286,6 +318,11 @@ class _LumosAppBarActionRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double actionSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: isCompact ? AppSpacing.xs : AppSpacing.sm,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: actions
@@ -293,7 +330,7 @@ class _LumosAppBarActionRow extends StatelessWidget {
           .entries
           .expand((MapEntry<int, Widget> entry) sync* {
             if (entry.key > 0) {
-              yield SizedBox(width: isCompact ? AppSpacing.xs : AppSpacing.sm);
+              yield SizedBox(width: actionSpacing);
             }
             yield entry.value;
           })

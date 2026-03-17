@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/themes/extensions/theme_extensions.dart';
 import '../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../buttons/lumos_buttons.dart';
@@ -54,13 +55,15 @@ class LumosTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final int? resolvedMaxLines = expands ? null : maxLines;
+    final Widget? resolvedPrefixIcon = _wrapIcon(context, child: prefixIcon);
+    final Widget? resolvedSuffixIcon = _wrapIcon(context, child: suffixIcon);
     final InputDecoration resolvedDecoration =
         decoration ??
         InputDecoration(
           labelText: label,
           hintText: hint,
-          prefixIcon: prefixIcon,
-          suffixIcon: suffixIcon,
+          prefixIcon: resolvedPrefixIcon,
+          suffixIcon: resolvedSuffixIcon,
           alignLabelWithHint: expands || resolvedMaxLines != 1,
         );
     return TextFormField(
@@ -78,8 +81,18 @@ class LumosTextField extends StatelessWidget {
       textInputAction: textInputAction,
       textAlign: textAlign,
       textAlignVertical: textAlignVertical,
-      style: textStyle,
+      style: textStyle ?? context.textTheme.bodyMedium,
       decoration: resolvedDecoration,
+    );
+  }
+
+  Widget? _wrapIcon(BuildContext context, {required Widget? child}) {
+    if (child == null) {
+      return null;
+    }
+    return IconTheme.merge(
+      data: IconThemeData(size: context.appInput.iconSize),
+      child: child,
     );
   }
 }
@@ -121,7 +134,7 @@ class LumosSearchBar extends StatelessWidget {
       return null;
     }
     return IconButton(
-      icon: const Icon(Icons.close_rounded, size: IconSizes.iconSmall),
+      icon: const Icon(Icons.close_rounded),
       tooltip: _resolveClearTooltip(),
       onPressed: onClear,
     );
@@ -181,11 +194,16 @@ class LumosRadioGroup<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Widget> tiles = _buildTiles();
+    final double compactSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.sm,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     if (direction == Axis.horizontal) {
       return RadioGroup<T>(
         groupValue: value,
         onChanged: onChanged,
-        child: Wrap(spacing: AppSpacing.sm, children: tiles),
+        child: Wrap(spacing: compactSpacing, children: tiles),
       );
     }
     return RadioGroup<T>(
@@ -227,9 +245,14 @@ class LumosWordBank extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double chipSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.sm,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return Wrap(
-      spacing: AppSpacing.sm,
-      runSpacing: AppSpacing.sm,
+      spacing: chipSpacing,
+      runSpacing: chipSpacing,
       children: words.map(_buildWordChip).toList(),
     );
   }
@@ -285,7 +308,7 @@ class LumosAnswerInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (mode == LumosAnswerMode.multipleChoice) {
-      return _buildMultipleChoice();
+      return _buildMultipleChoice(context);
     }
     if (mode == LumosAnswerMode.speaking) {
       return _buildSpeaking(context);
@@ -295,6 +318,11 @@ class LumosAnswerInput extends StatelessWidget {
 
   Widget _buildTyping(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
+    final double sectionSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.md,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
@@ -303,7 +331,7 @@ class LumosAnswerInput extends StatelessWidget {
           initialValue: userAnswer,
           onChanged: onAnswerChanged,
         ),
-        const SizedBox(height: AppSpacing.md),
+        SizedBox(height: sectionSpacing),
         LumosPrimaryButton(label: l10n.commonSubmit, onPressed: onSubmit),
       ],
     );
@@ -319,11 +347,16 @@ class LumosAnswerInput extends StatelessWidget {
     );
   }
 
-  Widget _buildMultipleChoice() {
+  Widget _buildMultipleChoice(BuildContext context) {
     final List<String> options = wordBank ?? const <String>[];
+    final double chipSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.sm,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return Wrap(
-      spacing: AppSpacing.sm,
-      runSpacing: AppSpacing.sm,
+      spacing: chipSpacing,
+      runSpacing: chipSpacing,
       children: options
           .map(
             (String option) => LumosOutlineButton(
@@ -359,15 +392,25 @@ class LumosFillBlank extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
+    final double sectionSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.md,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double chipSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.sm,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         Text(sentence, overflow: TextOverflow.ellipsis, maxLines: 2),
-        const SizedBox(height: AppSpacing.md),
+        SizedBox(height: sectionSpacing),
         if (options != null)
           Wrap(
-            spacing: AppSpacing.sm,
-            runSpacing: AppSpacing.sm,
+            spacing: chipSpacing,
+            runSpacing: chipSpacing,
             children: options!
                 .map(
                   (String option) => LumosOutlineButton(

@@ -58,8 +58,6 @@ class SpacingOwnershipGuardConst {
     'pager',
     'viewport',
   };
-<<<<<<< HEAD
-
   static const Set<String> transparentSingleChildWrappers = <String>{
     'Align',
     'Center',
@@ -104,8 +102,6 @@ class SpacingOwnershipGuardConst {
     'Tooltip',
     'MouseRegion',
   };
-=======
->>>>>>> 38eaa6ab671efeb4133af512a6283ebf8f1e58d5
 }
 
 class SpacingOwnershipViolation {
@@ -483,14 +479,8 @@ List<Expression> _collectBuildReturnExpressions(FunctionBody body) {
 }
 
 _SpacingWrapperSpec? _resolveRootBuildSpacingWrapper(Expression expression) {
-<<<<<<< HEAD
   final InstanceCreationExpression? widgetCreation =
       _unwrapSingleChildWidgetChain(expression);
-=======
-  final InstanceCreationExpression? widgetCreation = _unwrapWidgetCreation(
-    expression,
-  );
->>>>>>> 38eaa6ab671efeb4133af512a6283ebf8f1e58d5
   if (widgetCreation == null) {
     return null;
   }
@@ -523,7 +513,6 @@ _SpacingWrapperSpec? _resolveRootBuildSpacingWrapper(Expression expression) {
   );
 }
 
-<<<<<<< HEAD
 InstanceCreationExpression? _unwrapSingleChildWidgetChain(
   Expression expression,
 ) {
@@ -550,8 +539,6 @@ InstanceCreationExpression? _unwrapSingleChildWidgetChain(
   return null;
 }
 
-=======
->>>>>>> 38eaa6ab671efeb4133af512a6283ebf8f1e58d5
 bool _hasNamedArgument(InstanceCreationExpression node, String argumentName) {
   for (final Expression argument in node.argumentList.arguments) {
     if (argument is! NamedExpression) {

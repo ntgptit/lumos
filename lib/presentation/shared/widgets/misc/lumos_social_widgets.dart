@@ -25,6 +25,16 @@ class LumosShopItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double sectionSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.sm,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double imageHeight = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: WidgetSizes.buttonHeightLarge * AppSpacing.xs,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return LumosCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -33,12 +43,12 @@ class LumosShopItem extends StatelessWidget {
             LumosNetworkImage(
               imageUrl: imageUrl!,
               width: double.infinity,
-              height: WidgetSizes.buttonHeightLarge * AppSpacing.xs,
+              height: imageHeight,
             ),
           LumosText(name, style: LumosTextStyle.titleSmall),
-          const SizedBox(height: AppSpacing.sm),
+          SizedBox(height: sectionSpacing),
           LumosText('$price gems', style: LumosTextStyle.bodySmall),
-          const SizedBox(height: AppSpacing.sm),
+          SizedBox(height: sectionSpacing),
           LumosPrimaryButton(
             label: isPurchased ? 'Purchased' : 'Buy',
             onPressed: isPurchased ? null : onBuy,
@@ -71,6 +81,16 @@ class LumosSubscriptionPlan extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double sectionSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.sm,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double featureSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.xs,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return LumosCard(
       isSelected: isSelected,
       onTap: onSelect,
@@ -85,12 +105,12 @@ class LumosSubscriptionPlan extends StatelessWidget {
               if (isPopular) const Chip(label: Text('Popular')),
             ],
           ),
-          const SizedBox(height: AppSpacing.sm),
+          SizedBox(height: sectionSpacing),
           LumosText(price, style: LumosTextStyle.bodyMedium),
-          const SizedBox(height: AppSpacing.sm),
+          SizedBox(height: sectionSpacing),
           ...features.map(
             (String feature) => Padding(
-              padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+              padding: EdgeInsets.only(bottom: featureSpacing),
               child: LumosText(feature, style: LumosTextStyle.bodySmall),
             ),
           ),
@@ -116,10 +136,15 @@ class LumosFriendActivity extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double rowSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.sm,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return Row(
       children: <Widget>[
         LumosAvatar(imageUrl: avatarUrl, initials: _initial(friendName)),
-        const SizedBox(width: AppSpacing.sm),
+        SizedBox(width: rowSpacing),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -154,8 +179,18 @@ class LumosLeaderboardRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final EdgeInsets rowPadding = ResponsiveDimensions.compactInsets(
+      context: context,
+      baseInsets: const EdgeInsets.all(AppSpacing.md),
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double rowSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.sm,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.md),
+      padding: rowPadding,
       decoration: BoxDecoration(
         color: isCurrentUser
             ? context.colorScheme.primaryContainer
@@ -167,9 +202,9 @@ class LumosLeaderboardRow extends StatelessWidget {
       child: Row(
         children: <Widget>[
           LumosText('#$rank', style: LumosTextStyle.labelLarge),
-          const SizedBox(width: AppSpacing.sm),
+          SizedBox(width: rowSpacing),
           LumosAvatar(imageUrl: avatarUrl, initials: _initial(username)),
-          const SizedBox(width: AppSpacing.sm),
+          SizedBox(width: rowSpacing),
           Expanded(
             child: LumosText(username, style: LumosTextStyle.bodyMedium),
           ),

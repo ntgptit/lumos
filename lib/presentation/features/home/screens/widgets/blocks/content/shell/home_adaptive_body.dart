@@ -44,6 +44,20 @@ class _HomeAdaptiveBodyState extends ConsumerState<HomeAdaptiveBody> {
   Widget build(BuildContext context) {
     _syncPageCacheForLocale(context);
     final AppLocalizations l10n = AppLocalizations.of(context)!;
+    final EdgeInsets loadingMaskPadding = ResponsiveDimensions.compactInsets(
+      context: context,
+      baseInsets: const EdgeInsets.fromLTRB(
+        AppSpacing.lg,
+        AppSpacing.sm,
+        AppSpacing.lg,
+        AppSpacing.none,
+      ),
+    );
+    final double loadingMaskHeight = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: HomeAdaptiveBodyConst.tabLoadingMaskHeight,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     final int selectedIndex = ref.watch(homeSelectedIndexProvider);
     final List<int> visitedTabIndices = ref.watch(
       homeVisitedTabIndicesProvider,
@@ -94,12 +108,12 @@ class _HomeAdaptiveBodyState extends ConsumerState<HomeAdaptiveBody> {
               child: isSwitchLoading
                   ? Padding(
                       key: const ValueKey<String>('home-tab-loading-mask'),
-                      padding: HomeAdaptiveBodyConst.tabLoadingMaskPadding,
+                      padding: loadingMaskPadding,
                       child: ClipRRect(
                         borderRadius: BorderRadii.medium,
-                        child: const LumosLoadingIndicator(
+                        child: LumosLoadingIndicator(
                           isLinear: true,
-                          size: HomeAdaptiveBodyConst.tabLoadingMaskHeight,
+                          size: loadingMaskHeight,
                         ),
                       ),
                     )
@@ -112,33 +126,52 @@ class _HomeAdaptiveBodyState extends ConsumerState<HomeAdaptiveBody> {
     if (!widget._useNavigationRail) {
       return tabbedBody;
     }
-    return Row(
-      children: <Widget>[
-        NavigationRail(
-          selectedIndex: selectedIndex,
-          onDestinationSelected: (int newIndex) {
-            final HomeNavigationItem selectedItem = items[newIndex];
-            ref
-                .read(homeControllerProvider.notifier)
-                .onTabDestinationSelected(
-                  newIndex: newIndex,
-                  tabId: selectedItem.tabId,
-                );
-          },
-          extended: widget._deviceType == DeviceType.desktop,
-          destinations: items
-              .map(
-                (HomeNavigationItem item) => NavigationRailDestination(
-                  icon: LumosIcon(item.icon),
-                  selectedIcon: LumosIcon(item.selectedIcon),
-                  label: LumosInlineText(item.tabId.toLocalizedLabel(l10n)),
-                ),
-              )
-              .toList(),
-        ),
-        const VerticalDivider(width: AppSpacing.none),
-        Expanded(child: tabbedBody),
-      ],
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final bool extendedRail =
+            widget._deviceType == DeviceType.desktop &&
+            constraints.maxWidth >= 1180;
+        final double railMinWidth = ResponsiveDimensions.compactValue(
+          context: context,
+          baseValue: 72,
+          minScale: ResponsiveDimensions.compactLargeInsetScale,
+        );
+        final double railMinExtendedWidth = ResponsiveDimensions.compactValue(
+          context: context,
+          baseValue: 220,
+          minScale: ResponsiveDimensions.compactLargeInsetScale,
+        );
+        return Row(
+          children: <Widget>[
+            NavigationRail(
+              selectedIndex: selectedIndex,
+              minWidth: railMinWidth,
+              minExtendedWidth: railMinExtendedWidth,
+              onDestinationSelected: (int newIndex) {
+                final HomeNavigationItem selectedItem = items[newIndex];
+                ref
+                    .read(homeControllerProvider.notifier)
+                    .onTabDestinationSelected(
+                      newIndex: newIndex,
+                      tabId: selectedItem.tabId,
+                    );
+              },
+              extended: extendedRail,
+              destinations: items
+                  .map(
+                    (HomeNavigationItem item) => NavigationRailDestination(
+                      icon: LumosIcon(item.icon),
+                      selectedIcon: LumosIcon(item.selectedIcon),
+                      label: LumosInlineText(item.tabId.toLocalizedLabel(l10n)),
+                    ),
+                  )
+                  .toList(),
+            ),
+            const VerticalDivider(width: AppSpacing.none),
+            Expanded(child: tabbedBody),
+          ],
+        );
+      },
     );
   }
 

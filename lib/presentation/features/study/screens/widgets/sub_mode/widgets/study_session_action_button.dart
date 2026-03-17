@@ -16,23 +16,33 @@ class StudySessionActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    switch (action.style) {
-      case StudyModeActionButtonStyle.primary:
-        return LumosPrimaryButton(
-          onPressed: () => onActionPressed(action.actionId),
-          label: action.label,
-          icon: action.icon,
-        );
-      case StudyModeActionButtonStyle.secondary:
-        return LumosSecondaryButton(
-          onPressed: () => onActionPressed(action.actionId),
-          label: action.label,
-        );
-      case StudyModeActionButtonStyle.outline:
-        return LumosOutlineButton(
-          onPressed: () => onActionPressed(action.actionId),
-          label: action.label,
-        );
-    }
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final LumosButtonSize buttonSize = constraints.maxWidth < 180
+            ? LumosButtonSize.medium
+            : LumosButtonSize.large;
+        switch (action.style) {
+          case StudyModeActionButtonStyle.primary:
+            return LumosPrimaryButton(
+              onPressed: () => onActionPressed(action.actionId),
+              label: action.label,
+              icon: action.icon,
+              size: buttonSize,
+            );
+          case StudyModeActionButtonStyle.secondary:
+            return LumosSecondaryButton(
+              onPressed: () => onActionPressed(action.actionId),
+              label: action.label,
+              size: buttonSize,
+            );
+          case StudyModeActionButtonStyle.outline:
+            return LumosOutlineButton(
+              onPressed: () => onActionPressed(action.actionId),
+              label: action.label,
+              size: buttonSize,
+            );
+        }
+      },
+    );
   }
 }

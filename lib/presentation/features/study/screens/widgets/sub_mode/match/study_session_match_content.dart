@@ -29,54 +29,65 @@ class StudySessionMatchContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final EdgeInsets contentPadding = StudySessionLayoutMetrics.contentPadding(
-      context,
-    );
-    final EdgeInsets progressPadding =
-        StudySessionLayoutMetrics.progressPadding(context);
-    final double sectionSpacing = StudySessionLayoutMetrics.sectionSpacing(
-      context,
-      baseValue: _matchSectionSpacing,
-    );
-    final double bottomSpacing = StudySessionLayoutMetrics.actionSpacing(
-      context,
-      baseValue: _matchBottomSpacing,
-    );
     final ScrollBehavior scrollBehavior = ScrollConfiguration.of(
       context,
     ).copyWith(scrollbars: false);
-    return Padding(
-      padding: contentPadding,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Padding(
-            padding: progressPadding,
-            child: StudySessionProgressRow(
-              progressValue: session.progress.sessionProgress,
-            ),
-          ),
-          SizedBox(height: sectionSpacing),
-          Expanded(
-            child: ScrollConfiguration(
-              behavior: scrollBehavior,
-              child: ListView(
-                padding: EdgeInsets.zero,
-                children: <Widget>[
-                  StudySessionMatchPairs(
-                    pairs: viewModel.matchPairs,
-                    selectionState: matchSelectionState,
-                    onSelectLeft: onSelectMatchLeft,
-                    onSelectRight: onSelectMatchRight,
-                    shuffleSeed: session.currentItem.flashcardId,
-                  ),
-                  SizedBox(height: bottomSpacing),
-                ],
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final bool compactHeight = constraints.maxHeight < 760;
+        final EdgeInsets contentPadding =
+            StudySessionLayoutMetrics.contentPadding(
+              context,
+              top: compactHeight ? AppSpacing.sm : AppSpacing.md,
+              bottom: compactHeight ? AppSpacing.lg : AppSpacing.xl,
+            );
+        final EdgeInsets progressPadding =
+            StudySessionLayoutMetrics.progressPadding(
+              context,
+              horizontal: compactHeight ? AppSpacing.sm : AppSpacing.md,
+            );
+        final double sectionSpacing = StudySessionLayoutMetrics.sectionSpacing(
+          context,
+          baseValue: compactHeight ? AppSpacing.md : _matchSectionSpacing,
+        );
+        final double bottomSpacing = StudySessionLayoutMetrics.actionSpacing(
+          context,
+          baseValue: compactHeight ? AppSpacing.lg : _matchBottomSpacing,
+        );
+        return Padding(
+          padding: contentPadding,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Padding(
+                padding: progressPadding,
+                child: StudySessionProgressRow(
+                  progressValue: session.progress.sessionProgress,
+                ),
               ),
-            ),
+              SizedBox(height: sectionSpacing),
+              Expanded(
+                child: ScrollConfiguration(
+                  behavior: scrollBehavior,
+                  child: ListView(
+                    padding: EdgeInsets.zero,
+                    children: <Widget>[
+                      StudySessionMatchPairs(
+                        pairs: viewModel.matchPairs,
+                        selectionState: matchSelectionState,
+                        onSelectLeft: onSelectMatchLeft,
+                        onSelectRight: onSelectMatchRight,
+                        shuffleSeed: session.currentItem.flashcardId,
+                      ),
+                      SizedBox(height: bottomSpacing),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

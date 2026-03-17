@@ -131,6 +131,7 @@ class _LumosCardState extends State<LumosCard>
   Widget build(BuildContext context) {
     final ThemeData theme = context.theme;
     final ColorScheme colorScheme = theme.colorScheme;
+    final EdgeInsetsGeometry resolvedPadding = _resolvePadding(context);
 
     if (widget.isLoading) {
       final Color skeletonBackgroundColor = _resolveUnselectedColor(
@@ -138,9 +139,9 @@ class _LumosCardState extends State<LumosCard>
       );
       return _LumosCardSkeleton(
         variant: widget.variant,
-        borderRadius: _resolvedBorderRadius,
+        borderRadius: _resolveBorderRadius(context),
         margin: widget.margin ?? theme.cardTheme.margin,
-        padding: widget.padding,
+        padding: resolvedPadding,
         backgroundColor: skeletonBackgroundColor,
       );
     }
@@ -148,9 +149,11 @@ class _LumosCardState extends State<LumosCard>
     final Animation<double>? selectionAnimation = _selectionAnimation;
     if (selectionAnimation == null) {
       return _buildCard(
+        context: context,
         theme: theme,
         colorScheme: colorScheme,
         selectionProgress: _selectionProgressWithoutAnimation(),
+        padding: resolvedPadding,
         child: widget.child,
       );
     }
@@ -158,9 +161,11 @@ class _LumosCardState extends State<LumosCard>
     return AnimatedBuilder(
       animation: selectionAnimation,
       builder: (context, child) => _buildCard(
+        context: context,
         theme: theme,
         colorScheme: colorScheme,
         selectionProgress: selectionAnimation.value,
+        padding: resolvedPadding,
         child: child!,
       ),
       child: widget.child,
@@ -198,13 +203,16 @@ class _LumosCardState extends State<LumosCard>
   // ---------------------------------------------------------------------------
 
   Widget _buildCard({
+    required BuildContext context,
     required ThemeData theme,
     required ColorScheme colorScheme,
     required double selectionProgress,
+    required EdgeInsetsGeometry padding,
     required Widget child,
   }) {
-    final BorderRadius borderRadius = _resolvedBorderRadius;
+    final BorderRadius borderRadius = _resolveBorderRadius(context);
     final BorderSide? borderSide = _resolveBorderSide(
+      context: context,
       colorScheme: colorScheme,
       selectionProgress: selectionProgress,
     );
@@ -225,7 +233,7 @@ class _LumosCardState extends State<LumosCard>
       theme: theme,
       colorScheme: colorScheme,
       selectionProgress: selectionProgress,
-      content: Padding(padding: widget.padding, child: child),
+      content: Padding(padding: padding, child: child),
     );
 
     final Widget tappableChild = _buildTappableContent(
@@ -249,9 +257,18 @@ class _LumosCardState extends State<LumosCard>
   // Shape resolution
   // ---------------------------------------------------------------------------
 
-  BorderRadius get _resolvedBorderRadius {
-    if (widget.borderRadius != null) return widget.borderRadius!;
-    return LumosCardConst.surfaceBorderRadius;
+  BorderRadius _resolveBorderRadius(BuildContext context) {
+    if (widget.borderRadius case final BorderRadius resolvedBorderRadius) {
+      return resolvedBorderRadius;
+    }
+    return BorderRadii.circular(context.appCard.radius);
+  }
+
+  EdgeInsetsGeometry _resolvePadding(BuildContext context) {
+    if (widget.padding == LumosCardConst.defaultPadding) {
+      return context.appCard.paddingLg;
+    }
+    return widget.padding;
   }
 
   ShapeBorder _resolveShape({
@@ -269,6 +286,7 @@ class _LumosCardState extends State<LumosCard>
   // ---------------------------------------------------------------------------
 
   BorderSide? _resolveBorderSide({
+    required BuildContext context,
     required ColorScheme colorScheme,
     required double selectionProgress,
   }) {
@@ -280,10 +298,7 @@ class _LumosCardState extends State<LumosCard>
       selectionProgress,
     )!;
 
-    return BorderSide(
-      color: resolvedColor,
-      width: WidgetSizes.borderWidthRegular,
-    );
+    return BorderSide(color: resolvedColor, width: context.appCard.borderWidth);
   }
 
   // ---------------------------------------------------------------------------
@@ -483,7 +498,28 @@ class _LumosCardSkeletonState extends State<_LumosCardSkeleton>
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = context.colorScheme;
     final Color shimmerColor = colorScheme.onSurface;
+    final double primaryLineHeight = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.lg,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double bodyLineHeight = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.md,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double rowSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.sm,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double compactRowSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.xs,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     final ShapeBorder skeletonShape = _buildSkeletonShape(
+      context: context,
       colorScheme: colorScheme,
     );
 
@@ -506,25 +542,25 @@ class _LumosCardSkeletonState extends State<_LumosCardSkeleton>
                   color: shimmerColor,
                   opacity: _shimmerAnimation.value,
                   widthFactor: WidgetRatios.shimmerLineWidthShort,
-                  height: AppSpacing.lg,
+                  height: primaryLineHeight,
                 ),
-                const SizedBox(height: AppSpacing.sm),
+                SizedBox(height: rowSpacing),
                 _shimmerLine(
                   color: shimmerColor,
                   opacity:
                       _shimmerAnimation.value *
                       WidgetRatios.shimmerSecondaryBlendScale,
                   widthFactor: WidgetRatios.shimmerLineWidthFull,
-                  height: AppSpacing.md,
+                  height: bodyLineHeight,
                 ),
-                const SizedBox(height: AppSpacing.xs),
+                SizedBox(height: compactRowSpacing),
                 _shimmerLine(
                   color: shimmerColor,
                   opacity:
                       _shimmerAnimation.value *
                       WidgetRatios.shimmerTertiaryBlendScale,
                   widthFactor: WidgetRatios.shimmerLineWidthMedium,
-                  height: AppSpacing.md,
+                  height: bodyLineHeight,
                 ),
               ],
             ),
@@ -534,18 +570,27 @@ class _LumosCardSkeletonState extends State<_LumosCardSkeleton>
     );
   }
 
-  ShapeBorder _buildSkeletonShape({required ColorScheme colorScheme}) {
+  ShapeBorder _buildSkeletonShape({
+    required BuildContext context,
+    required ColorScheme colorScheme,
+  }) {
     return RoundedRectangleBorder(
       borderRadius: widget.borderRadius,
-      side: _resolveSkeletonBorderSide(colorScheme: colorScheme),
+      side: _resolveSkeletonBorderSide(
+        context: context,
+        colorScheme: colorScheme,
+      ),
     );
   }
 
-  BorderSide _resolveSkeletonBorderSide({required ColorScheme colorScheme}) {
+  BorderSide _resolveSkeletonBorderSide({
+    required BuildContext context,
+    required ColorScheme colorScheme,
+  }) {
     if (widget.variant == LumosCardVariant.outlined) {
       return BorderSide(
         color: colorScheme.outlineVariant,
-        width: WidgetSizes.borderWidthRegular,
+        width: context.appCard.borderWidth,
       );
     }
     return BorderSide.none;

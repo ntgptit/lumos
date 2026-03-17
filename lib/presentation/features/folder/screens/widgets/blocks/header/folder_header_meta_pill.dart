@@ -22,11 +22,20 @@ class FolderHeaderMetaPill extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
-    return Container(
-      padding: const EdgeInsets.symmetric(
+    final EdgeInsets padding = ResponsiveDimensions.compactInsets(
+      context: context,
+      baseInsets: const EdgeInsets.symmetric(
         horizontal: AppSpacing.sm,
         vertical: AppSpacing.xs,
       ),
+    );
+    final double inlineGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.xs,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    return Container(
+      padding: padding,
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: BorderRadii.medium,
@@ -38,7 +47,7 @@ class FolderHeaderMetaPill extends StatelessWidget {
             data: IconThemeData(color: foregroundColor),
             child: LumosIcon(icon, size: IconSizes.iconSmall),
           ),
-          const SizedBox(width: AppSpacing.xs),
+          SizedBox(width: inlineGap),
           if (expandLabel)
             Expanded(
               child: LumosInlineText(

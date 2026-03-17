@@ -27,10 +27,6 @@ class StudySessionMatchPairs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double rowGap = StudySessionLayoutMetrics.sectionSpacing(
-      context,
-      baseValue: _matchRowGap,
-    );
     final Set<String> matchedLeftIds = selectionState.matchedPairs
         .map((StudyMatchSubmission pair) => pair.leftId)
         .toSet();
@@ -54,28 +50,36 @@ class StudySessionMatchPairs extends StatelessWidget {
     if (rowCount == 0) {
       return const SizedBox.shrink();
     }
-    return AnimatedSize(
-      duration: AppDurations.medium,
-      curve: Curves.easeInOutCubicEmphasized,
-      alignment: Alignment.topCenter,
-      child: Column(
-        children: List<Widget>.generate(rowCount, (int index) {
-          final Widget row = StudySessionMatchPairRow(
-            leftPair: visibleLeftPairs[index],
-            rightPair: visibleRightPairs[index],
-            selectionState: selectionState,
-            onSelectLeft: onSelectLeft,
-            onSelectRight: onSelectRight,
-          );
-          if (index == rowCount - 1) {
-            return row;
-          }
-          return Padding(
-            padding: EdgeInsets.only(bottom: rowGap),
-            child: row,
-          );
-        }),
-      ),
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final double rowGap = StudySessionLayoutMetrics.sectionSpacing(
+          context,
+          baseValue: constraints.maxWidth < 380 ? AppSpacing.sm : _matchRowGap,
+        );
+        return AnimatedSize(
+          duration: AppDurations.medium,
+          curve: Curves.easeInOutCubicEmphasized,
+          alignment: Alignment.topCenter,
+          child: Column(
+            children: List<Widget>.generate(rowCount, (int index) {
+              final Widget row = StudySessionMatchPairRow(
+                leftPair: visibleLeftPairs[index],
+                rightPair: visibleRightPairs[index],
+                selectionState: selectionState,
+                onSelectLeft: onSelectLeft,
+                onSelectRight: onSelectRight,
+              );
+              if (index == rowCount - 1) {
+                return row;
+              }
+              return Padding(
+                padding: EdgeInsets.only(bottom: rowGap),
+                child: row,
+              );
+            }),
+          ),
+        );
+      },
     );
   }
 }

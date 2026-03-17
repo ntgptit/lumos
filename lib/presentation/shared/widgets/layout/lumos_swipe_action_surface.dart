@@ -101,19 +101,34 @@ class _SwipeActionBackground extends StatelessWidget {
     final Alignment alignment = dragExtent.isNegative
         ? Alignment.centerRight
         : Alignment.centerLeft;
+    final double horizontalInset = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.lg,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double iconSize = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: IconSizes.iconMedium,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double borderRadius = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.xl,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return DecoratedBox(
       decoration: BoxDecoration(
         color: palette.backgroundColor,
-        borderRadius: BorderRadii.xLarge,
+        borderRadius: BorderRadii.circular(borderRadius),
       ),
       child: Align(
         alignment: alignment,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+          padding: EdgeInsets.symmetric(horizontal: horizontalInset),
           child: Icon(
             resolvedAction.icon,
             color: palette.foregroundColor,
-            size: IconSizes.iconMedium,
+            size: iconSize,
           ),
         ),
       ),

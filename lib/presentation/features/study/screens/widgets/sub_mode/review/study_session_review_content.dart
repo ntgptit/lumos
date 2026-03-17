@@ -89,44 +89,56 @@ class _StudySessionReviewContentState extends State<StudySessionReviewContent> {
 
   @override
   Widget build(BuildContext context) {
-    final EdgeInsets contentPadding = StudySessionLayoutMetrics.contentPadding(
-      context,
-    );
-    final EdgeInsets progressPadding = StudySessionLayoutMetrics.progressPadding(
-      context,
-    );
-    final double sectionSpacing = StudySessionLayoutMetrics.sectionSpacing(
-      context,
-      baseValue: StudySessionReviewContentConst.sectionSpacing,
-    );
-    return Padding(
-      padding: contentPadding,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Padding(
-            padding: progressPadding,
-            child: StudySessionProgressRow(
-              progressValue: widget.session.progress.sessionProgress,
-            ),
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final bool compactHeight = constraints.maxHeight < 760;
+        final EdgeInsets contentPadding =
+            StudySessionLayoutMetrics.contentPadding(
+              context,
+              top: compactHeight ? AppSpacing.sm : AppSpacing.md,
+              bottom: compactHeight ? AppSpacing.lg : AppSpacing.xl,
+            );
+        final EdgeInsets progressPadding =
+            StudySessionLayoutMetrics.progressPadding(
+              context,
+              horizontal: compactHeight ? AppSpacing.sm : AppSpacing.md,
+            );
+        final double sectionSpacing = StudySessionLayoutMetrics.sectionSpacing(
+          context,
+          baseValue: compactHeight
+              ? AppSpacing.md
+              : StudySessionReviewContentConst.sectionSpacing,
+        );
+        return Padding(
+          padding: contentPadding,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Padding(
+                padding: progressPadding,
+                child: StudySessionProgressRow(
+                  progressValue: widget.session.progress.sessionProgress,
+                ),
+              ),
+              SizedBox(height: sectionSpacing),
+              Expanded(
+                child: StudySessionReviewCardViewport(
+                  session: widget.session,
+                  speechPlaybackState: widget.speechPlaybackState,
+                  onPlaySpeech: widget.onPlaySpeech,
+                  onReplaySpeech: widget.onReplaySpeech,
+                  canSwipeHorizontally: _canSwipeHorizontally(),
+                  controller: _pageController,
+                  itemCount: _pagerItemCount,
+                  currentPageIndex: _currentPageIndex,
+                  onPageChanged: _handlePageChanged,
+                  onLeadingEdgeAttempt: _handleLeadingEdgeAttempt,
+                ),
+              ),
+            ],
           ),
-          SizedBox(height: sectionSpacing),
-          Expanded(
-            child: StudySessionReviewCardViewport(
-              session: widget.session,
-              speechPlaybackState: widget.speechPlaybackState,
-              onPlaySpeech: widget.onPlaySpeech,
-              onReplaySpeech: widget.onReplaySpeech,
-              canSwipeHorizontally: _canSwipeHorizontally(),
-              controller: _pageController,
-              itemCount: _pagerItemCount,
-              currentPageIndex: _currentPageIndex,
-              onPageChanged: _handlePageChanged,
-              onLeadingEdgeAttempt: _handleLeadingEdgeAttempt,
-            ),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 

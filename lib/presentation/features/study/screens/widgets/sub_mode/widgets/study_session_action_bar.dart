@@ -17,21 +17,28 @@ class StudySessionActionBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double actionGap = StudySessionLayoutMetrics.sectionSpacing(
-      context,
-      baseValue: AppSpacing.sm,
-    );
-    return Wrap(
-      spacing: actionGap,
-      runSpacing: actionGap,
-      children: actions
-          .map(
-            (StudyModeActionViewModel action) => StudySessionActionButton(
-              action: action,
-              onActionPressed: onActionPressed,
-            ),
-          )
-          .toList(growable: false),
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final double baseGap = constraints.maxWidth < 380
+            ? AppSpacing.xs
+            : AppSpacing.sm;
+        final double actionGap = StudySessionLayoutMetrics.sectionSpacing(
+          context,
+          baseValue: baseGap,
+        );
+        return Wrap(
+          spacing: actionGap,
+          runSpacing: actionGap,
+          children: actions
+              .map(
+                (StudyModeActionViewModel action) => StudySessionActionButton(
+                  action: action,
+                  onActionPressed: onActionPressed,
+                ),
+              )
+              .toList(growable: false),
+        );
+      },
     );
   }
 }

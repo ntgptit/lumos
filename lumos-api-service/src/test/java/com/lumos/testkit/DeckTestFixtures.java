@@ -5,6 +5,7 @@ import java.time.Instant;
 import com.lumos.deck.dto.request.CreateDeckRequest;
 import com.lumos.deck.dto.request.UpdateDeckRequest;
 import com.lumos.deck.dto.response.AuditMetadataResponse;
+import com.lumos.deck.dto.response.DeckImportResponse;
 import com.lumos.deck.dto.response.DeckResponse;
 
 public final class DeckTestFixtures {
@@ -38,5 +39,14 @@ public final class DeckTestFixtures {
                 new AuditMetadataResponse(
                         Instant.parse("2026-01-01T00:00:00Z"),
                         Instant.parse("2026-01-02T00:00:00Z")));
+    }
+
+    public static DeckImportResponse deckImportResponse(
+            Long folderId,
+            Integer processedDeckCount,
+            Integer createdDeckCount,
+            Integer importedFlashcardCount) {
+
+        return new DeckImportResponse(folderId, processedDeckCount, createdDeckCount, importedFlashcardCount);
     }
 }

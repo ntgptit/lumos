@@ -26,27 +26,38 @@ class StudySessionReviewCardDeck extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: <Widget>[
-        Expanded(
-          child: StudySessionReviewPromptCard(
-            content: _buildPromptContent(session.currentItem),
-          ),
-        ),
-        const SizedBox(height: _reviewCardSpacing),
-        Expanded(
-          child: StudySessionReviewAnswerCard(
-            content: _buildAnswerContent(session.currentItem),
-            isSpeechAvailable: session.currentItem.speech.available,
-            isPlaying: speechPlaybackState.isPlaying,
-            tooltip: speechPlaybackState.isPlaying
-                ? l10n.studySpeechReplayAction
-                : l10n.flashcardPlayAudioTooltip,
-            onSpeechPressed: _handleSpeechPressed,
-          ),
-        ),
-      ],
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final double cardSpacing = ResponsiveDimensions.compactValue(
+          context: context,
+          baseValue: constraints.maxHeight < 520
+              ? AppSpacing.md
+              : _reviewCardSpacing,
+          minScale: ResponsiveDimensions.compactInsetScale,
+        );
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Expanded(
+              child: StudySessionReviewPromptCard(
+                content: _buildPromptContent(session.currentItem),
+              ),
+            ),
+            SizedBox(height: cardSpacing),
+            Expanded(
+              child: StudySessionReviewAnswerCard(
+                content: _buildAnswerContent(session.currentItem),
+                isSpeechAvailable: session.currentItem.speech.available,
+                isPlaying: speechPlaybackState.isPlaying,
+                tooltip: speechPlaybackState.isPlaying
+                    ? l10n.studySpeechReplayAction
+                    : l10n.flashcardPlayAudioTooltip,
+                onSpeechPressed: _handleSpeechPressed,
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 

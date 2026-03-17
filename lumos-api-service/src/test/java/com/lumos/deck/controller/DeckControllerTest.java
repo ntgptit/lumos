@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static com.lumos.testkit.DeckTestFixtures.createDeckRequest;
+import static com.lumos.testkit.DeckTestFixtures.deckImportResponse;
 import static com.lumos.testkit.DeckTestFixtures.deckResponse;
 import static com.lumos.testkit.DeckTestFixtures.updateDeckRequest;
 import static com.lumos.testkit.SearchRequestFixtures.byNameAsc;
@@ -17,7 +18,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.mock.web.MockMultipartFile;
 
+import com.lumos.deck.constant.DeckImportConstants;
+import com.lumos.deck.dto.response.DeckImportResponse;
 import com.lumos.deck.dto.response.DeckResponse;
 import com.lumos.deck.service.DeckService;
 
@@ -74,6 +78,22 @@ class DeckControllerTest {
         when(this.deckService.getDecks(FOLDER_ID, searchRequest, pageable)).thenReturn(response);
 
         final var entity = this.deckController.getDecks(FOLDER_ID, searchRequest, pageable);
+
+        assertEquals(200, entity.getStatusCode().value());
+        assertEquals(response, entity.getBody());
+    }
+
+    @Test
+    void importDecks_returnsOkResponse() {
+        final var file = new MockMultipartFile(
+                DeckImportConstants.FILE_PARAM_NAME,
+                "decks.xlsx",
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                new byte[] { 1 });
+        final DeckImportResponse response = deckImportResponse(FOLDER_ID, 2, 1, 5);
+        when(this.deckService.importDecks(FOLDER_ID, file)).thenReturn(response);
+
+        final var entity = this.deckController.importDecks(FOLDER_ID, file);
 
         assertEquals(200, entity.getStatusCode().value());
         assertEquals(response, entity.getBody());

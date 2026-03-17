@@ -106,7 +106,7 @@ class LumosAvatar extends StatelessWidget {
     super.key,
     this.imageUrl,
     this.initials,
-    this.radius = WidgetSizes.avatarMedium,
+    this.radius = LumosAvatarConst.defaultRadius,
   });
 
   final String? imageUrl;
@@ -115,20 +115,38 @@ class LumosAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double resolvedRadius = _resolveRadius(context);
     if (imageUrl == null) {
       final ColorScheme colorScheme = context.colorScheme;
       return CircleAvatar(
-        radius: radius,
+        radius: resolvedRadius,
         backgroundColor: colorScheme.secondaryContainer,
         foregroundColor: colorScheme.onSecondaryContainer,
         child: Text(initials ?? '?', overflow: TextOverflow.ellipsis),
       );
     }
     return CircleAvatar(
-      radius: radius,
+      radius: resolvedRadius,
       backgroundImage: NetworkImage(imageUrl!),
     );
   }
+
+  double _resolveRadius(BuildContext context) {
+    if (radius != LumosAvatarConst.defaultRadius) {
+      return radius;
+    }
+    return ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: radius,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+  }
+}
+
+abstract final class LumosAvatarConst {
+  LumosAvatarConst._();
+
+  static const double defaultRadius = WidgetSizes.avatarMedium;
 }
 
 class LumosBadge extends StatelessWidget {
@@ -140,12 +158,22 @@ class LumosBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = context.theme;
     final ColorScheme colorScheme = theme.colorScheme;
-    return Container(
-      constraints: const BoxConstraints(minWidth: AppSpacing.xxl),
-      padding: const EdgeInsets.symmetric(
+    final double minWidth = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.xxl,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final EdgeInsets badgePadding = ResponsiveDimensions.compactInsets(
+      context: context,
+      baseInsets: const EdgeInsets.symmetric(
         horizontal: AppSpacing.sm,
         vertical: AppSpacing.xs,
       ),
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    return Container(
+      constraints: BoxConstraints(minWidth: minWidth),
+      padding: badgePadding,
       decoration: BoxDecoration(
         color: colorScheme.secondaryContainer,
         borderRadius: BorderRadii.pill,
@@ -179,13 +207,18 @@ class LumosDivider extends StatelessWidget {
     if (label == null) {
       return Divider(thickness: thickness, indent: indent);
     }
+    final double labelSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.sm,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return Row(
       children: <Widget>[
         Expanded(
           child: Divider(thickness: thickness, indent: indent),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+          padding: EdgeInsets.symmetric(horizontal: labelSpacing),
           child: LumosText(label!, style: LumosTextStyle.labelSmall),
         ),
         Expanded(
@@ -285,12 +318,17 @@ class LumosConfetti extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double iconSize = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: IconSizes.iconXLarge,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     if (!isActive) {
       return const SizedBox.shrink();
     }
     return Icon(
       type == LumosConfettiType.full ? Icons.celebration : Icons.auto_awesome,
-      size: IconSizes.iconXLarge,
+      size: iconSize,
       color: context.appColors.warning,
     );
   }

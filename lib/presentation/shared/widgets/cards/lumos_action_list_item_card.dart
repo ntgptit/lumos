@@ -202,7 +202,7 @@ class LumosActionListItemCard extends StatelessWidget {
           value: action.key,
           enabled: action.isEnabled && !action.isLoading,
           height: WidgetSizes.minTouchTarget,
-          padding: LumosActionListItemCardConst.popupItemPadding,
+          padding: _resolvePopupItemPadding(context),
           child: _ActionMenuItem(action: action),
         ),
       );
@@ -213,6 +213,14 @@ class LumosActionListItemCard extends StatelessWidget {
     }
 
     return entries;
+  }
+
+  EdgeInsets _resolvePopupItemPadding(BuildContext context) {
+    return ResponsiveDimensions.compactInsets(
+      context: context,
+      baseInsets: LumosActionListItemCardConst.popupItemPadding,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
   }
 }
 
@@ -230,6 +238,16 @@ class _ActionMenuItem extends StatelessWidget {
     final ThemeData theme = context.theme;
     final ColorScheme colorScheme = theme.colorScheme;
     final AppColorTokens appColors = context.appColors;
+    final double menuSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: LumosActionListItemCardConst.menuItemSpacing,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double contentSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: LumosActionListItemCardConst.contentSpacing,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     final Color labelColor = _resolveLabelColor(
       colorScheme: colorScheme,
       appColors: appColors,
@@ -245,16 +263,17 @@ class _ActionMenuItem extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           _buildLeading(labelColor: labelColor),
-          const SizedBox(width: LumosActionListItemCardConst.menuItemSpacing),
+          SizedBox(width: menuSpacing),
           Expanded(
             child: _buildLabelColumn(
               textTheme: theme.textTheme,
               colorScheme: colorScheme,
               labelColor: labelColor,
+              contentSpacing: contentSpacing,
             ),
           ),
           if (action.badgeLabel case final String badgeLabelValue) ...[
-            const SizedBox(width: LumosActionListItemCardConst.menuItemSpacing),
+            SizedBox(width: menuSpacing),
             _ActionBadge(label: badgeLabelValue),
           ],
         ],
@@ -284,6 +303,7 @@ class _ActionMenuItem extends StatelessWidget {
     required TextTheme textTheme,
     required ColorScheme colorScheme,
     required Color labelColor,
+    required double contentSpacing,
   }) {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -297,9 +317,7 @@ class _ActionMenuItem extends StatelessWidget {
         ),
         if (action.supportingText case final String supportingTextValue)
           Padding(
-            padding: const EdgeInsets.only(
-              top: LumosActionListItemCardConst.contentSpacing,
-            ),
+            padding: EdgeInsets.only(top: contentSpacing),
             child: Text(
               supportingTextValue,
               maxLines: 1,
@@ -341,6 +359,11 @@ class _ActionBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = context.theme;
     final ColorScheme colorScheme = theme.colorScheme;
+    final EdgeInsets badgePadding = ResponsiveDimensions.compactInsets(
+      context: context,
+      baseInsets: LumosActionListItemCardConst.badgePadding as EdgeInsets,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -348,7 +371,7 @@ class _ActionBadge extends StatelessWidget {
         borderRadius: BorderRadii.large,
       ),
       child: Padding(
-        padding: LumosActionListItemCardConst.badgePadding,
+        padding: badgePadding,
         child: Text(
           label,
           maxLines: 1,
@@ -392,25 +415,29 @@ class _SwipeActionWrapperState extends State<_SwipeActionWrapper> {
     super.dispose();
   }
 
-  void _onHorizontalDragUpdate(DragUpdateDetails details) {
+  void _onHorizontalDragUpdate(
+    DragUpdateDetails details, {
+    required double swipeRevealWidth,
+  }) {
     // Only allow left swipe (negative delta = end direction).
     if (details.delta.dx > 0 && _dragExtentNotifier.value == AppSpacing.none) {
       return;
     }
     final double nextExtent = (_dragExtentNotifier.value + details.delta.dx)
-        .clamp(-LumosActionListItemCardConst.swipeRevealWidth, AppSpacing.none)
+        .clamp(-swipeRevealWidth, AppSpacing.none)
         .toDouble();
     _dragExtentNotifier.value = nextExtent;
   }
 
-  void _onHorizontalDragEnd(DragEndDetails details) {
+  void _onHorizontalDragEnd(
+    DragEndDetails details, {
+    required double swipeRevealWidth,
+  }) {
     final double threshold =
-        LumosActionListItemCardConst.swipeRevealWidth *
-        LumosActionListItemCardConst.swipeThreshold;
+        swipeRevealWidth * LumosActionListItemCardConst.swipeThreshold;
     final bool shouldReveal = _dragExtentNotifier.value.abs() >= threshold;
     if (shouldReveal) {
-      _dragExtentNotifier.value =
-          -LumosActionListItemCardConst.swipeRevealWidth;
+      _dragExtentNotifier.value = -swipeRevealWidth;
       return;
     }
     _dragExtentNotifier.value = AppSpacing.none;
@@ -424,13 +451,25 @@ class _SwipeActionWrapperState extends State<_SwipeActionWrapper> {
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = context.colorScheme;
     final AppColorTokens appColors = context.appColors;
+    final double swipeRevealWidth = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: LumosActionListItemCardConst.swipeRevealWidth,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
 
     return ValueListenableBuilder<double>(
       valueListenable: _dragExtentNotifier,
       builder: (BuildContext context, double dragExtent, _) {
         return GestureDetector(
-          onHorizontalDragUpdate: _onHorizontalDragUpdate,
-          onHorizontalDragEnd: _onHorizontalDragEnd,
+          onHorizontalDragUpdate: (DragUpdateDetails details) {
+            _onHorizontalDragUpdate(
+              details,
+              swipeRevealWidth: swipeRevealWidth,
+            );
+          },
+          onHorizontalDragEnd: (DragEndDetails details) {
+            _onHorizontalDragEnd(details, swipeRevealWidth: swipeRevealWidth);
+          },
           child: Stack(
             children: [
               // Reveal layer — action buttons behind the card.
@@ -440,6 +479,7 @@ class _SwipeActionWrapperState extends State<_SwipeActionWrapper> {
                   child: _buildRevealActions(
                     colorScheme: colorScheme,
                     appColors: appColors,
+                    swipeRevealWidth: swipeRevealWidth,
                   ),
                 ),
               ),
@@ -461,6 +501,7 @@ class _SwipeActionWrapperState extends State<_SwipeActionWrapper> {
   Widget _buildRevealActions({
     required ColorScheme colorScheme,
     required AppColorTokens appColors,
+    required double swipeRevealWidth,
   }) {
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -470,6 +511,7 @@ class _SwipeActionWrapperState extends State<_SwipeActionWrapper> {
               action: action,
               colorScheme: colorScheme,
               appColors: appColors,
+              swipeRevealWidth: swipeRevealWidth,
               onTap: () {
                 _closeSwipe();
                 widget.onActionSelected(action.key);
@@ -490,12 +532,14 @@ class _SwipeActionButton extends StatelessWidget {
     required this.action,
     required this.colorScheme,
     required this.appColors,
+    required this.swipeRevealWidth,
     required this.onTap,
   });
 
   final LumosSwipeAction action;
   final ColorScheme colorScheme;
   final AppColorTokens appColors;
+  final double swipeRevealWidth;
   final VoidCallback onTap;
 
   @override
@@ -503,22 +547,28 @@ class _SwipeActionButton extends StatelessWidget {
     final Color bgColor = _resolveBackground();
     final Color fgColor = _resolveForeground();
     final TextTheme textTheme = context.textTheme;
+    final double iconSize = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: LumosActionListItemCardConst.swipeIconSize,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double contentSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: LumosActionListItemCardConst.contentSpacing,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
 
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: LumosActionListItemCardConst.swipeRevealWidth,
+        width: swipeRevealWidth,
         color: bgColor,
         alignment: Alignment.center,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              action.icon,
-              color: fgColor,
-              size: LumosActionListItemCardConst.swipeIconSize,
-            ),
-            const SizedBox(height: LumosActionListItemCardConst.contentSpacing),
+            Icon(action.icon, color: fgColor, size: iconSize),
+            SizedBox(height: contentSpacing),
             Text(
               action.label,
               style: textTheme.labelSmall.withResolvedColor(fgColor),

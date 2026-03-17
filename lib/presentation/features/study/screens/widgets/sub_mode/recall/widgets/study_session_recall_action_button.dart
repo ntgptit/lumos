@@ -32,34 +32,41 @@ class StudySessionRecallActionButton extends StatelessWidget {
     final VoidCallback? onPressed = isInteractionLocked
         ? null
         : () => onActionPressed(action.actionId);
-    switch (action.style) {
-      case StudyModeActionButtonStyle.primary:
-        return LumosPrimaryButton(
-          label: resolvedLabel,
-          onPressed: onPressed,
-          size: LumosButtonSize.large,
-          icon: action.icon,
-          isLoading: isRevealLoading || (isSelected && isInteractionLocked),
-          expanded: true,
-        );
-      case StudyModeActionButtonStyle.secondary:
-        return LumosSecondaryButton(
-          label: resolvedLabel,
-          onPressed: onPressed,
-          size: LumosButtonSize.large,
-          icon: action.icon,
-          isLoading: isRevealLoading || (isSelected && isInteractionLocked),
-          expanded: true,
-        );
-      case StudyModeActionButtonStyle.outline:
-        return LumosOutlineButton(
-          label: resolvedLabel,
-          onPressed: onPressed,
-          size: LumosButtonSize.large,
-          icon: action.icon,
-          isLoading: isRevealLoading || (isSelected && isInteractionLocked),
-          expanded: true,
-        );
-    }
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final LumosButtonSize buttonSize = constraints.maxWidth < 180
+            ? LumosButtonSize.medium
+            : LumosButtonSize.large;
+        switch (action.style) {
+          case StudyModeActionButtonStyle.primary:
+            return LumosPrimaryButton(
+              label: resolvedLabel,
+              onPressed: onPressed,
+              size: buttonSize,
+              icon: action.icon,
+              isLoading: isRevealLoading || (isSelected && isInteractionLocked),
+              expanded: true,
+            );
+          case StudyModeActionButtonStyle.secondary:
+            return LumosSecondaryButton(
+              label: resolvedLabel,
+              onPressed: onPressed,
+              size: buttonSize,
+              icon: action.icon,
+              isLoading: isRevealLoading || (isSelected && isInteractionLocked),
+              expanded: true,
+            );
+          case StudyModeActionButtonStyle.outline:
+            return LumosOutlineButton(
+              label: resolvedLabel,
+              onPressed: onPressed,
+              size: buttonSize,
+              icon: action.icon,
+              isLoading: isRevealLoading || (isSelected && isInteractionLocked),
+              expanded: true,
+            );
+        }
+      },
+    );
   }
 }

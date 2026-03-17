@@ -40,19 +40,6 @@ class StudySessionRecallContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final EdgeInsets contentPadding = StudySessionLayoutMetrics.contentPadding(
-      context,
-    );
-    final EdgeInsets progressPadding =
-        StudySessionLayoutMetrics.progressPadding(context);
-    final double sectionSpacing = StudySessionLayoutMetrics.sectionSpacing(
-      context,
-      baseValue: _recallSectionSpacing,
-    );
-    final double actionSpacing = StudySessionLayoutMetrics.actionSpacing(
-      context,
-      baseValue: _recallActionSpacing,
-    );
     final AppLocalizations l10n = AppLocalizations.of(context)!;
     final List<StudyModeActionViewModel> visibleActions =
         StudyRecallLayoutResolver.resolveVisibleActions(
@@ -65,55 +52,79 @@ class StudySessionRecallContent extends StatelessWidget {
             icon: Icons.navigate_next_rounded,
           ),
         );
-    return Padding(
-      padding: contentPadding,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Padding(
-            padding: progressPadding,
-            child: StudySessionProgressRow(
-              progressValue: session.progress.sessionProgress,
-            ),
-          ),
-          SizedBox(height: sectionSpacing),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Expanded(
-                  child: StudySessionRecallPromptCard(
-                    prompt: StudyRecallLayoutResolver.resolvePromptContent(
-                      session: session,
-                      viewModel: viewModel,
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final bool compactHeight = constraints.maxHeight < 760;
+        final EdgeInsets contentPadding =
+            StudySessionLayoutMetrics.contentPadding(
+              context,
+              top: compactHeight ? AppSpacing.sm : AppSpacing.md,
+              bottom: compactHeight ? AppSpacing.lg : AppSpacing.xl,
+            );
+        final EdgeInsets progressPadding =
+            StudySessionLayoutMetrics.progressPadding(
+              context,
+              horizontal: compactHeight ? AppSpacing.sm : AppSpacing.md,
+            );
+        final double sectionSpacing = StudySessionLayoutMetrics.sectionSpacing(
+          context,
+          baseValue: compactHeight ? AppSpacing.md : _recallSectionSpacing,
+        );
+        final double actionSpacing = StudySessionLayoutMetrics.actionSpacing(
+          context,
+          baseValue: compactHeight ? AppSpacing.lg : _recallActionSpacing,
+        );
+        return Padding(
+          padding: contentPadding,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Padding(
+                padding: progressPadding,
+                child: StudySessionProgressRow(
+                  progressValue: session.progress.sessionProgress,
+                ),
+              ),
+              SizedBox(height: sectionSpacing),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    Expanded(
+                      child: StudySessionRecallPromptCard(
+                        prompt: StudyRecallLayoutResolver.resolvePromptContent(
+                          session: session,
+                          viewModel: viewModel,
+                        ),
+                        speech: session.currentItem.speech,
+                        playbackState: speechPlaybackState,
+                        onPlayPressed: speechPlaybackState.isPlaying
+                            ? onReplaySpeech
+                            : onPlaySpeech,
+                      ),
                     ),
-                    speech: session.currentItem.speech,
-                    playbackState: speechPlaybackState,
-                    onPlayPressed: speechPlaybackState.isPlaying
-                        ? onReplaySpeech
-                        : onPlaySpeech,
-                  ),
-                ),
-                SizedBox(height: sectionSpacing),
-                Expanded(
-                  child: StudySessionRecallAnswerPanel(
-                    content: StudyRecallLayoutResolver.resolveAnswerContent(
-                      session: session,
+                    SizedBox(height: sectionSpacing),
+                    Expanded(
+                      child: StudySessionRecallAnswerPanel(
+                        content: StudyRecallLayoutResolver.resolveAnswerContent(
+                          session: session,
+                        ),
+                        isRevealed: viewModel.showAnswer,
+                      ),
                     ),
-                    isRevealed: viewModel.showAnswer,
-                  ),
+                    SizedBox(height: actionSpacing),
+                    StudySessionRecallActionRow(
+                      actions: visibleActions,
+                      selectionState: recallSelectionState,
+                      onActionPressed: onActionPressed,
+                    ),
+                  ],
                 ),
-                SizedBox(height: actionSpacing),
-                StudySessionRecallActionRow(
-                  actions: visibleActions,
-                  selectionState: recallSelectionState,
-                  onActionPressed: onActionPressed,
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

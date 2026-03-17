@@ -19,6 +19,10 @@ spring:
   messages:
     basename: messages
     encoding: UTF-8
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
 
 app:
   cors:

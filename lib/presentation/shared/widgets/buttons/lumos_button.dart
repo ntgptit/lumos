@@ -60,8 +60,14 @@ class LumosButton extends StatelessWidget {
   }
 
   Widget _buildChild(BuildContext context) {
+    final double iconSize = _resolveIconSize(context);
+    final double contentGap = _resolveContentGap(context);
     if (isLoading) {
-      return _buildLoadingChild(context);
+      return _buildLoadingChild(
+        context,
+        iconSize: iconSize,
+        contentGap: contentGap,
+      );
     }
     if (icon == null) {
       return Text(label, overflow: TextOverflow.ellipsis);
@@ -69,29 +75,52 @@ class LumosButton extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        Icon(icon, size: IconSizes.iconButton),
-        const SizedBox(width: AppSpacing.sm),
+        Icon(icon, size: iconSize),
+        SizedBox(width: contentGap),
         Flexible(child: Text(label, overflow: TextOverflow.ellipsis)),
       ],
     );
   }
 
-  Widget _buildLoadingChild(BuildContext context) {
+  Widget _buildLoadingChild(
+    BuildContext context, {
+    required double iconSize,
+    required double contentGap,
+  }) {
     final Color indicatorColor = _resolveLoadingIndicatorColor(context);
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         SizedBox(
-          width: IconSizes.iconSmall,
-          height: IconSizes.iconSmall,
+          width: iconSize,
+          height: iconSize,
           child: CircularProgressIndicator(
             strokeWidth: WidgetSizes.borderWidthRegular,
             valueColor: AlwaysStoppedAnimation<Color>(indicatorColor),
           ),
         ),
-        const SizedBox(width: AppSpacing.sm),
+        SizedBox(width: contentGap),
         Flexible(child: Text(label, overflow: TextOverflow.ellipsis)),
       ],
+    );
+  }
+
+  double _resolveIconSize(BuildContext context) {
+    final buttonTokens = context.appButton;
+    if (size == LumosButtonSize.small) {
+      return buttonTokens.iconSizeSm;
+    }
+    if (size == LumosButtonSize.large) {
+      return buttonTokens.iconSizeLg;
+    }
+    return buttonTokens.iconSizeMd;
+  }
+
+  double _resolveContentGap(BuildContext context) {
+    return ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.sm,
+      minScale: ResponsiveDimensions.compactInsetScale,
     );
   }
 

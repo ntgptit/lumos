@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../../shared/widgets/lumos_widgets.dart';
 import '../../../../../mode/study_mode_action_button_style.dart';
 import '../../../../../mode/study_mode_action_view_model.dart';
@@ -143,6 +144,17 @@ class StudySessionFillActionRow extends StatelessWidget {
     if (actionButtons.isEmpty) {
       return const SizedBox.shrink();
     }
-    return StudySessionActionRowLayout(children: actionButtons);
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final bool compactWidth = constraints.maxWidth < 380;
+        return StudySessionActionRowLayout(
+          gap: compactWidth ? AppSpacing.md : AppSpacing.lg,
+          rowHeight: compactWidth ? 56 : 64,
+          verticalSpacing: compactWidth ? AppSpacing.xs : AppSpacing.sm,
+          singleWidthFactor: compactWidth ? 0.56 : 0.42,
+          children: actionButtons,
+        );
+      },
+    );
   }
 }

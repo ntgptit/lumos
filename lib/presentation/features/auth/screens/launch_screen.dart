@@ -15,6 +15,10 @@ class LaunchScreen extends ConsumerWidget {
     final AsyncValue<AuthViewState> authAsync = ref.watch(
       authSessionControllerProvider,
     );
+    final EdgeInsets errorPadding = ResponsiveDimensions.compactInsets(
+      context: context,
+      baseInsets: const EdgeInsets.all(AppSpacing.lg),
+    );
     return authAsync.when(
       loading: () =>
           const Scaffold(body: Center(child: LumosLoadingIndicator())),
@@ -22,7 +26,7 @@ class LaunchScreen extends ConsumerWidget {
         return Scaffold(
           body: Center(
             child: Padding(
-              padding: const EdgeInsets.all(AppSpacing.lg),
+              padding: errorPadding,
               child: LumosText(
                 error.toString(),
                 style: LumosTextStyle.bodySmall,

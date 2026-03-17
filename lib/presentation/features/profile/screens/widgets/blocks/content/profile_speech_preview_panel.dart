@@ -77,85 +77,109 @@ class _ProfileSpeechPreviewPanelState
         ref.read(profileSpeechPreviewControllerProvider.notifier).clearError();
       },
     );
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        LumosText(
-          l10n.profileSpeechPreviewTitle,
-          style: LumosTextStyle.titleMedium,
-        ),
-        const SizedBox(height: AppSpacing.xs),
-        LumosText(
-          l10n.profileSpeechPreviewSubtitle,
-          style: LumosTextStyle.bodyMedium,
-        ),
-        const SizedBox(height: AppSpacing.md),
-        ValueListenableBuilder<TextEditingValue>(
-          valueListenable: _previewTextController,
-          builder: (BuildContext context, TextEditingValue value, Widget? child) {
-            final bool canPlayPreview =
-                StringUtils.normalizeName(value.text).isNotEmpty &&
-                !previewState.isBusy &&
-                !previewState.isPlaying;
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                LumosTextField(
-                  controller: _previewTextController,
-                  label: l10n.profileSpeechPreviewTextLabel,
-                  maxLines: 3,
-                ),
-                const SizedBox(height: AppSpacing.md),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: LumosPrimaryButton(
-                        label: l10n.profileSpeechPreviewPlayLabel,
-                        icon: Icons.play_arrow_rounded,
-                        isLoading: previewState.isBusy,
-                        onPressed: canPlayPreview
-                            ? () {
-                                unawaited(
-                                  ref
-                                      .read(
-                                        profileSpeechPreviewControllerProvider
-                                            .notifier,
-                                      )
-                                      .play(
-                                        preference: widget.preference,
-                                        text: value.text,
-                                      ),
-                                );
-                              }
-                            : null,
-                      ),
-                    ),
-                    const SizedBox(width: AppSpacing.md),
-                    Expanded(
-                      child: LumosOutlineButton(
-                        label: l10n.profileSpeechPreviewStopLabel,
-                        icon: Icons.stop_rounded,
-                        onPressed: previewState.isBusy || previewState.isPlaying
-                            ? () {
-                                unawaited(
-                                  ref
-                                      .read(
-                                        profileSpeechPreviewControllerProvider
-                                            .notifier,
-                                      )
-                                      .stop(),
-                                );
-                              }
-                            : null,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            );
-          },
-        ),
-      ],
+    final double titleGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.xs,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double sectionGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.md,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final bool stackButtons = constraints.maxWidth < 380;
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            LumosText(
+              l10n.profileSpeechPreviewTitle,
+              style: LumosTextStyle.titleMedium,
+            ),
+            SizedBox(height: titleGap),
+            LumosText(
+              l10n.profileSpeechPreviewSubtitle,
+              style: LumosTextStyle.bodyMedium,
+            ),
+            SizedBox(height: sectionGap),
+            ValueListenableBuilder<TextEditingValue>(
+              valueListenable: _previewTextController,
+              builder:
+                  (
+                    BuildContext context,
+                    TextEditingValue value,
+                    Widget? child,
+                  ) {
+                    final bool canPlayPreview =
+                        StringUtils.normalizeName(value.text).isNotEmpty &&
+                        !previewState.isBusy &&
+                        !previewState.isPlaying;
+                    final Widget playButton = LumosPrimaryButton(
+                      label: l10n.profileSpeechPreviewPlayLabel,
+                      icon: Icons.play_arrow_rounded,
+                      isLoading: previewState.isBusy,
+                      onPressed: canPlayPreview
+                          ? () {
+                              unawaited(
+                                ref
+                                    .read(
+                                      profileSpeechPreviewControllerProvider
+                                          .notifier,
+                                    )
+                                    .play(
+                                      preference: widget.preference,
+                                      text: value.text,
+                                    ),
+                              );
+                            }
+                          : null,
+                    );
+                    final Widget stopButton = LumosOutlineButton(
+                      label: l10n.profileSpeechPreviewStopLabel,
+                      icon: Icons.stop_rounded,
+                      onPressed: previewState.isBusy || previewState.isPlaying
+                          ? () {
+                              unawaited(
+                                ref
+                                    .read(
+                                      profileSpeechPreviewControllerProvider
+                                          .notifier,
+                                    )
+                                    .stop(),
+                              );
+                            }
+                          : null,
+                    );
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        LumosTextField(
+                          controller: _previewTextController,
+                          label: l10n.profileSpeechPreviewTextLabel,
+                          maxLines: stackButtons ? 4 : 3,
+                        ),
+                        SizedBox(height: sectionGap),
+                        if (stackButtons) ...<Widget>[
+                          playButton,
+                          SizedBox(height: sectionGap),
+                          stopButton,
+                        ],
+                        if (!stackButtons)
+                          Row(
+                            children: <Widget>[
+                              Expanded(child: playButton),
+                              SizedBox(width: sectionGap),
+                              Expanded(child: stopButton),
+                            ],
+                          ),
+                      ],
+                    );
+                  },
+            ),
+          ],
+        );
+      },
     );
   }
 }

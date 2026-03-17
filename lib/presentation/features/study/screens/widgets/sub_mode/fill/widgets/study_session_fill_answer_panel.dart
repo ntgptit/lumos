@@ -23,10 +23,6 @@ class StudySessionFillAnswerPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double comparisonSpacing = StudySessionLayoutMetrics.actionSpacing(
-      context,
-      baseValue: _fillComparisonSpacing,
-    );
     final ThemeData theme = Theme.of(context);
     final ColorScheme colorScheme = theme.colorScheme;
     final TextStyle resolvedBaseStyle =
@@ -61,26 +57,59 @@ class StudySessionFillAnswerPanel extends StatelessWidget {
                 align: TextAlign.center,
                 style: resolvedBaseStyle,
               ),
-              SizedBox(height: comparisonSpacing),
-              Text.rich(
-                TextSpan(
-                  style: resolvedBaseStyle,
-                  children: <InlineSpan>[
-                    if (comparison.prefix.isNotEmpty)
-                      TextSpan(text: comparison.prefix),
-                    if (comparison.errorSuffix.isNotEmpty)
-                      TextSpan(text: comparison.errorSuffix, style: errorStyle),
-                  ],
-                ),
-                textAlign: TextAlign.center,
-              ),
             ],
           );
-    return StudySessionContentCard(
-      variant: LumosCardVariant.filled,
-      child: SizedBox.expand(
-        child: Center(child: SingleChildScrollView(child: answerContent)),
-      ),
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final bool compactHeight = constraints.maxHeight < 260;
+        final double comparisonSpacing =
+            StudySessionLayoutMetrics.actionSpacing(
+              context,
+              baseValue: compactHeight
+                  ? AppSpacing.xxxl
+                  : _fillComparisonSpacing,
+            );
+        final double horizontalInset = ResponsiveDimensions.compactValue(
+          context: context,
+          baseValue: compactHeight ? AppSpacing.md : AppSpacing.lg,
+          minScale: ResponsiveDimensions.compactInsetScale,
+        );
+        final Widget resolvedContent = comparison == null
+            ? answerContent
+            : Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  answerContent,
+                  SizedBox(height: comparisonSpacing),
+                  Text.rich(
+                    TextSpan(
+                      style: resolvedBaseStyle,
+                      children: <InlineSpan>[
+                        if (comparison.prefix.isNotEmpty)
+                          TextSpan(text: comparison.prefix),
+                        if (comparison.errorSuffix.isNotEmpty)
+                          TextSpan(
+                            text: comparison.errorSuffix,
+                            style: errorStyle,
+                          ),
+                      ],
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              );
+        return StudySessionContentCard(
+          variant: LumosCardVariant.filled,
+          child: SizedBox.expand(
+            child: Center(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(horizontal: horizontalInset),
+                child: resolvedContent,
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

@@ -50,85 +50,96 @@ class StudySessionFillContent extends StatelessWidget {
       viewModel: viewModel,
       fillSelectionState: fillSelectionState,
     );
-    final EdgeInsets contentPadding = StudySessionLayoutMetrics.contentPadding(
-      context,
-    );
-    final EdgeInsets progressPadding =
-        StudySessionLayoutMetrics.progressPadding(context);
-    final double sectionSpacing = StudySessionLayoutMetrics.sectionSpacing(
-      context,
-      baseValue: _fillSectionSpacing,
-    );
-    final double actionSpacing = StudySessionLayoutMetrics.actionSpacing(
-      context,
-      baseValue: _fillActionSpacing,
-    );
     final StudyModeActionViewModel? secondaryAction =
         contentState.secondaryAction;
-    return Padding(
-      padding: contentPadding,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Padding(
-            padding: progressPadding,
-            child: StudySessionProgressRow(
-              progressValue: session.progress.sessionProgress,
-            ),
-          ),
-          SizedBox(height: sectionSpacing),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Expanded(
-                  child: StudySessionFillPromptCard(
-                    prompt: viewModel.prompt,
-                    speech: session.currentItem.speech,
-                    playbackState: speechPlaybackState,
-                    onPlayPressed: speechPlaybackState.isPlaying
-                        ? onReplaySpeech
-                        : onPlaySpeech,
-                  ),
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final bool compactHeight = constraints.maxHeight < 760;
+        final EdgeInsets contentPadding =
+            StudySessionLayoutMetrics.contentPadding(
+              context,
+              top: compactHeight ? AppSpacing.sm : AppSpacing.md,
+              bottom: compactHeight ? AppSpacing.lg : AppSpacing.xl,
+            );
+        final EdgeInsets progressPadding =
+            StudySessionLayoutMetrics.progressPadding(
+              context,
+              horizontal: compactHeight ? AppSpacing.sm : AppSpacing.md,
+            );
+        final double sectionSpacing = StudySessionLayoutMetrics.sectionSpacing(
+          context,
+          baseValue: compactHeight ? AppSpacing.md : _fillSectionSpacing,
+        );
+        final double actionSpacing = StudySessionLayoutMetrics.actionSpacing(
+          context,
+          baseValue: compactHeight ? AppSpacing.lg : _fillActionSpacing,
+        );
+        return Padding(
+          padding: contentPadding,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Padding(
+                padding: progressPadding,
+                child: StudySessionProgressRow(
+                  progressValue: session.progress.sessionProgress,
                 ),
-                SizedBox(height: sectionSpacing),
-                Expanded(
-                  child: StudySessionFillBodyPanel(
-                    viewModel: viewModel,
-                    fillSelectionState: fillSelectionState,
-                    answerController: answerController,
-                    showsAnswerPanel: contentState.showsAnswerPanel,
-                    showsInputPanel: contentState.showsInputPanel,
-                    onInputChanged: onInputChanged,
-                    onSubmitTypedAnswer: onSubmitTypedAnswer,
-                  ),
+              ),
+              SizedBox(height: sectionSpacing),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    Expanded(
+                      child: StudySessionFillPromptCard(
+                        prompt: viewModel.prompt,
+                        speech: session.currentItem.speech,
+                        playbackState: speechPlaybackState,
+                        onPlayPressed: speechPlaybackState.isPlaying
+                            ? onReplaySpeech
+                            : onPlaySpeech,
+                      ),
+                    ),
+                    SizedBox(height: sectionSpacing),
+                    Expanded(
+                      child: StudySessionFillBodyPanel(
+                        viewModel: viewModel,
+                        fillSelectionState: fillSelectionState,
+                        answerController: answerController,
+                        showsAnswerPanel: contentState.showsAnswerPanel,
+                        showsInputPanel: contentState.showsInputPanel,
+                        onInputChanged: onInputChanged,
+                        onSubmitTypedAnswer: onSubmitTypedAnswer,
+                      ),
+                    ),
+                    if (contentState.showsBottomActions) ...<Widget>[
+                      SizedBox(height: actionSpacing),
+                      StudySessionFillActionRow(
+                        actions: const <StudyModeActionViewModel>[],
+                        secondaryLabel: secondaryAction?.label,
+                        onSecondaryPressed: secondaryAction != null
+                            ? () {
+                                onActionPressed(secondaryAction.actionId);
+                              }
+                            : null,
+                        primaryLabel: contentState.primaryLabel,
+                        onPrimaryPressed: contentState.showsRetryAction
+                            ? onRetryInputPressed
+                            : contentState.showsInputPanel
+                            ? onSubmitTypedAnswer
+                            : null,
+                        onActionPressed: (String actionId) {
+                          onActionPressed(actionId);
+                        },
+                      ),
+                    ],
+                  ],
                 ),
-                if (contentState.showsBottomActions) ...<Widget>[
-                  SizedBox(height: actionSpacing),
-                  StudySessionFillActionRow(
-                    actions: const <StudyModeActionViewModel>[],
-                    secondaryLabel: secondaryAction?.label,
-                    onSecondaryPressed: secondaryAction != null
-                        ? () {
-                            onActionPressed(secondaryAction.actionId);
-                          }
-                        : null,
-                    primaryLabel: contentState.primaryLabel,
-                    onPrimaryPressed: contentState.showsRetryAction
-                        ? onRetryInputPressed
-                        : contentState.showsInputPanel
-                        ? onSubmitTypedAnswer
-                        : null,
-                    onActionPressed: (String actionId) {
-                      onActionPressed(actionId);
-                    },
-                  ),
-                ],
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

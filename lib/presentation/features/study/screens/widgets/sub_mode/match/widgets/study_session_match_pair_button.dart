@@ -44,11 +44,6 @@ class StudySessionMatchPairButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colorScheme = theme.colorScheme;
-    final EdgeInsets contentPadding = StudySessionLayoutMetrics.cardPadding(
-      context,
-      horizontal: AppSpacing.xl,
-      vertical: AppSpacing.xl,
-    );
     final Color backgroundColor = isSuccessFeedback
         ? context.appColors.successContainer
         : isErrorFeedback
@@ -63,70 +58,86 @@ class StudySessionMatchPairButton extends StatelessWidget {
         : isMeaningCard
         ? colorScheme.onSurfaceVariant
         : colorScheme.onSurface;
-    final TextStyle? textStyle =
-        (isMeaningCard
-                ? theme.textTheme.titleLarge
-                : theme.textTheme.titleMedium)
-            ?.copyWith(
-              color: textColor,
-              fontWeight: isMeaningCard ? FontWeight.w500 : FontWeight.w300,
-              height: isMeaningCard
-                  ? _matchTermLineHeight
-                  : _matchMeaningLineHeight,
-            );
-    return AnimatedSlide(
-      duration: _matchDisappearAnimationDuration,
-      curve: Curves.easeInOutCubicEmphasized,
-      offset: isDisappearing ? const Offset(0, 0.08) : Offset.zero,
-      child: AnimatedScale(
-        duration: _matchDisappearAnimationDuration,
-        curve: Curves.easeInOutCubicEmphasized,
-        scale: isDisappearing ? 0.92 : 1,
-        child: AnimatedOpacity(
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final bool compactWidth = constraints.maxWidth < 180;
+        final EdgeInsets contentPadding = StudySessionLayoutMetrics.cardPadding(
+          context,
+          horizontal: compactWidth ? AppSpacing.lg : AppSpacing.xl,
+          vertical: compactWidth ? AppSpacing.lg : AppSpacing.xl,
+        );
+        final TextStyle? textStyle =
+            (isMeaningCard
+                    ? compactWidth
+                          ? theme.textTheme.titleMedium
+                          : theme.textTheme.titleLarge
+                    : compactWidth
+                    ? theme.textTheme.bodyLarge
+                    : theme.textTheme.titleMedium)
+                ?.copyWith(
+                  color: textColor,
+                  fontWeight: isMeaningCard ? FontWeight.w500 : FontWeight.w300,
+                  height: isMeaningCard
+                      ? _matchTermLineHeight
+                      : _matchMeaningLineHeight,
+                );
+        return AnimatedSlide(
           duration: _matchDisappearAnimationDuration,
           curve: Curves.easeInOutCubicEmphasized,
-          opacity: isDisappearing ? 0 : 1,
-          child: LumosCard(
-            onTap: isMatched || isInteractionLocked ? null : onPressed,
-            isSelected:
-                (isSelected || isMatched) &&
-                !isSuccessFeedback &&
-                !isErrorFeedback,
-            variant: LumosCardVariant.filled,
-            borderRadius: BorderRadii.xLarge,
-            padding: EdgeInsets.zero,
-            child: AnimatedContainer(
-              duration: AppDurations.medium,
-              curve: Curves.easeInOutCubic,
-              decoration: BoxDecoration(
-                color: isSuccessFeedback || isErrorFeedback
-                    ? backgroundColor
-                    : colorScheme.surface.withValues(
-                        alpha: AppOpacity.transparent,
-                      ),
+          offset: isDisappearing ? const Offset(0, 0.08) : Offset.zero,
+          child: AnimatedScale(
+            duration: _matchDisappearAnimationDuration,
+            curve: Curves.easeInOutCubicEmphasized,
+            scale: isDisappearing ? 0.92 : 1,
+            child: AnimatedOpacity(
+              duration: _matchDisappearAnimationDuration,
+              curve: Curves.easeInOutCubicEmphasized,
+              opacity: isDisappearing ? 0 : 1,
+              child: LumosCard(
+                onTap: isMatched || isInteractionLocked ? null : onPressed,
+                isSelected:
+                    (isSelected || isMatched) &&
+                    !isSuccessFeedback &&
+                    !isErrorFeedback,
+                variant: LumosCardVariant.filled,
                 borderRadius: BorderRadii.xLarge,
-              ),
-              padding: contentPadding,
-              child: Center(
-                child: Align(
-                  alignment: isMeaningCard
-                      ? Alignment.center
-                      : Alignment.centerLeft,
-                  child: LumosInlineText(
-                    label,
-                    align: isMeaningCard ? TextAlign.center : TextAlign.left,
-                    maxLines: isMeaningCard
-                        ? _matchWordMaxLines
-                        : _matchMeaningMaxLines,
-                    overflow: TextOverflow.ellipsis,
-                    style: textStyle,
+                padding: EdgeInsets.zero,
+                child: AnimatedContainer(
+                  duration: AppDurations.medium,
+                  curve: Curves.easeInOutCubic,
+                  decoration: BoxDecoration(
+                    color: isSuccessFeedback || isErrorFeedback
+                        ? backgroundColor
+                        : colorScheme.surface.withValues(
+                            alpha: AppOpacity.transparent,
+                          ),
+                    borderRadius: BorderRadii.xLarge,
+                  ),
+                  padding: contentPadding,
+                  child: Center(
+                    child: Align(
+                      alignment: isMeaningCard
+                          ? Alignment.center
+                          : Alignment.centerLeft,
+                      child: LumosInlineText(
+                        label,
+                        align: isMeaningCard
+                            ? TextAlign.center
+                            : TextAlign.left,
+                        maxLines: isMeaningCard
+                            ? _matchWordMaxLines
+                            : _matchMeaningMaxLines,
+                        overflow: TextOverflow.ellipsis,
+                        style: textStyle,
+                      ),
+                    ),
                   ),
                 ),
               ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

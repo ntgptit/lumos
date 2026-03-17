@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/themes/foundation/app_foundation.dart';
+
 abstract final class LumosPagedSliverListConst {
   LumosPagedSliverListConst._();
 
@@ -33,9 +35,14 @@ class LumosPagedSliverList extends StatelessWidget {
       _buildBodySliver(),
       ...trailingSlivers,
     ];
+    final double cacheExtent = context.screenHeightPercentage(
+      WidgetRatios.bottomSheetInitialHeightFactor,
+    );
     return CustomScrollView(
       controller: controller,
       physics: physics,
+      cacheExtent: cacheExtent,
+      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       slivers: slivers,
     );
   }

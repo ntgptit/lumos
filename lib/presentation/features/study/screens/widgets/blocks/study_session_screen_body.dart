@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../domain/entities/study/study_models.dart';
 import '../../../../../shared/widgets/lumos_widgets.dart';
 import '../../../mode/study_mode_view_strategy_factory.dart';
@@ -43,7 +44,7 @@ class StudySessionScreenBody extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return sessionAsync.when(
+    final Widget resolvedBody = sessionAsync.when(
       data: (StudySessionData session) {
         return StudySessionResolvedBodyContent(
           session: session,
@@ -61,19 +62,49 @@ class StudySessionScreenBody extends ConsumerWidget {
         );
       },
       error: (Object error, StackTrace stackTrace) {
-        return Center(
-          child: LumosErrorState(
-            errorMessage: error.toString(),
-            onRetry: () {
-              ref.invalidate(studySessionControllerProvider(request));
-            },
-          ),
+        return LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            final EdgeInsets shellPadding = ResponsiveDimensions.compactInsets(
+              context: context,
+              baseInsets: const EdgeInsets.all(AppSpacing.lg),
+            );
+            final double maxWidth = constraints.isDesktop
+                ? WidgetSizes.maxContentWidth
+                : constraints.maxWidth;
+            return Align(
+              alignment: Alignment.topCenter,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: maxWidth),
+                child: Padding(
+                  padding: shellPadding,
+                  child: LumosErrorState(
+                    errorMessage: error.toString(),
+                    onRetry: () {
+                      ref.invalidate(studySessionControllerProvider(request));
+                    },
+                  ),
+                ),
+              ),
+            );
+          },
         );
       },
       loading: () {
         final StudySessionData? resolvedSession = cachedSession;
         if (resolvedSession == null) {
-          return const Center(child: LumosLoadingIndicator());
+          return LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+              final EdgeInsets shellPadding =
+                  ResponsiveDimensions.compactInsets(
+                    context: context,
+                    baseInsets: const EdgeInsets.all(AppSpacing.lg),
+                  );
+              return Padding(
+                padding: shellPadding,
+                child: const Center(child: LumosLoadingIndicator()),
+              );
+            },
+          );
         }
         return StudySessionResolvedBodyContent(
           session: resolvedSession,
@@ -88,6 +119,20 @@ class StudySessionScreenBody extends ConsumerWidget {
           onRetryInputPressed: onRetryInputPressed,
           onPlaySpeech: onPlaySpeech,
           onReplaySpeech: onReplaySpeech,
+        );
+      },
+    );
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final double maxWidth = constraints.isDesktop
+            ? WidgetSizes.maxContentWidth
+            : constraints.maxWidth;
+        return Align(
+          alignment: Alignment.topCenter,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: maxWidth),
+            child: resolvedBody,
+          ),
         );
       },
     );

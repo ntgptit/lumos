@@ -18,22 +18,32 @@ class StudySessionChoiceList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double itemSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.sm,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     if (useGrid) {
-      return GridView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: AppSpacing.sm,
-          mainAxisSpacing: AppSpacing.sm,
-          childAspectRatio: 1.2,
-        ),
-        itemCount: choices.length,
-        itemBuilder: (BuildContext context, int index) {
-          final StudyChoice choice = choices[index];
-          return LumosOutlineButton(
-            onPressed: () => onChoicePressed(choice.label),
-            label: choice.label,
+      return LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          final bool singleColumn = constraints.maxWidth < 360;
+          return GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: singleColumn ? 1 : 2,
+              crossAxisSpacing: itemSpacing,
+              mainAxisSpacing: itemSpacing,
+              childAspectRatio: singleColumn ? 3.2 : 1.2,
+            ),
+            itemCount: choices.length,
+            itemBuilder: (BuildContext context, int index) {
+              final StudyChoice choice = choices[index];
+              return LumosOutlineButton(
+                onPressed: () => onChoicePressed(choice.label),
+                label: choice.label,
+              );
+            },
           );
         },
       );
@@ -42,7 +52,7 @@ class StudySessionChoiceList extends StatelessWidget {
       children: choices
           .map(
             (StudyChoice choice) => Padding(
-              padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+              padding: EdgeInsets.only(bottom: itemSpacing),
               child: LumosOutlineButton(
                 onPressed: () => onChoicePressed(choice.label),
                 label: choice.label,

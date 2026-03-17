@@ -35,6 +35,7 @@ class LumosClickableCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final DeviceType resolvedDeviceType = _resolveDeviceType(context);
     return LumosCard(
       onTap: onTap,
       onLongPress: onLongPress,
@@ -46,8 +47,15 @@ class LumosClickableCard extends StatelessWidget {
       variant: variant,
       isSelected: isSelected,
       isLoading: isLoading,
-      deviceType: deviceType,
+      deviceType: resolvedDeviceType,
       child: child,
     );
+  }
+
+  DeviceType _resolveDeviceType(BuildContext context) {
+    if (deviceType != DeviceType.mobile) {
+      return deviceType;
+    }
+    return context.deviceType;
   }
 }

@@ -20,37 +20,49 @@ class StudySessionReviewPromptCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colorScheme = theme.colorScheme;
-    final double iconSize = StudySessionLayoutMetrics.compactIcon(
-      context,
-      baseValue: _reviewPromptIconSize,
-    );
-    final EdgeInsets cardPadding = StudySessionLayoutMetrics.cardPadding(
-      context,
-      horizontal: AppSpacing.xl,
-      vertical: AppSpacing.xl,
-    );
-    final EdgeInsets topTrailingPadding =
-        StudySessionLayoutMetrics.topTrailingPadding(context);
-    return StudySessionContentCard(
-      variant: LumosCardVariant.filled,
-      topTrailing: LumosIcon(Icons.edit_outlined, size: iconSize),
-      topTrailingPadding: topTrailingPadding,
-      child: Padding(
-        padding: cardPadding,
-        child: Center(
-          child: SingleChildScrollView(
-            child: LumosInlineText(
-              content,
-              align: TextAlign.center,
-              style: theme.textTheme.titleLarge?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-                fontWeight: FontWeight.w400,
-                height: _reviewPromptLineHeight,
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final bool compactHeight = constraints.maxHeight < 260;
+        final double iconSize = ResponsiveDimensions.compactValue(
+          context: context,
+          baseValue: compactHeight
+              ? IconSizes.iconSmall
+              : _reviewPromptIconSize,
+          minScale: ResponsiveDimensions.compactInsetScale,
+        );
+        final EdgeInsets cardPadding = StudySessionLayoutMetrics.cardPadding(
+          context,
+          horizontal: compactHeight ? AppSpacing.lg : AppSpacing.xl,
+          vertical: compactHeight ? AppSpacing.lg : AppSpacing.xl,
+        );
+        final EdgeInsets topTrailingPadding =
+            StudySessionLayoutMetrics.topTrailingPadding(
+              context,
+              top: compactHeight ? AppSpacing.md : AppSpacing.lg,
+              right: compactHeight ? AppSpacing.md : AppSpacing.lg,
+            );
+        return StudySessionContentCard(
+          variant: LumosCardVariant.filled,
+          topTrailing: LumosIcon(Icons.edit_outlined, size: iconSize),
+          topTrailingPadding: topTrailingPadding,
+          child: Padding(
+            padding: cardPadding,
+            child: Center(
+              child: SingleChildScrollView(
+                child: LumosInlineText(
+                  content,
+                  align: TextAlign.center,
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                    fontWeight: FontWeight.w400,
+                    height: _reviewPromptLineHeight,
+                  ),
+                ),
               ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

@@ -24,6 +24,16 @@ class LumosMatchPairs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
+    final double sectionSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.md,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double chipSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.sm,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
@@ -31,23 +41,23 @@ class LumosMatchPairs extends StatelessWidget {
           l10n.exerciseMatchPairsTitle,
           style: LumosTextStyle.titleMedium,
         ),
-        const SizedBox(height: AppSpacing.md),
+        SizedBox(height: sectionSpacing),
         Wrap(
-          spacing: AppSpacing.sm,
-          runSpacing: AppSpacing.sm,
+          spacing: chipSpacing,
+          runSpacing: chipSpacing,
           children: leftItems
               .map((PairItem item) => Chip(label: Text(item.label)))
               .toList(),
         ),
-        const SizedBox(height: AppSpacing.sm),
+        SizedBox(height: chipSpacing),
         Wrap(
-          spacing: AppSpacing.sm,
-          runSpacing: AppSpacing.sm,
+          spacing: chipSpacing,
+          runSpacing: chipSpacing,
           children: rightItems
               .map((PairItem item) => Chip(label: Text(item.label)))
               .toList(),
         ),
-        const SizedBox(height: AppSpacing.md),
+        SizedBox(height: sectionSpacing),
         LumosPrimaryButton(
           label: isCompleted
               ? l10n.exerciseCompletedLabel
@@ -77,6 +87,16 @@ class LumosReorderWords extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
+    final double sectionSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.md,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double chipSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.sm,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
@@ -84,15 +104,15 @@ class LumosReorderWords extends StatelessWidget {
           l10n.exerciseReorderWordsTitle,
           style: LumosTextStyle.titleMedium,
         ),
-        const SizedBox(height: AppSpacing.md),
+        SizedBox(height: sectionSpacing),
         Wrap(
-          spacing: AppSpacing.sm,
-          runSpacing: AppSpacing.sm,
+          spacing: chipSpacing,
+          runSpacing: chipSpacing,
           children: words
               .map((String word) => Chip(label: Text(word)))
               .toList(),
         ),
-        const SizedBox(height: AppSpacing.md),
+        SizedBox(height: sectionSpacing),
         LumosPrimaryButton(
           label: l10n.exerciseCheckOrderLabel,
           onPressed: () {
@@ -123,6 +143,16 @@ class LumosListeningExercise extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
+    final double sectionSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.md,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double compactSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.sm,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
@@ -130,17 +160,17 @@ class LumosListeningExercise extends StatelessWidget {
           l10n.exerciseListeningTitle,
           style: LumosTextStyle.titleMedium,
         ),
-        const SizedBox(height: AppSpacing.sm),
+        SizedBox(height: compactSpacing),
         LumosText(
           audioUrl,
           style: LumosTextStyle.labelSmall,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
-        const SizedBox(height: AppSpacing.md),
+        SizedBox(height: sectionSpacing),
         ...options.map(
           (String option) => Padding(
-            padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+            padding: EdgeInsets.only(bottom: compactSpacing),
             child: LumosOutlineButton(
               label: option,
               onPressed: () {

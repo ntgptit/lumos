@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/themes/foundation/app_foundation.dart';
+
 class LumosActionChip extends StatelessWidget {
   const LumosActionChip({
     required this.label,
@@ -18,7 +20,9 @@ class LumosActionChip extends StatelessWidget {
       label: label,
       onPressed: onPressed,
       avatar: avatar,
-      materialTapTargetSize: MaterialTapTargetSize.padded,
+      materialTapTargetSize: context.deviceType == DeviceType.desktop
+          ? MaterialTapTargetSize.shrinkWrap
+          : MaterialTapTargetSize.padded,
     );
   }
 }

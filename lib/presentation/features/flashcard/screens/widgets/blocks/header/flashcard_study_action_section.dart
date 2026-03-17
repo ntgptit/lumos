@@ -45,57 +45,80 @@ class FlashcardStudyActionSection extends StatelessWidget {
     if (actions.isEmpty) {
       return const SizedBox.shrink();
     }
-    return Column(
-      children: actions
-          .map((FlashcardStudyActionSectionItem action) {
-            final Color containerColor = _resolveFlashcardActionContainerColor(
-              context: context,
-              tone: action.tone,
-            );
-            final Color iconColor = _resolveFlashcardActionIconColor(
-              context: context,
-              tone: action.tone,
-            );
-            return Padding(
-              padding: const EdgeInsets.only(
-                bottom: FlashcardStudyActionSectionConst.itemSpacing,
-              ),
-              child: LumosCard(
-                variant: LumosCardVariant.elevated,
-                onTap: action.onPressed,
-                child: Row(
-                  children: <Widget>[
-                    Container(
-                      width: FlashcardStudyActionSectionConst.iconContainerSize,
-                      height:
-                          FlashcardStudyActionSectionConst.iconContainerSize,
-                      decoration: BoxDecoration(
-                        color: containerColor,
-                        borderRadius: BorderRadii.medium,
-                      ),
-                      child: IconTheme(
-                        data: IconThemeData(
-                          color: iconColor,
-                          size: FlashcardStudyActionSectionConst.iconSize,
+    final double itemSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardStudyActionSectionConst.itemSpacing,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double iconContainerSize = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardStudyActionSectionConst.iconContainerSize,
+      minScale: ResponsiveDimensions.compactLargeInsetScale,
+    );
+    final double iconSize = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardStudyActionSectionConst.iconSize,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double labelLeftSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardStudyActionSectionConst.labelLeftSpacing,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final bool compactWidth = constraints.maxWidth < 380;
+        return Column(
+          children: actions
+              .map((FlashcardStudyActionSectionItem action) {
+                final Color containerColor =
+                    _resolveFlashcardActionContainerColor(
+                      context: context,
+                      tone: action.tone,
+                    );
+                final Color iconColor = _resolveFlashcardActionIconColor(
+                  context: context,
+                  tone: action.tone,
+                );
+                return Padding(
+                  padding: EdgeInsets.only(bottom: itemSpacing),
+                  child: LumosCard(
+                    variant: LumosCardVariant.elevated,
+                    onTap: action.onPressed,
+                    child: Row(
+                      children: <Widget>[
+                        Container(
+                          width: iconContainerSize,
+                          height: iconContainerSize,
+                          decoration: BoxDecoration(
+                            color: containerColor,
+                            borderRadius: BorderRadii.medium,
+                          ),
+                          child: IconTheme(
+                            data: IconThemeData(
+                              color: iconColor,
+                              size: iconSize,
+                            ),
+                            child: LumosIcon(action.icon),
+                          ),
                         ),
-                        child: LumosIcon(action.icon),
-                      ),
+                        SizedBox(width: labelLeftSpacing),
+                        Expanded(
+                          child: LumosInlineText(
+                            action.label,
+                            style: compactWidth
+                                ? Theme.of(context).textTheme.titleSmall
+                                : Theme.of(context).textTheme.titleMedium,
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(
-                      width: FlashcardStudyActionSectionConst.labelLeftSpacing,
-                    ),
-                    Expanded(
-                      child: LumosInlineText(
-                        action.label,
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          })
-          .toList(growable: false),
+                  ),
+                );
+              })
+              .toList(growable: false),
+        );
+      },
     );
   }
 }

@@ -22,12 +22,17 @@ class LumosSkillTree extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double sectionSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.sm,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: nodes.length,
       separatorBuilder: (BuildContext context, int index) =>
-          const SizedBox(height: AppSpacing.sm),
+          SizedBox(height: sectionSpacing),
       itemBuilder: (BuildContext context, int index) {
         final SkillNodeData node = nodes[index];
         return LumosSkillNode(
@@ -65,23 +70,29 @@ class LumosSkillNode extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double rowSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.sm,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double iconSize = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: IconSizes.iconMedium,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return LumosCard(
       onTap: onTap,
       isSelected: isSelected,
       child: Row(
         children: <Widget>[
-          Icon(
-            _resolveIcon(),
-            size: IconSizes.iconMedium,
-            color: _resolveColor(context),
-          ),
-          const SizedBox(width: AppSpacing.sm),
+          Icon(_resolveIcon(), size: iconSize, color: _resolveColor(context)),
+          SizedBox(width: rowSpacing),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 LumosText(title, style: LumosTextStyle.titleSmall),
-                ..._buildProgress(),
+                ..._buildProgress(context),
               ],
             ),
           ),
@@ -119,12 +130,17 @@ class LumosSkillNode extends StatelessWidget {
     return appColors.info;
   }
 
-  List<Widget> _buildProgress() {
+  List<Widget> _buildProgress(BuildContext context) {
     if (progress == null) {
       return const <Widget>[];
     }
+    final double progressSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.xs,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return <Widget>[
-      const SizedBox(height: AppSpacing.xs),
+      SizedBox(height: progressSpacing),
       LumosProgressBar(value: progress!),
     ];
   }
@@ -159,27 +175,37 @@ class LumosLessonCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double sectionSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.sm,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return LumosCard(
       onTap: isLocked ? null : onTap,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           LumosText(title, style: LumosTextStyle.titleMedium),
-          ..._buildSubtitle(),
-          const SizedBox(height: AppSpacing.sm),
+          ..._buildSubtitle(context),
+          SizedBox(height: sectionSpacing),
           LumosText('$xpValue XP', style: LumosTextStyle.labelLarge),
-          ..._buildProgress(),
+          ..._buildProgress(context),
         ],
       ),
     );
   }
 
-  List<Widget> _buildSubtitle() {
+  List<Widget> _buildSubtitle(BuildContext context) {
     if (subtitle == null) {
       return const <Widget>[];
     }
+    final double subtitleSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.xs,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return <Widget>[
-      const SizedBox(height: AppSpacing.xs),
+      SizedBox(height: subtitleSpacing),
       LumosText(
         subtitle!,
         style: LumosTextStyle.bodySmall,
@@ -189,12 +215,17 @@ class LumosLessonCard extends StatelessWidget {
     ];
   }
 
-  List<Widget> _buildProgress() {
+  List<Widget> _buildProgress(BuildContext context) {
     if (progress == null) {
       return const <Widget>[];
     }
+    final double progressSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.sm,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return <Widget>[
-      const SizedBox(height: AppSpacing.sm),
+      SizedBox(height: progressSpacing),
       LumosProgressBar(value: progress!),
     ];
   }

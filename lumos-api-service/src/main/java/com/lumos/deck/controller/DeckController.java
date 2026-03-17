@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,11 +15,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.lumos.common.dto.request.SearchRequest;
+import com.lumos.deck.constant.DeckImportConstants;
 import com.lumos.deck.dto.request.CreateDeckRequest;
 import com.lumos.deck.dto.request.UpdateDeckRequest;
+import com.lumos.deck.dto.response.DeckImportResponse;
 import com.lumos.deck.dto.response.DeckResponse;
 import com.lumos.deck.service.DeckService;
 
@@ -102,5 +107,22 @@ public class DeckController {
         final var decks = this.deckService.getDecks(folderId, searchRequest, pageable);
         // Return the deck list page slice for the selected folder scope.
         return ResponseEntity.ok(decks);
+    }
+
+    /**
+     * Import multiple decks from an Excel file into the target folder.
+     *
+     * @param folderId parent folder identifier
+     * @param file     Excel import file
+     * @return import summary response
+     */
+    @Operation(summary = "Import decks from Excel")
+    @PostMapping(path = "/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<DeckImportResponse> importDecks(
+            @PathVariable Long folderId,
+            @RequestParam(DeckImportConstants.FILE_PARAM_NAME) MultipartFile file) {
+        final var response = this.deckService.importDecks(folderId, file);
+        // Return the synchronous import summary so the folder screen can refresh deck data afterward.
+        return ResponseEntity.ok(response);
     }
 }

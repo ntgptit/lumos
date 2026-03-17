@@ -1,6 +1,7 @@
 package com.lumos.deck.repository;
 
 import java.time.Instant;
+import java.util.Collection;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,6 +17,17 @@ public interface DeckRepository extends JpaRepository<Deck, Long>, JpaSpecificat
     Optional<Deck> findByIdAndDeletedAtIsNull(Long id);
 
     boolean existsByFolderIdAndDeletedAtIsNull(Long folderId);
+
+    @Query(value = """
+            SELECT d.*
+            FROM decks d
+            WHERE d.deleted_at IS NULL
+              AND d.folder_id = :folderId
+              AND LOWER(d.name) IN (:normalizedNames)
+            """, nativeQuery = true)
+    java.util.List<Deck> findAllActiveByFolderIdAndNormalizedNames(
+            @Param("folderId") Long folderId,
+            @Param("normalizedNames") Collection<String> normalizedNames);
 
     @Query(value = """
             SELECT COUNT(1) > 0

@@ -60,13 +60,33 @@ class FolderListTile extends StatelessWidget {
             ),
           )
         : colorScheme.primary;
+    final double leadingSize = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FolderListTileConst.leadingSize,
+      minScale: ResponsiveDimensions.compactLargeInsetScale,
+    );
+    final double leadingIconSize = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FolderListTileConst.leadingIconSize,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double badgeMinSize = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FolderListTileConst.badgeMinSize,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double badgeHorizontalPadding = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FolderListTileConst.badgeHorizontalPadding,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return LumosActionListItemCard(
       title: item.name,
       subtitle: subtitle,
       onTap: onOpen,
       leading: SizedBox(
-        width: FolderListTileConst.leadingSize,
-        height: FolderListTileConst.leadingSize,
+        width: leadingSize,
+        height: leadingSize,
         child: Stack(
           clipBehavior: Clip.none,
           children: <Widget>[
@@ -84,9 +104,9 @@ class FolderListTile extends StatelessWidget {
               child: Center(
                 child: IconTheme(
                   data: IconThemeData(color: foregroundColor),
-                  child: const LumosIcon(
+                  child: LumosIcon(
                     Icons.folder_open_rounded,
-                    size: FolderListTileConst.leadingIconSize,
+                    size: leadingIconSize,
                   ),
                 ),
               ),
@@ -95,12 +115,12 @@ class FolderListTile extends StatelessWidget {
               right: AppSpacing.none,
               bottom: AppSpacing.none,
               child: Container(
-                constraints: const BoxConstraints(
-                  minWidth: FolderListTileConst.badgeMinSize,
-                  minHeight: FolderListTileConst.badgeMinSize,
+                constraints: BoxConstraints(
+                  minWidth: badgeMinSize,
+                  minHeight: badgeMinSize,
                 ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: FolderListTileConst.badgeHorizontalPadding,
+                padding: EdgeInsets.symmetric(
+                  horizontal: badgeHorizontalPadding,
                 ),
                 decoration: BoxDecoration(
                   color: isRoot ? colorScheme.secondary : colorScheme.primary,

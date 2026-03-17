@@ -1,0 +1,47 @@
+import 'package:flutter/material.dart';
+
+import '../../../../../../../../core/themes/foundation/app_foundation.dart';
+import '../../../../../../../shared/widgets/lumos_widgets.dart';
+
+class HomeSplitFocusItem extends StatelessWidget {
+  const HomeSplitFocusItem({
+    required this.icon,
+    required this.iconColor,
+    required this.label,
+    required this.progressValue,
+    required this.itemSpacing,
+    required this.inlineGap,
+    super.key,
+  });
+
+  final IconData icon;
+  final Color iconColor;
+  final String label;
+  final double progressValue;
+  final double itemSpacing;
+  final double inlineGap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        IconTheme(
+          data: IconThemeData(color: iconColor),
+          child: LumosIcon(icon, size: IconSizes.iconSmall),
+        ),
+        SizedBox(width: inlineGap),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              LumosText(label, style: LumosTextStyle.bodySmall),
+              SizedBox(height: itemSpacing * 0.5),
+              LumosProgressBar(value: progressValue),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}

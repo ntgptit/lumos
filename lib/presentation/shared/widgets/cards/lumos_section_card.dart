@@ -62,19 +62,23 @@ class LumosSectionCard extends StatelessWidget {
   }
 
   Widget _buildContent(BuildContext context) {
+    final EdgeInsetsGeometry resolvedPadding = _resolvePadding(context);
+    final EdgeInsetsGeometry resolvedHeaderPadding = _resolveHeaderPadding(
+      context,
+    );
     final Widget? resolvedHeader = _buildHeader(context);
     if (resolvedHeader == null) {
-      return Padding(padding: padding, child: child);
+      return Padding(padding: resolvedPadding, child: child);
     }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        Padding(padding: headerPadding, child: resolvedHeader),
+        Padding(padding: resolvedHeaderPadding, child: resolvedHeader),
         if (showHeaderDivider)
           const Divider(height: AppStroke.thin, thickness: AppStroke.thin),
-        Padding(padding: padding, child: child),
+        Padding(padding: resolvedPadding, child: child),
       ],
     );
   }
@@ -89,6 +93,11 @@ class LumosSectionCard extends StatelessWidget {
     if (resolvedTitle == null) {
       return null;
     }
+    final double trailingGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.md,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
 
     return Row(
       children: <Widget>[
@@ -99,10 +108,24 @@ class LumosSectionCard extends StatelessWidget {
           ),
         ),
         if (headerTrailing case final Widget trailing) ...<Widget>[
-          const SizedBox(width: AppSpacing.md),
+          SizedBox(width: trailingGap),
           trailing,
         ],
       ],
     );
+  }
+
+  EdgeInsetsGeometry _resolvePadding(BuildContext context) {
+    if (padding == LumosSectionCardConst.defaultPadding) {
+      return context.appCard.paddingLg;
+    }
+    return padding;
+  }
+
+  EdgeInsetsGeometry _resolveHeaderPadding(BuildContext context) {
+    if (headerPadding == LumosSectionCardConst.defaultPadding) {
+      return context.appCard.paddingLg;
+    }
+    return headerPadding;
   }
 }

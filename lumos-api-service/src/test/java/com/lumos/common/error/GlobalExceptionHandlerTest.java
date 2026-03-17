@@ -23,8 +23,11 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import com.lumos.deck.exception.DeckImportFileInvalidException;
+import com.lumos.deck.exception.DeckImportPayloadTooLargeException;
 import com.lumos.deck.exception.DeckNameConflictException;
 import com.lumos.deck.exception.DeckNotFoundException;
 import com.lumos.deck.exception.DeckParentHasSubfoldersException;
@@ -154,6 +157,45 @@ class GlobalExceptionHandlerTest {
         assertEquals("resolved:deck.parent-has-subfolders", response
                 .getBody()
                 .message());
+    }
+
+    @Test
+    void handleDeckImportFileInvalid_returnsBadRequestResponse() {
+        final var handler = this.handler();
+        final var request = this.request("/api/v1/folders/1/decks/import");
+
+        final var response = handler.handleDeckImportFileInvalid(
+                new DeckImportFileInvalidException(ErrorMessageKeys.DECK_IMPORT_FILE_EMPTY),
+                request);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("resolved:deck.import.file-empty", response.getBody().message());
+    }
+
+    @Test
+    void handleDeckImportPayloadTooLarge_returnsPayloadTooLargeResponse() {
+        final var handler = this.handler();
+        final var request = this.request("/api/v1/folders/1/decks/import");
+
+        final var response = handler.handleDeckImportPayloadTooLarge(
+                new DeckImportPayloadTooLargeException(50),
+                request);
+
+        assertEquals(HttpStatus.PAYLOAD_TOO_LARGE, response.getStatusCode());
+        assertEquals("resolved:deck.import.file-too-large", response.getBody().message());
+    }
+
+    @Test
+    void handleMaxUploadSizeExceeded_returnsPayloadTooLargeResponse() {
+        final var handler = this.handler();
+        final var request = this.request("/api/v1/folders/1/decks/import");
+
+        final var response = handler.handleMaxUploadSizeExceeded(
+                new MaxUploadSizeExceededException(50L * 1024L * 1024L),
+                request);
+
+        assertEquals(HttpStatus.PAYLOAD_TOO_LARGE, response.getStatusCode());
+        assertEquals("resolved:deck.import.file-too-large", response.getBody().message());
     }
 
     @Test

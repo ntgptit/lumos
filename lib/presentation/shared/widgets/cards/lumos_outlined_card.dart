@@ -29,6 +29,7 @@ class LumosOutlinedCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final DeviceType resolvedDeviceType = _resolveDeviceType(context);
     return LumosCard(
       variant: LumosCardVariant.outlined,
       padding: padding,
@@ -38,8 +39,15 @@ class LumosOutlinedCard extends StatelessWidget {
       backgroundColor: backgroundColor,
       isSelected: isSelected,
       isLoading: isLoading,
-      deviceType: deviceType,
+      deviceType: resolvedDeviceType,
       child: child,
     );
+  }
+
+  DeviceType _resolveDeviceType(BuildContext context) {
+    if (deviceType != DeviceType.mobile) {
+      return deviceType;
+    }
+    return context.deviceType;
   }
 }

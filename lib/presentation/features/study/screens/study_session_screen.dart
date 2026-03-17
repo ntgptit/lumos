@@ -55,6 +55,8 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool compactPhone =
+        context.deviceType == DeviceType.mobile && context.screenHeight < 780;
     final StudySessionLaunchRequest request = _request;
     final AsyncValue<StudySessionData> sessionAsync = ref.watch(
       studySessionControllerProvider(request),
@@ -91,8 +93,9 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
         onPlaySpeech: _playSpeech,
         onStudyMenuSelected: _handleStudyMenuSelection,
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.none),
+      body: SafeArea(
+        top: false,
+        bottom: !compactPhone,
         child: StudySessionScreenBody(
           request: request,
           sessionAsync: sessionAsync,

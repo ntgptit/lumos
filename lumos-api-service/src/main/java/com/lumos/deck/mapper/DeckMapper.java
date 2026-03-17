@@ -5,6 +5,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
 import com.lumos.deck.dto.response.AuditMetadataResponse;
+import com.lumos.deck.dto.response.DeckImportResponse;
 import com.lumos.deck.dto.response.DeckResponse;
 import com.lumos.deck.entity.Deck;
 import com.lumos.folder.entity.Folder;
@@ -23,6 +24,16 @@ public interface DeckMapper {
     @Mapping(target = "description", source = "description")
     @Mapping(target = "flashcardCount", source = "flashcardCount")
     Deck toDeckEntity(Folder folder, String name, String description, Integer flashcardCount);
+
+    @Mapping(target = "folderId", source = "folderId")
+    @Mapping(target = "processedDeckCount", source = "processedDeckCount")
+    @Mapping(target = "createdDeckCount", source = "createdDeckCount")
+    @Mapping(target = "importedFlashcardCount", source = "importedFlashcardCount")
+    DeckImportResponse toDeckImportResponse(
+            Long folderId,
+            Integer processedDeckCount,
+            Integer createdDeckCount,
+            Integer importedFlashcardCount);
 
     default AuditMetadataResponse toAuditMetadata(Deck deck) {
         

@@ -35,49 +35,63 @@ class StudySessionFillPromptCard extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colorScheme = theme.colorScheme;
     final bool isSpeechEnabled = speech.available && !playbackState.isBusy;
-    final double iconSize = StudySessionLayoutMetrics.compactIcon(
-      context,
-      baseValue: _fillHeroIconSize,
-    );
-    final EdgeInsets cardPadding = StudySessionLayoutMetrics.cardPadding(
-      context,
-      horizontal: AppSpacing.xl,
-      vertical: AppSpacing.xl,
-    );
-    final EdgeInsets topTrailingPadding =
-        StudySessionLayoutMetrics.topTrailingPadding(context);
-    final EdgeInsets bottomTrailingPadding =
-        StudySessionLayoutMetrics.bottomTrailingPadding(context);
-    return StudySessionContentCard(
-      variant: LumosCardVariant.filled,
-      height: height,
-      expandToFill: height == null,
-      topTrailing: LumosIcon(Icons.edit_outlined, size: iconSize),
-      topTrailingPadding: topTrailingPadding,
-      bottomTrailing: LumosIconButton(
-        icon: Icons.volume_up_rounded,
-        tooltip: speech.available ? speech.speechText : null,
-        onPressed: isSpeechEnabled ? onPlayPressed : null,
-      ),
-      bottomTrailingPadding: bottomTrailingPadding,
-      child: Padding(
-        padding: cardPadding,
-        child: Center(
-          child: SingleChildScrollView(
-            child: LumosInlineText(
-              prompt,
-              align: TextAlign.center,
-              maxLines: _fillHeroPromptMaxLines,
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.titleMedium?.copyWith(
-                color: colorScheme.onSurface,
-                fontWeight: FontWeight.w500,
-                height: _fillHeroPromptLineHeight,
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final bool compactHeight = constraints.maxHeight < 260;
+        final double iconSize = ResponsiveDimensions.compactValue(
+          context: context,
+          baseValue: compactHeight ? IconSizes.iconSmall : _fillHeroIconSize,
+          minScale: ResponsiveDimensions.compactInsetScale,
+        );
+        final EdgeInsets cardPadding = StudySessionLayoutMetrics.cardPadding(
+          context,
+          horizontal: compactHeight ? AppSpacing.lg : AppSpacing.xl,
+          vertical: compactHeight ? AppSpacing.lg : AppSpacing.xl,
+        );
+        final EdgeInsets topTrailingPadding =
+            StudySessionLayoutMetrics.topTrailingPadding(
+              context,
+              top: compactHeight ? AppSpacing.md : AppSpacing.lg,
+              right: compactHeight ? AppSpacing.md : AppSpacing.lg,
+            );
+        final EdgeInsets bottomTrailingPadding =
+            StudySessionLayoutMetrics.bottomTrailingPadding(
+              context,
+              right: compactHeight ? AppSpacing.sm : AppSpacing.md,
+              bottom: compactHeight ? AppSpacing.sm : AppSpacing.md,
+            );
+        return StudySessionContentCard(
+          variant: LumosCardVariant.filled,
+          height: height,
+          expandToFill: height == null,
+          topTrailing: LumosIcon(Icons.edit_outlined, size: iconSize),
+          topTrailingPadding: topTrailingPadding,
+          bottomTrailing: LumosIconButton(
+            icon: Icons.volume_up_rounded,
+            tooltip: speech.available ? speech.speechText : null,
+            onPressed: isSpeechEnabled ? onPlayPressed : null,
+          ),
+          bottomTrailingPadding: bottomTrailingPadding,
+          child: Padding(
+            padding: cardPadding,
+            child: Center(
+              child: SingleChildScrollView(
+                child: LumosInlineText(
+                  prompt,
+                  align: TextAlign.center,
+                  maxLines: _fillHeroPromptMaxLines,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    color: colorScheme.onSurface,
+                    fontWeight: FontWeight.w500,
+                    height: _fillHeroPromptLineHeight,
+                  ),
+                ),
               ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

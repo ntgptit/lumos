@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../../../../core/constants/route_names.dart';
+import '../../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../../l10n/app_localizations.dart';
 import '../../../../../../shared/widgets/lumos_widgets.dart';
 import '../../../../providers/home_provider.dart';
@@ -15,12 +16,21 @@ class HomeBottomNav extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
+    final double navigationBarHeight = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: WidgetSizes.navigationBarHeight,
+      minScale: ResponsiveDimensions.compactLargeInsetScale,
+    );
     final int selectedIndex = ref.watch(homeSelectedIndexProvider);
     final List<HomeNavigationItem> items = ref.watch(
       homeNavigationItemsProvider,
     );
     final bool isOnHomeRoute = _isOnHomeRoute(context);
     return NavigationBar(
+      height: navigationBarHeight,
+      labelBehavior: context.deviceType == DeviceType.mobile
+          ? NavigationDestinationLabelBehavior.alwaysShow
+          : NavigationDestinationLabelBehavior.onlyShowSelected,
       selectedIndex: selectedIndex,
       onDestinationSelected: (int newIndex) {
         final HomeNavigationItem selectedItem = items[newIndex];

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../domain/entities/study/study_models.dart';
 import '../../../mode/study_mode_view_model.dart';
 import '../../../mode/study_mode_view_strategy.dart';
@@ -60,24 +61,37 @@ class StudySessionResolvedBodyContent extends ConsumerWidget {
     final StudySpeechPlaybackState speechPlaybackState = ref.watch(
       studySpeechPlaybackControllerProvider(session.sessionId),
     );
-    return StudySessionModeContent(
-      session: session,
-      viewModel: viewModel,
-      answerController: answerController,
-      fillSelectionState: fillSelectionState,
-      guessSelectionState: guessSelectionState,
-      matchSelectionState: matchSelectionState,
-      recallSelectionState: recallSelectionState,
-      speechPlaybackState: speechPlaybackState,
-      onSubmitTypedAnswer: onSubmitTypedAnswer,
-      onChoicePressed: onChoicePressed,
-      onSelectMatchLeft: onSelectMatchLeft,
-      onSelectMatchRight: onSelectMatchRight,
-      onActionPressed: onActionPressed,
-      onFillInputChanged: onFillInputChanged,
-      onRetryInputPressed: onRetryInputPressed,
-      onPlaySpeech: onPlaySpeech,
-      onReplaySpeech: onReplaySpeech,
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final double maxWidth = constraints.isDesktop
+            ? WidgetSizes.maxContentWidth
+            : constraints.maxWidth;
+        return Align(
+          alignment: Alignment.topCenter,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: maxWidth),
+            child: StudySessionModeContent(
+              session: session,
+              viewModel: viewModel,
+              answerController: answerController,
+              fillSelectionState: fillSelectionState,
+              guessSelectionState: guessSelectionState,
+              matchSelectionState: matchSelectionState,
+              recallSelectionState: recallSelectionState,
+              speechPlaybackState: speechPlaybackState,
+              onSubmitTypedAnswer: onSubmitTypedAnswer,
+              onChoicePressed: onChoicePressed,
+              onSelectMatchLeft: onSelectMatchLeft,
+              onSelectMatchRight: onSelectMatchRight,
+              onActionPressed: onActionPressed,
+              onFillInputChanged: onFillInputChanged,
+              onRetryInputPressed: onRetryInputPressed,
+              onPlaySpeech: onPlaySpeech,
+              onReplaySpeech: onReplaySpeech,
+            ),
+          ),
+        );
+      },
     );
   }
 

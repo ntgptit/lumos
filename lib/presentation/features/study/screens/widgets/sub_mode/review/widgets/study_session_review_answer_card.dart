@@ -30,39 +30,50 @@ class StudySessionReviewAnswerCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colorScheme = theme.colorScheme;
-    final EdgeInsets cardPadding = StudySessionLayoutMetrics.cardInsets(
-      context,
-      left: AppSpacing.xl,
-      top: AppSpacing.lg,
-      right: AppSpacing.xl,
-      bottom: AppSpacing.xl,
-    );
-    final EdgeInsets topTrailingPadding =
-        StudySessionLayoutMetrics.topTrailingPadding(context);
-    return StudySessionContentCard(
-      variant: LumosCardVariant.filled,
-      topTrailing: LumosIconButton(
-        icon: isPlaying ? Icons.volume_off_rounded : Icons.volume_up_rounded,
-        tooltip: tooltip,
-        onPressed: isSpeechAvailable ? onSpeechPressed : null,
-      ),
-      topTrailingPadding: topTrailingPadding,
-      child: Padding(
-        padding: cardPadding,
-        child: Center(
-          child: SingleChildScrollView(
-            child: LumosInlineText(
-              content,
-              align: TextAlign.center,
-              style: theme.textTheme.headlineLarge?.copyWith(
-                color: colorScheme.onSurface,
-                fontWeight: FontWeight.w400,
-                height: _reviewAnswerLineHeight,
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final bool compactHeight = constraints.maxHeight < 260;
+        final EdgeInsets cardPadding = StudySessionLayoutMetrics.cardInsets(
+          context,
+          left: compactHeight ? AppSpacing.lg : AppSpacing.xl,
+          top: AppSpacing.lg,
+          right: compactHeight ? AppSpacing.lg : AppSpacing.xl,
+          bottom: compactHeight ? AppSpacing.lg : AppSpacing.xl,
+        );
+        final EdgeInsets topTrailingPadding =
+            StudySessionLayoutMetrics.topTrailingPadding(
+              context,
+              top: compactHeight ? AppSpacing.md : AppSpacing.lg,
+              right: compactHeight ? AppSpacing.md : AppSpacing.lg,
+            );
+        return StudySessionContentCard(
+          variant: LumosCardVariant.filled,
+          topTrailing: LumosIconButton(
+            icon: isPlaying
+                ? Icons.volume_off_rounded
+                : Icons.volume_up_rounded,
+            tooltip: tooltip,
+            onPressed: isSpeechAvailable ? onSpeechPressed : null,
+          ),
+          topTrailingPadding: topTrailingPadding,
+          child: Padding(
+            padding: cardPadding,
+            child: Center(
+              child: SingleChildScrollView(
+                child: LumosInlineText(
+                  content,
+                  align: TextAlign.center,
+                  style: theme.textTheme.headlineLarge?.copyWith(
+                    color: colorScheme.onSurface,
+                    fontWeight: FontWeight.w400,
+                    height: _reviewAnswerLineHeight,
+                  ),
+                ),
               ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

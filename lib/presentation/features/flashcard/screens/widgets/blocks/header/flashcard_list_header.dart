@@ -28,43 +28,71 @@ class FlashcardListHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colorScheme = theme.colorScheme;
-    return Row(
+    final double titleBottomSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardListHeaderConst.titleBottomSpacing,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double sortGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: FlashcardListHeaderConst.sortGap,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final EdgeInsets sortPadding = ResponsiveDimensions.compactInsets(
+      context: context,
+      baseInsets: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.sm,
+        vertical: AppSpacing.xs,
+      ),
+    );
+    final Widget titleSection = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              LumosInlineText(title, style: theme.textTheme.titleMedium),
-              const SizedBox(
-                height: FlashcardListHeaderConst.titleBottomSpacing,
-              ),
-              LumosInlineText(
-                subtitle,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                ),
-              ),
-            ],
-          ),
-        ),
-        InkWell(
-          onTap: onSortPressed,
-          borderRadius: BorderRadii.large,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.sm,
-              vertical: AppSpacing.xs,
-            ),
-            child: Row(
-              children: <Widget>[
-                LumosInlineText(sortLabel, style: theme.textTheme.titleMedium),
-                const SizedBox(width: FlashcardListHeaderConst.sortGap),
-                const LumosIcon(Icons.tune_rounded),
-              ],
-            ),
+        LumosInlineText(title, style: theme.textTheme.titleMedium),
+        SizedBox(height: titleBottomSpacing),
+        LumosInlineText(
+          subtitle,
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: colorScheme.onSurfaceVariant,
           ),
         ),
       ],
+    );
+    final Widget sortAction = InkWell(
+      onTap: onSortPressed,
+      borderRadius: BorderRadii.large,
+      child: Padding(
+        padding: sortPadding,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            LumosInlineText(sortLabel, style: theme.textTheme.titleMedium),
+            SizedBox(width: sortGap),
+            const LumosIcon(Icons.tune_rounded),
+          ],
+        ),
+      ),
+    );
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        if (constraints.maxWidth < 360) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              titleSection,
+              SizedBox(height: sortGap),
+              sortAction,
+            ],
+          );
+        }
+        return Row(
+          children: <Widget>[
+            Expanded(child: titleSection),
+            SizedBox(width: sortGap),
+            sortAction,
+          ],
+        );
+      },
     );
   }
 }

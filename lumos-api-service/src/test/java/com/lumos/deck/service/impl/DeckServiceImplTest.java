@@ -1,12 +1,14 @@
 package com.lumos.deck.service.impl;
 
 import static com.lumos.testkit.DeckTestFixtures.createDeckRequest;
+import static com.lumos.testkit.DeckTestFixtures.deckImportResponse;
 import static com.lumos.testkit.DeckTestFixtures.updateDeckRequest;
 import static com.lumos.testkit.SearchRequestFixtures.byNameAsc;
 import static com.lumos.testkit.SearchRequestFixtures.empty;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -16,6 +18,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.Strings;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -25,15 +28,23 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.mock.web.MockMultipartFile;
 
+import com.lumos.deck.constant.DeckImportConstants;
 import com.lumos.deck.constant.DeckConstants;
+import com.lumos.deck.dto.DeckImportDeckDraft;
+import com.lumos.deck.dto.DeckImportFlashcardDraft;
+import com.lumos.deck.dto.response.DeckImportResponse;
 import com.lumos.deck.dto.response.DeckResponse;
 import com.lumos.deck.entity.Deck;
 import com.lumos.deck.exception.DeckNameConflictException;
 import com.lumos.deck.exception.DeckNotFoundException;
 import com.lumos.deck.exception.DeckParentHasSubfoldersException;
 import com.lumos.deck.mapper.DeckMapper;
+import com.lumos.deck.repository.DeckImportBatchRepository;
 import com.lumos.deck.repository.DeckRepository;
+import com.lumos.deck.support.DeckExcelImportSupport;
+import com.lumos.flashcard.repository.FlashcardImportBatchRepository;
 import com.lumos.folder.entity.Folder;
 import com.lumos.folder.exception.FolderNotFoundException;
 import com.lumos.folder.repository.FolderRepository;
@@ -48,10 +59,19 @@ class DeckServiceImplTest {
     private DeckRepository deckRepository;
 
     @Mock
+    private DeckImportBatchRepository deckImportBatchRepository;
+
+    @Mock
     private FolderRepository folderRepository;
 
     @Mock
+    private FlashcardImportBatchRepository flashcardImportBatchRepository;
+
+    @Mock
     private DeckMapper deckMapper;
+
+    @Mock
+    private DeckExcelImportSupport deckExcelImportSupport;
 
     @InjectMocks
     private DeckServiceImpl deckService;
@@ -314,6 +334,77 @@ class DeckServiceImplTest {
                 .getDecks(FOLDER_ID, searchRequest, pageable));
     }
 
+    @Test
+    void importDecks_importsParsedDecks() {
+        final var folder = this.folder(FOLDER_ID, 1);
+        final var file = this.importFile();
+        final var drafts = List.of(
+                new DeckImportDeckDraft(
+                        "Deck A",
+                        2,
+                        List.of(new DeckImportFlashcardDraft("Term A", "Meaning A", 3))),
+                new DeckImportDeckDraft(
+                        "Deck B",
+                        4,
+                        List.of(
+                                new DeckImportFlashcardDraft("Term B", "Meaning B", 5),
+                                new DeckImportFlashcardDraft("Term C", "Meaning C", 6))));
+        final var firstDeck = this.deck(folder, DECK_ID, "Deck A", DeckConstants.EMPTY_DESCRIPTION);
+        final var secondDeck = this.deck(folder, 12L, "Deck B", DeckConstants.EMPTY_DESCRIPTION);
+        final DeckImportResponse response = deckImportResponse(FOLDER_ID, 2, 2, 3);
+        when(this.folderRepository.findByIdAndDeletedAtIsNull(FOLDER_ID)).thenReturn(Optional.of(folder));
+        when(this.folderRepository.existsByParentIdAndDeletedAtIsNull(FOLDER_ID)).thenReturn(false);
+        when(this.deckExcelImportSupport.parseExcelFile(file)).thenReturn(drafts);
+        when(this.deckImportBatchRepository.insertDecksIgnoreConflicts(eq(FOLDER_ID), eq(drafts), any(Instant.class)))
+                .thenReturn(2);
+        when(this.deckRepository.findAllActiveByFolderIdAndNormalizedNames(
+                eq(FOLDER_ID),
+                argThat(names -> names.size() == 2
+                        && names.stream().allMatch(name -> Strings.CS.equals(name, "deck a")
+                                || Strings.CS.equals(name, "deck b")))))
+                .thenReturn(List.of(firstDeck, secondDeck));
+        when(this.flashcardImportBatchRepository.insertFlashcards(any(), any(Instant.class))).thenReturn(3);
+        when(this.deckMapper.toDeckImportResponse(FOLDER_ID, 2, 2, 3)).thenReturn(response);
+
+        final var result = this.deckService.importDecks(FOLDER_ID, file);
+
+        assertEquals(response, result);
+        verify(this.deckImportBatchRepository).incrementFlashcardCounts(
+                argThat(countMap -> countMap.size() == 2
+                        && countMap.get(DECK_ID) == 1
+                        && countMap.get(12L) == 2),
+                any(Instant.class));
+    }
+
+    @Test
+    void importDecks_whenDeckAlreadyExists_reusesExistingDeckAndStillImportsFlashcards() {
+        final var folder = this.folder(FOLDER_ID, 1);
+        final var file = this.importFile();
+        final var drafts = List.of(
+                new DeckImportDeckDraft(
+                        "Deck A",
+                        2,
+                        List.of(new DeckImportFlashcardDraft("Term A", "Meaning A", 3))));
+        final var existingDeck = this.deck(folder, DECK_ID, "Deck A", DeckConstants.EMPTY_DESCRIPTION);
+        final DeckImportResponse response = deckImportResponse(FOLDER_ID, 1, 0, 1);
+        when(this.folderRepository.findByIdAndDeletedAtIsNull(FOLDER_ID)).thenReturn(Optional.of(folder));
+        when(this.folderRepository.existsByParentIdAndDeletedAtIsNull(FOLDER_ID)).thenReturn(false);
+        when(this.deckExcelImportSupport.parseExcelFile(file)).thenReturn(drafts);
+        when(this.deckImportBatchRepository.insertDecksIgnoreConflicts(eq(FOLDER_ID), eq(drafts), any(Instant.class)))
+                .thenReturn(0);
+        when(this.deckRepository.findAllActiveByFolderIdAndNormalizedNames(
+                eq(FOLDER_ID),
+                argThat(names -> names.size() == 1
+                        && names.stream().allMatch(name -> Strings.CS.equals(name, "deck a")))))
+                .thenReturn(List.of(existingDeck));
+        when(this.flashcardImportBatchRepository.insertFlashcards(any(), any(Instant.class))).thenReturn(1);
+        when(this.deckMapper.toDeckImportResponse(FOLDER_ID, 1, 0, 1)).thenReturn(response);
+
+        final var result = this.deckService.importDecks(FOLDER_ID, file);
+
+        assertEquals(response, result);
+    }
+
     private Folder folder(Long id, Integer depth) {
         final var folder = new Folder();
         folder
@@ -349,5 +440,13 @@ class DeckServiceImplTest {
                         "Deck A",
                         "Description",
                         0);
+    }
+
+    private MockMultipartFile importFile() {
+        return new MockMultipartFile(
+                DeckImportConstants.FILE_PARAM_NAME,
+                "decks.xlsx",
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                new byte[] { 1 });
     }
 }

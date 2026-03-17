@@ -101,7 +101,8 @@ class LumosSortBottomSheet<T> extends StatefulWidget {
   final void Function(T selectedValue, int directionIndex) onApply;
 
   @override
-  State<LumosSortBottomSheet<T>> createState() => _LumosSortBottomSheetState<T>();
+  State<LumosSortBottomSheet<T>> createState() =>
+      _LumosSortBottomSheetState<T>();
 }
 
 class _LumosSortBottomSheetState<T> extends State<LumosSortBottomSheet<T>> {
@@ -126,63 +127,74 @@ class _LumosSortBottomSheetState<T> extends State<LumosSortBottomSheet<T>> {
 
   @override
   Widget build(BuildContext context) {
+    final EdgeInsets contentPadding = ResponsiveDimensions.compactInsets(
+      context: context,
+      baseInsets: _LumosSortBottomSheetConst.contentPadding as EdgeInsets,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double sectionSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: _LumosSortBottomSheetConst.sectionSpacing,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double buttonSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: _LumosSortBottomSheetConst.buttonSpacing,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return LumosBottomSheet(
       child: ValueListenableBuilder<T>(
         valueListenable: _selectedValueNotifier,
         builder: (BuildContext context, T selectedValue, Widget? child) {
           return ValueListenableBuilder<int>(
             valueListenable: _selectedDirectionIndexNotifier,
-            builder: (
-              BuildContext context,
-              int selectedDirectionIndex,
-              Widget? child,
-            ) {
-              return SingleChildScrollView(
-                child: Padding(
-                  padding: _LumosSortBottomSheetConst.contentPadding,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      _buildHeader(context: context),
-                      const SizedBox(
-                        height: _LumosSortBottomSheetConst.sectionSpacing,
+            builder:
+                (
+                  BuildContext context,
+                  int selectedDirectionIndex,
+                  Widget? child,
+                ) {
+                  return SingleChildScrollView(
+                    child: Padding(
+                      padding: contentPadding,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          _buildHeader(context: context),
+                          SizedBox(height: sectionSpacing),
+                          _LumosSortSheetSection(
+                            title: widget.optionSectionTitle,
+                            child: _buildOptionList(
+                              context: context,
+                              selectedValue: selectedValue,
+                            ),
+                          ),
+                          SizedBox(height: sectionSpacing),
+                          _LumosSortSheetSection(
+                            title: widget.directionSectionTitle,
+                            child: LumosSegmentedControl(
+                              options: <String>[
+                                widget.directionLabelBuilder(selectedValue, 0),
+                                widget.directionLabelBuilder(selectedValue, 1),
+                              ],
+                              selectedIndex: selectedDirectionIndex,
+                              expandToAvailableWidth: true,
+                              onChanged: (int nextIndex) {
+                                _selectedDirectionIndexNotifier.value =
+                                    nextIndex;
+                              },
+                            ),
+                          ),
+                          SizedBox(height: buttonSpacing),
+                          LumosPrimaryButton(
+                            onPressed: _apply,
+                            label: widget.applyLabel,
+                          ),
+                        ],
                       ),
-                      _LumosSortSheetSection(
-                        title: widget.optionSectionTitle,
-                        child: _buildOptionList(
-                          context: context,
-                          selectedValue: selectedValue,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: _LumosSortBottomSheetConst.sectionSpacing,
-                      ),
-                      _LumosSortSheetSection(
-                        title: widget.directionSectionTitle,
-                        child: LumosSegmentedControl(
-                          options: <String>[
-                            widget.directionLabelBuilder(selectedValue, 0),
-                            widget.directionLabelBuilder(selectedValue, 1),
-                          ],
-                          selectedIndex: selectedDirectionIndex,
-                          expandToAvailableWidth: true,
-                          onChanged: (int nextIndex) {
-                            _selectedDirectionIndexNotifier.value = nextIndex;
-                          },
-                        ),
-                      ),
-                      const SizedBox(
-                        height: _LumosSortBottomSheetConst.buttonSpacing,
-                      ),
-                      LumosPrimaryButton(
-                        onPressed: _apply,
-                        label: widget.applyLabel,
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
+                    ),
+                  );
+                },
           );
         },
       ),
@@ -193,14 +205,17 @@ class _LumosSortBottomSheetState<T> extends State<LumosSortBottomSheet<T>> {
     final TextTheme textTheme = context.textTheme;
     final ColorScheme colorScheme = context.colorScheme;
     final String? subtitle = widget.subtitle;
+    final double subtitleSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: _LumosSortBottomSheetConst.subtitleSpacing,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         LumosText(widget.title, style: LumosTextStyle.titleLarge),
         if (subtitle != null && subtitle.isNotEmpty) ...<Widget>[
-          const SizedBox(
-            height: _LumosSortBottomSheetConst.subtitleSpacing,
-          ),
+          SizedBox(height: subtitleSpacing),
           LumosInlineText(
             subtitle,
             style: textTheme.bodyMedium.withResolvedColor(
@@ -222,7 +237,9 @@ class _LumosSortBottomSheetState<T> extends State<LumosSortBottomSheet<T>> {
         children: widget.options
             .asMap()
             .entries
-            .expand((MapEntry<int, ({T value, String label, IconData? icon})> entry) sync* {
+            .expand((
+              MapEntry<int, ({T value, String label, IconData? icon})> entry,
+            ) sync* {
               if (entry.key > 0) {
                 yield const Divider(
                   height: AppStroke.thin,
@@ -264,11 +281,21 @@ class _LumosSortSheetSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final TextTheme textTheme = context.textTheme;
     final ColorScheme colorScheme = context.colorScheme;
+    final EdgeInsets sectionHeaderPadding = ResponsiveDimensions.compactInsets(
+      context: context,
+      baseInsets: _LumosSortBottomSheetConst.sectionHeaderPadding as EdgeInsets,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final EdgeInsets sectionPadding = ResponsiveDimensions.compactInsets(
+      context: context,
+      baseInsets: _LumosSortBottomSheetConst.sectionPadding as EdgeInsets,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
-          padding: _LumosSortBottomSheetConst.sectionHeaderPadding,
+          padding: sectionHeaderPadding,
           child: LumosInlineText(
             title,
             style: textTheme.titleSmall.withResolvedColor(
@@ -281,10 +308,7 @@ class _LumosSortSheetSection extends StatelessWidget {
             color: colorScheme.surfaceContainerLowest,
             borderRadius: BorderRadii.large,
           ),
-          child: Padding(
-            padding: _LumosSortBottomSheetConst.sectionPadding,
-            child: child,
-          ),
+          child: Padding(padding: sectionPadding, child: child),
         ),
       ],
     );
@@ -308,6 +332,21 @@ class _LumosSortSheetOptionTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final TextTheme textTheme = context.textTheme;
     final ColorScheme colorScheme = context.colorScheme;
+    final double optionMinHeight = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: _LumosSortBottomSheetConst.optionMinHeight,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final EdgeInsets optionPadding = ResponsiveDimensions.compactInsets(
+      context: context,
+      baseInsets: _LumosSortBottomSheetConst.optionPadding as EdgeInsets,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double itemSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.sm,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     final Color backgroundColor = isSelected
         ? colorScheme.secondaryContainer
         : colorScheme.surface.withValues(alpha: AppOpacity.transparent);
@@ -320,20 +359,19 @@ class _LumosSortSheetOptionTile extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadii.large,
         child: ConstrainedBox(
-          constraints: const BoxConstraints(
-            minHeight: _LumosSortBottomSheetConst.optionMinHeight,
-          ),
+          constraints: BoxConstraints(minHeight: optionMinHeight),
           child: Padding(
-            padding: _LumosSortBottomSheetConst.optionPadding,
+            padding: optionPadding,
             child: Row(
               children: <Widget>[
                 if (icon case final IconData leadingIcon) ...<Widget>[
                   _buildLeading(
+                    context: context,
                     colorScheme: colorScheme,
                     foregroundColor: foregroundColor,
                     icon: leadingIcon,
                   ),
-                  const SizedBox(width: AppSpacing.sm),
+                  SizedBox(width: itemSpacing),
                 ],
                 Expanded(
                   child: LumosInlineText(
@@ -344,8 +382,8 @@ class _LumosSortSheetOptionTile extends StatelessWidget {
                   ),
                 ),
                 if (isSelected) ...<Widget>[
-                  const SizedBox(width: AppSpacing.sm),
-                  _buildTrailing(colorScheme: colorScheme),
+                  SizedBox(width: itemSpacing),
+                  _buildTrailing(context: context, colorScheme: colorScheme),
                 ],
               ],
             ),
@@ -356,43 +394,61 @@ class _LumosSortSheetOptionTile extends StatelessWidget {
   }
 
   Widget _buildLeading({
+    required BuildContext context,
     required ColorScheme colorScheme,
     required Color foregroundColor,
     required IconData icon,
   }) {
+    final double iconContainerSize = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: _LumosSortBottomSheetConst.optionIconContainerSize,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double iconSize = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: _LumosSortBottomSheetConst.optionIconSize,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     final Color iconContainerColor = isSelected
         ? colorScheme.secondary.withValues(alpha: AppOpacity.stateHover)
         : colorScheme.surfaceContainerHigh;
     return Container(
-      width: _LumosSortBottomSheetConst.optionIconContainerSize,
-      height: _LumosSortBottomSheetConst.optionIconContainerSize,
+      width: iconContainerSize,
+      height: iconContainerSize,
       decoration: BoxDecoration(
         color: iconContainerColor,
         borderRadius: BorderRadii.medium,
       ),
       child: IconTheme(
-        data: IconThemeData(
-          color: foregroundColor,
-          size: _LumosSortBottomSheetConst.optionIconSize,
-        ),
+        data: IconThemeData(color: foregroundColor, size: iconSize),
         child: LumosIcon(icon),
       ),
     );
   }
 
-  Widget _buildTrailing({required ColorScheme colorScheme}) {
+  Widget _buildTrailing({
+    required BuildContext context,
+    required ColorScheme colorScheme,
+  }) {
+    final double iconContainerSize = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: _LumosSortBottomSheetConst.optionCheckContainerSize,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double iconSize = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: _LumosSortBottomSheetConst.optionCheckSize,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return Container(
-      width: _LumosSortBottomSheetConst.optionCheckContainerSize,
-      height: _LumosSortBottomSheetConst.optionCheckContainerSize,
+      width: iconContainerSize,
+      height: iconContainerSize,
       decoration: BoxDecoration(
         color: colorScheme.secondary,
         borderRadius: BorderRadii.pill,
       ),
       child: IconTheme(
-        data: IconThemeData(
-          color: colorScheme.onSecondary,
-          size: _LumosSortBottomSheetConst.optionCheckSize,
-        ),
+        data: IconThemeData(color: colorScheme.onSecondary, size: iconSize),
         child: const LumosIcon(Icons.check_rounded),
       ),
     );

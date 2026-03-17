@@ -8,8 +8,18 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import com.lumos.auth.exception.AccountDisabledException;
+import com.lumos.auth.exception.DuplicateEmailException;
+import com.lumos.auth.exception.DuplicateUsernameException;
+import com.lumos.auth.exception.InvalidCredentialsException;
+import com.lumos.auth.exception.InvalidRefreshTokenException;
+import com.lumos.auth.exception.UnauthorizedAccessException;
+import com.lumos.deck.constant.DeckImportConstants;
+import com.lumos.deck.exception.DeckImportFileInvalidException;
+import com.lumos.deck.exception.DeckImportPayloadTooLargeException;
 import com.lumos.deck.exception.DeckNameConflictException;
 import com.lumos.deck.exception.DeckNotFoundException;
 import com.lumos.deck.exception.DeckParentHasSubfoldersException;
@@ -17,12 +27,6 @@ import com.lumos.flashcard.exception.FlashcardNotFoundException;
 import com.lumos.folder.exception.FolderHasDecksConflictException;
 import com.lumos.folder.exception.FolderNameConflictException;
 import com.lumos.folder.exception.FolderNotFoundException;
-import com.lumos.auth.exception.AccountDisabledException;
-import com.lumos.auth.exception.DuplicateEmailException;
-import com.lumos.auth.exception.DuplicateUsernameException;
-import com.lumos.auth.exception.InvalidCredentialsException;
-import com.lumos.auth.exception.InvalidRefreshTokenException;
-import com.lumos.auth.exception.UnauthorizedAccessException;
 import com.lumos.study.exception.StudyAnswerPayloadInvalidException;
 import com.lumos.study.exception.StudyCommandNotAllowedException;
 import com.lumos.study.exception.StudySessionNotFoundException;
@@ -80,6 +84,33 @@ public class GlobalExceptionHandler {
             DeckParentHasSubfoldersException exception,
             HttpServletRequest request) {
         return handleApiException(HttpStatus.CONFLICT, exception, request);
+    }
+
+    @ExceptionHandler(DeckImportFileInvalidException.class)
+    public ResponseEntity<ApiErrorResponse> handleDeckImportFileInvalid(
+            DeckImportFileInvalidException exception,
+            HttpServletRequest request) {
+        return handleApiException(HttpStatus.BAD_REQUEST, exception, request);
+    }
+
+    @ExceptionHandler(DeckImportPayloadTooLargeException.class)
+    public ResponseEntity<ApiErrorResponse> handleDeckImportPayloadTooLarge(
+            DeckImportPayloadTooLargeException exception,
+            HttpServletRequest request) {
+        return handleApiException(HttpStatus.PAYLOAD_TOO_LARGE, exception, request);
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ApiErrorResponse> handleMaxUploadSizeExceeded(
+            MaxUploadSizeExceededException exception,
+            HttpServletRequest request) {
+        return this.apiErrorResponseFactory.build(
+                HttpStatus.PAYLOAD_TOO_LARGE,
+                this.apiErrorResponseFactory.resolveMessage(
+                        ErrorMessageKeys.DECK_IMPORT_FILE_TOO_LARGE,
+                        DeckImportConstants.MAX_FILE_SIZE_MB),
+                request.getRequestURI(),
+                Map.of());
     }
 
     @ExceptionHandler(FlashcardNotFoundException.class)

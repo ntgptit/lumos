@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../domain/entities/study/study_models.dart';
 import '../../../mode/study_mode_view_model.dart';
 import '../../../providers/study_fill_selection_provider.dart';
@@ -56,59 +57,67 @@ class StudySessionModeContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    switch (session.activeMode) {
-      case StudySessionSubModeConst.reviewMode:
-        return StudySessionReviewContent(
-          session: session,
-          speechPlaybackState: speechPlaybackState,
-          onActionPressed: onActionPressed,
-          onPlaySpeech: onPlaySpeech,
-          onReplaySpeech: onReplaySpeech,
+    final Widget content = switch (session.activeMode) {
+      StudySessionSubModeConst.reviewMode => StudySessionReviewContent(
+        session: session,
+        speechPlaybackState: speechPlaybackState,
+        onActionPressed: onActionPressed,
+        onPlaySpeech: onPlaySpeech,
+        onReplaySpeech: onReplaySpeech,
+      ),
+      StudySessionSubModeConst.fillMode => StudySessionFillContent(
+        session: session,
+        viewModel: viewModel,
+        fillSelectionState: fillSelectionState,
+        answerController: answerController,
+        speechPlaybackState: speechPlaybackState,
+        onSubmitTypedAnswer: onSubmitTypedAnswer,
+        onActionPressed: onActionPressed,
+        onInputChanged: onFillInputChanged,
+        onRetryInputPressed: onRetryInputPressed,
+        onPlaySpeech: onPlaySpeech,
+        onReplaySpeech: onReplaySpeech,
+      ),
+      StudySessionSubModeConst.guessMode => StudySessionGuessContent(
+        session: session,
+        viewModel: viewModel,
+        guessSelectionState: guessSelectionState,
+        speechPlaybackState: speechPlaybackState,
+        onChoicePressed: onChoicePressed,
+        onActionPressed: onActionPressed,
+        onPlaySpeech: onPlaySpeech,
+        onReplaySpeech: onReplaySpeech,
+      ),
+      StudySessionSubModeConst.matchMode => StudySessionMatchContent(
+        session: session,
+        viewModel: viewModel,
+        matchSelectionState: matchSelectionState,
+        onSelectMatchLeft: onSelectMatchLeft,
+        onSelectMatchRight: onSelectMatchRight,
+      ),
+      StudySessionSubModeConst.recallMode => StudySessionRecallContent(
+        session: session,
+        viewModel: viewModel,
+        recallSelectionState: recallSelectionState,
+        speechPlaybackState: speechPlaybackState,
+        onActionPressed: onActionPressed,
+        onPlaySpeech: onPlaySpeech,
+        onReplaySpeech: onReplaySpeech,
+      ),
+      _ => const SizedBox.shrink(),
+    };
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final double horizontalInset = constraints.isDesktop
+            ? AppSpacing.sm
+            : constraints.isTablet
+            ? AppSpacing.xs
+            : AppSpacing.none;
+        return Padding(
+          padding: EdgeInsets.symmetric(horizontal: horizontalInset),
+          child: content,
         );
-      case StudySessionSubModeConst.fillMode:
-        return StudySessionFillContent(
-          session: session,
-          viewModel: viewModel,
-          fillSelectionState: fillSelectionState,
-          answerController: answerController,
-          speechPlaybackState: speechPlaybackState,
-          onSubmitTypedAnswer: onSubmitTypedAnswer,
-          onActionPressed: onActionPressed,
-          onInputChanged: onFillInputChanged,
-          onRetryInputPressed: onRetryInputPressed,
-          onPlaySpeech: onPlaySpeech,
-          onReplaySpeech: onReplaySpeech,
-        );
-      case StudySessionSubModeConst.guessMode:
-        return StudySessionGuessContent(
-          session: session,
-          viewModel: viewModel,
-          guessSelectionState: guessSelectionState,
-          speechPlaybackState: speechPlaybackState,
-          onChoicePressed: onChoicePressed,
-          onActionPressed: onActionPressed,
-          onPlaySpeech: onPlaySpeech,
-          onReplaySpeech: onReplaySpeech,
-        );
-      case StudySessionSubModeConst.matchMode:
-        return StudySessionMatchContent(
-          session: session,
-          viewModel: viewModel,
-          matchSelectionState: matchSelectionState,
-          onSelectMatchLeft: onSelectMatchLeft,
-          onSelectMatchRight: onSelectMatchRight,
-        );
-      case StudySessionSubModeConst.recallMode:
-        return StudySessionRecallContent(
-          session: session,
-          viewModel: viewModel,
-          recallSelectionState: recallSelectionState,
-          speechPlaybackState: speechPlaybackState,
-          onActionPressed: onActionPressed,
-          onPlaySpeech: onPlaySpeech,
-          onReplaySpeech: onReplaySpeech,
-        );
-    }
-    throw UnsupportedError('Unsupported study mode: ${session.activeMode}');
+      },
+    );
   }
 }

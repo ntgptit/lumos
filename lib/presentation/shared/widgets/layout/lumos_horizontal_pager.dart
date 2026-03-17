@@ -32,11 +32,21 @@ class LumosHorizontalPager extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double wheelDeltaThreshold = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: LumosHorizontalPagerConst.wheelDeltaThreshold,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final ScrollPhysics resolvedPhysics = context.isDesktop
+        ? const ClampingScrollPhysics(parent: PageScrollPhysics())
+        : const BouncingScrollPhysics(parent: PageScrollPhysics());
     return Focus(
       autofocus: autofocus,
       onKeyEvent: _handleKeyEvent,
       child: Listener(
-        onPointerSignal: _handlePointerSignal,
+        onPointerSignal: (PointerSignalEvent event) {
+          _handlePointerSignal(event, wheelDeltaThreshold: wheelDeltaThreshold);
+        },
         child: NotificationListener<UserScrollNotification>(
           onNotification: _handleUserScrollNotification,
           child: NotificationListener<OverscrollNotification>(
@@ -46,9 +56,7 @@ class LumosHorizontalPager extends StatelessWidget {
               child: PageView.builder(
                 controller: controller,
                 scrollDirection: Axis.horizontal,
-                physics: const BouncingScrollPhysics(
-                  parent: PageScrollPhysics(),
-                ),
+                physics: resolvedPhysics,
                 itemCount: itemCount,
                 onPageChanged: onPageChanged,
                 itemBuilder: itemBuilder,
@@ -75,7 +83,10 @@ class LumosHorizontalPager extends StatelessWidget {
     return KeyEventResult.ignored;
   }
 
-  void _handlePointerSignal(PointerSignalEvent event) {
+  void _handlePointerSignal(
+    PointerSignalEvent event, {
+    required double wheelDeltaThreshold,
+  }) {
     if (event is! PointerScrollEvent) {
       return;
     }
@@ -83,8 +94,8 @@ class LumosHorizontalPager extends StatelessWidget {
     final double deltaY = event.scrollDelta.dy;
     final double horizontalIntent = deltaX.abs();
     final double verticalIntent = deltaY.abs();
-    if (horizontalIntent < LumosHorizontalPagerConst.wheelDeltaThreshold &&
-        verticalIntent < LumosHorizontalPagerConst.wheelDeltaThreshold) {
+    if (horizontalIntent < wheelDeltaThreshold &&
+        verticalIntent < wheelDeltaThreshold) {
       return;
     }
     if (horizontalIntent >= verticalIntent) {

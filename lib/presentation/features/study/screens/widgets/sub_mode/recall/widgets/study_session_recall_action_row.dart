@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../mode/study_mode_action_view_model.dart';
 import '../../../../../providers/study_recall_selection_provider.dart';
 import '../../widgets/study_session_action_row_layout.dart';
@@ -19,16 +20,26 @@ class StudySessionRecallActionRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StudySessionActionRowLayout(
-      children: actions
-          .map(
-            (StudyModeActionViewModel action) => StudySessionRecallActionButton(
-              action: action,
-              selectionState: selectionState,
-              onActionPressed: onActionPressed,
-            ),
-          )
-          .toList(growable: false),
+    final List<Widget> actionButtons = actions
+        .map(
+          (StudyModeActionViewModel action) => StudySessionRecallActionButton(
+            action: action,
+            selectionState: selectionState,
+            onActionPressed: onActionPressed,
+          ),
+        )
+        .toList(growable: false);
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final bool compactWidth = constraints.maxWidth < 380;
+        return StudySessionActionRowLayout(
+          gap: compactWidth ? AppSpacing.md : AppSpacing.lg,
+          rowHeight: compactWidth ? 56 : 64,
+          verticalSpacing: compactWidth ? AppSpacing.xs : AppSpacing.sm,
+          singleWidthFactor: compactWidth ? 0.56 : 0.42,
+          children: actionButtons,
+        );
+      },
     );
   }
 }

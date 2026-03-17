@@ -42,11 +42,19 @@ void main() {
           .extension<AppNavigationBarTokens>()!;
       final AppNavigationBarTokens adaptedNavigationBarTokens = adaptedTheme
           .extension<AppNavigationBarTokens>()!;
+      final AppCardTokens baseCardTokens = baseTheme
+          .extension<AppCardTokens>()!;
+      final AppCardTokens adaptedCardTokens = adaptedTheme
+          .extension<AppCardTokens>()!;
       final double baseHeadlineFontSize =
           baseTheme.textTheme.headlineMedium?.fontSize ?? 28;
       final double adaptedHeadlineFontSize =
           adaptedTheme.textTheme.headlineMedium?.fontSize ??
           baseHeadlineFontSize;
+      final double baseTitleFontSize =
+          baseTheme.textTheme.titleLarge?.fontSize ?? 22;
+      final double adaptedTitleFontSize =
+          adaptedTheme.textTheme.titleLarge?.fontSize ?? baseTitleFontSize;
       final double baseBodySmallFontSize =
           baseTheme.textTheme.bodySmall?.fontSize ?? 12;
       final double adaptedBodySmallFontSize =
@@ -55,10 +63,15 @@ void main() {
           adaptedTheme.textTheme.bodyMedium?.fontSize ?? 14;
 
       expect(adaptedHeadlineFontSize, lessThan(baseHeadlineFontSize));
+      expect(adaptedTitleFontSize, lessThan(baseTitleFontSize));
       expect(adaptedBodyMediumFontSize, lessThan(14));
       expect(adaptedBodySmallFontSize, baseBodySmallFontSize);
       expect(adaptedButtonTokens.heightMd, lessThan(baseButtonTokens.heightMd));
       expect(adaptedInputTokens.minHeight, lessThan(baseInputTokens.minHeight));
+      expect(
+        adaptedCardTokens.paddingLg.left,
+        lessThan(baseCardTokens.paddingLg.left),
+      );
       expect(
         adaptedNavigationBarTokens.height,
         lessThan(baseNavigationBarTokens.height),

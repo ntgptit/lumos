@@ -56,14 +56,21 @@ class StudySessionScreenAppBar extends StatelessWidget
         ],
       );
     }
+    final bool showsLeadingModeIcon = context.screenWidth >= 390;
+    final double leadingModeInset = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.xs,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return LumosAppBar(
       title: viewModel?.modeLabel ?? deckName,
       wrapActions: false,
       actions: <Widget>[
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: AppSpacing.xs),
-          child: LumosIcon(Icons.text_fields_rounded),
-        ),
+        if (showsLeadingModeIcon)
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: leadingModeInset),
+            child: const LumosIcon(Icons.text_fields_rounded),
+          ),
         LumosIconButton(
           icon: Icons.volume_up_rounded,
           tooltip: l10n.flashcardPlayAudioTooltip,

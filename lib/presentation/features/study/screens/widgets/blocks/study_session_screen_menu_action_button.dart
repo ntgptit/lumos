@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../domain/entities/study/study_models.dart';
 import '../../../../../../l10n/app_localizations.dart';
 import '../../../../../shared/widgets/lumos_widgets.dart';
@@ -22,6 +23,11 @@ class StudySessionScreenMenuActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
+    final double iconSize = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: IconSizes.iconMedium,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     final List<PopupMenuEntry<String>> items = <PopupMenuEntry<String>>[];
     if (session.activeMode == StudySessionSubModeConst.reviewMode &&
         session.currentItem.speech.available) {
@@ -53,7 +59,7 @@ class StudySessionScreenMenuActionButton extends StatelessWidget {
       return const SizedBox.shrink();
     }
     return PopupMenuButton<String>(
-      icon: const LumosIcon(Icons.more_vert_rounded),
+      icon: LumosIcon(Icons.more_vert_rounded, size: iconSize),
       onSelected: onSelected,
       itemBuilder: (BuildContext context) => items,
     );

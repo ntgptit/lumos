@@ -43,6 +43,11 @@ class FolderHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
+    final double sectionGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.md,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return LumosCard(
       variant: LumosCardVariant.filled,
       elevation: AppElevationTokens.level1,
@@ -55,7 +60,7 @@ class FolderHeader extends StatelessWidget {
             isDeckManager: isDeckManager,
             deckCount: deckCount,
           ),
-          const SizedBox(height: AppSpacing.md),
+          SizedBox(height: sectionGap),
           FolderHeaderNavigationSection(
             l10n: l10n,
             currentDepth: currentDepth,

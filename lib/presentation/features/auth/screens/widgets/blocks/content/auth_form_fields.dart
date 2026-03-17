@@ -27,6 +27,11 @@ class AuthFormFields extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
+    final double fieldSpacing = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: AppSpacing.md,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     final Widget passwordToggle = LumosIconButton(
       onPressed: () {
         ref.read(authPasswordVisibilityControllerProvider.notifier).toggle();
@@ -46,12 +51,12 @@ class AuthFormFields extends ConsumerWidget {
             controller: usernameController,
             label: l10n.authUsernameLabel,
           ),
-          const SizedBox(height: AppSpacing.md),
+          SizedBox(height: fieldSpacing),
           LumosTextField(
             controller: emailController,
             label: l10n.authEmailLabel,
           ),
-          const SizedBox(height: AppSpacing.md),
+          SizedBox(height: fieldSpacing),
           LumosTextField(
             controller: passwordController,
             obscureText: passwordObscured,
@@ -68,7 +73,7 @@ class AuthFormFields extends ConsumerWidget {
           controller: identifierController,
           label: l10n.authUsernameOrEmailLabel,
         ),
-        const SizedBox(height: AppSpacing.md),
+        SizedBox(height: fieldSpacing),
         LumosTextField(
           controller: passwordController,
           obscureText: passwordObscured,
