@@ -39,9 +39,11 @@ Load these in order:
    - `C:\Users\ntgpt\.codex\skills\flutter-full-app\SKILL.md`
    - `C:\Users\ntgpt\.codex\skills\flutter-frontend-client\SKILL.md`
 4. `C:\Users\ntgpt\.codex\flutter_architecture_checklist.md`
+5. `D:\workspace\lumos\00_docs\architecture\flutter\memora_flutter_architecture_contract.md`
 
 Repo-specific rules for Flutter:
 
+- `D:\workspace\lumos\00_docs\architecture\flutter\memora_flutter_architecture_contract.md` is the authoritative repo-local contract for Flutter folder placement, shared UI boundaries, feature sequencing, and study-mode structure.
 - `Riverpod Annotation + DI` is required.
 - `go_router` is required.
 - `retrofit + dio` is required for remote HTTP integration.
@@ -72,7 +74,7 @@ Repo-specific rules for Flutter:
 - Do not use `setState` as the main architecture.
 - Do not use `else`.
 - Use Material 3 theme, density, and component behavior.
-- Use centralized theme tokens under `lib/core/themes/**`.
+- Use centralized theme tokens under `lib/core/theme/**`.
 
 Flutter verification after code changes:
 
