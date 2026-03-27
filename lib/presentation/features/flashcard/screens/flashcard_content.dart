@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/themes/foundation/app_foundation.dart';
-import '../../../../core/constants/route_names.dart';
+import '../../../../app/app_routes.dart';
 import '../../../../core/utils/string_utils.dart';
 import '../../../../domain/entities/flashcard_models.dart';
 import '../../../../domain/entities/study/study_models.dart';

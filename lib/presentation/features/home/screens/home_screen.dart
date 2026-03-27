@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/constants/route_names.dart';
+import '../../../../app/app_routes.dart';
 import '../../../../core/themes/foundation/app_foundation.dart';
 import '../../../shared/widgets/lumos_widgets.dart';
 import '../../auth/providers/auth_session_provider.dart';

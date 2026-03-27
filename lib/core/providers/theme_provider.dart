@@ -3,19 +3,13 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants/storage_keys.dart';
-import '../themes/app_theme.dart';
+import '../theme/app_theme.dart';
 
 part 'theme_provider.g.dart';
-
-/// User-facing theme preference persisted in app state.
-enum AppThemePreference { system, light, dark }
 
 /// Shared constants for theme provider defaults.
 abstract final class ThemeProviderConst {
   static const ThemeMode defaultThemeMode = ThemeMode.system;
-  static const String themeModeSystem = 'system';
-  static const String themeModeLight = 'light';
-  static const String themeModeDark = 'dark';
 }
 
 /// Provides SharedPreferences instance for app-level persistence.
@@ -44,9 +38,8 @@ class AppThemeMode extends _$AppThemeMode {
   }
 
   /// Applies theme mode from persisted or selected preference.
-  Future<void> setPreference(AppThemePreference preference) async {
-    final ThemeMode mode = _toThemeMode(preference: preference);
-    await setThemeMode(mode);
+  Future<void> setPreference(AppThemeModeOption preference) async {
+    await setThemeMode(preference.themeMode);
   }
 
   /// Toggles quickly between light and dark mode.
@@ -58,21 +51,8 @@ class AppThemeMode extends _$AppThemeMode {
     await setThemeMode(nextMode);
   }
 
-  ThemeMode _toThemeMode({required AppThemePreference preference}) {
-    return switch (preference) {
-      AppThemePreference.system => ThemeMode.system,
-      AppThemePreference.light => ThemeMode.light,
-      AppThemePreference.dark => ThemeMode.dark,
-    };
-  }
-
   ThemeMode _fromStorage({required String? rawValue}) {
-    return switch (rawValue) {
-      ThemeProviderConst.themeModeSystem => ThemeMode.system,
-      ThemeProviderConst.themeModeLight => ThemeMode.light,
-      ThemeProviderConst.themeModeDark => ThemeMode.dark,
-      _ => ThemeProviderConst.defaultThemeMode,
-    };
+    return AppThemeModeOption.fromStorage(rawValue).themeMode;
   }
 
   void _restoreThemeMode() {
@@ -92,7 +72,10 @@ class AppThemeMode extends _$AppThemeMode {
     final SharedPreferences prefs = await ref.read(
       appSharedPreferencesProvider.future,
     );
-    await prefs.setString(StorageKeys.themeMode, mode.name);
+    final String storageValue = AppThemeModeOption.fromThemeMode(
+      mode,
+    ).storageValue;
+    await prefs.setString(StorageKeys.themeMode, storageValue);
   }
 }
 

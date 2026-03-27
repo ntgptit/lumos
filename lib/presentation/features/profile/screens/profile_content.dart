@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/speech/providers/tts_voice_options_provider.dart';
 import '../../../../core/speech/tts_voice_option.dart';
 import '../../../../core/providers/theme_provider.dart';
+import '../../../../core/theme/app_theme_mode.dart';
 import '../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../domain/entities/profile/profile_models.dart';
 import '../../../../domain/entities/study/study_speech_contract.dart';
@@ -92,7 +93,7 @@ class ProfileContent extends ConsumerWidget {
                     SizedBox(height: sectionGap),
                     ProfileThemeSection(
                       themeMode: themeMode,
-                      onPreferenceChanged: (AppThemePreference preference) {
+                      onPreferenceChanged: (AppThemeModeOption preference) {
                         unawaited(
                           ref
                               .read(appThemeModeProvider.notifier)

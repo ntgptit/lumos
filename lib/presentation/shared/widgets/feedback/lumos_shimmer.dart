@@ -7,7 +7,7 @@ class LumosShimmer extends StatelessWidget {
   const LumosShimmer({
     required this.child,
     super.key,
-    this.duration = MotionDurations.animationMedium,
+    this.duration = AppMotion.medium,
   });
 
   final Widget child;

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/constants/route_names.dart';
+import '../../../../app/app_routes.dart';
 import '../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../providers/study_overview_provider.dart';

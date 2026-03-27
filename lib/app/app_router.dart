@@ -2,23 +2,19 @@ import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../core/constants/route_names.dart';
-import '../../presentation/features/auth/providers/auth_session_provider.dart';
-import '../../presentation/features/auth/screens/auth_screen.dart';
-import '../../presentation/features/auth/screens/launch_screen.dart';
-import '../../presentation/features/flashcard/screens/flashcard_screen.dart';
-import '../../presentation/features/home/screens/home_screen.dart';
-import '../../presentation/features/study/screens/study_session_screen.dart';
+import '../presentation/features/auth/providers/auth_session_provider.dart';
+import '../presentation/features/auth/screens/auth_screen.dart';
+import '../presentation/features/auth/screens/launch_screen.dart';
+import '../presentation/features/flashcard/screens/flashcard_screen.dart';
+import '../presentation/features/home/screens/home_screen.dart';
+import '../presentation/features/study/screens/study_session_screen.dart';
+import 'app_routes.dart';
 
 part 'app_router.g.dart';
 
-/// Root navigator key used by [GoRouter] for top-level navigation.
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
 
-/// Application router provider.
-///
-/// This provider is the single source of truth for route configuration.
-@riverpod
+@Riverpod(keepAlive: true)
 GoRouter appRouter(Ref ref) {
   final AsyncValue<AuthViewState> authAsync = ref.watch(
     authSessionControllerProvider,

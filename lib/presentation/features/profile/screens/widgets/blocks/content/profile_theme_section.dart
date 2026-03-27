@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../../core/providers/theme_provider.dart';
+import '../../../../../../../core/theme/app_theme_mode.dart';
 import '../../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../../l10n/app_localizations.dart';
 import '../../../../../../shared/widgets/lumos_widgets.dart';
@@ -14,15 +14,14 @@ class ProfileThemeSection extends StatelessWidget {
   });
 
   final ThemeMode themeMode;
-  final ValueChanged<AppThemePreference> onPreferenceChanged;
+  final ValueChanged<AppThemeModeOption> onPreferenceChanged;
   final VoidCallback onQuickTogglePressed;
 
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
-    final AppThemePreference selectedPreference = _themePreferenceFromMode(
-      mode: themeMode,
-    );
+    final AppThemeModeOption selectedPreference =
+        AppThemeModeOption.fromThemeMode(themeMode);
     final double cardPadding = ResponsiveDimensions.compactValue(
       context: context,
       baseValue: AppSpacing.lg,
@@ -55,16 +54,16 @@ class ProfileThemeSection extends StatelessWidget {
               style: LumosTextStyle.bodyMedium,
             ),
             SizedBox(height: sectionGap),
-            LumosRadioGroup<AppThemePreference>(
-              options: AppThemePreference.values,
+            LumosRadioGroup<AppThemeModeOption>(
+              options: AppThemeModeOption.values,
               value: selectedPreference,
-              onChanged: (AppThemePreference? value) {
+              onChanged: (AppThemeModeOption? value) {
                 if (value == null) {
                   return;
                 }
                 onPreferenceChanged(value);
               },
-              labelBuilder: (AppThemePreference preference) {
+              labelBuilder: (AppThemeModeOption preference) {
                 return _themeLabel(l10n: l10n, preference: preference);
               },
             ),
@@ -82,22 +81,14 @@ class ProfileThemeSection extends StatelessWidget {
   }
 }
 
-AppThemePreference _themePreferenceFromMode({required ThemeMode mode}) {
-  return switch (mode) {
-    ThemeMode.light => AppThemePreference.light,
-    ThemeMode.dark => AppThemePreference.dark,
-    _ => AppThemePreference.system,
-  };
-}
-
 String _themeLabel({
   required AppLocalizations l10n,
-  required AppThemePreference preference,
+  required AppThemeModeOption preference,
 }) {
   return switch (preference) {
-    AppThemePreference.system => l10n.profileThemeSystem,
-    AppThemePreference.light => l10n.profileThemeLight,
-    AppThemePreference.dark => l10n.profileThemeDark,
+    AppThemeModeOption.system => l10n.profileThemeSystem,
+    AppThemeModeOption.light => l10n.profileThemeLight,
+    AppThemeModeOption.dark => l10n.profileThemeDark,
   };
 }
 

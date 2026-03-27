@@ -290,7 +290,7 @@ class LumosFlashcard extends StatelessWidget {
     required double compactSpacing,
   }) {
     return AnimatedContainer(
-      duration: MotionDurations.animationMedium,
+      duration: AppMotion.medium,
       curve: Curves.easeInOut,
       decoration: BoxDecoration(
         borderRadius: BorderRadii.circular(borderRadius),

@@ -192,7 +192,7 @@ class FlashcardPreviewCarousel extends StatelessWidget {
                       dotSize * FlashcardPreviewCarouselConst.activeDotScale,
                   child: Center(
                     child: AnimatedScale(
-                      duration: MotionDurations.animationFast,
+                      duration: AppMotion.fast,
                       scale: isActive
                           ? FlashcardPreviewCarouselConst.activeDotScale
                           : WidgetRatios.full,
@@ -266,7 +266,7 @@ class FlashcardPreviewCarousel extends StatelessWidget {
       }
       pageController.animateToPage(
         nextPage,
-        duration: MotionDurations.animationFast,
+        duration: AppMotion.fast,
         curve: Curves.easeOutCubic,
       );
       return;
@@ -278,7 +278,7 @@ class FlashcardPreviewCarousel extends StatelessWidget {
     }
     pageController.animateToPage(
       previousPage,
-      duration: MotionDurations.animationFast,
+      duration: AppMotion.fast,
       curve: Curves.easeOutCubic,
     );
   }

@@ -4,9 +4,19 @@ class ThemeArchitectureGuardConst {
   const ThemeArchitectureGuardConst._();
 
   static const String themesRoot = 'lib/core/themes';
+  static const String themeRoot = 'lib/core/theme';
   static const String extension = '.dart';
   static const String generatedExtension = '.g.dart';
   static const String freezedExtension = '.freezed.dart';
+  static const String tokenRoot = 'lib/core/theme/tokens';
+  static const String responsiveBreakpointsFile =
+      'lib/core/theme/responsive/breakpoints.dart';
+  static const List<String> forwardedConstGuardFiles = <String>[
+    'lib/core/theme/responsive/breakpoints.dart',
+    'lib/core/themes/foundation/app_layout_tokens.dart',
+    'lib/core/themes/foundation/app_material3_tokens.dart',
+    'lib/core/themes/foundation/app_motion_tokens.dart',
+  ];
 
   static const List<String> requiredDirectories = <String>[
     'lib/core/themes/foundation',
@@ -149,6 +159,24 @@ final RegExp _finalFieldNameRegExp = RegExp(
   r'final\s+[A-Za-z_<>,? ]+\s+([A-Za-z_]\w*)\s*;',
 );
 final RegExp _camelCaseFieldRegExp = RegExp(r'^[a-z][A-Za-z0-9]*$');
+final RegExp _forwardedStaticConstRegExp = RegExp(
+  r'^\s*static\s+const\s+[A-Za-z_<>,? ]+\s+[A-Za-z_]\w*\s*=\s*([A-Z][A-Za-z0-9_]*)\.[A-Za-z0-9_.]+\s*;',
+);
+const Set<String> _forwardedTokenSourcePrefixes = <String>{
+  'App',
+  'ColorTokens',
+  'SpacingTokens',
+  'RadiusTokens',
+  'BorderTokens',
+  'ElevationTokens',
+  'TypographyTokens',
+  'IconTokens',
+  'SizeTokens',
+  'IconSizes',
+  'WidgetSizes',
+  'Material3',
+  'Breakpoints',
+};
 
 Future<void> main() async {
   final List<ThemeArchitectureViolation> violations =
@@ -169,6 +197,7 @@ Future<void> main() async {
   _appendForbiddenLegacyDirectoryViolations(violations: violations);
   await _appendRequiredPatternViolations(violations: violations);
   await _appendTokenNamingViolations(violations: violations);
+  await _appendForwardedTokenDeclarationViolations(violations: violations);
 
   if (violations.isEmpty) {
     stdout.writeln('Theme architecture contract guard passed.');
@@ -183,6 +212,76 @@ Future<void> main() async {
     );
   }
   exitCode = 1;
+}
+
+Future<void> _appendForwardedTokenDeclarationViolations({
+  required List<ThemeArchitectureViolation> violations,
+}) async {
+  final Directory tokenDirectory = Directory(
+    ThemeArchitectureGuardConst.tokenRoot,
+  );
+  final List<String> tokenFiles = <String>[];
+  if (tokenDirectory.existsSync()) {
+    tokenFiles.addAll(
+      tokenDirectory
+          .listSync(recursive: true)
+          .whereType<File>()
+          .map((File file) => file.path.replaceAll('\\', '/'))
+          .where(
+            (String path) =>
+                path.endsWith(ThemeArchitectureGuardConst.extension),
+          )
+          .where(
+            (String path) =>
+                !path.endsWith(
+                  ThemeArchitectureGuardConst.generatedExtension,
+                ) &&
+                !path.endsWith(ThemeArchitectureGuardConst.freezedExtension),
+          ),
+    );
+  }
+  final Set<String> targetFiles = <String>{
+    ...tokenFiles,
+    ...ThemeArchitectureGuardConst.forwardedConstGuardFiles,
+  };
+  final List<String> sortedTargetFiles = targetFiles.toList()..sort();
+
+  for (final String filePath in sortedTargetFiles) {
+    final File file = File(filePath);
+    if (!file.existsSync()) {
+      continue;
+    }
+    final List<String> lines = await file.readAsLines();
+    for (int index = 0; index < lines.length; index++) {
+      final String line = lines[index];
+      if (!_isForwardedTokenDeclaration(line)) {
+        continue;
+      }
+      violations.add(
+        ThemeArchitectureViolation(
+          filePath: filePath,
+          lineNumber: index + 1,
+          reason:
+              'Theme token wrappers must not forward constants from another type. Use canonical declaration or export/typedef.',
+          lineContent: line.trim(),
+        ),
+      );
+    }
+  }
+}
+
+bool _isForwardedTokenDeclaration(String line) {
+  final RegExpMatch? match = _forwardedStaticConstRegExp.firstMatch(line);
+  if (match == null) {
+    return false;
+  }
+  final String sourceType = match.group(1) ?? '';
+  for (final String prefix in _forwardedTokenSourcePrefixes) {
+    if (sourceType.startsWith(prefix)) {
+      return true;
+    }
+  }
+  return false;
 }
 
 void _appendMissingDirectoryViolations({

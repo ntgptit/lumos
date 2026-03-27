@@ -7,7 +7,7 @@ import '../lumos_models.dart';
 abstract final class LumosScreenTransitionConst {
   LumosScreenTransitionConst._();
 
-  static const Duration duration = MotionDurations.animationSlow;
+  static const Duration duration = AppMotion.slow;
   static const double slideOffsetY = WidgetRatios.transitionSlideOffsetY;
 }
 

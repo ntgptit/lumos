@@ -2,9 +2,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 
-import 'app_material3_tokens.dart';
 import 'app_radius.dart';
-import 'app_spacing.dart';
 
 abstract final class BorderRadii {
   static const BorderRadius small = BorderRadius.all(
@@ -61,50 +59,33 @@ abstract final class IconSizes {
 }
 
 abstract final class WidgetSizes {
-  static const double none = AppSpacing.none;
-  static const double borderWidthRegular =
-      Material3ComponentSizeTokens.borderWidth;
-  static const double minTouchTarget =
-      Material3ComponentSizeTokens.minTouchTarget;
-  static const double buttonHeightSmall =
-      Material3ComponentSizeTokens.buttonHeight;
-  static const double buttonHeightMedium =
-      Material3ComponentSizeTokens.buttonHeight;
-  static const double buttonHeightLarge =
-      Material3ComponentSizeTokens.buttonHeightLarge;
-  static const double buttonMinWidth =
-      Material3ComponentSizeTokens.buttonMinWidth;
-  static const double dialogMinWidth =
-      Material3ComponentSizeTokens.dialogMinWidth;
-  static const double swipeActionWidth =
-      Material3ComponentSizeTokens.swipeActionWidth;
-  static const double progressIndicatorStrokeWidth =
-      Material3ComponentSizeTokens.progressIndicatorStrokeWidth;
-  static const double selectionElevationBoost =
-      Material3ComponentSizeTokens.selectionElevationBoost;
-  static const double fabRegular = Material3ComponentSizeTokens.fabRegular;
-  static const double fabSmall = Material3ComponentSizeTokens.fabSmall;
-  static const double maxContentWidth =
-      Material3ComponentSizeTokens.maxContentWidth;
-  static const double appBarHeight =
-      Material3ComponentSizeTokens.appBarSmallHeight;
-  static const double avatarSmall = Material3ComponentSizeTokens.avatarSmall;
-  static const double avatarMedium = Material3ComponentSizeTokens.avatarMedium;
-  static const double avatarLarge = Material3ComponentSizeTokens.avatarLarge;
-  static const double navigationBarHeight =
-      Material3ComponentSizeTokens.navigationBarHeight;
-  static const double overlayMaxWidthTablet =
-      Material3ComponentSizeTokens.overlayMaxWidthTablet;
-  static const double overlayMaxWidthDesktop =
-      Material3ComponentSizeTokens.overlayMaxWidthDesktop;
-  static const double progressTrackHeight =
-      Material3ComponentSizeTokens.progressTrackHeight;
-  static const double sliderTrackHeight =
-      Material3ComponentSizeTokens.sliderTrackHeight;
+  static const double none = 0.0;
+  static const double borderWidthRegular = 1.0;
+  static const double minTouchTarget = 48.0;
+  static const double buttonHeightSmall = 40.0;
+  static const double buttonHeightMedium = 40.0;
+  static const double buttonHeightLarge = 48.0;
+  static const double buttonMinWidth = 64.0;
+  static const double dialogMinWidth = 340.0;
+  static const double swipeActionWidth = 72.0;
+  static const double progressIndicatorStrokeWidth = 2.0;
+  static const double selectionElevationBoost = 1.0;
+  static const double fabRegular = 56.0;
+  static const double fabSmall = 40.0;
+  static const double maxContentWidth = 1200.0;
+  static const double appBarHeight = 64.0;
+  static const double avatarSmall = 24.0;
+  static const double avatarMedium = 32.0;
+  static const double avatarLarge = 48.0;
+  static const double navigationBarHeight = 80.0;
+  static const double overlayMaxWidthTablet = 480.0;
+  static const double overlayMaxWidthDesktop = 560.0;
+  static const double progressTrackHeight = 4.0;
+  static const double sliderTrackHeight = 4.0;
 }
 
 abstract final class WidgetRatios {
-  static const double none = AppSpacing.none;
+  static const double none = 0.0;
   static const double half = 0.5;
   static const double full = 1.0;
   static const double transitionSlideOffsetY = 0.06;
