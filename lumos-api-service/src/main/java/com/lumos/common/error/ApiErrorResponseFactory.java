@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Strings;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,7 +50,7 @@ public class ApiErrorResponseFactory {
     }
 
     private String normalizeMessageKey(String rawValue) {
-        if (!Strings.CS.startsWith(rawValue, "{") || !Strings.CS.endsWith(rawValue, "}")) {
+        if (!StringUtils.startsWith(rawValue, "{") || !StringUtils.endsWith(rawValue, "}")) {
             return rawValue;
         }
         return rawValue.substring(1, rawValue.length() - 1);

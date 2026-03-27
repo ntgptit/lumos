@@ -3,14 +3,13 @@ package com.lumos.study.mode;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Strings;
 import org.springframework.stereotype.Component;
 
 import com.lumos.study.entity.StudySession;
 import com.lumos.study.entity.StudySessionItem;
 import com.lumos.study.enums.ReviewOutcome;
-import com.lumos.study.enums.StudyModeLifecycleState;
 import com.lumos.study.enums.StudyMode;
+import com.lumos.study.enums.StudyModeLifecycleState;
 
 @Component
 public class FillStudyModeStrategy extends AbstractStudyModeStrategy {
@@ -28,7 +27,7 @@ public class FillStudyModeStrategy extends AbstractStudyModeStrategy {
     public ReviewOutcome evaluateAnswer(StudySessionItem currentItem, String submittedAnswer) {
         final String normalizedSubmittedAnswer = StringUtils.trimToEmpty(submittedAnswer);
         final String normalizedExpectedAnswer = StringUtils.trimToEmpty(currentItem.getFrontTextSnapshot());
-        final boolean isMatched = Strings.CI.equals(
+        final boolean isMatched = StringUtils.equals(
                 normalizedSubmittedAnswer,
                 normalizedExpectedAnswer);
         // Return a passed outcome only when the learner re-enters the term side that fill mode expects.

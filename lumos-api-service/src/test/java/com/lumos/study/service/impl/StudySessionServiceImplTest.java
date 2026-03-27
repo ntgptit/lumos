@@ -16,23 +16,23 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.times;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.time.Instant;
 
-import org.apache.commons.lang3.Strings;
-import org.springframework.data.domain.Pageable;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Pageable;
 
 import com.lumos.auth.repository.UserAccountRepository;
 import com.lumos.auth.security.AuthenticatedUserProvider;
@@ -309,9 +309,9 @@ class StudySessionServiceImplTest {
         assertEquals("WAITING_FEEDBACK", response.modeState());
         assertTrue(item.getCurrentModeCompleted());
         assertTrue(response.allowedActions().stream()
-                .anyMatch(action -> Strings.CS.equals(action, "GO_NEXT")));
+                .anyMatch(action -> StringUtils.equals(action, "GO_NEXT")));
         assertFalse(response.allowedActions().stream()
-                .anyMatch(action -> Strings.CS.equals(action, "SUBMIT_ANSWER")));
+                .anyMatch(action -> StringUtils.equals(action, "SUBMIT_ANSWER")));
     }
 
     @Test
@@ -343,11 +343,11 @@ class StudySessionServiceImplTest {
         assertTrue(item.getRetryPending());
         assertEquals(1, item.getIncorrectAttemptCount());
         assertTrue(response.allowedActions().stream()
-                .anyMatch(action -> Strings.CS.equals(action, "REVEAL_ANSWER")));
+                .anyMatch(action -> StringUtils.equals(action, "REVEAL_ANSWER")));
         assertTrue(response.allowedActions().stream()
-                .anyMatch(action -> Strings.CS.equals(action, "SUBMIT_ANSWER")));
+                .anyMatch(action -> StringUtils.equals(action, "SUBMIT_ANSWER")));
         assertFalse(response.allowedActions().stream()
-                .anyMatch(action -> Strings.CS.equals(action, "GO_NEXT")));
+                .anyMatch(action -> StringUtils.equals(action, "GO_NEXT")));
     }
 
     @Test
@@ -379,9 +379,9 @@ class StudySessionServiceImplTest {
         assertFalse(item.getRetryPending());
         assertEquals(1, item.getIncorrectAttemptCount());
         assertTrue(response.allowedActions().stream()
-                .anyMatch(action -> Strings.CS.equals(action, "GO_NEXT")));
+                .anyMatch(action -> StringUtils.equals(action, "GO_NEXT")));
         assertFalse(response.allowedActions().stream()
-                .anyMatch(action -> Strings.CS.equals(action, "SUBMIT_ANSWER")));
+                .anyMatch(action -> StringUtils.equals(action, "SUBMIT_ANSWER")));
     }
 
     @Test
@@ -531,11 +531,11 @@ class StudySessionServiceImplTest {
         assertEquals(1, item.getIncorrectAttemptCount());
         assertEquals(ReviewOutcome.FAILED, attemptCaptor.getValue().getReviewOutcome());
         assertTrue(response.allowedActions().stream()
-                .anyMatch(action -> Strings.CS.equals(action, "REVEAL_ANSWER")));
+                .anyMatch(action -> StringUtils.equals(action, "REVEAL_ANSWER")));
         assertTrue(response.allowedActions().stream()
-                .anyMatch(action -> Strings.CS.equals(action, "SUBMIT_ANSWER")));
+                .anyMatch(action -> StringUtils.equals(action, "SUBMIT_ANSWER")));
         assertFalse(response.allowedActions().stream()
-                .anyMatch(action -> Strings.CS.equals(action, "GO_NEXT")));
+                .anyMatch(action -> StringUtils.equals(action, "GO_NEXT")));
     }
 
     @Test
@@ -720,7 +720,7 @@ class StudySessionServiceImplTest {
         assertFalse(secondItem.getRetryPending());
         assertEquals(null, secondItem.getLastOutcome());
         assertTrue(response.allowedActions().stream()
-                .anyMatch(action -> Strings.CS.equals(action, "RESET_CURRENT_MODE")));
+                .anyMatch(action -> StringUtils.equals(action, "RESET_CURRENT_MODE")));
     }
 
     @Test

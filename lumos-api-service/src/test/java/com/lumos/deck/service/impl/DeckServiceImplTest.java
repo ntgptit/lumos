@@ -18,7 +18,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -30,8 +30,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.mock.web.MockMultipartFile;
 
-import com.lumos.deck.constant.DeckImportConstants;
 import com.lumos.deck.constant.DeckConstants;
+import com.lumos.deck.constant.DeckImportConstants;
 import com.lumos.deck.dto.DeckImportDeckDraft;
 import com.lumos.deck.dto.DeckImportFlashcardDraft;
 import com.lumos.deck.dto.response.DeckImportResponse;
@@ -360,8 +360,8 @@ class DeckServiceImplTest {
         when(this.deckRepository.findAllActiveByFolderIdAndNormalizedNames(
                 eq(FOLDER_ID),
                 argThat(names -> names.size() == 2
-                        && names.stream().allMatch(name -> Strings.CS.equals(name, "deck a")
-                                || Strings.CS.equals(name, "deck b")))))
+                        && names.stream().allMatch(name -> StringUtils.equals(name, "deck a")
+                                || StringUtils.equals(name, "deck b")))))
                 .thenReturn(List.of(firstDeck, secondDeck));
         when(this.flashcardImportBatchRepository.insertFlashcards(any(), any(Instant.class))).thenReturn(3);
         when(this.deckMapper.toDeckImportResponse(FOLDER_ID, 2, 2, 3)).thenReturn(response);
@@ -395,7 +395,7 @@ class DeckServiceImplTest {
         when(this.deckRepository.findAllActiveByFolderIdAndNormalizedNames(
                 eq(FOLDER_ID),
                 argThat(names -> names.size() == 1
-                        && names.stream().allMatch(name -> Strings.CS.equals(name, "deck a")))))
+                        && names.stream().allMatch(name -> StringUtils.equals(name, "deck a")))))
                 .thenReturn(List.of(existingDeck));
         when(this.flashcardImportBatchRepository.insertFlashcards(any(), any(Instant.class))).thenReturn(1);
         when(this.deckMapper.toDeckImportResponse(FOLDER_ID, 1, 0, 1)).thenReturn(response);

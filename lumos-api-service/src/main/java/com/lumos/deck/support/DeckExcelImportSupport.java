@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Strings;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
@@ -240,7 +239,7 @@ public class DeckExcelImportSupport {
             return false;
         }
         final var trimmedValue = StringUtils.trim(value);
-        return Strings.CS.startsWith(trimmedValue, DeckImportConstants.DECK_MARKER_PREFIX);
+        return StringUtils.startsWith(trimmedValue, DeckImportConstants.DECK_MARKER_PREFIX);
     }
 
     private String resolveMarkedValue(String value) {
@@ -250,7 +249,7 @@ public class DeckExcelImportSupport {
         }
         final var trimmedValue = StringUtils.trim(value);
         // Return null when the cell does not start with the deck marker prefix.
-        if (!Strings.CS.startsWith(trimmedValue, DeckImportConstants.DECK_MARKER_PREFIX)) {
+        if (!StringUtils.startsWith(trimmedValue, DeckImportConstants.DECK_MARKER_PREFIX)) {
             return null;
         }
         return StringUtils.trim(StringUtils.substringAfter(trimmedValue, DeckImportConstants.DECK_MARKER_PREFIX));

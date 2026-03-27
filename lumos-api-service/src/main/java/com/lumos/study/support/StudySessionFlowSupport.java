@@ -5,7 +5,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Strings;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -41,27 +40,43 @@ public class StudySessionFlowSupport {
     private final StudyModeStrategyFactory studyModeStrategyFactory;
 
     public StudySession resolveSession(Long sessionId) {
-        final StudySession session = this.studySessionRepository.findByIdAndDeletedAtIsNull(sessionId)
+        final var session = this.studySessionRepository
+                .findByIdAndDeletedAtIsNull(sessionId)
                 .orElseThrow(() -> new StudySessionNotFoundException(sessionId));
-        final Long currentUserId = this.authenticatedUserProvider.getCurrentUserId();
-        if (session.getUserAccount() == null || !Objects.deepEquals(currentUserId, session.getUserAccount().getId())) {
+        final var currentUserId = this.authenticatedUserProvider
+                .getCurrentUserId();
+        if (session
+                .getUserAccount() == null
+                || !Objects
+                        .deepEquals(currentUserId, session
+                                .getUserAccount()
+                                .getId())) {
             throw new StudySessionNotFoundException(sessionId);
         }
         return session;
     }
 
     public List<StudySessionItem> resolveSessionItems(StudySession session) {
-        return this.studySessionItemRepository.findAllByStudySessionIdAndDeletedAtIsNullOrderBySequenceIndexAsc(
-                session.getId());
+        return this.studySessionItemRepository
+                .findAllByStudySessionIdAndDeletedAtIsNullOrderBySequenceIndexAsc(
+                        session
+                                .getId());
     }
 
     public StudySessionItem resolveCurrentItem(StudySession session) {
-        return resolveCurrentItem(session, resolveSessionItems(session));
+        return this
+                .resolveCurrentItem(session, this
+                        .resolveSessionItems(session));
     }
 
     public StudySessionItem resolveCurrentItem(StudySession session, List<StudySessionItem> items) {
-        return items.stream()
-                .filter(item -> Objects.deepEquals(item.getSequenceIndex(), session.getCurrentItemIndex()))
+        return items
+                .stream()
+                .filter(item -> Objects
+                        .deepEquals(item
+                                .getSequenceIndex(),
+                                session
+                                        .getCurrentItemIndex()))
                 .findFirst()
                 .orElseThrow(StudyCommandNotAllowedException::new);
     }
@@ -72,50 +87,75 @@ public class StudySessionFlowSupport {
             List<StudySessionItem> items,
             ReviewOutcome outcome,
             String submittedAnswer) {
-        final boolean isPassed = outcome == ReviewOutcome.PASSED;
-        final List<StudySessionItem> affectedItems = resolveOutcomeItems(
-                session,
-                currentItem,
-                items,
-                outcome);
+        final var isPassed = outcome == ReviewOutcome.PASSED;
+        final var affectedItems = this
+                .resolveOutcomeItems(
+                        session,
+                        currentItem,
+                        items,
+                        outcome);
         for (StudySessionItem item : affectedItems) {
-            item.setLastOutcome(outcome);
-            item.setCurrentModeCompleted(isPassed);
-            item.setRetryPending(!isPassed);
-            item.setIncorrectAttemptCount(resolveIncorrectAttemptCount(item, outcome));
+            item
+                    .setLastOutcome(outcome);
+            item
+                    .setCurrentModeCompleted(isPassed);
+            item
+                    .setRetryPending(!isPassed);
+            item
+                    .setIncorrectAttemptCount(this
+                            .resolveIncorrectAttemptCount(item, outcome));
         }
-        session.setModeState(StudyModeLifecycleState.WAITING_FEEDBACK);
-        saveAttempts(session, affectedItems, outcome, submittedAnswer);
+        session
+                .setModeState(StudyModeLifecycleState.WAITING_FEEDBACK);
+        this
+                .saveAttempts(session, affectedItems, outcome, submittedAnswer);
     }
 
     public void applySkippedOutcome(StudySession session, StudySessionItem currentItem) {
-        currentItem.setLastOutcome(ReviewOutcome.SKIPPED);
-        currentItem.setCurrentModeCompleted(Boolean.TRUE);
-        currentItem.setRetryPending(Boolean.FALSE);
-        currentItem.setIncorrectAttemptCount(resolveIncorrectAttemptCount(currentItem, ReviewOutcome.SKIPPED));
-        session.setModeState(StudyModeLifecycleState.WAITING_FEEDBACK);
-        saveAttempts(session, List.of(currentItem), ReviewOutcome.SKIPPED, null);
+        currentItem
+                .setLastOutcome(ReviewOutcome.SKIPPED);
+        currentItem
+                .setCurrentModeCompleted(Boolean.TRUE);
+        currentItem
+                .setRetryPending(Boolean.FALSE);
+        currentItem
+                .setIncorrectAttemptCount(this
+                        .resolveIncorrectAttemptCount(currentItem, ReviewOutcome.SKIPPED));
+        session
+                .setModeState(StudyModeLifecycleState.WAITING_FEEDBACK);
+        this
+                .saveAttempts(session, List
+                        .of(currentItem), ReviewOutcome.SKIPPED, null);
     }
 
     public Integer findNextSequenceIndex(List<StudySessionItem> items, int currentSequenceIndex) {
-        return items.stream()
-                .filter(item -> item.getSequenceIndex() > currentSequenceIndex)
-                .filter(item -> !item.getCurrentModeCompleted())
+        return items
+                .stream()
+                .filter(item -> item
+                        .getSequenceIndex() > currentSequenceIndex)
+                .filter(item -> !item
+                        .getCurrentModeCompleted())
                 .map(StudySessionItem::getSequenceIndex)
                 .findFirst()
                 .orElse(null);
     }
 
     public boolean hasPendingRetry(List<StudySessionItem> items) {
-        return items.stream().anyMatch(StudySessionItem::getRetryPending);
+        return items
+                .stream()
+                .anyMatch(StudySessionItem::getRetryPending);
     }
 
     public boolean hasUnfinishedItem(List<StudySessionItem> items) {
-        return items.stream().anyMatch(item -> !item.getCurrentModeCompleted());
+        return items
+                .stream()
+                .anyMatch(item -> !item
+                        .getCurrentModeCompleted());
     }
 
     public int findFirstRetrySequenceIndex(List<StudySessionItem> items) {
-        return items.stream()
+        return items
+                .stream()
                 .filter(StudySessionItem::getRetryPending)
                 .map(StudySessionItem::getSequenceIndex)
                 .findFirst()
@@ -123,27 +163,43 @@ public class StudySessionFlowSupport {
     }
 
     public void moveToNextMode(StudySession session, List<StudySessionItem> items, StudyMode nextMode) {
-        session.setCurrentModeIndex(session.getCurrentModeIndex() + 1);
-        session.setActiveMode(nextMode);
-        session.setCurrentItemIndex(0);
-        session.setModeState(StudyModeLifecycleState.INITIALIZED);
+        session
+                .setCurrentModeIndex(session
+                        .getCurrentModeIndex() + 1);
+        session
+                .setActiveMode(nextMode);
+        session
+                .setCurrentItemIndex(0);
+        session
+                .setModeState(StudyModeLifecycleState.INITIALIZED);
         for (StudySessionItem item : items) {
-            item.setCurrentModeCompleted(Boolean.FALSE);
-            item.setRetryPending(Boolean.FALSE);
-            item.setLastOutcome(null);
-            item.setIncorrectAttemptCount(INITIAL_INCORRECT_ATTEMPT_COUNT);
+            item
+                    .setCurrentModeCompleted(Boolean.FALSE);
+            item
+                    .setRetryPending(Boolean.FALSE);
+            item
+                    .setLastOutcome(null);
+            item
+                    .setIncorrectAttemptCount(INITIAL_INCORRECT_ATTEMPT_COUNT);
         }
     }
 
     public void resetCurrentMode(StudySession session, List<StudySessionItem> items) {
-        session.setCurrentItemIndex(0);
-        session.setModeState(StudyModeLifecycleState.INITIALIZED);
-        session.setSessionCompleted(Boolean.FALSE);
+        session
+                .setCurrentItemIndex(0);
+        session
+                .setModeState(StudyModeLifecycleState.INITIALIZED);
+        session
+                .setSessionCompleted(Boolean.FALSE);
         for (StudySessionItem item : items) {
-            item.setCurrentModeCompleted(Boolean.FALSE);
-            item.setRetryPending(Boolean.FALSE);
-            item.setLastOutcome(null);
-            item.setIncorrectAttemptCount(INITIAL_INCORRECT_ATTEMPT_COUNT);
+            item
+                    .setCurrentModeCompleted(Boolean.FALSE);
+            item
+                    .setRetryPending(Boolean.FALSE);
+            item
+                    .setLastOutcome(null);
+            item
+                    .setIncorrectAttemptCount(INITIAL_INCORRECT_ATTEMPT_COUNT);
         }
     }
 
@@ -152,39 +208,64 @@ public class StudySessionFlowSupport {
             StudySessionItem currentItem,
             List<StudySessionItem> items,
             SubmitAnswerRequest request) {
-        final StudyModeStrategy studyModeStrategy = resolveStudyModeStrategy(session.getActiveMode());
-        if (session.getActiveMode() == StudyMode.MATCH) {
-            if (CollectionUtils.isEmpty(request.matchedPairs())) {
+        final var studyModeStrategy = this
+                .resolveStudyModeStrategy(session
+                        .getActiveMode());
+        if (session
+                .getActiveMode() == StudyMode.MATCH) {
+            if (CollectionUtils
+                    .isEmpty(request
+                            .matchedPairs())) {
                 throw new StudyAnswerPayloadInvalidException();
             }
-            return studyModeStrategy.evaluateMatchPairs(currentItem, items, request.matchedPairs());
+            return studyModeStrategy
+                    .evaluateMatchPairs(currentItem, items, request
+                            .matchedPairs());
         }
-        if (StringUtils.isBlank(request.answer())) {
+        if (StringUtils
+                .isBlank(request
+                        .answer())) {
             throw new StudyAnswerPayloadInvalidException();
         }
-        return studyModeStrategy.evaluateAnswer(currentItem, request.answer());
+        return studyModeStrategy
+                .evaluateAnswer(currentItem, request
+                        .answer());
     }
 
     public String resolveSubmittedAnswerLog(StudySession session, SubmitAnswerRequest request) {
-        if (session.getActiveMode() == StudyMode.MATCH) {
-            return request.matchedPairs().stream()
-                    .map(pair -> pair.leftId() + ":" + pair.rightId())
-                    .collect(Collectors.joining(","));
+        if (session
+                .getActiveMode() == StudyMode.MATCH) {
+            return request
+                    .matchedPairs()
+                    .stream()
+                    .map(pair -> pair
+                            .leftId() + ":"
+                            + pair
+                                    .rightId())
+                    .collect(Collectors
+                            .joining(","));
         }
-        return request.answer();
+        return request
+                .answer();
     }
 
     public void ensureActionAllowed(StudySession session, StudySessionItem currentItem, String actionId) {
-        final List<String> allowedActions = resolveStudyModeStrategy(session.getActiveMode())
+        final var allowedActions = this
+                .resolveStudyModeStrategy(session
+                        .getActiveMode())
                 .resolveAllowedActions(session, currentItem);
-        if (allowedActions.stream().anyMatch(allowedAction -> Strings.CS.equals(allowedAction, actionId))) {
+        if (allowedActions
+                .stream()
+                .anyMatch(allowedAction -> StringUtils
+                        .equals(allowedAction, actionId))) {
             return;
         }
         throw new StudyCommandNotAllowedException();
     }
 
     private StudyModeStrategy resolveStudyModeStrategy(StudyMode studyMode) {
-        return this.studyModeStrategyFactory.getStrategy(studyMode);
+        return this.studyModeStrategyFactory
+                .getStrategy(studyMode);
     }
 
     private List<StudySessionItem> resolveOutcomeItems(
@@ -193,9 +274,13 @@ public class StudySessionFlowSupport {
             List<StudySessionItem> items,
             ReviewOutcome outcome) {
         if (outcome != ReviewOutcome.PASSED) {
-            return List.of(currentItem);
+            return List
+                    .of(currentItem);
         }
-        return resolveStudyModeStrategy(session.getActiveMode()).resolvePassedItems(currentItem, items);
+        return this
+                .resolveStudyModeStrategy(session
+                        .getActiveMode())
+                .resolvePassedItems(currentItem, items);
     }
 
     private void saveAttempts(
@@ -204,19 +289,29 @@ public class StudySessionFlowSupport {
             ReviewOutcome outcome,
             String submittedAnswer) {
         for (StudySessionItem item : items) {
-            final StudyAttempt attempt = new StudyAttempt();
-            attempt.setStudySession(session);
-            attempt.setFlashcard(item.getFlashcard());
-            attempt.setStudyMode(session.getActiveMode());
-            attempt.setReviewOutcome(outcome);
-            attempt.setSubmittedAnswer(submittedAnswer);
-            this.studyAttemptRepository.save(attempt);
+            final var attempt = new StudyAttempt();
+            attempt
+                    .setStudySession(session);
+            attempt
+                    .setFlashcard(item
+                            .getFlashcard());
+            attempt
+                    .setStudyMode(session
+                            .getActiveMode());
+            attempt
+                    .setReviewOutcome(outcome);
+            attempt
+                    .setSubmittedAnswer(submittedAnswer);
+            this.studyAttemptRepository
+                    .save(attempt);
         }
     }
 
     private int resolveIncorrectAttemptCount(StudySessionItem item, ReviewOutcome outcome) {
-        final Integer persistedCount = item.getIncorrectAttemptCount();
-        final int currentCount = persistedCount == null ? INITIAL_INCORRECT_ATTEMPT_COUNT : persistedCount;
+        final var persistedCount = item
+                .getIncorrectAttemptCount();
+        final var currentCount = persistedCount == null ? INITIAL_INCORRECT_ATTEMPT_COUNT
+                : persistedCount;
         if (outcome != ReviewOutcome.FAILED) {
             return currentCount;
         }
