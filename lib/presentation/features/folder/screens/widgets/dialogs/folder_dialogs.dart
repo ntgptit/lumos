@@ -149,7 +149,7 @@ Future<void> _handleFolderEditorSubmit({
   }
   final FolderUpsertInput input = FolderUpsertInput(
     name: StringUtils.normalizeName(rawName),
-    description: StringUtils.normalizeName(rawDescription),
+    description: StringUtils.normalizeText(rawDescription),
     parentId: parentId,
   );
   final FolderSubmitResult submitResult = await onSubmitted(input);
@@ -194,7 +194,7 @@ String? _resolveFormValidationMessage({
   if (nameValidationMessage != null) {
     return nameValidationMessage;
   }
-  final String normalizedDescription = StringUtils.normalizeName(
+  final String normalizedDescription = StringUtils.normalizeText(
     rawDescription,
   );
   if (normalizedDescription.length > _folderDescriptionMaxLength) {

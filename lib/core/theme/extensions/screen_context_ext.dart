@@ -1,19 +1,8 @@
 import 'package:flutter/material.dart';
-
-import '../responsive/screen_class.dart';
-import '../responsive/screen_info.dart';
-import 'dimension_theme_ext.dart';
+import 'package:lumos/core/theme/responsive/screen_class.dart';
+import 'package:lumos/core/theme/responsive/screen_info.dart';
 
 extension ScreenContextExt on BuildContext {
-  ScreenInfo get screenInfo {
-    final DimensionThemeExt? extension = Theme.of(
-      this,
-    ).extension<DimensionThemeExt>();
-    if (extension != null) {
-      return extension.screenInfo;
-    }
-    return ScreenInfo.fromMediaQueryData(MediaQuery.of(this));
-  }
-
+  ScreenInfo get screenInfo => ScreenInfo.fromContext(this);
   ScreenClass get screenClass => screenInfo.screenClass;
 }

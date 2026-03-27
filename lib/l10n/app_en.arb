@@ -4,6 +4,10 @@
   "@appTitle": {
     "description": "Default application title"
   },
+  "appName": "Lumos",
+  "@appName": {
+    "description": "Short application name used in shared shells and splash UI"
+  },
   "commonCancel": "Cancel",
   "commonCreate": "Create",
   "commonSave": "Save",
@@ -305,6 +309,43 @@
   "commonSubmit": "Submit",
   "commonCheck": "Check",
   "commonReplay": "Replay",
+  "navigationDashboardLabel": "Home",
+  "navigationFoldersLabel": "Folders",
+  "navigationDecksLabel": "Library",
+  "navigationProgressLabel": "Progress",
+  "navigationSettingsLabel": "Profile",
+  "loading": "Loading...",
+  "splashTitle": "Preparing your learning workspace",
+  "clearSelectionTooltip": "Clear selection",
+  "selectionCountLabel": "{count} selected",
+  "@selectionCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "filterTooltip": "Filter",
+  "sortTooltip": "Sort",
+  "noResultsTitle": "No results found",
+  "noResultsMessage": "Try adjusting your filters or search terms.",
+  "offlineTitle": "You are offline",
+  "offlineMessage": "Check your internet connection and try again.",
+  "offlineRetryLabel": "Retry",
+  "accessRequiredTitle": "Access required",
+  "signInMessage": "Sign in to continue.",
+  "signInLabel": "Sign in",
+  "selectDateLabel": "Select date",
+  "clearDateTooltip": "Clear date",
+  "requiredFieldMark": " *",
+  "searchLabel": "Search",
+  "clearSearchTooltip": "Clear search",
+  "selectTimeLabel": "Select time",
+  "clearTimeTooltip": "Clear time",
+  "maintenanceTitle": "Maintenance",
+  "maintenanceMessage": "The system is temporarily unavailable.",
+  "notFoundTitle": "Page not found",
+  "notFoundMessage": "The requested page does not exist.",
   "authTitle": "Lumos",
   "authSubtitle": "Authenticate first, then resume study from canonical backend state.",
   "authLoginTab": "Login",

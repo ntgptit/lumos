@@ -29,7 +29,7 @@ class ProfileSpeechPreviewController extends _$ProfileSpeechPreviewController {
     required SpeechPreference preference,
     required String text,
   }) async {
-    final String normalizedText = StringUtils.normalizeName(text);
+    final String normalizedText = StringUtils.normalizeText(text);
     if (normalizedText.isEmpty) {
       return;
     }

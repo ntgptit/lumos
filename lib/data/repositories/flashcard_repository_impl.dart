@@ -154,8 +154,8 @@ class DioFlashcardRepository implements FlashcardRepository {
       input.backLangCode,
     );
     return FlashcardUpsertInput(
-      frontText: StringUtils.normalizeName(input.frontText),
-      backText: StringUtils.normalizeName(input.backText),
+      frontText: StringUtils.normalizeText(input.frontText),
+      backText: StringUtils.normalizeText(input.backText),
       frontLangCode: normalizedFrontLangCode,
       backLangCode: normalizedBackLangCode,
     );

@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:lumos/core/theme/responsive/adaptive_typography.dart';
 
-import '../../constants/text_styles.dart';
+@immutable
+class TextThemeExt extends ThemeExtension<TextThemeExt> {
+  const TextThemeExt({required this.typography});
 
-extension TextThemeExt on TextTheme {
-  TextStyle get bodyMediumStrong {
-    final TextStyle baseStyle = bodyMedium ?? const TextStyle();
-    return baseStyle.copyWith(fontWeight: AppTypographyConst.kFontWeightBold);
+  final AdaptiveTypography typography;
+
+  @override
+  TextThemeExt copyWith({AdaptiveTypography? typography}) {
+    return TextThemeExt(typography: typography ?? this.typography);
   }
 
-  TextStyle get bodySmallMuted {
-    return bodySmall ?? const TextStyle();
-  }
-
-  TextStyle get labelMediumLink {
-    final TextStyle baseStyle = labelMedium ?? const TextStyle();
-    return baseStyle.copyWith(decoration: TextDecoration.underline);
+  @override
+  TextThemeExt lerp(ThemeExtension<TextThemeExt>? other, double t) {
+    if (other is! TextThemeExt) {
+      return this;
+    }
+    return t < 0.5 ? this : other;
   }
 }

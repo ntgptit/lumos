@@ -1,321 +1,233 @@
-import 'dart:async';
-
 import 'package:dio/dio.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
-import '../../constants/storage_keys.dart';
-import 'auth_token_interceptor.dart';
-import 'retry_interceptor.dart';
+import 'package:lumos/core/network/interceptors/auth_interceptor.dart';
+import 'package:lumos/core/network/interceptors/retry_interceptor.dart';
+import 'package:lumos/core/services/auth_session_service.dart';
+import 'package:lumos/core/storage/secure_storage.dart';
+import 'package:lumos/core/storage/storage_keys.dart';
 
 abstract final class SessionRefreshInterceptorConst {
-  SessionRefreshInterceptorConst._();
-
-  static const String refreshPath = '/api/v1/auth/refresh';
-  static const String bypassRefreshKey = 'bypass_token_refresh';
-  static const String refreshTokenField = 'refreshToken';
-  static const String accessTokenField = 'accessToken';
-  static const String userField = 'user';
-  static const String userIdField = 'id';
+  static const bypassRefreshKey =
+      SessionRefreshInterceptor.skipSessionRefreshKey;
 }
 
-enum SessionRefreshFailureReason { invalidSession, retryable }
-
-class SessionRefreshResult {
-  const SessionRefreshResult._({
-    required this.accessToken,
-    required this.failureReason,
-    this.error,
-  });
-
-  const SessionRefreshResult.refreshed(String accessToken)
-    : this._(accessToken: accessToken, failureReason: null);
-
-  const SessionRefreshResult.failure({
-    required SessionRefreshFailureReason failureReason,
-    DioException? error,
-  }) : this._(accessToken: null, failureReason: failureReason, error: error);
-
-  final String? accessToken;
-  final SessionRefreshFailureReason? failureReason;
-  final DioException? error;
-
-  bool get refreshed => (accessToken ?? '').isNotEmpty;
-  bool get shouldClearSession =>
-      failureReason == SessionRefreshFailureReason.invalidSession;
-}
-
-/// Interceptor that refreshes expired access tokens and retries the request once.
-class SessionRefreshInterceptor extends Interceptor {
+class SessionRefreshInterceptor extends QueuedInterceptor {
   SessionRefreshInterceptor({
-    required FlutterSecureStorage storage,
-    required Dio refreshDio,
-    this.onSessionInvalidated,
-  }) : _storage = storage,
-       _refreshDio = refreshDio;
+    required Dio dio,
+    required SecureStorage secureStorage,
+    required AuthSessionService authSessionService,
+  }) : _dio = dio,
+       _secureStorage = secureStorage,
+       _authSessionService = authSessionService;
 
-  final FlutterSecureStorage _storage;
-  final Dio _refreshDio;
-  final FutureOr<void> Function()? onSessionInvalidated;
+  static const skipSessionRefreshKey = 'skipSessionRefresh';
+  static const retriedWithFreshTokenKey = 'retriedWithFreshToken';
+  static const _loginPath = '/api/v1/auth/login';
+  static const _registerPath = '/api/v1/auth/register';
+  static const _refreshPath = '/api/v1/auth/refresh';
+  static const _logoutPath = '/api/v1/auth/logout';
 
-  Completer<SessionRefreshResult>? _refreshCompleter;
+  final Dio _dio;
+  final SecureStorage _secureStorage;
+  final AuthSessionService _authSessionService;
 
   @override
   Future<void> onError(
     DioException err,
     ErrorInterceptorHandler handler,
   ) async {
-    if (!_isUnauthorized(err)) {
-      handler.next(err);
-      return;
-    }
-    if (_isRefreshBypassed(err.requestOptions)) {
-      handler.next(err);
-      return;
-    }
-    if (_isRefreshRequest(err.requestOptions)) {
-      await _clearSessionAndNotify();
+    final requestOptions = err.requestOptions;
+    if (!_shouldHandleUnauthorized(err, requestOptions)) {
       handler.next(err);
       return;
     }
 
-    final String? refreshToken = await _storage.read(
-      key: StorageKeys.refreshToken,
+    final latestAccessToken = await _readToken(StorageKeys.authToken);
+    final requestAccessToken = _extractBearerToken(
+      requestOptions.headers['Authorization'],
     );
-    if ((refreshToken ?? '').isEmpty) {
-      await _clearSessionAndNotify();
-      handler.next(err);
-      return;
+
+    if (_hasNewerAccessToken(latestAccessToken, requestAccessToken)) {
+      try {
+        final response = await _retryRequest(
+          requestOptions,
+          latestAccessToken!,
+        );
+        handler.resolve(response);
+        return;
+      } on DioException catch (retryError) {
+        handler.next(retryError);
+        return;
+      }
     }
 
-    final SessionRefreshResult refreshResult = await _refreshAccessToken(
-      refreshToken: refreshToken!,
-    );
-    if (refreshResult.shouldClearSession) {
-      await _clearSessionAndNotify();
+    final refreshToken = await _readToken(StorageKeys.refreshToken);
+    if (refreshToken == null) {
+      await _expireSession();
       handler.next(err);
-      return;
-    }
-    if (!refreshResult.refreshed) {
-      handler.next(refreshResult.error ?? err);
       return;
     }
 
     try {
-      final Response<dynamic> response = await _refreshDio.fetch<dynamic>(
-        _cloneRequestOptions(
-          original: err.requestOptions,
-          accessToken: refreshResult.accessToken!,
-        ),
+      final refreshedTokens = await _refreshTokens(refreshToken);
+      await _persistTokens(refreshedTokens);
+      final response = await _retryRequest(
+        requestOptions,
+        refreshedTokens.accessToken,
       );
       handler.resolve(response);
-      return;
-    } on DioException catch (retryError) {
-      handler.next(retryError);
-      return;
+    } on DioException catch (refreshError) {
+      await _expireSession();
+      handler.next(refreshError);
+    } catch (_) {
+      await _expireSession();
+      handler.next(err);
     }
   }
 
-  bool _isUnauthorized(DioException error) {
-    return error.response?.statusCode == 401;
-  }
-
-  bool _isRefreshBypassed(RequestOptions requestOptions) {
-    final Object? rawValue =
-        requestOptions.extra[SessionRefreshInterceptorConst.bypassRefreshKey];
-    if (rawValue is bool) {
-      return rawValue;
-    }
-    return false;
-  }
-
-  bool _isRefreshRequest(RequestOptions requestOptions) {
-    return requestOptions.path == SessionRefreshInterceptorConst.refreshPath;
-  }
-
-  Future<SessionRefreshResult> _refreshAccessToken({
-    required String refreshToken,
-  }) async {
-    final Completer<SessionRefreshResult>? activeRefresh = _refreshCompleter;
-    if (activeRefresh != null) {
-      return activeRefresh.future;
+  bool _shouldHandleUnauthorized(
+    DioException err,
+    RequestOptions requestOptions,
+  ) {
+    if (err.response?.statusCode != 401) {
+      return false;
     }
 
-    final Completer<SessionRefreshResult> refreshCompleter =
-        Completer<SessionRefreshResult>();
-    _refreshCompleter = refreshCompleter;
-    try {
-      final Response<dynamic> response = await _refreshDio.post<dynamic>(
-        SessionRefreshInterceptorConst.refreshPath,
-        data: <String, dynamic>{
-          SessionRefreshInterceptorConst.refreshTokenField: refreshToken,
+    if (requestOptions.cancelToken?.isCancelled == true) {
+      return false;
+    }
+
+    if (requestOptions.extra[skipSessionRefreshKey] == true) {
+      return false;
+    }
+
+    if (requestOptions.extra[retriedWithFreshTokenKey] == true) {
+      return false;
+    }
+
+    return !_isSkippedAuthEndpoint(requestOptions.path);
+  }
+
+  bool _isSkippedAuthEndpoint(String path) {
+    return path.endsWith(_loginPath) ||
+        path.endsWith(_registerPath) ||
+        path.endsWith(_refreshPath) ||
+        path.endsWith(_logoutPath);
+  }
+
+  bool _hasNewerAccessToken(String? latestToken, String? requestToken) {
+    if (latestToken == null || latestToken.isEmpty) {
+      return false;
+    }
+
+    if (requestToken == null || requestToken.isEmpty) {
+      return false;
+    }
+
+    return latestToken != requestToken;
+  }
+
+  Future<String?> _readToken(String key) async {
+    final value = await _secureStorage.read(key);
+    final normalizedValue = value?.trim();
+    if (normalizedValue == null || normalizedValue.isEmpty) {
+      return null;
+    }
+    return normalizedValue;
+  }
+
+  String? _extractBearerToken(Object? rawAuthorizationHeader) {
+    if (rawAuthorizationHeader is! String) {
+      return null;
+    }
+
+    const prefix = 'Bearer ';
+    if (!rawAuthorizationHeader.startsWith(prefix)) {
+      return null;
+    }
+
+    final token = rawAuthorizationHeader.substring(prefix.length).trim();
+    if (token.isEmpty) {
+      return null;
+    }
+    return token;
+  }
+
+  Future<_RefreshedTokens> _refreshTokens(String refreshToken) async {
+    final response = await _dio.post<Map<String, dynamic>>(
+      _refreshPath,
+      data: <String, String>{'refreshToken': refreshToken},
+      options: Options(
+        extra: <String, Object?>{
+          AuthInterceptor.skipAuthKey: true,
+          RetryInterceptor.skipRetryKey: true,
+          skipSessionRefreshKey: true,
         },
-        options: Options(
-          extra: <String, dynamic>{
-            SessionRefreshInterceptorConst.bypassRefreshKey: true,
-            RetryInterceptorConst.bypassRetryKey: true,
-          },
-        ),
-      );
-      final Map<String, dynamic> payload = _castMap(response.data);
-      final String accessToken = _readAccessToken(payload);
-      if (accessToken.isEmpty) {
-        const SessionRefreshResult failureResult = SessionRefreshResult.failure(
-          failureReason: SessionRefreshFailureReason.invalidSession,
-        );
-        refreshCompleter.complete(failureResult);
-        return failureResult;
-      }
-
-      await _persistSession(
-        payload: payload,
-        currentRefreshToken: refreshToken,
-      );
-      final SessionRefreshResult successResult = SessionRefreshResult.refreshed(
-        accessToken,
-      );
-      refreshCompleter.complete(successResult);
-      return successResult;
-    } on DioException catch (error) {
-      final SessionRefreshResult failureResult = SessionRefreshResult.failure(
-        failureReason: _isRefreshSessionInvalid(error)
-            ? SessionRefreshFailureReason.invalidSession
-            : SessionRefreshFailureReason.retryable,
-        error: error,
-      );
-      refreshCompleter.complete(failureResult);
-      return failureResult;
-    } finally {
-      _refreshCompleter = null;
-    }
-  }
-
-  bool _isRefreshSessionInvalid(DioException error) {
-    final int? statusCode = error.response?.statusCode;
-    if (statusCode == 401) {
-      return true;
-    }
-    if (statusCode == 403) {
-      return true;
-    }
-    return false;
-  }
-
-  Future<void> _persistSession({
-    required Map<String, dynamic> payload,
-    required String currentRefreshToken,
-  }) async {
-    final String accessToken = _readAccessToken(payload);
-    final String nextRefreshToken = _readRefreshToken(
-      payload: payload,
-      fallbackRefreshToken: currentRefreshToken,
-    );
-    await _storage.write(key: StorageKeys.accessToken, value: accessToken);
-    await _storage.write(
-      key: StorageKeys.refreshToken,
-      value: nextRefreshToken,
+      ),
     );
 
-    final String userId = _readUserId(payload);
-    if (userId.isEmpty) {
-      return;
+    final data = response.data ?? const <String, dynamic>{};
+    final accessToken = _normalizeTokenValue(data['accessToken']);
+    final nextRefreshToken = _normalizeTokenValue(data['refreshToken']);
+    if (accessToken == null || nextRefreshToken == null) {
+      throw DioException.badResponse(
+        statusCode: response.statusCode ?? 401,
+        requestOptions: response.requestOptions,
+        response: response,
+      );
     }
-    await _storage.write(key: StorageKeys.userId, value: userId);
-  }
 
-  String _readAccessToken(Map<String, dynamic> payload) {
-    return payload[SessionRefreshInterceptorConst.accessTokenField]
-            as String? ??
-        '';
-  }
-
-  String _readRefreshToken({
-    required Map<String, dynamic> payload,
-    required String fallbackRefreshToken,
-  }) {
-    final String refreshToken =
-        payload[SessionRefreshInterceptorConst.refreshTokenField] as String? ??
-        '';
-    if (refreshToken.isNotEmpty) {
-      return refreshToken;
-    }
-    return fallbackRefreshToken;
-  }
-
-  String _readUserId(Map<String, dynamic> payload) {
-    final Object? rawUser = payload[SessionRefreshInterceptorConst.userField];
-    if (rawUser is! Map<dynamic, dynamic>) {
-      return '';
-    }
-    final Map<String, dynamic> userPayload = rawUser.cast<String, dynamic>();
-    final Object? rawUserId =
-        userPayload[SessionRefreshInterceptorConst.userIdField];
-    if (rawUserId is int) {
-      return '$rawUserId';
-    }
-    if (rawUserId is String) {
-      return rawUserId;
-    }
-    return '';
-  }
-
-  RequestOptions _cloneRequestOptions({
-    required RequestOptions original,
-    required String accessToken,
-  }) {
-    final Map<String, dynamic> headers = <String, dynamic>{
-      ...original.headers,
-      AuthTokenInterceptorConst.authorizationHeader:
-          '${AuthTokenInterceptorConst.bearerPrefix}$accessToken',
-    };
-    final Map<String, dynamic> extra = <String, dynamic>{
-      ...original.extra,
-      SessionRefreshInterceptorConst.bypassRefreshKey: true,
-      RetryInterceptorConst.bypassRetryKey: true,
-    };
-    extra.remove(RetryInterceptorConst.retryAttemptKey);
-    return RequestOptions(
-      path: original.path,
-      method: original.method,
-      baseUrl: original.baseUrl,
-      connectTimeout: original.connectTimeout,
-      sendTimeout: original.sendTimeout,
-      receiveTimeout: original.receiveTimeout,
-      headers: headers,
-      queryParameters: original.queryParameters,
-      data: original.data,
-      responseType: original.responseType,
-      contentType: original.contentType,
-      extra: extra,
-      followRedirects: original.followRedirects,
-      listFormat: original.listFormat,
-      maxRedirects: original.maxRedirects,
-      persistentConnection: original.persistentConnection,
-      validateStatus: original.validateStatus,
-      receiveDataWhenStatusError: original.receiveDataWhenStatusError,
-      requestEncoder: original.requestEncoder,
-      responseDecoder: original.responseDecoder,
+    return _RefreshedTokens(
+      accessToken: accessToken,
+      refreshToken: nextRefreshToken,
     );
   }
 
-  Future<void> _clearSession() async {
-    await _storage.delete(key: StorageKeys.accessToken);
-    await _storage.delete(key: StorageKeys.refreshToken);
-    await _storage.delete(key: StorageKeys.userId);
+  String? _normalizeTokenValue(Object? rawValue) {
+    if (rawValue is! String) {
+      return null;
+    }
+
+    final normalizedValue = rawValue.trim();
+    if (normalizedValue.isEmpty) {
+      return null;
+    }
+    return normalizedValue;
   }
 
-  Future<void> _clearSessionAndNotify() async {
-    await _clearSession();
-    final FutureOr<void> Function()? callback = onSessionInvalidated;
-    if (callback == null) {
-      return;
-    }
-    await callback();
+  Future<void> _persistTokens(_RefreshedTokens tokens) async {
+    await _secureStorage.write(StorageKeys.authToken, tokens.accessToken);
+    await _secureStorage.write(StorageKeys.refreshToken, tokens.refreshToken);
   }
 
-  Map<String, dynamic> _castMap(dynamic rawValue) {
-    if (rawValue is Map<dynamic, dynamic>) {
-      return rawValue.cast<String, dynamic>();
-    }
-    return <String, dynamic>{};
+  Future<Response<Object?>> _retryRequest(
+    RequestOptions requestOptions,
+    String accessToken,
+  ) {
+    final headers = Map<String, dynamic>.from(requestOptions.headers);
+    headers['Authorization'] = 'Bearer $accessToken';
+
+    final extra = Map<String, dynamic>.from(requestOptions.extra);
+    extra[retriedWithFreshTokenKey] = true;
+
+    return _dio.fetch<Object?>(
+      requestOptions.copyWith(headers: headers, extra: extra),
+    );
   }
+
+  Future<void> _expireSession() async {
+    await _secureStorage.clear(
+      keys: <String>{StorageKeys.authToken, StorageKeys.refreshToken},
+    );
+    _authSessionService.notifyExpired();
+  }
+}
+
+class _RefreshedTokens {
+  const _RefreshedTokens({
+    required this.accessToken,
+    required this.refreshToken,
+  });
+
+  final String accessToken;
+  final String refreshToken;
 }

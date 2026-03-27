@@ -1,90 +1,99 @@
-import 'dart:math' as math;
-
-import 'package:flutter/material.dart';
-
-import 'adaptive_component_size.dart';
-import 'adaptive_spacing.dart';
-import 'breakpoints.dart';
-import 'screen_info.dart';
+import 'package:flutter/foundation.dart';
+import 'package:lumos/core/theme/responsive/screen_class.dart';
+import 'package:lumos/core/theme/responsive/screen_info.dart';
 
 @immutable
-final class AdaptiveLayout {
+class AdaptiveLayout {
   const AdaptiveLayout({
-    required this.maxContentWidth,
+    required this.pageHorizontalPadding,
+    required this.pageVerticalPadding,
+    required this.sectionGap,
     required this.gutter,
-    required this.columns,
+    required this.gridColumns,
+    required this.useSplitView,
+    required this.contentMaxWidth,
+    required this.panelMaxWidth,
     required this.dialogMaxWidth,
-    required this.overlayMaxWidth,
-    required this.horizontalPadding,
-    required this.isSplitView,
+    required this.flashcardMaxWidth,
+    required this.studyContentMaxWidth,
+    required this.resultDialogMaxWidth,
   });
 
-  factory AdaptiveLayout.fromScreenInfo({
-    required ScreenInfo screenInfo,
-    required AdaptiveSpacing spacing,
-    required AdaptiveComponentSize componentSize,
-  }) {
-    final bool isSplitView = screenInfo.width >= Breakpoints.kTabletMaxWidth;
-    final int columns = switch (screenInfo.screenClass) {
-      _ when screenInfo.isCompact => 4,
-      _ when screenInfo.isMedium => 8,
-      _ => 12,
-    };
-    final double overlayMaxWidth = switch (screenInfo.screenClass) {
-      _ when screenInfo.isCompact => screenInfo.width,
-      _ when screenInfo.isMedium => componentSize.overlayMaxWidthTablet,
-      _ => componentSize.overlayMaxWidthDesktop,
-    };
-    return AdaptiveLayout(
-      maxContentWidth: math.min(
-        screenInfo.width,
-        componentSize.maxContentWidth,
+  factory AdaptiveLayout.fromScreen(ScreenClass screenClass) {
+    return switch (screenClass) {
+      ScreenClass.compact => const AdaptiveLayout(
+        pageHorizontalPadding: 20,
+        pageVerticalPadding: 24,
+        sectionGap: 24,
+        gutter: 20,
+        gridColumns: 1,
+        useSplitView: false,
+        contentMaxWidth: 560,
+        panelMaxWidth: 480,
+        dialogMaxWidth: 420,
+        flashcardMaxWidth: 520,
+        studyContentMaxWidth: 560,
+        resultDialogMaxWidth: 420,
       ),
-      gutter: switch (screenInfo.screenClass) {
-        _ when screenInfo.isCompact => spacing.lg,
-        _ when screenInfo.isMedium => spacing.xxl,
-        _ => spacing.xxxl,
-      },
-      columns: columns,
-      dialogMaxWidth: math.min(
-        screenInfo.width,
-        componentSize.dialogMinWidth * 1.6,
+      ScreenClass.medium => const AdaptiveLayout(
+        pageHorizontalPadding: 32,
+        pageVerticalPadding: 32,
+        sectionGap: 32,
+        gutter: 28,
+        gridColumns: 2,
+        useSplitView: false,
+        contentMaxWidth: 720,
+        panelMaxWidth: 560,
+        dialogMaxWidth: 520,
+        flashcardMaxWidth: 620,
+        studyContentMaxWidth: 720,
+        resultDialogMaxWidth: 500,
       ),
-      overlayMaxWidth: overlayMaxWidth,
-      horizontalPadding: switch (screenInfo.screenClass) {
-        _ when screenInfo.isCompact => spacing.lg,
-        _ when screenInfo.isMedium => spacing.xxl,
-        _ => spacing.page,
-      },
-      isSplitView: isSplitView,
-    );
+      ScreenClass.expanded => const AdaptiveLayout(
+        pageHorizontalPadding: 40,
+        pageVerticalPadding: 40,
+        sectionGap: 40,
+        gutter: 32,
+        gridColumns: 3,
+        useSplitView: true,
+        contentMaxWidth: 960,
+        panelMaxWidth: 640,
+        dialogMaxWidth: 560,
+        flashcardMaxWidth: 680,
+        studyContentMaxWidth: 900,
+        resultDialogMaxWidth: 560,
+      ),
+      ScreenClass.large => const AdaptiveLayout(
+        pageHorizontalPadding: 56,
+        pageVerticalPadding: 48,
+        sectionGap: 48,
+        gutter: 40,
+        gridColumns: 4,
+        useSplitView: true,
+        contentMaxWidth: 1120,
+        panelMaxWidth: 720,
+        dialogMaxWidth: 640,
+        flashcardMaxWidth: 760,
+        studyContentMaxWidth: 1040,
+        resultDialogMaxWidth: 620,
+      ),
+    };
   }
 
-  final double maxContentWidth;
+  factory AdaptiveLayout.resolve(ScreenInfo screenInfo) {
+    return AdaptiveLayout.fromScreen(screenInfo.screenClass);
+  }
+
+  final double pageHorizontalPadding;
+  final double pageVerticalPadding;
+  final double sectionGap;
   final double gutter;
-  final int columns;
+  final int gridColumns;
+  final bool useSplitView;
+  final double contentMaxWidth;
+  final double panelMaxWidth;
   final double dialogMaxWidth;
-  final double overlayMaxWidth;
-  final double horizontalPadding;
-  final bool isSplitView;
-
-  AdaptiveLayout copyWith({
-    double? maxContentWidth,
-    double? gutter,
-    int? columns,
-    double? dialogMaxWidth,
-    double? overlayMaxWidth,
-    double? horizontalPadding,
-    bool? isSplitView,
-  }) {
-    return AdaptiveLayout(
-      maxContentWidth: maxContentWidth ?? this.maxContentWidth,
-      gutter: gutter ?? this.gutter,
-      columns: columns ?? this.columns,
-      dialogMaxWidth: dialogMaxWidth ?? this.dialogMaxWidth,
-      overlayMaxWidth: overlayMaxWidth ?? this.overlayMaxWidth,
-      horizontalPadding: horizontalPadding ?? this.horizontalPadding,
-      isSplitView: isSplitView ?? this.isSplitView,
-    );
-  }
+  final double flashcardMaxWidth;
+  final double studyContentMaxWidth;
+  final double resultDialogMaxWidth;
 }

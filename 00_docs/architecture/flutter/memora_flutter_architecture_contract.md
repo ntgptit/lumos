@@ -1,4 +1,4 @@
-# Memora Flutter Architecture Contract
+# lumos Flutter Architecture Contract
 
 This file is the repo-local source of truth for Flutter folder placement, theme and responsive foundation, shared presentation boundaries, feature structure, and architecture rollout order in `lumos`.
 
@@ -7,7 +7,7 @@ This file is the repo-local source of truth for Flutter folder placement, theme 
 - Project type: Flutter full app
 - Scope: Repository-wide target structure
 - Intent: target structure
-- Notes: Repo-local clean-architecture contract for Memora in `lumos`, using Riverpod Annotation + DI, app-wide `domain` and `data` roots, and shared presentation split into `primitives` and `composites`.
+- Notes: Repo-local clean-architecture contract for lumos in `lumos`, using Riverpod Annotation + DI, app-wide `domain` and `data` roots, and shared presentation split into `primitives` and `composites`.
 
 ## Folder tree
 
@@ -790,7 +790,7 @@ Muc dich
 
 `presentation/features` chua UI theo nghiep vu thuc te.
 
-Feature trong Memora
+Feature trong lumos
 
 - dashboard
 - folder
@@ -1099,7 +1099,7 @@ Voi feature
 
 ## 2.24 Final Architecture Principle
 
-Kien truc cua Memora phai tuan theo nguyen tac:
+Kien truc cua lumos phai tuan theo nguyen tac:
 
 - Theme va responsive di tu nen tang
 - Shared widget la lop ap tieu chuan UI

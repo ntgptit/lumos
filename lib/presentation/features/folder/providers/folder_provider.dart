@@ -109,7 +109,7 @@ class FolderAsyncController extends _$FolderAsyncController {
   }
 
   void updateSearchQuery(String rawQuery) {
-    final String normalizedQuery = StringUtils.normalizeName(rawQuery);
+    final String normalizedQuery = StringUtils.normalizeSearchQuery(rawQuery);
     final Timer? activeTimer = _searchDebounceTimer;
     if (activeTimer != null) {
       activeTimer.cancel();
@@ -120,7 +120,7 @@ class FolderAsyncController extends _$FolderAsyncController {
   }
 
   void updateDeckSearchQuery(String rawQuery) {
-    final String normalizedQuery = StringUtils.normalizeName(rawQuery);
+    final String normalizedQuery = StringUtils.normalizeSearchQuery(rawQuery);
     final Timer? activeTimer = _searchDebounceTimer;
     if (activeTimer != null) {
       activeTimer.cancel();

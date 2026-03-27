@@ -43,7 +43,7 @@ class FlashcardStudyCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
     final ThemeData theme = Theme.of(context);
-    final String normalizedNote = StringUtils.normalizeName(item.note);
+    final String normalizedNote = StringUtils.normalizeText(item.note);
     final bool hasNote = normalizedNote.isNotEmpty;
     final double contentHorizontalPadding = ResponsiveDimensions.compactValue(
       context: context,

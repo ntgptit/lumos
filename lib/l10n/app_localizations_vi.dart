@@ -12,6 +12,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get appTitle => 'Lumos';
 
   @override
+  String get appName => 'Lumos';
+
+  @override
   String get commonCancel => 'Hủy';
 
   @override
@@ -633,6 +636,98 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get commonReplay => 'Phát lại';
+
+  @override
+  String get navigationDashboardLabel => 'Trang chủ';
+
+  @override
+  String get navigationFoldersLabel => 'Thư mục';
+
+  @override
+  String get navigationDecksLabel => 'Thư viện';
+
+  @override
+  String get navigationProgressLabel => 'Tiến độ';
+
+  @override
+  String get navigationSettingsLabel => 'Hồ sơ';
+
+  @override
+  String get loading => 'Đang tải...';
+
+  @override
+  String get splashTitle => 'Đang chuẩn bị không gian học tập của bạn';
+
+  @override
+  String get clearSelectionTooltip => 'Bỏ chọn';
+
+  @override
+  String selectionCountLabel(int count) {
+    return 'Đã chọn $count';
+  }
+
+  @override
+  String get filterTooltip => 'Lọc';
+
+  @override
+  String get sortTooltip => 'Sắp xếp';
+
+  @override
+  String get noResultsTitle => 'Không tìm thấy kết quả';
+
+  @override
+  String get noResultsMessage => 'Hãy thử điều chỉnh bộ lọc hoặc từ khóa tìm kiếm.';
+
+  @override
+  String get offlineTitle => 'Bạn đang ngoại tuyến';
+
+  @override
+  String get offlineMessage => 'Kiểm tra kết nối Internet rồi thử lại.';
+
+  @override
+  String get offlineRetryLabel => 'Thử lại';
+
+  @override
+  String get accessRequiredTitle => 'Cần quyền truy cập';
+
+  @override
+  String get signInMessage => 'Đăng nhập để tiếp tục.';
+
+  @override
+  String get signInLabel => 'Đăng nhập';
+
+  @override
+  String get selectDateLabel => 'Chọn ngày';
+
+  @override
+  String get clearDateTooltip => 'Xóa ngày';
+
+  @override
+  String get requiredFieldMark => ' *';
+
+  @override
+  String get searchLabel => 'Tìm kiếm';
+
+  @override
+  String get clearSearchTooltip => 'Xóa tìm kiếm';
+
+  @override
+  String get selectTimeLabel => 'Chọn giờ';
+
+  @override
+  String get clearTimeTooltip => 'Xóa giờ';
+
+  @override
+  String get maintenanceTitle => 'Bảo trì';
+
+  @override
+  String get maintenanceMessage => 'Hệ thống hiện tạm thời không khả dụng.';
+
+  @override
+  String get notFoundTitle => 'Không tìm thấy trang';
+
+  @override
+  String get notFoundMessage => 'Trang bạn yêu cầu không tồn tại.';
 
   @override
   String get authTitle => 'Lumos';

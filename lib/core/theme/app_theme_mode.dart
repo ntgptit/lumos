@@ -1,34 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:lumos/core/enums/app_theme_type.dart';
 
-enum AppThemeModeOption {
-  system,
-  light,
-  dark;
+enum AppThemeMode { system, light, dark }
 
-  static AppThemeModeOption fromThemeMode(ThemeMode themeMode) {
-    return switch (themeMode) {
-      ThemeMode.system => AppThemeModeOption.system,
-      ThemeMode.light => AppThemeModeOption.light,
-      ThemeMode.dark => AppThemeModeOption.dark,
-    };
+extension AppThemeModeX on AppThemeMode {
+  AppThemeType get themeType {
+    switch (this) {
+      case AppThemeMode.system:
+        return AppThemeType.system;
+      case AppThemeMode.light:
+        return AppThemeType.light;
+      case AppThemeMode.dark:
+        return AppThemeType.dark;
+    }
   }
 
-  static AppThemeModeOption fromStorage(String? rawValue) {
-    return switch (rawValue) {
-      'system' => AppThemeModeOption.system,
-      'light' => AppThemeModeOption.light,
-      'dark' => AppThemeModeOption.dark,
-      _ => AppThemeModeOption.system,
-    };
+  ThemeMode get materialThemeMode {
+    switch (this) {
+      case AppThemeMode.system:
+        return ThemeMode.system;
+      case AppThemeMode.light:
+        return ThemeMode.light;
+      case AppThemeMode.dark:
+        return ThemeMode.dark;
+    }
   }
 
-  ThemeMode get themeMode {
-    return switch (this) {
-      AppThemeModeOption.system => ThemeMode.system,
-      AppThemeModeOption.light => ThemeMode.light,
-      AppThemeModeOption.dark => ThemeMode.dark,
-    };
+  Brightness resolveBrightness(Brightness platformBrightness) {
+    switch (this) {
+      case AppThemeMode.system:
+        return platformBrightness;
+      case AppThemeMode.light:
+        return Brightness.light;
+      case AppThemeMode.dark:
+        return Brightness.dark;
+    }
   }
+}
 
-  String get storageValue => name;
+extension AppThemeTypeX on AppThemeType {
+  AppThemeMode get appThemeMode {
+    switch (this) {
+      case AppThemeType.system:
+        return AppThemeMode.system;
+      case AppThemeType.light:
+        return AppThemeMode.light;
+      case AppThemeType.dark:
+        return AppThemeMode.dark;
+    }
+  }
 }

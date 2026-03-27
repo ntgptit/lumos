@@ -1,89 +1,113 @@
-import 'package:flutter/material.dart';
-
-import '../tokens/size_tokens.dart';
-import 'responsive_scale.dart';
+import 'package:flutter/foundation.dart';
+import 'package:lumos/core/theme/responsive/screen_class.dart';
+import 'package:lumos/core/theme/tokens/tokens.dart';
 
 @immutable
-final class AdaptiveComponentSize {
+class AdaptiveComponentSize {
   const AdaptiveComponentSize({
-    required this.minTouchTarget,
-    required this.buttonHeightSmall,
-    required this.buttonHeightMedium,
-    required this.buttonHeightLarge,
-    required this.buttonMinWidth,
-    required this.dialogMinWidth,
-    required this.appBarHeight,
-    required this.navigationBarHeight,
-    required this.maxContentWidth,
-    required this.overlayMaxWidthTablet,
-    required this.overlayMaxWidthDesktop,
-    required this.progressTrackHeight,
-    required this.sliderTrackHeight,
+    required this.buttonHeight,
+    required this.bottomBarHeight,
+    required this.bottomSheetHandleHeight,
+    required this.bottomSheetHandleWidth,
+    required this.cardPadding,
+    required this.emptyStateMinHeight,
+    required this.inputHeight,
+    required this.chipHeight,
+    required this.dialogPadding,
+    required this.listItemLeadingSize,
+    required this.loadingStateMaxWidth,
+    required this.toolbarHeight,
+    required this.fabSize,
+    required this.navigationRailWidth,
+    required this.cardMinHeight,
   });
 
-  factory AdaptiveComponentSize.fromScale(ResponsiveScale scale) {
-    return AdaptiveComponentSize(
-      minTouchTarget: SizeTokens.minTouchTarget * scale.component,
-      buttonHeightSmall: SizeTokens.buttonHeightSmall * scale.component,
-      buttonHeightMedium: SizeTokens.buttonHeightMedium * scale.component,
-      buttonHeightLarge: SizeTokens.buttonHeightLarge * scale.component,
-      buttonMinWidth: SizeTokens.buttonMinWidth * scale.component,
-      dialogMinWidth: SizeTokens.dialogMinWidth * scale.component,
-      appBarHeight: SizeTokens.appBarHeight * scale.component,
-      navigationBarHeight: SizeTokens.navigationBarHeight * scale.component,
-      maxContentWidth: SizeTokens.maxContentWidth,
-      overlayMaxWidthTablet: SizeTokens.overlayMaxWidthTablet,
-      overlayMaxWidthDesktop: SizeTokens.overlayMaxWidthDesktop,
-      progressTrackHeight: SizeTokens.progressTrackHeight,
-      sliderTrackHeight: SizeTokens.sliderTrackHeight,
-    );
+  factory AdaptiveComponentSize.fromScreen(ScreenClass screenClass) {
+    return switch (screenClass) {
+      ScreenClass.compact => const AdaptiveComponentSize(
+        buttonHeight: AppSizeTokens.compactButtonHeight,
+        bottomBarHeight: AppSizeTokens.compactBottomBarHeight,
+        bottomSheetHandleHeight: AppSizeTokens.bottomSheetHandleHeight,
+        bottomSheetHandleWidth: AppSizeTokens.bottomSheetHandleWidth,
+        cardPadding: AppSizeTokens.cardPadding,
+        emptyStateMinHeight: AppSizeTokens.compactEmptyStateMinHeight,
+        inputHeight: AppSizeTokens.compactInputHeight,
+        chipHeight: AppSizeTokens.chipHeight,
+        dialogPadding: AppSizeTokens.dialogPadding,
+        listItemLeadingSize: AppSizeTokens.compactListItemLeadingSize,
+        loadingStateMaxWidth: AppSizeTokens.loadingStateMaxWidth,
+        toolbarHeight: AppSizeTokens.compactToolbarHeight,
+        fabSize: AppSizeTokens.fabSize,
+        navigationRailWidth: 72,
+        cardMinHeight: AppSizeTokens.cardMinHeight,
+      ),
+      ScreenClass.medium => const AdaptiveComponentSize(
+        buttonHeight: AppSizeTokens.regularButtonHeight,
+        bottomBarHeight: AppSizeTokens.regularBottomBarHeight,
+        bottomSheetHandleHeight: AppSizeTokens.bottomSheetHandleHeight,
+        bottomSheetHandleWidth: AppSizeTokens.bottomSheetHandleWidth,
+        cardPadding: AppSizeTokens.cardPadding,
+        emptyStateMinHeight: AppSizeTokens.regularEmptyStateMinHeight,
+        inputHeight: AppSizeTokens.regularInputHeight,
+        chipHeight: AppSizeTokens.chipHeight,
+        dialogPadding: AppSizeTokens.dialogPadding,
+        listItemLeadingSize: AppSizeTokens.regularListItemLeadingSize,
+        loadingStateMaxWidth: AppSizeTokens.loadingStateMaxWidth,
+        toolbarHeight: AppSizeTokens.compactToolbarHeight,
+        fabSize: AppSizeTokens.fabSize,
+        navigationRailWidth: AppSizeTokens.navigationRailWidth,
+        cardMinHeight: AppSizeTokens.cardMinHeight,
+      ),
+      ScreenClass.expanded => const AdaptiveComponentSize(
+        buttonHeight: AppSizeTokens.comfortableButtonHeight,
+        bottomBarHeight: AppSizeTokens.comfortableBottomBarHeight,
+        bottomSheetHandleHeight: AppSizeTokens.bottomSheetHandleHeight,
+        bottomSheetHandleWidth: AppSizeTokens.bottomSheetHandleWidth,
+        cardPadding: 20,
+        emptyStateMinHeight: AppSizeTokens.comfortableEmptyStateMinHeight,
+        inputHeight: 56,
+        chipHeight: 36,
+        dialogPadding: 32,
+        listItemLeadingSize: AppSizeTokens.regularListItemLeadingSize,
+        loadingStateMaxWidth: AppSizeTokens.loadingStateMaxWidth,
+        toolbarHeight: AppSizeTokens.regularToolbarHeight,
+        fabSize: 60,
+        navigationRailWidth: 88,
+        cardMinHeight: 136,
+      ),
+      ScreenClass.large => const AdaptiveComponentSize(
+        buttonHeight: AppSizeTokens.comfortableButtonHeight,
+        bottomBarHeight: AppSizeTokens.comfortableBottomBarHeight,
+        bottomSheetHandleHeight: AppSizeTokens.bottomSheetHandleHeight,
+        bottomSheetHandleWidth: AppSizeTokens.bottomSheetHandleWidth,
+        cardPadding: 24,
+        emptyStateMinHeight: AppSizeTokens.comfortableEmptyStateMinHeight,
+        inputHeight: 56,
+        chipHeight: 38,
+        dialogPadding: 40,
+        listItemLeadingSize: AppSizeTokens.comfortableListItemLeadingSize,
+        loadingStateMaxWidth: AppSizeTokens.loadingStateMaxWidth,
+        toolbarHeight: AppSizeTokens.regularToolbarHeight,
+        fabSize: 64,
+        navigationRailWidth: 96,
+        cardMinHeight: 156,
+      ),
+    };
   }
 
-  final double minTouchTarget;
-  final double buttonHeightSmall;
-  final double buttonHeightMedium;
-  final double buttonHeightLarge;
-  final double buttonMinWidth;
-  final double dialogMinWidth;
-  final double appBarHeight;
-  final double navigationBarHeight;
-  final double maxContentWidth;
-  final double overlayMaxWidthTablet;
-  final double overlayMaxWidthDesktop;
-  final double progressTrackHeight;
-  final double sliderTrackHeight;
-
-  AdaptiveComponentSize copyWith({
-    double? minTouchTarget,
-    double? buttonHeightSmall,
-    double? buttonHeightMedium,
-    double? buttonHeightLarge,
-    double? buttonMinWidth,
-    double? dialogMinWidth,
-    double? appBarHeight,
-    double? navigationBarHeight,
-    double? maxContentWidth,
-    double? overlayMaxWidthTablet,
-    double? overlayMaxWidthDesktop,
-    double? progressTrackHeight,
-    double? sliderTrackHeight,
-  }) {
-    return AdaptiveComponentSize(
-      minTouchTarget: minTouchTarget ?? this.minTouchTarget,
-      buttonHeightSmall: buttonHeightSmall ?? this.buttonHeightSmall,
-      buttonHeightMedium: buttonHeightMedium ?? this.buttonHeightMedium,
-      buttonHeightLarge: buttonHeightLarge ?? this.buttonHeightLarge,
-      buttonMinWidth: buttonMinWidth ?? this.buttonMinWidth,
-      dialogMinWidth: dialogMinWidth ?? this.dialogMinWidth,
-      appBarHeight: appBarHeight ?? this.appBarHeight,
-      navigationBarHeight: navigationBarHeight ?? this.navigationBarHeight,
-      maxContentWidth: maxContentWidth ?? this.maxContentWidth,
-      overlayMaxWidthTablet:
-          overlayMaxWidthTablet ?? this.overlayMaxWidthTablet,
-      overlayMaxWidthDesktop:
-          overlayMaxWidthDesktop ?? this.overlayMaxWidthDesktop,
-      progressTrackHeight: progressTrackHeight ?? this.progressTrackHeight,
-      sliderTrackHeight: sliderTrackHeight ?? this.sliderTrackHeight,
-    );
-  }
+  final double buttonHeight;
+  final double bottomBarHeight;
+  final double bottomSheetHandleHeight;
+  final double bottomSheetHandleWidth;
+  final double cardPadding;
+  final double emptyStateMinHeight;
+  final double inputHeight;
+  final double chipHeight;
+  final double dialogPadding;
+  final double listItemLeadingSize;
+  final double loadingStateMaxWidth;
+  final double toolbarHeight;
+  final double fabSize;
+  final double navigationRailWidth;
+  final double cardMinHeight;
 }

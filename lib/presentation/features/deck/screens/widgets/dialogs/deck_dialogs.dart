@@ -146,7 +146,7 @@ Future<void> _handleDeckEditorSubmit({
   }
   final DeckUpsertInput input = DeckUpsertInput(
     name: StringUtils.normalizeName(rawName),
-    description: StringUtils.normalizeName(rawDescription),
+    description: StringUtils.normalizeText(rawDescription),
   );
   final DeckSubmitResult submitResult = await onSubmitted(input);
   if (!dialogContext.mounted) {
@@ -187,7 +187,7 @@ String? _resolveFormValidationMessage({
   if (nameValidationMessage != null) {
     return nameValidationMessage;
   }
-  final String normalizedDescription = StringUtils.normalizeName(
+  final String normalizedDescription = StringUtils.normalizeText(
     rawDescription,
   );
   if (normalizedDescription.length > _deckDescriptionMaxLength) {

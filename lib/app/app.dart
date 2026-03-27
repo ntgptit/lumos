@@ -1,98 +1,105 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../core/providers/theme_provider.dart';
-import '../core/theme/responsive/responsive_theme_factory.dart';
-import '../l10n/app_localizations.dart';
-import 'app_lifecycle_handler.dart';
-import 'app_providers.dart';
+import 'package:lumos/app/app_lifecycle_handler.dart';
+import 'package:lumos/app/app_providers.dart';
+import 'package:lumos/app/app_router.dart';
+import 'package:lumos/core/config/app_constants.dart';
+import 'package:lumos/core/config/app_duration.dart';
+import 'package:lumos/core/di/core_providers.dart';
+import 'package:lumos/core/config/env_config.dart';
+import 'package:lumos/core/theme/app_theme.dart';
+import 'package:lumos/core/theme/responsive/screen_info.dart';
+import 'package:lumos/core/theme/theme_helpers.dart';
+import 'package:lumos/l10n/l10n.dart';
 
 class App extends StatelessWidget {
-  const App({super.key});
+  const App({super.key, this.container});
+
+  final ProviderContainer? container;
 
   @override
   Widget build(BuildContext context) {
-    return const ProviderScope(child: _AppView());
+    final child = const AppLifecycleHandler(child: _AppView());
+
+    if (container != null) {
+      return UncontrolledProviderScope(container: container!, child: child);
+    }
+
+    return ProviderScope(child: child);
   }
 }
 
-class _AppView extends ConsumerStatefulWidget {
+class _AppView extends ConsumerWidget {
   const _AppView();
 
   @override
-  ConsumerState<_AppView> createState() {
-    return _AppViewState();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final envConfig = ref.watch(envConfigProvider);
+    final themeType = ref.watch(themeTypeControllerProvider);
+    final locale = ref.watch(appLocaleProvider);
+    final supportedLocales = ref.watch(supportedLocalesProvider);
+    final router = ref.watch(appRouterProvider);
+    final scaffoldMessengerKey = ref.watch(rootScaffoldMessengerKeyProvider);
+
+    return MaterialApp.router(
+      debugShowCheckedModeBanner: envConfig.showDebugBanner,
+      title: envConfig.appName,
+      scaffoldMessengerKey: scaffoldMessengerKey,
+      scrollBehavior: const MaterialScrollBehavior().copyWith(
+        scrollbars: false,
+      ),
+      routerConfig: router,
+      restorationScopeId: AppConstants.appRestorationScopeId,
+      locale: locale,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: supportedLocales,
+      showPerformanceOverlay: envConfig.showPerformanceOverlay,
+      themeMode: ThemeHelpers.resolveThemeMode(themeType),
+      theme: AppTheme.light(screenInfo: const ScreenInfo.fallback()),
+      darkTheme: AppTheme.dark(screenInfo: const ScreenInfo.fallback()),
+      themeAnimationDuration: AppDuration.themeChange,
+      themeAnimationCurve: Curves.easeInOutCubic,
+      builder: (context, child) {
+        final theme = ThemeHelpers.resolveTheme(context, themeType: themeType);
+        final content = Theme(
+          data: theme,
+          child: child ?? const SizedBox.shrink(),
+        );
+
+        return _AppEnvironmentBanner(envConfig: envConfig, child: content);
+      },
+    );
   }
 }
 
-class _AppViewState extends ConsumerState<_AppView> {
-  @override
-  void reassemble() {
-    super.reassemble();
-    if (!kDebugMode) {
-      return;
-    }
-    ref.invalidate(appLightThemeProvider);
-    ref.invalidate(appDarkThemeProvider);
-  }
+class _AppEnvironmentBanner extends StatelessWidget {
+  const _AppEnvironmentBanner({required this.envConfig, required this.child});
+
+  final EnvConfig envConfig;
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
-    final bool isInForeground = ref.watch(appIsInForegroundProvider);
-    final routerConfig = ref.watch(appRouterConfigProvider);
-    final themeMode = ref.watch(appThemeModeConfigProvider);
-    final lightTheme = ref.watch(appLightThemeConfigProvider);
-    final darkTheme = ref.watch(appDarkThemeConfigProvider);
-    final appLocale = ref.watch(appLocaleConfigProvider);
+    if (!envConfig.showEnvironmentBanner || envConfig.isProduction) {
+      return child;
+    }
 
-    return AppLifecycleHandler(
-      onStateChanged: _handleLifecycleStateChanged,
-      child: MaterialApp.router(
-        debugShowCheckedModeBanner: false,
-        onGenerateTitle: (BuildContext context) {
-          return AppLocalizations.of(context)?.appTitle ?? 'Lumos';
-        },
-        builder: (BuildContext context, Widget? child) {
-          final bool disableAnimations = MediaQuery.disableAnimationsOf(
-            context,
-          );
-          final TextScaler textScaler = MediaQuery.textScalerOf(context);
-          if (child == null) {
-            return const SizedBox.shrink();
-          }
-          final MediaQueryData mediaQueryData = MediaQuery.of(
-            context,
-          ).copyWith(textScaler: textScaler);
-          final ThemeData adaptiveTheme = ResponsiveThemeFactory.adapt(
-            theme: Theme.of(context),
-            mediaQueryData: mediaQueryData,
-          );
-          return MediaQuery(
-            data: mediaQueryData,
-            child: Theme(
-              data: adaptiveTheme,
-              child: TickerMode(
-                enabled: isInForeground && !disableAnimations,
-                child: child,
-              ),
-            ),
-          );
-        },
-        theme: lightTheme,
-        darkTheme: darkTheme,
-        themeMode: themeMode,
-        locale: appLocale,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        routerConfig: routerConfig,
-      ),
+    return Banner(
+      message: envConfig.environmentLabel,
+      location: BannerLocation.topEnd,
+      color: _bannerColor(envConfig.flavor),
+      child: child,
     );
   }
 
-  void _handleLifecycleStateChanged(AppLifecycleState lifecycleState) {
-    ref
-        .read(appLifecycleControllerProvider.notifier)
-        .setLifecycleState(lifecycleState);
+  Color _bannerColor(AppFlavor flavor) {
+    switch (flavor) {
+      case AppFlavor.development:
+        return Colors.green.shade700;
+      case AppFlavor.staging:
+        return Colors.orange.shade700;
+      case AppFlavor.production:
+        return Colors.blueGrey.shade700;
+    }
   }
 }

@@ -1,69 +1,75 @@
 abstract final class StringUtils {
-  StringUtils._();
-
-  static String normalizeName(String rawValue) {
-    return rawValue.replaceAll(RegExp(r'^\s+|\s+$'), '');
-  }
-
-  static String normalizeLower(String rawValue) {
-    final String normalized = normalizeName(rawValue);
-    return normalized.toLowerCase();
-  }
-
-  static String normalizeUpper(String rawValue) {
-    final String normalized = normalizeName(rawValue);
-    return normalized.toUpperCase();
-  }
-
-  static String normalizeLocaleTag(String rawValue) {
-    final String normalized = normalizeName(rawValue);
-    return normalized.replaceAll('_', '-');
-  }
-
-  static String localeLanguageCode(String rawValue) {
-    final String normalized = normalizeLower(normalizeLocaleTag(rawValue));
-    if (normalized.isEmpty) {
-      return '';
+  static String normalizeName(String value) {
+    if (value.isEmpty) {
+      return value;
     }
-    final int separatorIndex = normalized.indexOf('-');
-    if (separatorIndex < 0) {
-      return normalized;
+    return value.trim().replaceAll(RegExp(r'\s+'), ' ');
+  }
+
+  static String normalizeText(String value) {
+    if (value.isEmpty) {
+      return value;
     }
-    return prefix(normalized, separatorIndex);
+    return value.trim();
   }
 
-  static String firstLine(String rawValue) {
-    final String normalized = normalizeName(rawValue);
-    if (normalized.isEmpty) {
-      return '';
+  static String normalizeSearchQuery(String value) {
+    if (value.isEmpty) {
+      return value;
     }
-    final int lineBreakIndex = normalized.indexOf('\n');
-    if (lineBreakIndex < 0) {
-      return normalized;
+    return value.trim().replaceAll(RegExp(r'\s+'), ' ');
+  }
+
+  static bool isBlank(String? value) {
+    return value == null || value.trim().isEmpty;
+  }
+
+  static String? trimmedOrNull(String? value) {
+    final trimmed = value?.trim();
+    if (trimmed == null || trimmed.isEmpty) {
+      return null;
     }
-    return prefix(normalized, lineBreakIndex);
+    return trimmed;
   }
 
-  static int compareNormalizedLower(String left, String right) {
-    final String normalizedLeft = normalizeLower(left);
-    final String normalizedRight = normalizeLower(right);
-    return normalizedLeft.compareTo(normalizedRight);
-  }
-
-  static String prefix(String rawValue, int endExclusive) {
-    final int safeEnd = endExclusive.clamp(0, rawValue.length);
-    return rawValue.substring(0, safeEnd);
-  }
-
-  static String suffix(String rawValue, int startInclusive) {
-    final int safeStart = startInclusive.clamp(0, rawValue.length);
-    return rawValue.substring(safeStart);
-  }
-
-  static String trailingCharacter(String rawValue) {
-    if (rawValue.isEmpty) {
-      return '';
+  static String capitalize(String value) {
+    if (value.trim().isEmpty) {
+      return value;
     }
-    return rawValue.substring(rawValue.length - 1);
+    return '${value[0].toUpperCase()}${value.substring(1)}';
+  }
+
+  static String normalizeWhitespace(String value) {
+    return value.trim().replaceAll(RegExp(r'\s+'), ' ');
+  }
+
+  static bool equalsIgnoreCase(String? left, String? right) {
+    return trimmedOrNull(left)?.toLowerCase() ==
+        trimmedOrNull(right)?.toLowerCase();
+  }
+
+  static String initials(String value, {int maxLength = 2}) {
+    final words = normalizeWhitespace(
+      value,
+    ).split(' ').where((word) => word.isNotEmpty);
+    final chars = words
+        .take(maxLength)
+        .map((word) => word[0].toUpperCase())
+        .join();
+    return chars;
+  }
+
+  static String truncate(
+    String value, {
+    required int maxLength,
+    String ellipsis = '...',
+  }) {
+    if (maxLength <= 0 || value.length <= maxLength) {
+      return value;
+    }
+    if (ellipsis.length >= maxLength) {
+      return ellipsis.substring(0, maxLength);
+    }
+    return '${value.substring(0, maxLength - ellipsis.length)}$ellipsis';
   }
 }

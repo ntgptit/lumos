@@ -135,7 +135,7 @@ class DioDeckRepository implements DeckRepository {
   DeckUpsertInput _normalizeInput(DeckUpsertInput input) {
     return DeckUpsertInput(
       name: StringUtils.normalizeName(input.name),
-      description: StringUtils.normalizeName(input.description),
+      description: StringUtils.normalizeText(input.description),
     );
   }
 

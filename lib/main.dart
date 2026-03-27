@@ -1,9 +1,8 @@
 import 'package:flutter/widgets.dart';
-
-import 'app/app.dart';
-import 'app/app_initializer.dart';
+import 'package:lumos/app/app.dart';
+import 'package:lumos/app/app_initializer.dart';
 
 Future<void> main() async {
-  await AppInitializer.ensureInitialized();
-  runApp(const App());
+  final container = await AppInitializer.ensureInitialized();
+  runApp(App(container: container));
 }

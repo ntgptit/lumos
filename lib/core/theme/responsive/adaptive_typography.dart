@@ -1,71 +1,48 @@
-import 'package:flutter/material.dart';
-
-import 'responsive_scale.dart';
+import 'package:flutter/foundation.dart';
+import 'package:lumos/core/theme/responsive/responsive_scale.dart';
+import 'package:lumos/core/theme/responsive/screen_class.dart';
+import 'package:lumos/core/theme/tokens/tokens.dart';
 
 @immutable
-final class AdaptiveTypography {
+class AdaptiveTypography {
   const AdaptiveTypography({
-    required this.displayScale,
-    required this.headlineScale,
-    required this.titleScale,
-    required this.bodyScale,
+    required this.display,
+    required this.displayMedium,
+    required this.headline,
+    required this.headlineLarge,
+    required this.title,
+    required this.titleMedium,
+    required this.body,
+    required this.bodyMedium,
+    required this.label,
+    required this.labelMedium,
   });
 
-  factory AdaptiveTypography.fromScale(ResponsiveScale scale) {
+  factory AdaptiveTypography.fromScreen(ScreenClass screenClass) {
+    final scale = ResponsiveScale.typography(screenClass);
+
     return AdaptiveTypography(
-      displayScale: scale.display,
-      headlineScale: scale.headline,
-      titleScale: scale.title,
-      bodyScale: scale.body,
+      display: AppTypographyTokens.displayLarge * scale,
+      displayMedium: AppTypographyTokens.displayMedium * scale,
+      headline: AppTypographyTokens.headlineMedium * scale,
+      headlineLarge: AppTypographyTokens.headlineLarge * scale,
+      title: AppTypographyTokens.titleLarge * scale,
+      titleMedium: AppTypographyTokens.titleMedium * scale,
+      body: AppTypographyTokens.bodyLarge * scale,
+      bodyMedium: AppTypographyTokens.bodyMedium * scale,
+      label: AppTypographyTokens.labelLarge * scale,
+      labelMedium: AppTypographyTokens.labelMedium * scale,
     );
   }
 
-  final double displayScale;
-  final double headlineScale;
-  final double titleScale;
-  final double bodyScale;
-
-  TextTheme scaleTextTheme(TextTheme textTheme) {
-    return textTheme.copyWith(
-      displayLarge: _scaleTextStyle(textTheme.displayLarge, displayScale),
-      displayMedium: _scaleTextStyle(textTheme.displayMedium, displayScale),
-      displaySmall: _scaleTextStyle(textTheme.displaySmall, displayScale),
-      headlineLarge: _scaleTextStyle(textTheme.headlineLarge, headlineScale),
-      headlineMedium: _scaleTextStyle(textTheme.headlineMedium, headlineScale),
-      headlineSmall: _scaleTextStyle(textTheme.headlineSmall, headlineScale),
-      titleLarge: _scaleTextStyle(textTheme.titleLarge, titleScale),
-      titleMedium: _scaleTextStyle(textTheme.titleMedium, titleScale),
-      titleSmall: _scaleTextStyle(textTheme.titleSmall, titleScale),
-      bodyLarge: _scaleTextStyle(textTheme.bodyLarge, bodyScale),
-      bodyMedium: _scaleTextStyle(textTheme.bodyMedium, bodyScale),
-      bodySmall: textTheme.bodySmall,
-      labelLarge: _scaleTextStyle(textTheme.labelLarge, bodyScale),
-      labelMedium: _scaleTextStyle(textTheme.labelMedium, bodyScale),
-      labelSmall: textTheme.labelSmall,
-    );
-  }
-
-  AdaptiveTypography copyWith({
-    double? displayScale,
-    double? headlineScale,
-    double? titleScale,
-    double? bodyScale,
-  }) {
-    return AdaptiveTypography(
-      displayScale: displayScale ?? this.displayScale,
-      headlineScale: headlineScale ?? this.headlineScale,
-      titleScale: titleScale ?? this.titleScale,
-      bodyScale: bodyScale ?? this.bodyScale,
-    );
-  }
-}
-
-TextStyle? _scaleTextStyle(TextStyle? style, double scale) {
-  if (style == null) {
-    return null;
-  }
-  if (style.fontSize == null) {
-    return style;
-  }
-  return style.copyWith(fontSize: style.fontSize! * scale);
+  final double display;
+  final double displayMedium;
+  final double headline;
+  final double headlineLarge;
+  final double title;
+  final double titleMedium;
+  final double body;
+  final double bodyMedium;
+  final double label;
+  final double labelMedium;
 }

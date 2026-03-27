@@ -2,164 +2,84 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 
-import '../../utils/string_utils.dart';
-
 abstract final class RetryInterceptorConst {
-  RetryInterceptorConst._();
-
-  static const String retryAttemptKey = 'retry_attempt';
-  static const String bypassRetryKey = 'bypass_retry';
-  static const Set<String> safeRetryMethods = <String>{
-    'GET',
-    'HEAD',
-    'OPTIONS',
-  };
-  static const int defaultMaxRetries = 3;
-  static const int maxRetryLimit = 5;
-  static const int baseDelayMs = 300;
+  static const retryCountKey = RetryInterceptor.retryCountKey;
+  static const bypassRetryKey = RetryInterceptor.skipRetryKey;
 }
 
-/// Retries transient failures (timeouts, connection errors, and 5xx responses).
 class RetryInterceptor extends Interceptor {
   RetryInterceptor({
     required Dio dio,
-    int maxRetries = RetryInterceptorConst.defaultMaxRetries,
+    this.maxRetries = 1,
+    this.baseDelay = const Duration(milliseconds: 400),
+    Set<String>? retryableMethods,
   }) : _dio = dio,
-       maxRetries = _normalizeMaxRetries(maxRetries);
+       _retryableMethods =
+           retryableMethods ?? const <String>{'GET', 'HEAD', 'OPTIONS'};
+
+  static const retryCountKey = 'retryCount';
+  static const skipRetryKey = 'skipRetry';
 
   final Dio _dio;
   final int maxRetries;
+  final Duration baseDelay;
+  final Set<String> _retryableMethods;
 
   @override
   Future<void> onError(
     DioException err,
     ErrorInterceptorHandler handler,
   ) async {
-    if (_isBypassRetry(err.requestOptions)) {
+    final requestOptions = err.requestOptions;
+    final retryCount = (requestOptions.extra[retryCountKey] as int?) ?? 0;
+
+    if (!_shouldRetry(err, requestOptions, retryCount)) {
       handler.next(err);
       return;
     }
-    if (!_canRetry(error: err)) {
-      handler.next(err);
-      return;
+
+    requestOptions.extra[retryCountKey] = retryCount + 1;
+    await Future<void>.delayed(_delayFor(retryCount + 1));
+
+    try {
+      final response = await _dio.fetch<Object?>(requestOptions);
+      handler.resolve(response);
+    } on DioException catch (retryError) {
+      handler.next(retryError);
     }
-    DioException currentError = err;
-    int attempt = _readAttempt(err.requestOptions);
-    while (attempt < maxRetries && _canRetry(error: currentError)) {
-      final int nextAttempt = attempt + 1;
-      final RequestOptions requestOptions = _cloneRequestOptions(
-        original: currentError.requestOptions,
-        nextAttempt: nextAttempt,
-      );
-      await _delayForAttempt(nextAttempt);
-      try {
-        final Response<dynamic> response = await _dio.fetch<dynamic>(
-          requestOptions,
-        );
-        handler.resolve(response);
-        return;
-      } on DioException catch (retryError) {
-        currentError = retryError;
-        attempt = _readAttempt(retryError.requestOptions);
-      }
-    }
-    handler.next(currentError);
   }
 
-  static int _normalizeMaxRetries(int maxRetries) {
-    if (maxRetries < 0) {
-      return 0;
-    }
-    if (maxRetries <= RetryInterceptorConst.maxRetryLimit) {
-      return maxRetries;
-    }
-    return RetryInterceptorConst.maxRetryLimit;
-  }
-
-  bool _isBypassRetry(RequestOptions requestOptions) {
-    final Object? rawValue =
-        requestOptions.extra[RetryInterceptorConst.bypassRetryKey];
-    if (rawValue is bool) {
-      return rawValue;
-    }
-    return false;
-  }
-
-  bool _canRetry({required DioException error}) {
-    if (!_isRetryableMethod(error.requestOptions)) {
+  bool _shouldRetry(
+    DioException err,
+    RequestOptions requestOptions,
+    int retryCount,
+  ) {
+    if (retryCount >= maxRetries) {
       return false;
     }
-    if (error.type == DioExceptionType.connectionTimeout) {
-      return true;
-    }
-    if (error.type == DioExceptionType.sendTimeout) {
-      return true;
-    }
-    if (error.type == DioExceptionType.receiveTimeout) {
-      return true;
-    }
-    if (error.type == DioExceptionType.connectionError) {
-      return true;
-    }
-    if (error.type != DioExceptionType.badResponse) {
+
+    if (requestOptions.cancelToken?.isCancelled == true) {
       return false;
     }
-    final int? statusCode = error.response?.statusCode;
-    if (statusCode == null) {
+
+    if (requestOptions.extra[skipRetryKey] == true) {
       return false;
     }
-    return statusCode >= 500;
-  }
 
-  bool _isRetryableMethod(RequestOptions requestOptions) {
-    final String method = StringUtils.normalizeUpper(requestOptions.method);
-    return RetryInterceptorConst.safeRetryMethods.contains(method);
-  }
-
-  int _readAttempt(RequestOptions requestOptions) {
-    final Object? rawValue =
-        requestOptions.extra[RetryInterceptorConst.retryAttemptKey];
-    if (rawValue is int) {
-      return rawValue;
+    if (!_retryableMethods.contains(requestOptions.method.toUpperCase())) {
+      return false;
     }
-    return 0;
+
+    final statusCode = err.response?.statusCode;
+    return err.type == DioExceptionType.connectionError ||
+        err.type == DioExceptionType.connectionTimeout ||
+        err.type == DioExceptionType.receiveTimeout ||
+        statusCode == 408 ||
+        statusCode == 429 ||
+        (statusCode != null && statusCode >= 500);
   }
 
-  RequestOptions _cloneRequestOptions({
-    required RequestOptions original,
-    required int nextAttempt,
-  }) {
-    final Map<String, dynamic> extra = <String, dynamic>{
-      ...original.extra,
-      RetryInterceptorConst.retryAttemptKey: nextAttempt,
-      RetryInterceptorConst.bypassRetryKey: true,
-    };
-    return RequestOptions(
-      path: original.path,
-      method: original.method,
-      baseUrl: original.baseUrl,
-      connectTimeout: original.connectTimeout,
-      sendTimeout: original.sendTimeout,
-      receiveTimeout: original.receiveTimeout,
-      headers: original.headers,
-      queryParameters: original.queryParameters,
-      data: original.data,
-      responseType: original.responseType,
-      contentType: original.contentType,
-      extra: extra,
-      followRedirects: original.followRedirects,
-      listFormat: original.listFormat,
-      maxRedirects: original.maxRedirects,
-      persistentConnection: original.persistentConnection,
-      validateStatus: original.validateStatus,
-      receiveDataWhenStatusError: original.receiveDataWhenStatusError,
-      requestEncoder: original.requestEncoder,
-      responseDecoder: original.responseDecoder,
-    );
-  }
-
-  Future<void> _delayForAttempt(int attempt) {
-    final int delayMs = RetryInterceptorConst.baseDelayMs * attempt;
-    return Future<void>.delayed(Duration(milliseconds: delayMs));
+  Duration _delayFor(int attempt) {
+    return Duration(milliseconds: baseDelay.inMilliseconds * attempt);
   }
 }

@@ -151,8 +151,8 @@ Future<void> _handleSubmit({
     return;
   }
   final FlashcardUpsertInput input = FlashcardUpsertInput(
-    frontText: StringUtils.normalizeName(rawFrontText),
-    backText: StringUtils.normalizeName(rawBackText),
+    frontText: StringUtils.normalizeText(rawFrontText),
+    backText: StringUtils.normalizeText(rawBackText),
     frontLangCode: null,
     backLangCode: null,
   );
@@ -174,7 +174,7 @@ String? _resolveValidationMessage({
   required String rawFrontText,
   required String rawBackText,
 }) {
-  final String frontText = StringUtils.normalizeName(rawFrontText);
+  final String frontText = StringUtils.normalizeText(rawFrontText);
   if (frontText.isEmpty) {
     return l10n.flashcardFrontRequiredValidation;
   }
@@ -183,7 +183,7 @@ String? _resolveValidationMessage({
       FlashcardDomainConst.frontTextMaxLength,
     );
   }
-  final String backText = StringUtils.normalizeName(rawBackText);
+  final String backText = StringUtils.normalizeText(rawBackText);
   if (backText.isEmpty) {
     return l10n.flashcardBackRequiredValidation;
   }

@@ -1,57 +1,39 @@
-import 'package:flutter/material.dart';
-
-import '../tokens/icon_tokens.dart';
-import 'responsive_scale.dart';
+import 'package:flutter/foundation.dart';
+import 'package:lumos/core/theme/responsive/responsive_scale.dart';
+import 'package:lumos/core/theme/responsive/screen_class.dart';
+import 'package:lumos/core/theme/tokens/tokens.dart';
 
 @immutable
-final class AdaptiveIconSize {
+class AdaptiveIconSize {
   const AdaptiveIconSize({
-    required this.small,
-    required this.medium,
-    required this.large,
-    required this.xLarge,
-    required this.appBar,
-    required this.bottomNavigation,
-    required this.button,
+    required this.xs,
+    required this.sm,
+    required this.md,
+    required this.lg,
+    required this.xl,
+    required this.xxl,
+    required this.xxxl,
   });
 
-  factory AdaptiveIconSize.fromScale(ResponsiveScale scale) {
+  factory AdaptiveIconSize.fromScreen(ScreenClass screenClass) {
+    final scale = ResponsiveScale.icon(screenClass);
+
     return AdaptiveIconSize(
-      small: IconTokens.small * scale.component,
-      medium: IconTokens.medium * scale.component,
-      large: IconTokens.large * scale.component,
-      xLarge: IconTokens.xLarge * scale.component,
-      appBar: IconTokens.appBar * scale.component,
-      bottomNavigation: IconTokens.bottomNavigation * scale.component,
-      button: IconTokens.button * scale.component,
+      xs: AppIconTokens.xs * scale,
+      sm: AppIconTokens.sm * scale,
+      md: AppIconTokens.md * scale,
+      lg: AppIconTokens.lg * scale,
+      xl: AppIconTokens.xl * scale,
+      xxl: AppIconTokens.xxl * scale,
+      xxxl: AppIconTokens.xxxl * scale,
     );
   }
 
-  final double small;
-  final double medium;
-  final double large;
-  final double xLarge;
-  final double appBar;
-  final double bottomNavigation;
-  final double button;
-
-  AdaptiveIconSize copyWith({
-    double? small,
-    double? medium,
-    double? large,
-    double? xLarge,
-    double? appBar,
-    double? bottomNavigation,
-    double? button,
-  }) {
-    return AdaptiveIconSize(
-      small: small ?? this.small,
-      medium: medium ?? this.medium,
-      large: large ?? this.large,
-      xLarge: xLarge ?? this.xLarge,
-      appBar: appBar ?? this.appBar,
-      bottomNavigation: bottomNavigation ?? this.bottomNavigation,
-      button: button ?? this.button,
-    );
-  }
+  final double xs;
+  final double sm;
+  final double md;
+  final double lg;
+  final double xl;
+  final double xxl;
+  final double xxxl;
 }

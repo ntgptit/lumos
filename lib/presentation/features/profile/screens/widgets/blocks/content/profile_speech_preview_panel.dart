@@ -112,7 +112,7 @@ class _ProfileSpeechPreviewPanelState
                     Widget? child,
                   ) {
                     final bool canPlayPreview =
-                        StringUtils.normalizeName(value.text).isNotEmpty &&
+                        StringUtils.normalizeText(value.text).isNotEmpty &&
                         !previewState.isBusy &&
                         !previewState.isPlaying;
                     final Widget playButton = LumosPrimaryButton(

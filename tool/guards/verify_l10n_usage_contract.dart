@@ -35,6 +35,8 @@ class L10nUsageGuardConst {
     'message',
   };
 
+  static const String l10nFacadePath = 'lib/l10n/l10n.dart';
+
 }
 
 class L10nUsageViolation {
@@ -52,6 +54,29 @@ class L10nUsageViolation {
 
   String toConsoleLine() {
     return '$filePath:$lineNumber: $reason :: $lineContent';
+  }
+}
+
+class _FacadeViolation {
+  const _FacadeViolation({
+    required this.filePath,
+    required this.lineNumber,
+    required this.reason,
+    required this.lineContent,
+  });
+
+  final String filePath;
+  final int lineNumber;
+  final String reason;
+  final String lineContent;
+
+  L10nUsageViolation toViolation() {
+    return L10nUsageViolation(
+      filePath: filePath,
+      lineNumber: lineNumber,
+      reason: reason,
+      lineContent: lineContent,
+    );
   }
 }
 
@@ -100,6 +125,8 @@ Future<void> main() async {
     violations.addAll(visitor.violations);
   }
 
+  violations.addAll(await _collectFacadeViolations());
+
   if (violations.isEmpty) {
     stdout.writeln('L10n usage contract passed.');
     return;
@@ -110,6 +137,29 @@ Future<void> main() async {
     stderr.writeln(violation.toConsoleLine());
   }
   exitCode = 1;
+}
+
+Future<List<L10nUsageViolation>> _collectFacadeViolations() async {
+  final File file = File(L10nUsageGuardConst.l10nFacadePath);
+  if (!file.existsSync()) {
+    return <L10nUsageViolation>[];
+  }
+
+  final String path = _normalizePath(file.path);
+  final String source = await file.readAsString();
+  final parsed = parseString(
+    content: source,
+    path: path,
+    throwIfDiagnostics: false,
+  );
+  final List<String> lines = source.split('\n');
+  final _L10nFacadeVisitor visitor = _L10nFacadeVisitor(
+    path: path,
+    lines: lines,
+    lineInfo: parsed.lineInfo,
+  );
+  parsed.unit.accept(visitor);
+  return visitor.violations.map((_FacadeViolation item) => item.toViolation()).toList();
 }
 
 List<File> _collectScanFiles() {
@@ -271,6 +321,40 @@ class _L10nUsageVisitor extends RecursiveAstVisitor<void> {
       return invocation.methodName.name;
     }
     return 'unknown owner';
+  }
+}
+
+class _L10nFacadeVisitor extends RecursiveAstVisitor<void> {
+  _L10nFacadeVisitor({
+    required this.path,
+    required this.lines,
+    required this.lineInfo,
+  });
+
+  final String path;
+  final List<String> lines;
+  final LineInfo lineInfo;
+  final List<_FacadeViolation> violations = <_FacadeViolation>[];
+
+  @override
+  void visitExtensionDeclaration(ExtensionDeclaration node) {
+    final String source = node.toSource();
+    if (!source.contains(' on AppLocalizations')) {
+      super.visitExtensionDeclaration(node);
+      return;
+    }
+
+    final int lineNumber = lineInfo.getLocation(node.offset).lineNumber;
+    violations.add(
+      _FacadeViolation(
+        filePath: path,
+        lineNumber: lineNumber,
+        reason:
+            'Do not add compatibility extensions on AppLocalizations in lib/l10n/l10n.dart. Add keys to *.arb and regenerate l10n instead.',
+        lineContent: _lineContentAt(lines, lineNumber),
+      ),
+    );
+    super.visitExtensionDeclaration(node);
   }
 }
 

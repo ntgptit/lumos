@@ -101,6 +101,12 @@ abstract class AppLocalizations {
   /// **'Lumos'**
   String get appTitle;
 
+  /// Short application name used in shared shells and splash UI
+  ///
+  /// In en, this message translates to:
+  /// **'Lumos'**
+  String get appName;
+
   /// No description provided for @commonCancel.
   ///
   /// In en, this message translates to:
@@ -1282,6 +1288,186 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Replay'**
   String get commonReplay;
+
+  /// No description provided for @navigationDashboardLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get navigationDashboardLabel;
+
+  /// No description provided for @navigationFoldersLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Folders'**
+  String get navigationFoldersLabel;
+
+  /// No description provided for @navigationDecksLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Library'**
+  String get navigationDecksLabel;
+
+  /// No description provided for @navigationProgressLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Progress'**
+  String get navigationProgressLabel;
+
+  /// No description provided for @navigationSettingsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get navigationSettingsLabel;
+
+  /// No description provided for @loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading...'**
+  String get loading;
+
+  /// No description provided for @splashTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Preparing your learning workspace'**
+  String get splashTitle;
+
+  /// No description provided for @clearSelectionTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear selection'**
+  String get clearSelectionTooltip;
+
+  /// No description provided for @selectionCountLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} selected'**
+  String selectionCountLabel(int count);
+
+  /// No description provided for @filterTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter'**
+  String get filterTooltip;
+
+  /// No description provided for @sortTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort'**
+  String get sortTooltip;
+
+  /// No description provided for @noResultsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No results found'**
+  String get noResultsTitle;
+
+  /// No description provided for @noResultsMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Try adjusting your filters or search terms.'**
+  String get noResultsMessage;
+
+  /// No description provided for @offlineTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You are offline'**
+  String get offlineTitle;
+
+  /// No description provided for @offlineMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your internet connection and try again.'**
+  String get offlineMessage;
+
+  /// No description provided for @offlineRetryLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get offlineRetryLabel;
+
+  /// No description provided for @accessRequiredTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Access required'**
+  String get accessRequiredTitle;
+
+  /// No description provided for @signInMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to continue.'**
+  String get signInMessage;
+
+  /// No description provided for @signInLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in'**
+  String get signInLabel;
+
+  /// No description provided for @selectDateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Select date'**
+  String get selectDateLabel;
+
+  /// No description provided for @clearDateTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear date'**
+  String get clearDateTooltip;
+
+  /// No description provided for @requiredFieldMark.
+  ///
+  /// In en, this message translates to:
+  /// **' *'**
+  String get requiredFieldMark;
+
+  /// No description provided for @searchLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get searchLabel;
+
+  /// No description provided for @clearSearchTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear search'**
+  String get clearSearchTooltip;
+
+  /// No description provided for @selectTimeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Select time'**
+  String get selectTimeLabel;
+
+  /// No description provided for @clearTimeTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear time'**
+  String get clearTimeTooltip;
+
+  /// No description provided for @maintenanceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Maintenance'**
+  String get maintenanceTitle;
+
+  /// No description provided for @maintenanceMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'The system is temporarily unavailable.'**
+  String get maintenanceMessage;
+
+  /// No description provided for @notFoundTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Page not found'**
+  String get notFoundTitle;
+
+  /// No description provided for @notFoundMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'The requested page does not exist.'**
+  String get notFoundMessage;
 
   /// No description provided for @authTitle.
   ///

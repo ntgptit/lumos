@@ -1,12 +1,11 @@
-import 'package:flutter/material.dart';
-
-import '../tokens/radius_tokens.dart';
-import 'responsive_scale.dart';
+import 'package:flutter/foundation.dart';
+import 'package:lumos/core/theme/responsive/responsive_scale.dart';
+import 'package:lumos/core/theme/responsive/screen_class.dart';
+import 'package:lumos/core/theme/tokens/tokens.dart';
 
 @immutable
-final class AdaptiveRadius {
+class AdaptiveRadius {
   const AdaptiveRadius({
-    required this.none,
     required this.xs,
     required this.sm,
     required this.md,
@@ -15,47 +14,23 @@ final class AdaptiveRadius {
     required this.pill,
   });
 
-  factory AdaptiveRadius.fromScale(ResponsiveScale scale) {
+  factory AdaptiveRadius.fromScreen(ScreenClass screenClass) {
+    final scale = ResponsiveScale.radius(screenClass);
+
     return AdaptiveRadius(
-      none: RadiusTokens.none,
-      xs: RadiusTokens.xs * scale.radius,
-      sm: RadiusTokens.sm * scale.radius,
-      md: RadiusTokens.md * scale.radius,
-      lg: RadiusTokens.lg * scale.radius,
-      xl: RadiusTokens.xl * scale.radius,
-      pill: RadiusTokens.pill,
+      xs: AppRadiusTokens.xs * scale,
+      sm: AppRadiusTokens.sm * scale,
+      md: AppRadiusTokens.md * scale,
+      lg: AppRadiusTokens.lg * scale,
+      xl: AppRadiusTokens.xl * scale,
+      pill: AppRadiusTokens.pill,
     );
   }
 
-  final double none;
   final double xs;
   final double sm;
   final double md;
   final double lg;
   final double xl;
   final double pill;
-
-  BorderRadius circular(double radius) {
-    return BorderRadius.circular(radius);
-  }
-
-  AdaptiveRadius copyWith({
-    double? none,
-    double? xs,
-    double? sm,
-    double? md,
-    double? lg,
-    double? xl,
-    double? pill,
-  }) {
-    return AdaptiveRadius(
-      none: none ?? this.none,
-      xs: xs ?? this.xs,
-      sm: sm ?? this.sm,
-      md: md ?? this.md,
-      lg: lg ?? this.lg,
-      xl: xl ?? this.xl,
-      pill: pill ?? this.pill,
-    );
-  }
 }

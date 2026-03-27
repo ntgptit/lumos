@@ -136,7 +136,7 @@ class DioFolderRepository implements FolderRepository {
   FolderUpsertInput _normalizeInput(FolderUpsertInput input) {
     return FolderUpsertInput(
       name: StringUtils.normalizeName(input.name),
-      description: StringUtils.normalizeName(input.description),
+      description: StringUtils.normalizeText(input.description),
       parentId: input.parentId,
     );
   }

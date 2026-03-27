@@ -111,7 +111,7 @@ class FlashcardAsyncController extends _$FlashcardAsyncController {
     if (currentState == null) {
       return;
     }
-    final String normalized = StringUtils.normalizeName(value);
+    final String normalized = StringUtils.normalizeSearchQuery(value);
     if (currentState.searchQuery == normalized) {
       return;
     }
@@ -536,8 +536,8 @@ class FlashcardAsyncController extends _$FlashcardAsyncController {
 
   FlashcardUpsertInput _normalizeInput(FlashcardUpsertInput input) {
     return FlashcardUpsertInput(
-      frontText: StringUtils.normalizeName(input.frontText),
-      backText: StringUtils.normalizeName(input.backText),
+      frontText: StringUtils.normalizeText(input.frontText),
+      backText: StringUtils.normalizeText(input.backText),
       frontLangCode: input.frontLangCode,
       backLangCode: input.backLangCode,
     );

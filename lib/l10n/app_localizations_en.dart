@@ -12,6 +12,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'Lumos';
 
   @override
+  String get appName => 'Lumos';
+
+  @override
   String get commonCancel => 'Cancel';
 
   @override
@@ -633,6 +636,98 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get commonReplay => 'Replay';
+
+  @override
+  String get navigationDashboardLabel => 'Home';
+
+  @override
+  String get navigationFoldersLabel => 'Folders';
+
+  @override
+  String get navigationDecksLabel => 'Library';
+
+  @override
+  String get navigationProgressLabel => 'Progress';
+
+  @override
+  String get navigationSettingsLabel => 'Profile';
+
+  @override
+  String get loading => 'Loading...';
+
+  @override
+  String get splashTitle => 'Preparing your learning workspace';
+
+  @override
+  String get clearSelectionTooltip => 'Clear selection';
+
+  @override
+  String selectionCountLabel(int count) {
+    return '$count selected';
+  }
+
+  @override
+  String get filterTooltip => 'Filter';
+
+  @override
+  String get sortTooltip => 'Sort';
+
+  @override
+  String get noResultsTitle => 'No results found';
+
+  @override
+  String get noResultsMessage => 'Try adjusting your filters or search terms.';
+
+  @override
+  String get offlineTitle => 'You are offline';
+
+  @override
+  String get offlineMessage => 'Check your internet connection and try again.';
+
+  @override
+  String get offlineRetryLabel => 'Retry';
+
+  @override
+  String get accessRequiredTitle => 'Access required';
+
+  @override
+  String get signInMessage => 'Sign in to continue.';
+
+  @override
+  String get signInLabel => 'Sign in';
+
+  @override
+  String get selectDateLabel => 'Select date';
+
+  @override
+  String get clearDateTooltip => 'Clear date';
+
+  @override
+  String get requiredFieldMark => ' *';
+
+  @override
+  String get searchLabel => 'Search';
+
+  @override
+  String get clearSearchTooltip => 'Clear search';
+
+  @override
+  String get selectTimeLabel => 'Select time';
+
+  @override
+  String get clearTimeTooltip => 'Clear time';
+
+  @override
+  String get maintenanceTitle => 'Maintenance';
+
+  @override
+  String get maintenanceMessage => 'The system is temporarily unavailable.';
+
+  @override
+  String get notFoundTitle => 'Page not found';
+
+  @override
+  String get notFoundMessage => 'The requested page does not exist.';
 
   @override
   String get authTitle => 'Lumos';

@@ -1,37 +1,53 @@
 import 'package:flutter/material.dart';
+import 'package:lumos/core/theme/extensions/color_scheme_ext.dart';
+import 'package:lumos/core/theme/extensions/dimension_theme_ext.dart';
+import 'package:lumos/core/theme/extensions/screen_context_ext.dart';
+import 'package:lumos/core/theme/responsive/adaptive_layout.dart';
+import 'package:lumos/core/theme/responsive/adaptive_component_size.dart';
+import 'package:lumos/core/theme/responsive/adaptive_icon_size.dart';
+import 'package:lumos/core/theme/responsive/adaptive_radius.dart';
+import 'package:lumos/core/theme/responsive/adaptive_spacing.dart';
+import 'package:lumos/core/theme/responsive/adaptive_typography.dart';
+import 'package:lumos/core/theme/responsive/screen_class.dart';
+import 'package:lumos/core/theme/responsive/responsive_theme_factory.dart';
 
-import '../responsive/adaptive_component_size.dart';
-import '../responsive/adaptive_icon_size.dart';
-import '../responsive/adaptive_layout.dart';
-import '../responsive/adaptive_radius.dart';
-import '../responsive/adaptive_spacing.dart';
-import 'component_theme_ext.dart';
-import 'dimension_theme_ext.dart';
+extension lumosThemeDataExt on ThemeData {
+  DimensionThemeExt get lumos {
+    final dimensions = extension<DimensionThemeExt>();
+    assert(
+      dimensions != null,
+      'DimensionThemeExt is missing from ThemeData. Use AppTheme or access '
+      'BuildContext.lumos for screen-aware fallback values.',
+    );
+    return dimensions ?? ResponsiveThemeFactory.create(ScreenClass.compact);
+  }
+}
 
 extension ThemeContextExt on BuildContext {
-  DimensionThemeExt get dimensions {
-    final DimensionThemeExt? extension = Theme.of(
-      this,
-    ).extension<DimensionThemeExt>();
-    if (extension != null) {
-      return extension;
+  ThemeData get theme => Theme.of(this);
+  ColorScheme get colorScheme => theme.colorScheme;
+  TextTheme get textTheme => theme.textTheme;
+
+  DimensionThemeExt get lumos {
+    final dimensions = theme.extension<DimensionThemeExt>();
+    if (dimensions != null) {
+      return dimensions;
     }
-    return DimensionThemeExt.fromMediaQueryData(MediaQuery.of(this));
+    return ResponsiveThemeFactory.create(screenClass);
   }
 
-  ComponentThemeExt get componentTheme {
-    final ComponentThemeExt? extension = Theme.of(
-      this,
-    ).extension<ComponentThemeExt>();
-    if (extension != null) {
-      return extension;
-    }
-    return ComponentThemeExt.fromTheme(Theme.of(this));
+  DimensionThemeExt get dims => lumos;
+  AdaptiveSpacing get spacing => dims.spacing;
+  AdaptiveRadius get radius => dims.radius;
+  AdaptiveTypography get typography => dims.typography;
+  AdaptiveLayout get layout => dims.layout;
+
+  ColorSchemeExt get appColors {
+    return theme.extension<ColorSchemeExt>() ??
+        ResponsiveThemeFactory.colors(theme.brightness);
   }
 
-  AdaptiveSpacing get spacing => dimensions.spacing;
-  AdaptiveRadius get radius => dimensions.radius;
-  AdaptiveLayout get layout => dimensions.layout;
-  AdaptiveIconSize get iconSize => dimensions.iconSize;
-  AdaptiveComponentSize get componentSize => dimensions.componentSize;
+  AdaptiveIconSize get iconSize => dims.iconSize;
+  AdaptiveComponentSize get componentSize => dims.componentSize;
+  AdaptiveComponentSize get component => componentSize;
 }

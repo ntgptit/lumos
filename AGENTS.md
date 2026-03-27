@@ -39,11 +39,11 @@ Load these in order:
    - `C:\Users\ntgpt\.codex\skills\flutter-full-app\SKILL.md`
    - `C:\Users\ntgpt\.codex\skills\flutter-frontend-client\SKILL.md`
 4. `C:\Users\ntgpt\.codex\flutter_architecture_checklist.md`
-5. `D:\workspace\lumos\00_docs\architecture\flutter\memora_flutter_architecture_contract.md`
+5. `D:\workspace\lumos\00_docs\architecture\flutter\lumos_flutter_architecture_contract.md`
 
 Repo-specific rules for Flutter:
 
-- `D:\workspace\lumos\00_docs\architecture\flutter\memora_flutter_architecture_contract.md` is the authoritative repo-local contract for Flutter folder placement, shared UI boundaries, feature sequencing, and study-mode structure.
+- `D:\workspace\lumos\00_docs\architecture\flutter\lumos_flutter_architecture_contract.md` is the authoritative repo-local contract for Flutter folder placement, shared UI boundaries, feature sequencing, and study-mode structure.
 - `Riverpod Annotation + DI` is required.
 - `go_router` is required.
 - `retrofit + dio` is required for remote HTTP integration.
