@@ -29,10 +29,10 @@ import 'package:lumos/presentation/features/study/screens/study_session_route_sc
 import 'package:lumos/presentation/features/study/screens/study_mode_picker_screen.dart';
 import 'package:lumos/presentation/features/study/screens/study_result_screen.dart';
 import 'package:lumos/presentation/features/study/screens/study_setup_screen.dart';
-import 'package:lumos/presentation/shared/screens/maintenance_screen.dart';
-import 'package:lumos/presentation/shared/screens/not_found_screen.dart';
-import 'package:lumos/presentation/shared/screens/offline_screen.dart';
-import 'package:lumos/presentation/shared/screens/splash_screen.dart';
+import 'package:lumos/presentation/shared/screens/lumos_maintenance_screen.dart';
+import 'package:lumos/presentation/shared/screens/lumos_not_found_screen.dart';
+import 'package:lumos/presentation/shared/screens/lumos_offline_screen.dart';
+import 'package:lumos/presentation/shared/screens/lumos_splash_screen.dart';
 
 part 'app_route_data.g.dart';
 
@@ -42,7 +42,7 @@ class SplashRouteData extends GoRouteData with $SplashRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const SplashScreen();
+    return const LumosSplashScreen();
   }
 }
 
@@ -497,7 +497,7 @@ class OfflineRouteData extends GoRouteData with $OfflineRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const OfflineScreen();
+    return const LumosOfflineScreen();
   }
 }
 
@@ -507,7 +507,7 @@ class MaintenanceRouteData extends GoRouteData with $MaintenanceRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const MaintenanceScreen();
+    return const LumosMaintenanceScreen();
   }
 }
 
@@ -517,6 +517,6 @@ class NotFoundRouteData extends GoRouteData with $NotFoundRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const NotFoundScreen();
+    return const LumosNotFoundScreen();
   }
 }

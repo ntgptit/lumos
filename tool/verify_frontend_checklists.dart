@@ -14,6 +14,10 @@ import 'guards/verify_opacity_constants_contract.dart' as opacity_guard;
 import 'guards/verify_riverpod_annotation.dart' as riverpod_annotation_guard;
 import 'guards/verify_shared_widget_override_contract.dart'
     as shared_widget_override_guard;
+import 'guards/verify_shared_no_alias_contract.dart'
+    as shared_no_alias_guard;
+import 'guards/verify_shared_widget_prefix_contract.dart'
+    as shared_widget_prefix_guard;
 import 'guards/verify_shared_widgets_m3_coverage.dart'
     as shared_widgets_m3_coverage_guard;
 import 'guards/verify_spacing_ownership_contract.dart'
@@ -242,6 +246,16 @@ List<_GuardTask> _buildDefaultTasks() {
       id: 'shared-widget-override',
       fileName: 'guards/verify_shared_widget_override_contract.dart',
       run: shared_widget_override_guard.main,
+    ),
+    _GuardTask(
+      id: 'shared-no-alias',
+      fileName: 'guards/verify_shared_no_alias_contract.dart',
+      run: shared_no_alias_guard.main,
+    ),
+    _GuardTask(
+      id: 'shared-widget-prefix',
+      fileName: 'guards/verify_shared_widget_prefix_contract.dart',
+      run: shared_widget_prefix_guard.main,
     ),
     _GuardTask(
       id: 'shared-widgets-m3-coverage',

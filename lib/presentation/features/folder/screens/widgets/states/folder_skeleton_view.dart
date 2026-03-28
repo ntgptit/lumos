@@ -10,17 +10,17 @@ class FolderSkeletonView extends StatelessWidget {
   Widget build(BuildContext context) {
     final double heroHeight = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.canvas,
+      baseValue: LumosSpacing.canvas,
       minScale: ResponsiveDimensions.compactLargeInsetScale,
     );
     final double sectionGap = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.lg,
+      baseValue: LumosSpacing.lg,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     final double itemGap = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.sm,
+      baseValue: LumosSpacing.sm,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     return ListView(

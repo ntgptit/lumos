@@ -23,15 +23,15 @@ class StudySessionReviewCard extends StatelessWidget {
         final EdgeInsets cardPadding = ResponsiveDimensions.compactInsets(
           context: context,
           baseInsets: EdgeInsets.fromLTRB(
-            constraints.maxHeight < 260 ? AppSpacing.lg : AppSpacing.xl,
-            AppSpacing.lg,
-            constraints.maxHeight < 260 ? AppSpacing.lg : AppSpacing.xl,
-            constraints.maxHeight < 260 ? AppSpacing.lg : AppSpacing.xl,
+            constraints.maxHeight < 260 ? LumosSpacing.lg : LumosSpacing.xl,
+            LumosSpacing.lg,
+            constraints.maxHeight < 260 ? LumosSpacing.lg : LumosSpacing.xl,
+            constraints.maxHeight < 260 ? LumosSpacing.lg : LumosSpacing.xl,
           ),
         );
         final double horizontalInset = ResponsiveDimensions.compactValue(
           context: context,
-          baseValue: constraints.maxWidth < 360 ? AppSpacing.sm : AppSpacing.md,
+          baseValue: constraints.maxWidth < 360 ? LumosSpacing.sm : LumosSpacing.md,
           minScale: ResponsiveDimensions.compactInsetScale,
         );
         return LumosCard(

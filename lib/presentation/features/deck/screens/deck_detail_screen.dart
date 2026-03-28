@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lumos/presentation/shared/screens/app_placeholder_screen.dart';
+import 'package:lumos/presentation/shared/screens/lumos_placeholder_screen.dart';
 
 class DeckDetailScreen extends StatelessWidget {
   const DeckDetailScreen({
@@ -13,7 +13,7 @@ class DeckDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppPlaceholderScreen(
+    return LumosPlaceholderScreen(
       title: 'Deck Detail',
       message: 'Folder $folderId, deck $deckId.',
     );

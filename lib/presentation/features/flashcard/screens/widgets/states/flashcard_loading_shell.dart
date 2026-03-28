@@ -7,10 +7,10 @@ import '../../../../../shared/widgets/lumos_widgets.dart';
 import '../../../../home/screens/widgets/blocks/footer/home_bottom_nav.dart';
 
 const EdgeInsetsGeometry _flashcardLoadingMaskPadding = EdgeInsets.fromLTRB(
-  AppSpacing.lg,
-  AppSpacing.sm,
-  AppSpacing.lg,
-  AppSpacing.none,
+  LumosSpacing.lg,
+  LumosSpacing.sm,
+  LumosSpacing.lg,
+  LumosSpacing.none,
 );
 const double _flashcardLoadingMaskHeight = WidgetSizes.progressTrackHeight;
 

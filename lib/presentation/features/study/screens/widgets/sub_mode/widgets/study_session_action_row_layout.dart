@@ -4,7 +4,7 @@ import '../../../../../../../core/themes/foundation/app_foundation.dart';
 import 'study_session_layout_metrics.dart';
 
 const double _studySessionActionRowSingleWidthFactor = 0.42;
-const double _studySessionActionRowGap = AppSpacing.lg;
+const double _studySessionActionRowGap = LumosSpacing.lg;
 const double _studySessionActionRowHeight = 64;
 
 class StudySessionActionRowLayout extends StatelessWidget {
@@ -14,7 +14,7 @@ class StudySessionActionRowLayout extends StatelessWidget {
     this.singleWidthFactor = _studySessionActionRowSingleWidthFactor,
     this.gap = _studySessionActionRowGap,
     this.rowHeight = _studySessionActionRowHeight,
-    this.verticalSpacing = AppSpacing.sm,
+    this.verticalSpacing = LumosSpacing.sm,
   });
 
   final List<Widget> children;
@@ -71,7 +71,7 @@ class StudySessionActionRowLayout extends StatelessWidget {
         final bool isLastChild = index == children.length - 1;
         return Padding(
           padding: EdgeInsets.only(
-            bottom: isLastChild ? AppSpacing.none : resolvedVerticalSpacing,
+            bottom: isLastChild ? LumosSpacing.none : resolvedVerticalSpacing,
           ),
           child: children[index],
         );

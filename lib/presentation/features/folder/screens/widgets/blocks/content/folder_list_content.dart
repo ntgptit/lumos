@@ -49,7 +49,7 @@ class FolderListContent extends StatelessWidget {
     );
     final double rowSpacing = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.sm,
+      baseValue: LumosSpacing.sm,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     final List<Widget> trailingSlivers = <Widget>[

@@ -11,17 +11,17 @@ abstract final class FlashcardListCardConst {
   FlashcardListCardConst._();
 
   static const EdgeInsets cardPadding = EdgeInsets.fromLTRB(
-    AppSpacing.lg,
-    AppSpacing.md,
-    AppSpacing.md,
-    AppSpacing.md,
+    LumosSpacing.lg,
+    LumosSpacing.md,
+    LumosSpacing.md,
+    LumosSpacing.md,
   );
-  static const double textGap = AppSpacing.xs;
-  static const double iconSpacing = AppSpacing.xs;
-  static const double actionIconSize = IconSizes.iconMedium - AppSpacing.xs;
+  static const double textGap = LumosSpacing.xs;
+  static const double iconSpacing = LumosSpacing.xs;
+  static const double actionIconSize = IconSizes.iconMedium - LumosSpacing.xs;
   static const VisualDensity actionVisualDensity = VisualDensity.compact;
   static const double frontTextFontSize =
-      AppTypographyConst.titleMediumFontSize + AppSpacing.xxs;
+      AppTypographyConst.titleMediumFontSize + LumosSpacing.xxs;
   static const double frontTextHeight =
       AppTypographyConst.titleMediumLineHeight / frontTextFontSize;
   static const int backTextMaxLines = 4;

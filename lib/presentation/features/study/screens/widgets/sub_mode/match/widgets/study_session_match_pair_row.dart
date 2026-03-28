@@ -8,7 +8,7 @@ import '../../../../../providers/study_match_selection_provider.dart';
 import '../../widgets/study_session_layout_metrics.dart';
 import 'study_session_match_pair_button.dart';
 
-const double _matchColumnGap = AppSpacing.md;
+const double _matchColumnGap = LumosSpacing.md;
 const double _matchCardMinHeight = 204;
 const double _matchCardMaxHeight = 276;
 const double _matchCardHeightFactor = 0.72;

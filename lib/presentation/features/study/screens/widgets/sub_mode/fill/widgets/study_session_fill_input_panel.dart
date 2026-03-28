@@ -33,22 +33,22 @@ class StudySessionFillInputPanel extends StatelessWidget {
         final double errorFieldPadding =
             StudySessionLayoutMetrics.actionSpacing(
               context,
-              baseValue: compactHeight ? AppSpacing.xxl : AppSpacing.xxxl,
+              baseValue: compactHeight ? LumosSpacing.xxl : LumosSpacing.xxxl,
             );
         final EdgeInsets errorBannerPadding =
             StudySessionLayoutMetrics.cardPadding(
               context,
-              horizontal: compactHeight ? AppSpacing.md : AppSpacing.lg,
-              vertical: AppSpacing.sm,
+              horizontal: compactHeight ? LumosSpacing.md : LumosSpacing.lg,
+              vertical: LumosSpacing.sm,
             );
         final double horizontalInset = ResponsiveDimensions.compactValue(
           context: context,
-          baseValue: compactHeight ? AppSpacing.md : AppSpacing.lg,
+          baseValue: compactHeight ? LumosSpacing.md : LumosSpacing.lg,
           minScale: ResponsiveDimensions.compactInsetScale,
         );
         final double bottomInset = ResponsiveDimensions.compactValue(
           context: context,
-          baseValue: compactHeight ? AppSpacing.md : AppSpacing.lg,
+          baseValue: compactHeight ? LumosSpacing.md : LumosSpacing.lg,
           minScale: ResponsiveDimensions.compactInsetScale,
         );
         return LumosCard(
@@ -120,7 +120,7 @@ class StudySessionFillInputPanel extends StatelessWidget {
                                         size: IconSizes.iconSmall,
                                       ),
                                     ),
-                                    const SizedBox(width: AppSpacing.sm),
+                                    const SizedBox(width: LumosSpacing.sm),
                                     Flexible(
                                       child: LumosText(
                                         l10n.studyFillAnswerRequiredValidation,

@@ -109,10 +109,10 @@ class StudySessionModeContent extends StatelessWidget {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         final double horizontalInset = constraints.isDesktop
-            ? AppSpacing.sm
+            ? LumosSpacing.sm
             : constraints.isTablet
-            ? AppSpacing.xs
-            : AppSpacing.none;
+            ? LumosSpacing.xs
+            : LumosSpacing.none;
         return Padding(
           padding: EdgeInsets.symmetric(horizontal: horizontalInset),
           child: content,

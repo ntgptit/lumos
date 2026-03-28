@@ -6,8 +6,8 @@ import '../../../../../../shared/widgets/lumos_widgets.dart';
 abstract final class FlashcardListHeaderConst {
   FlashcardListHeaderConst._();
 
-  static const double titleBottomSpacing = AppSpacing.xs;
-  static const double sortGap = AppSpacing.sm;
+  static const double titleBottomSpacing = LumosSpacing.xs;
+  static const double sortGap = LumosSpacing.sm;
 }
 
 class FlashcardListHeader extends StatelessWidget {
@@ -41,8 +41,8 @@ class FlashcardListHeader extends StatelessWidget {
     final EdgeInsets sortPadding = ResponsiveDimensions.compactInsets(
       context: context,
       baseInsets: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.sm,
-        vertical: AppSpacing.xs,
+        horizontal: LumosSpacing.sm,
+        vertical: LumosSpacing.xs,
       ),
     );
     final Widget titleSection = Column(

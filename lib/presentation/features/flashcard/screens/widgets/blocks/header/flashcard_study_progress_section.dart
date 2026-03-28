@@ -6,8 +6,8 @@ import '../../../../../../shared/widgets/lumos_widgets.dart';
 abstract final class FlashcardStudyProgressSectionConst {
   FlashcardStudyProgressSectionConst._();
 
-  static const double sectionSpacing = AppSpacing.lg;
-  static const double itemSpacing = AppSpacing.md;
+  static const double sectionSpacing = LumosSpacing.lg;
+  static const double itemSpacing = LumosSpacing.md;
   static const double progressRingSize = WidgetSizes.avatarMedium;
   static const double actionIconSize = IconSizes.iconSmall;
   static const double progressTextMaxValue = 1;
@@ -62,7 +62,7 @@ class FlashcardStudyProgressSection extends StatelessWidget {
     );
     final double rowGap = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.lg,
+      baseValue: LumosSpacing.lg,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     final int safeTotalCount = _safeTotalCount();

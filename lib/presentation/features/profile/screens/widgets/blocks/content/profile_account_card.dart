@@ -16,12 +16,12 @@ class ProfileAccountCard extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
     final double cardPadding = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.lg,
+      baseValue: LumosSpacing.lg,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     final double sectionGap = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.lg,
+      baseValue: LumosSpacing.lg,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     return LumosCard(
@@ -35,7 +35,7 @@ class ProfileAccountCard extends StatelessWidget {
               l10n.profileAccountSectionTitle,
               style: LumosTextStyle.titleLarge,
             ),
-            const SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: LumosSpacing.sm),
             LumosText(
               l10n.profileAccountSectionSubtitle,
               style: LumosTextStyle.bodyMedium,
@@ -45,14 +45,14 @@ class ProfileAccountCard extends StatelessWidget {
               user.username,
               style: theme.textTheme.headlineSmall,
             ),
-            const SizedBox(height: AppSpacing.xs),
+            const SizedBox(height: LumosSpacing.xs),
             LumosInlineText(
               user.email,
               style: theme.textTheme.bodyLarge?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: LumosSpacing.md),
             DecoratedBox(
               decoration: BoxDecoration(
                 color: theme.colorScheme.secondaryContainer,
@@ -60,8 +60,8 @@ class ProfileAccountCard extends StatelessWidget {
               ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.md,
-                  vertical: AppSpacing.xs,
+                  horizontal: LumosSpacing.md,
+                  vertical: LumosSpacing.xs,
                 ),
                 child: LumosInlineText(
                   user.accountStatus,

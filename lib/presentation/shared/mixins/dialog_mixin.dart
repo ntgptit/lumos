@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lumos/core/enums/dialog_type.dart';
-import 'package:lumos/presentation/shared/composites/dialogs/app_bottom_sheet.dart';
-import 'package:lumos/presentation/shared/composites/dialogs/app_confirm_dialog.dart';
+import 'package:lumos/presentation/shared/composites/dialogs/lumos_bottom_sheet.dart';
+import 'package:lumos/presentation/shared/composites/dialogs/lumos_confirm_dialog.dart';
 
 mixin DialogMixin<T extends StatefulWidget> on State<T> {
   Future<R?> showAppDialog<R>({
@@ -28,7 +28,7 @@ mixin DialogMixin<T extends StatefulWidget> on State<T> {
   }) {
     return showAppDialog<bool>(
       builder: (dialogContext) {
-        return AppConfirmDialog(
+        return LumosConfirmDialog(
           title: title,
           content: content,
           confirmLabel: confirmLabel,
@@ -56,7 +56,7 @@ mixin DialogMixin<T extends StatefulWidget> on State<T> {
       isScrollControlled: isScrollControlled,
       useRootNavigator: useRootNavigator,
       backgroundColor: Colors.transparent,
-      builder: (_) => AppBottomSheet(
+      builder: (_) => LumosBottomSheet(
         title: title,
         subtitle: subtitle,
         actions: actions,

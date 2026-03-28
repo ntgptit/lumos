@@ -26,7 +26,7 @@ class DeckListContent extends ConsumerWidget {
       builder: (BuildContext context, BoxConstraints constraints) {
         final double bottomInset = ResponsiveDimensions.compactValue(
           context: context,
-          baseValue: constraints.maxWidth < 380 ? AppSpacing.xs : AppSpacing.sm,
+          baseValue: constraints.maxWidth < 380 ? LumosSpacing.xs : LumosSpacing.sm,
           minScale: ResponsiveDimensions.compactInsetScale,
         );
         return Column(

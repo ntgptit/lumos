@@ -35,16 +35,16 @@ class StudySessionReviewAnswerCard extends StatelessWidget {
         final bool compactHeight = constraints.maxHeight < 260;
         final EdgeInsets cardPadding = StudySessionLayoutMetrics.cardInsets(
           context,
-          left: compactHeight ? AppSpacing.lg : AppSpacing.xl,
-          top: AppSpacing.lg,
-          right: compactHeight ? AppSpacing.lg : AppSpacing.xl,
-          bottom: compactHeight ? AppSpacing.lg : AppSpacing.xl,
+          left: compactHeight ? LumosSpacing.lg : LumosSpacing.xl,
+          top: LumosSpacing.lg,
+          right: compactHeight ? LumosSpacing.lg : LumosSpacing.xl,
+          bottom: compactHeight ? LumosSpacing.lg : LumosSpacing.xl,
         );
         final EdgeInsets topTrailingPadding =
             StudySessionLayoutMetrics.topTrailingPadding(
               context,
-              top: compactHeight ? AppSpacing.md : AppSpacing.lg,
-              right: compactHeight ? AppSpacing.md : AppSpacing.lg,
+              top: compactHeight ? LumosSpacing.md : LumosSpacing.lg,
+              right: compactHeight ? LumosSpacing.md : LumosSpacing.lg,
             );
         return StudySessionContentCard(
           variant: LumosCardVariant.filled,

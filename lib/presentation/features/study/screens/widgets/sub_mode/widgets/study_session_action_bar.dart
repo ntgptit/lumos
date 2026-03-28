@@ -20,8 +20,8 @@ class StudySessionActionBar extends StatelessWidget {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         final double baseGap = constraints.maxWidth < 380
-            ? AppSpacing.xs
-            : AppSpacing.sm;
+            ? LumosSpacing.xs
+            : LumosSpacing.sm;
         final double actionGap = StudySessionLayoutMetrics.sectionSpacing(
           context,
           baseValue: baseGap,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lumos/presentation/shared/screens/app_placeholder_screen.dart';
+import 'package:lumos/presentation/shared/primitives/buttons/lumos_button.dart';
+import 'package:lumos/presentation/shared/screens/lumos_placeholder_screen.dart';
 
 class StudySessionScreen extends StatelessWidget {
   const StudySessionScreen({
@@ -15,18 +16,18 @@ class StudySessionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppPlaceholderScreen(
+    return LumosPlaceholderScreen(
       title: 'Study Session',
       actions: [
-        FilledButton(
+        LumosButton.primary(
           onPressed: onOpenModePicker,
-          child: const Text('Mode Picker'),
+          text: 'Mode Picker',
         ),
-        FilledButton(
+        LumosButton.primary(
           onPressed: onOpenResult,
-          child: const Text('Finish Session'),
+          text: 'Finish Session',
         ),
-        OutlinedButton(onPressed: onExit, child: const Text('Exit')),
+        LumosButton.outline(onPressed: onExit, text: 'Exit'),
       ],
     );
   }

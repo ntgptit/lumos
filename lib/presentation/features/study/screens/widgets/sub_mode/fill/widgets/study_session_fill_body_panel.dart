@@ -34,11 +34,11 @@ class StudySessionFillBodyPanel extends StatelessWidget {
           context: context,
           baseInsets: EdgeInsets.symmetric(
             horizontal: constraints.maxWidth < 360
-                ? AppSpacing.xs
-                : AppSpacing.none,
+                ? LumosSpacing.xs
+                : LumosSpacing.none,
             vertical: constraints.maxHeight < 260
-                ? AppSpacing.xs
-                : AppSpacing.none,
+                ? LumosSpacing.xs
+                : LumosSpacing.none,
           ),
         );
         if (showsAnswerPanel) {

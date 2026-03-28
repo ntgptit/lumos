@@ -8,8 +8,8 @@ import '../widgets/study_session_layout_metrics.dart';
 import '../widgets/study_session_progress_row.dart';
 import 'widgets/study_session_match_pairs.dart';
 
-const double _matchSectionSpacing = AppSpacing.lg;
-const double _matchBottomSpacing = AppSpacing.xxl;
+const double _matchSectionSpacing = LumosSpacing.lg;
+const double _matchBottomSpacing = LumosSpacing.xxl;
 
 class StudySessionMatchContent extends StatelessWidget {
   const StudySessionMatchContent({
@@ -38,21 +38,21 @@ class StudySessionMatchContent extends StatelessWidget {
         final EdgeInsets contentPadding =
             StudySessionLayoutMetrics.contentPadding(
               context,
-              top: compactHeight ? AppSpacing.sm : AppSpacing.md,
-              bottom: compactHeight ? AppSpacing.lg : AppSpacing.xl,
+              top: compactHeight ? LumosSpacing.sm : LumosSpacing.md,
+              bottom: compactHeight ? LumosSpacing.lg : LumosSpacing.xl,
             );
         final EdgeInsets progressPadding =
             StudySessionLayoutMetrics.progressPadding(
               context,
-              horizontal: compactHeight ? AppSpacing.sm : AppSpacing.md,
+              horizontal: compactHeight ? LumosSpacing.sm : LumosSpacing.md,
             );
         final double sectionSpacing = StudySessionLayoutMetrics.sectionSpacing(
           context,
-          baseValue: compactHeight ? AppSpacing.md : _matchSectionSpacing,
+          baseValue: compactHeight ? LumosSpacing.md : _matchSectionSpacing,
         );
         final double bottomSpacing = StudySessionLayoutMetrics.actionSpacing(
           context,
-          baseValue: compactHeight ? AppSpacing.lg : _matchBottomSpacing,
+          baseValue: compactHeight ? LumosSpacing.lg : _matchBottomSpacing,
         );
         return Padding(
           padding: contentPadding,

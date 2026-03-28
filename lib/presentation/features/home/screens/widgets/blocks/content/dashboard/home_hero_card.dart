@@ -11,8 +11,8 @@ abstract final class HomeHeroCardConst {
   static const double heroMinHeightMobile = 280;
   static const double heroMinHeightLarge = 250;
   static const double emphasizedBorderWidth = AppStroke.thin;
-  static const double heroShadowBlurRadius = AppSpacing.xxl;
-  static const double heroShadowOffsetY = AppSpacing.sm;
+  static const double heroShadowBlurRadius = LumosSpacing.xxl;
+  static const double heroShadowOffsetY = LumosSpacing.sm;
 }
 
 class HomeHeroCard extends StatelessWidget {
@@ -27,12 +27,12 @@ class HomeHeroCard extends StatelessWidget {
     final bool isMobile = deviceType == DeviceType.mobile;
     final double heroPadding = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.xxl,
+      baseValue: LumosSpacing.xxl,
       minScale: ResponsiveDimensions.compactLargeInsetScale,
     );
     final double titleGap = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.lg,
+      baseValue: LumosSpacing.lg,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     final Color secondaryBlend = Color.alphaBlend(
@@ -65,7 +65,7 @@ class HomeHeroCard extends StatelessWidget {
               color: colorScheme.shadow.withValues(alpha: AppOpacity.subtle),
               blurRadius: HomeHeroCardConst.heroShadowBlurRadius,
               offset: const Offset(
-                AppSpacing.none,
+                LumosSpacing.none,
                 HomeHeroCardConst.heroShadowOffsetY,
               ),
             ),
@@ -88,11 +88,11 @@ class HomeHeroCard extends StatelessWidget {
                         size: IconSizes.iconMedium,
                       ),
                     ),
-                    const SizedBox(width: AppSpacing.sm),
+                    const SizedBox(width: LumosSpacing.sm),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.sm,
-                        vertical: AppSpacing.xs,
+                        horizontal: LumosSpacing.sm,
+                        vertical: LumosSpacing.xs,
                       ),
                       decoration: BoxDecoration(
                         color: colorScheme.surfaceContainerLowest,
@@ -116,7 +116,7 @@ class HomeHeroCard extends StatelessWidget {
                   style: LumosTextStyle.headlineMedium,
                   containerRole: LumosTextContainerRole.primaryContainer,
                 ),
-                const SizedBox(height: AppSpacing.sm),
+                const SizedBox(height: LumosSpacing.sm),
                 LumosText(
                   l10n.homeHeroBody,
                   style: LumosTextStyle.bodyMedium,
@@ -126,8 +126,8 @@ class HomeHeroCard extends StatelessWidget {
                 ),
                 SizedBox(height: titleGap),
                 Wrap(
-                  spacing: AppSpacing.sm,
-                  runSpacing: AppSpacing.sm,
+                  spacing: LumosSpacing.sm,
+                  runSpacing: LumosSpacing.sm,
                   children: <Widget>[
                     LumosPrimaryButton(
                       label: l10n.homePrimaryAction,

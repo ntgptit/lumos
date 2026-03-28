@@ -33,7 +33,7 @@ class FolderCreateButton extends StatelessWidget {
     final FolderContentSupportCreateAction singleAction = actions.first;
     final double bottomInset = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.xxl,
+      baseValue: LumosSpacing.xxl,
       minScale: ResponsiveDimensions.compactVerticalInsetScale,
     );
     return Positioned(

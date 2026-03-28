@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lumos/core/enums/snackbar_type.dart';
 import 'package:lumos/core/theme/tokens/tokens.dart';
-import 'package:lumos/presentation/shared/primitives/feedback/app_snackbar.dart';
+import 'package:lumos/presentation/shared/primitives/feedback/lumos_snackbar.dart';
 
 mixin SnackbarMixin<T extends StatefulWidget> on State<T> {
   void showAppSnackbar({
@@ -28,7 +28,7 @@ mixin SnackbarMixin<T extends StatefulWidget> on State<T> {
         backgroundColor: Colors.transparent,
         elevation: AppElevationTokens.level0,
         duration: duration ?? type.defaultDuration,
-        content: AppSnackbar(
+        content: LumosSnackbar(
           message: message,
           title: title,
           type: type,

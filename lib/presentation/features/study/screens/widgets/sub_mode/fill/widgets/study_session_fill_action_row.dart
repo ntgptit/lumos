@@ -148,9 +148,9 @@ class StudySessionFillActionRow extends StatelessWidget {
       builder: (BuildContext context, BoxConstraints constraints) {
         final bool compactWidth = constraints.maxWidth < 380;
         return StudySessionActionRowLayout(
-          gap: compactWidth ? AppSpacing.md : AppSpacing.lg,
+          gap: compactWidth ? LumosSpacing.md : LumosSpacing.lg,
           rowHeight: compactWidth ? 56 : 64,
-          verticalSpacing: compactWidth ? AppSpacing.xs : AppSpacing.sm,
+          verticalSpacing: compactWidth ? LumosSpacing.xs : LumosSpacing.sm,
           singleWidthFactor: compactWidth ? 0.56 : 0.42,
           children: actionButtons,
         );

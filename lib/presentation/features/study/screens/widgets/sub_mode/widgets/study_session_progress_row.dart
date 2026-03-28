@@ -4,7 +4,7 @@ import '../../../../../../../core/themes/foundation/app_foundation.dart';
 import '../../../../../../shared/widgets/lumos_widgets.dart';
 import 'study_session_layout_metrics.dart';
 
-const double _studySessionProgressBarHeight = AppSpacing.md;
+const double _studySessionProgressBarHeight = LumosSpacing.md;
 
 class StudySessionProgressRow extends StatelessWidget {
   const StudySessionProgressRow({required this.progressValue, super.key});
@@ -20,7 +20,7 @@ class StudySessionProgressRow extends StatelessWidget {
     );
     final double valueGap = StudySessionLayoutMetrics.sectionSpacing(
       context,
-      baseValue: AppSpacing.md,
+      baseValue: LumosSpacing.md,
     );
     final ThemeData theme = Theme.of(context);
     final ColorScheme colorScheme = theme.colorScheme;

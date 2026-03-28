@@ -23,15 +23,15 @@ abstract final class StudySessionReviewContentConst {
   static const int currentPageIndex = 1;
   static const int nextPageIndex = 2;
   static const EdgeInsetsGeometry contentPadding = EdgeInsets.fromLTRB(
-    AppSpacing.lg,
-    AppSpacing.md,
-    AppSpacing.lg,
-    AppSpacing.xl,
+    LumosSpacing.lg,
+    LumosSpacing.md,
+    LumosSpacing.lg,
+    LumosSpacing.xl,
   );
   static const EdgeInsetsGeometry progressPadding = EdgeInsets.symmetric(
-    horizontal: AppSpacing.md,
+    horizontal: LumosSpacing.md,
   );
-  static const double sectionSpacing = AppSpacing.lg;
+  static const double sectionSpacing = LumosSpacing.lg;
 }
 
 class StudySessionReviewContent extends StatefulWidget {
@@ -95,18 +95,18 @@ class _StudySessionReviewContentState extends State<StudySessionReviewContent> {
         final EdgeInsets contentPadding =
             StudySessionLayoutMetrics.contentPadding(
               context,
-              top: compactHeight ? AppSpacing.sm : AppSpacing.md,
-              bottom: compactHeight ? AppSpacing.lg : AppSpacing.xl,
+              top: compactHeight ? LumosSpacing.sm : LumosSpacing.md,
+              bottom: compactHeight ? LumosSpacing.lg : LumosSpacing.xl,
             );
         final EdgeInsets progressPadding =
             StudySessionLayoutMetrics.progressPadding(
               context,
-              horizontal: compactHeight ? AppSpacing.sm : AppSpacing.md,
+              horizontal: compactHeight ? LumosSpacing.sm : LumosSpacing.md,
             );
         final double sectionSpacing = StudySessionLayoutMetrics.sectionSpacing(
           context,
           baseValue: compactHeight
-              ? AppSpacing.md
+              ? LumosSpacing.md
               : StudySessionReviewContentConst.sectionSpacing,
         );
         return Padding(

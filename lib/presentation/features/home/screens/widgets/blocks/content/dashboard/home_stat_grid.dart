@@ -8,14 +8,14 @@ import '../../../../../../../shared/widgets/lumos_widgets.dart';
 abstract final class HomeStatGridConst {
   HomeStatGridConst._();
 
-  static const double statIconContainerSize = AppSpacing.xxxl + AppSpacing.sm;
-  static const double activityAccentSize = AppSpacing.xxxl;
+  static const double statIconContainerSize = LumosSpacing.xxxl + LumosSpacing.sm;
+  static const double activityAccentSize = LumosSpacing.xxxl;
   static const double cardElevation = AppElevationTokens.level1;
   static const EdgeInsetsGeometry sectionHeaderPadding = EdgeInsets.fromLTRB(
-    AppSpacing.lg,
-    AppSpacing.lg,
-    AppSpacing.lg,
-    AppSpacing.md,
+    LumosSpacing.lg,
+    LumosSpacing.lg,
+    LumosSpacing.lg,
+    LumosSpacing.md,
   );
 }
 
@@ -27,12 +27,12 @@ class HomeStatGrid extends StatelessWidget {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
     final double cardPadding = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.lg,
+      baseValue: LumosSpacing.lg,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     final double itemGap = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.md,
+      baseValue: LumosSpacing.md,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     final List<_HomeStatItem> stats = <_HomeStatItem>[
@@ -88,7 +88,7 @@ class HomeStatGrid extends StatelessWidget {
                               child: LumosIcon(stat.icon),
                             ),
                           ),
-                          const SizedBox(width: AppSpacing.md),
+                          const SizedBox(width: LumosSpacing.md),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -120,7 +120,7 @@ class HomeStatGrid extends StatelessWidget {
                 (_HomeStatItem stat) => Expanded(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.xs,
+                      horizontal: LumosSpacing.xs,
                     ),
                     child: LumosSectionCard(
                       variant: LumosCardVariant.outlined,
@@ -148,7 +148,7 @@ class HomeStatGrid extends StatelessWidget {
                               child: LumosIcon(stat.icon),
                             ),
                           ),
-                          const SizedBox(width: AppSpacing.md),
+                          const SizedBox(width: LumosSpacing.md),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,

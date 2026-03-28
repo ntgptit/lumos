@@ -14,10 +14,10 @@ abstract final class FlashcardScreenConst {
   FlashcardScreenConst._();
 
   static const EdgeInsets loadingMaskPadding = EdgeInsets.fromLTRB(
-    AppSpacing.lg,
-    AppSpacing.sm,
-    AppSpacing.lg,
-    AppSpacing.none,
+    LumosSpacing.lg,
+    LumosSpacing.sm,
+    LumosSpacing.lg,
+    LumosSpacing.none,
   );
   static const double loadingMaskHeight = WidgetSizes.progressTrackHeight;
 }

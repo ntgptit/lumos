@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lumos/presentation/shared/screens/app_placeholder_screen.dart';
+import 'package:lumos/presentation/shared/screens/lumos_placeholder_screen.dart';
 
 class FolderListScreen extends StatelessWidget {
   const FolderListScreen({this.folderId, super.key});
@@ -11,6 +11,6 @@ class FolderListScreen extends StatelessWidget {
     final String? message = folderId == null
         ? 'Folder list adapter is active.'
         : 'Folder detail adapter is active for folder $folderId.';
-    return AppPlaceholderScreen(title: 'Folders', message: message);
+    return LumosPlaceholderScreen(title: 'Folders', message: message);
   }
 }

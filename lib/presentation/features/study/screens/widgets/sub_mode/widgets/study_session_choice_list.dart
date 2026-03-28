@@ -20,7 +20,7 @@ class StudySessionChoiceList extends StatelessWidget {
   Widget build(BuildContext context) {
     final double itemSpacing = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.sm,
+      baseValue: LumosSpacing.sm,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     if (useGrid) {

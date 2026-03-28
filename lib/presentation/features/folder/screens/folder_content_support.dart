@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 abstract final class FolderContentSupportConst {
   FolderContentSupportConst._();
 
-  static const double listBottomSpacing = AppSpacing.canvas;
-  static const double loadMoreThreshold = AppSpacing.canvas;
-  static const double scrollTopOffset = AppSpacing.none;
-  static const double scrollTopTriggerOffset = AppSpacing.sm;
+  static const double listBottomSpacing = LumosSpacing.canvas;
+  static const double loadMoreThreshold = LumosSpacing.canvas;
+  static const double scrollTopOffset = LumosSpacing.none;
+  static const double scrollTopTriggerOffset = LumosSpacing.sm;
   static const Duration scrollTopDuration = AppDurations.fast;
-  static const double loadMoreTopSpacing = AppSpacing.md;
-  static const double loadMoreBottomSpacing = AppSpacing.sm;
-  static const double createActionSheetHorizontalPadding = AppSpacing.lg;
-  static const double createActionSheetVerticalPadding = AppSpacing.md;
-  static const double createActionSheetBottomPadding = AppSpacing.lg;
+  static const double loadMoreTopSpacing = LumosSpacing.md;
+  static const double loadMoreBottomSpacing = LumosSpacing.sm;
+  static const double createActionSheetHorizontalPadding = LumosSpacing.lg;
+  static const double createActionSheetVerticalPadding = LumosSpacing.md;
+  static const double createActionSheetBottomPadding = LumosSpacing.lg;
 }
 
 class FolderContentSupportCreateAction {

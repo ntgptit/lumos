@@ -79,12 +79,12 @@ class FlashcardListContent extends StatelessWidget {
     );
     final double mediumGap = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.md,
+      baseValue: LumosSpacing.md,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     final double loadingBottomGap = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.sm,
+      baseValue: LumosSpacing.sm,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     final double bottomSpacing = ResponsiveDimensions.compactValue(

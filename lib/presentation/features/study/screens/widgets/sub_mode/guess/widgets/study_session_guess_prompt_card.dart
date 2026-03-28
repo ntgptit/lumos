@@ -46,8 +46,8 @@ class StudySessionGuessPromptCard extends StatelessWidget {
     );
     final EdgeInsets cardPadding = StudySessionLayoutMetrics.cardPadding(
       context,
-      horizontal: AppSpacing.xl,
-      vertical: AppSpacing.xl,
+      horizontal: LumosSpacing.xl,
+      vertical: LumosSpacing.xl,
     );
     final EdgeInsets topTrailingPadding =
         StudySessionLayoutMetrics.topTrailingPadding(context);

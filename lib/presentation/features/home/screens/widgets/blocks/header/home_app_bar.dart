@@ -11,15 +11,15 @@ import '../../../../extensions/home_tab_id_l10n_extension.dart';
 abstract final class HomeAppBarConst {
   HomeAppBarConst._();
 
-  static const double notificationDotSize = AppSpacing.sm;
+  static const double notificationDotSize = LumosSpacing.sm;
   static const double compactNotificationDotSize =
-      AppSpacing.xs + AppSpacing.xxs;
-  static const double brandMarkSizeCompact = AppSpacing.xxxl + AppSpacing.xs;
+      LumosSpacing.xs + LumosSpacing.xxs;
+  static const double brandMarkSizeCompact = LumosSpacing.xxxl + LumosSpacing.xs;
   static const double brandMarkSizeExpanded = WidgetSizes.avatarLarge;
   static const EdgeInsetsGeometry profilePillPaddingCompact =
-      EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: AppSpacing.xxs);
+      EdgeInsets.symmetric(horizontal: LumosSpacing.xs, vertical: LumosSpacing.xxs);
   static const EdgeInsetsGeometry profilePillPaddingExpanded =
-      EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: AppSpacing.xs);
+      EdgeInsets.symmetric(horizontal: LumosSpacing.xs, vertical: LumosSpacing.xs);
 }
 
 class HomeAppBar extends ConsumerWidget implements PreferredSizeWidget {
@@ -73,8 +73,8 @@ class HomeAppBar extends ConsumerWidget implements PreferredSizeWidget {
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.md,
-                vertical: AppSpacing.sm,
+                horizontal: LumosSpacing.md,
+                vertical: LumosSpacing.sm,
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -88,7 +88,7 @@ class HomeAppBar extends ConsumerWidget implements PreferredSizeWidget {
                       size: IconSizes.iconSmall,
                     ),
                   ),
-                  const SizedBox(width: AppSpacing.xs),
+                  const SizedBox(width: LumosSpacing.xs),
                   LumosInlineText(
                     l10n.homeStatStreakValue,
                     style: theme.textTheme.labelMedium?.copyWith(
@@ -121,8 +121,8 @@ class HomeAppBar extends ConsumerWidget implements PreferredSizeWidget {
               size: IconSizes.iconMedium,
             ),
             Positioned(
-              top: isCompact ? AppSpacing.xs : AppSpacing.sm,
-              right: isCompact ? AppSpacing.xs : AppSpacing.sm,
+              top: isCompact ? LumosSpacing.xs : LumosSpacing.sm,
+              right: isCompact ? LumosSpacing.xs : LumosSpacing.sm,
               child: Container(
                 width: isCompact
                     ? HomeAppBarConst.compactNotificationDotSize
@@ -157,7 +157,7 @@ class HomeAppBar extends ConsumerWidget implements PreferredSizeWidget {
                 ),
               ),
               if (!isCompact) ...<Widget>[
-                const SizedBox(width: AppSpacing.sm),
+                const SizedBox(width: LumosSpacing.sm),
                 LumosInlineText(
                   l10n.homeProfileQuickName,
                   style: theme.textTheme.labelMedium?.copyWith(
@@ -165,7 +165,7 @@ class HomeAppBar extends ConsumerWidget implements PreferredSizeWidget {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                const SizedBox(width: AppSpacing.xs),
+                const SizedBox(width: LumosSpacing.xs),
               ],
               IconTheme(
                 data: IconThemeData(color: colorScheme.onSurfaceVariant),

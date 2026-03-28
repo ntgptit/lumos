@@ -7,7 +7,7 @@ import '../../../../../providers/study_speech_playback_provider.dart';
 import 'study_session_review_answer_card.dart';
 import 'study_session_review_prompt_card.dart';
 
-const double _reviewCardSpacing = AppSpacing.lg;
+const double _reviewCardSpacing = LumosSpacing.lg;
 
 class StudySessionReviewCardDeck extends StatelessWidget {
   const StudySessionReviewCardDeck({
@@ -31,7 +31,7 @@ class StudySessionReviewCardDeck extends StatelessWidget {
         final double cardSpacing = ResponsiveDimensions.compactValue(
           context: context,
           baseValue: constraints.maxHeight < 520
-              ? AppSpacing.md
+              ? LumosSpacing.md
               : _reviewCardSpacing,
           minScale: ResponsiveDimensions.compactInsetScale,
         );

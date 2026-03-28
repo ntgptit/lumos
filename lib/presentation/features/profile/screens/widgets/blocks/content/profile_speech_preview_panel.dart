@@ -79,12 +79,12 @@ class _ProfileSpeechPreviewPanelState
     );
     final double titleGap = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.xs,
+      baseValue: LumosSpacing.xs,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     final double sectionGap = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.md,
+      baseValue: LumosSpacing.md,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     return LayoutBuilder(

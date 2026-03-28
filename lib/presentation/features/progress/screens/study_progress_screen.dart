@@ -20,12 +20,12 @@ class StudyProgressScreen extends ConsumerWidget {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
     final double screenPadding = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.lg,
+      baseValue: LumosSpacing.lg,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     final double sectionGap = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.lg,
+      baseValue: LumosSpacing.lg,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     final AsyncValue<StudyOverviewData> overviewAsync = ref.watch(

@@ -14,7 +14,7 @@ import 'dart:io';
 /// - Không parse AST (vẫn là regex-based guard), nhưng giảm false-positive bằng ngữ cảnh.
 ///
 /// Lưu ý:
-/// - Guard hoạt động tốt nhất khi UI tokens đã được chuẩn hoá (AppSizes/AppSpacing/AppTypography/...).
+/// - Guard hoạt động tốt nhất khi UI tokens đã được chuẩn hoá (AppSizes/LumosSpacing/AppTypography/...).
 /// - Nếu dự án của bạn đã “token-first”, có thể nâng rule lên mức “cấm literal hoàn toàn”.
 class UiDesignGuardConst {
   const UiDesignGuardConst._();

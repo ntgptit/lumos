@@ -30,12 +30,12 @@ class ProfileStudySection extends StatelessWidget {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
     final double cardPadding = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.lg,
+      baseValue: LumosSpacing.lg,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     final double sectionGap = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.lg,
+      baseValue: LumosSpacing.lg,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     return LumosCard(
@@ -49,7 +49,7 @@ class ProfileStudySection extends StatelessWidget {
               l10n.profileStudySectionTitle,
               style: LumosTextStyle.titleLarge,
             ),
-            const SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: LumosSpacing.sm),
             LumosText(
               l10n.profileStudySectionSubtitle,
               style: LumosTextStyle.bodyMedium,
@@ -76,7 +76,7 @@ class ProfileStudySection extends StatelessWidget {
                 onLimitChanged(limit);
               },
             ),
-            const SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: LumosSpacing.sm),
             LumosText(
               l10n.profileStudyReviewHint,
               style: LumosTextStyle.bodySmall,

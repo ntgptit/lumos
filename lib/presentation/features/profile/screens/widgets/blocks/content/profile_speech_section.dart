@@ -41,17 +41,17 @@ class ProfileSpeechSection extends StatelessWidget {
     final double resolvedPitch = normalizeTtsPitch(preference.pitch);
     final double cardPadding = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.lg,
+      baseValue: LumosSpacing.lg,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     final double sectionGap = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.md,
+      baseValue: LumosSpacing.md,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     final double footerGap = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.lg,
+      baseValue: LumosSpacing.lg,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     return LumosCard(
@@ -65,12 +65,12 @@ class ProfileSpeechSection extends StatelessWidget {
               l10n.profileSpeechSectionTitle,
               style: LumosTextStyle.titleLarge,
             ),
-            const SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: LumosSpacing.sm),
             LumosText(
               l10n.profileSpeechSectionSubtitle,
               style: LumosTextStyle.bodyMedium,
             ),
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: LumosSpacing.md),
             SwitchListTile.adaptive(
               contentPadding: EdgeInsets.zero,
               title: LumosText(

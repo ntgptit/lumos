@@ -81,7 +81,7 @@ final Map<String, List<String>> _requiredFilePatterns = <String, List<String>>{
     'abstract final class AppPalette',
   ],
   'lib/core/themes/foundation/app_spacing.dart': <String>[
-    'abstract final class AppSpacing',
+    'abstract final class LumosSpacing',
   ],
   'lib/core/themes/foundation/app_radius.dart': <String>[
     'abstract final class AppRadius',
@@ -415,7 +415,7 @@ Future<void> _appendTokenNamingViolations({
       'xxxl',
     },
     violations: violations,
-    typeLabel: 'AppSpacing',
+    typeLabel: 'LumosSpacing',
   );
 
   await _appendRequiredStaticConstNameViolations(

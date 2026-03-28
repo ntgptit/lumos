@@ -13,10 +13,10 @@ abstract final class HomeAdaptiveBodyConst {
 
   static const Duration loadingMaskFadeDuration = AppDurations.fast;
   static const EdgeInsets tabLoadingMaskPadding = EdgeInsets.fromLTRB(
-    AppSpacing.lg,
-    AppSpacing.sm,
-    AppSpacing.lg,
-    AppSpacing.none,
+    LumosSpacing.lg,
+    LumosSpacing.sm,
+    LumosSpacing.lg,
+    LumosSpacing.none,
   );
   static const double tabLoadingMaskHeight = WidgetSizes.progressTrackHeight;
 }
@@ -47,10 +47,10 @@ class _HomeAdaptiveBodyState extends ConsumerState<HomeAdaptiveBody> {
     final EdgeInsets loadingMaskPadding = ResponsiveDimensions.compactInsets(
       context: context,
       baseInsets: const EdgeInsets.fromLTRB(
-        AppSpacing.lg,
-        AppSpacing.sm,
-        AppSpacing.lg,
-        AppSpacing.none,
+        LumosSpacing.lg,
+        LumosSpacing.sm,
+        LumosSpacing.lg,
+        LumosSpacing.none,
       ),
     );
     final double loadingMaskHeight = ResponsiveDimensions.compactValue(
@@ -167,7 +167,7 @@ class _HomeAdaptiveBodyState extends ConsumerState<HomeAdaptiveBody> {
                   )
                   .toList(),
             ),
-            const VerticalDivider(width: AppSpacing.none),
+            const VerticalDivider(width: LumosSpacing.none),
             Expanded(child: tabbedBody),
           ],
         );

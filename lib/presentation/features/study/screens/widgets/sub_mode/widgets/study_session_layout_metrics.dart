@@ -9,9 +9,9 @@ abstract final class StudySessionLayoutMetrics {
 
   static EdgeInsets contentPadding(
     BuildContext context, {
-    double horizontal = AppSpacing.lg,
-    double top = AppSpacing.md,
-    double bottom = AppSpacing.xl,
+    double horizontal = LumosSpacing.lg,
+    double top = LumosSpacing.md,
+    double bottom = LumosSpacing.xl,
   }) {
     return EdgeInsets.fromLTRB(
       _outerInset(context, horizontal),
@@ -23,15 +23,15 @@ abstract final class StudySessionLayoutMetrics {
 
   static EdgeInsets progressPadding(
     BuildContext context, {
-    double horizontal = AppSpacing.md,
+    double horizontal = LumosSpacing.md,
   }) {
     return EdgeInsets.symmetric(horizontal: _sectionInset(context, horizontal));
   }
 
   static EdgeInsets cardPadding(
     BuildContext context, {
-    double horizontal = AppSpacing.xl,
-    double vertical = AppSpacing.xl,
+    double horizontal = LumosSpacing.xl,
+    double vertical = LumosSpacing.xl,
   }) {
     return EdgeInsets.symmetric(
       horizontal: _cardInset(context, horizontal),
@@ -56,8 +56,8 @@ abstract final class StudySessionLayoutMetrics {
 
   static EdgeInsets topTrailingPadding(
     BuildContext context, {
-    double top = AppSpacing.lg,
-    double right = AppSpacing.lg,
+    double top = LumosSpacing.lg,
+    double right = LumosSpacing.lg,
   }) {
     return EdgeInsets.only(
       top: _sectionInset(context, top),
@@ -67,8 +67,8 @@ abstract final class StudySessionLayoutMetrics {
 
   static EdgeInsets bottomTrailingPadding(
     BuildContext context, {
-    double right = AppSpacing.md,
-    double bottom = AppSpacing.md,
+    double right = LumosSpacing.md,
+    double bottom = LumosSpacing.md,
   }) {
     return EdgeInsets.only(
       right: _sectionInset(context, right),
@@ -78,14 +78,14 @@ abstract final class StudySessionLayoutMetrics {
 
   static double sectionSpacing(
     BuildContext context, {
-    double baseValue = AppSpacing.lg,
+    double baseValue = LumosSpacing.lg,
   }) {
     return _sectionInset(context, baseValue);
   }
 
   static double actionSpacing(
     BuildContext context, {
-    double baseValue = AppSpacing.xl,
+    double baseValue = LumosSpacing.xl,
   }) {
     return _sectionInset(context, baseValue);
   }

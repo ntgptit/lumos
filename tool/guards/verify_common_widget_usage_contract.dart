@@ -14,7 +14,7 @@ class CommonWidgetUsageGuardConst {
   static const String providersMarker = '/providers/';
   static const List<String> sharedWidgetsPrefixes = <String>[
     'lib/core/widgets/',
-    'lib/presentation/shared/widgets/',
+    'lib/presentation/shared/',
   ];
   static const String coreThemesPrefix = 'lib/core/themes/';
   static const String allowMaterialWidgetOverrideMarker =

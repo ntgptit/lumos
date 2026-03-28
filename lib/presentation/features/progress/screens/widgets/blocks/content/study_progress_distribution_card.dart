@@ -19,7 +19,7 @@ class StudyProgressDistributionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final double cardPadding = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.lg,
+      baseValue: LumosSpacing.lg,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     return LumosCard(
@@ -32,10 +32,10 @@ class StudyProgressDistributionCard extends StatelessWidget {
               l10n.studyProgressBoxDistributionTitle,
               style: LumosTextStyle.titleLarge,
             ),
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: LumosSpacing.md),
             ...analytics.boxDistribution.entries.map(
               (MapEntry<int, int> entry) => Padding(
-                padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                padding: const EdgeInsets.only(bottom: LumosSpacing.sm),
                 child: Row(
                   children: <Widget>[
                     Expanded(

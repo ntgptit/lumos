@@ -14,8 +14,8 @@ abstract final class FolderListTileConst {
   static const double leadingSize = WidgetSizes.avatarLarge;
   static const double leadingIconSize = IconSizes.iconMedium;
   static const double leadingBorderWidth = WidgetSizes.borderWidthRegular;
-  static const double badgeMinSize = AppSpacing.xl;
-  static const double badgeHorizontalPadding = AppSpacing.xs;
+  static const double badgeMinSize = LumosSpacing.xl;
+  static const double badgeHorizontalPadding = LumosSpacing.xs;
   static const double badgeFontSize = FontSizes.fontSizeSmall;
 }
 
@@ -112,8 +112,8 @@ class FolderListTile extends StatelessWidget {
               ),
             ),
             Positioned(
-              right: AppSpacing.none,
-              bottom: AppSpacing.none,
+              right: LumosSpacing.none,
+              bottom: LumosSpacing.none,
               child: Container(
                 constraints: BoxConstraints(
                   minWidth: badgeMinSize,

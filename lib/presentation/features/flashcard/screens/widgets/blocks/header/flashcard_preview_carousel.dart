@@ -10,19 +10,19 @@ import '../../../../../../shared/widgets/lumos_widgets.dart';
 abstract final class FlashcardPreviewCarouselConst {
   FlashcardPreviewCarouselConst._();
 
-  static const double carouselHeight = AppSpacing.section * 6;
-  static const double pageSpacing = AppSpacing.xs;
-  static const double dotSpacing = AppSpacing.xs;
+  static const double carouselHeight = LumosSpacing.section * 6;
+  static const double pageSpacing = LumosSpacing.xs;
+  static const double dotSpacing = LumosSpacing.xs;
   static const double activeDotScale = 1.7;
-  static const double dotSize = AppSpacing.sm;
-  static const double titleHorizontalPadding = AppSpacing.xl;
-  static const double titleVerticalPadding = AppSpacing.lg;
-  static const double expandButtonInset = AppSpacing.sm;
-  static const double expandIconSize = AppSpacing.xl;
+  static const double dotSize = LumosSpacing.sm;
+  static const double titleHorizontalPadding = LumosSpacing.xl;
+  static const double titleVerticalPadding = LumosSpacing.lg;
+  static const double expandButtonInset = LumosSpacing.sm;
+  static const double expandIconSize = LumosSpacing.xl;
   static const double frontTextFontSize = AppTypographyConst.titleLargeFontSize;
   static const double frontTextHeight =
       AppTypographyConst.titleLargeLineHeight / frontTextFontSize;
-  static const double horizontalScrollActivationOffset = AppSpacing.xs;
+  static const double horizontalScrollActivationOffset = LumosSpacing.xs;
 }
 
 class FlashcardPreviewCarousel extends StatelessWidget {
@@ -76,7 +76,7 @@ class FlashcardPreviewCarousel extends StatelessWidget {
     );
     final double indicatorGap = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.sm,
+      baseValue: LumosSpacing.sm,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     final double dotSpacing = ResponsiveDimensions.compactValue(
@@ -254,12 +254,12 @@ class FlashcardPreviewCarousel extends StatelessWidget {
       return;
     }
     final double horizontalDelta = event.scrollDelta.dx;
-    if (horizontalDelta == AppSpacing.none) {
+    if (horizontalDelta == LumosSpacing.none) {
       return;
     }
 
     final int currentPage = pageController.page?.round() ?? previewIndex;
-    if (horizontalDelta > AppSpacing.none) {
+    if (horizontalDelta > LumosSpacing.none) {
       final int nextPage = (currentPage + 1).clamp(0, dotCount - 1);
       if (nextPage == currentPage) {
         return;

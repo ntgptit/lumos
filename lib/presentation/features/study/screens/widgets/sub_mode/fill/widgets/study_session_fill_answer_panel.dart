@@ -7,7 +7,7 @@ import '../../widgets/study_session_content_card.dart';
 import '../../widgets/study_session_layout_metrics.dart';
 import 'study_session_fill_panel_style.dart';
 
-const double _fillComparisonSpacing = AppSpacing.canvas;
+const double _fillComparisonSpacing = LumosSpacing.canvas;
 
 class StudySessionFillAnswerPanel extends StatelessWidget {
   const StudySessionFillAnswerPanel({
@@ -66,12 +66,12 @@ class StudySessionFillAnswerPanel extends StatelessWidget {
             StudySessionLayoutMetrics.actionSpacing(
               context,
               baseValue: compactHeight
-                  ? AppSpacing.xxxl
+                  ? LumosSpacing.xxxl
                   : _fillComparisonSpacing,
             );
         final double horizontalInset = ResponsiveDimensions.compactValue(
           context: context,
-          baseValue: compactHeight ? AppSpacing.md : AppSpacing.lg,
+          baseValue: compactHeight ? LumosSpacing.md : LumosSpacing.lg,
           minScale: ResponsiveDimensions.compactInsetScale,
         );
         final Widget resolvedContent = comparison == null

@@ -39,8 +39,8 @@ class StudySessionReviewCardViewport extends StatelessWidget {
         final double horizontalInset = ResponsiveDimensions.compactValue(
           context: context,
           baseValue: constraints.maxWidth > 480
-              ? AppSpacing.sm
-              : AppSpacing.none,
+              ? LumosSpacing.sm
+              : LumosSpacing.none,
           minScale: ResponsiveDimensions.compactInsetScale,
         );
         final Widget cards = Padding(

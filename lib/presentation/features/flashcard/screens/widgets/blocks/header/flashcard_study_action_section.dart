@@ -7,10 +7,10 @@ import '../../../../../../shared/widgets/lumos_widgets.dart';
 abstract final class FlashcardStudyActionSectionConst {
   FlashcardStudyActionSectionConst._();
 
-  static const double itemSpacing = AppSpacing.md;
+  static const double itemSpacing = LumosSpacing.md;
   static const double iconContainerSize = WidgetSizes.avatarMedium;
   static const double iconSize = IconSizes.iconSmall;
-  static const double labelLeftSpacing = AppSpacing.md;
+  static const double labelLeftSpacing = LumosSpacing.md;
 }
 
 enum FlashcardStudyActionSectionTone {

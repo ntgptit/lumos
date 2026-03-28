@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lumos/presentation/shared/screens/app_placeholder_screen.dart';
+import 'package:lumos/presentation/shared/primitives/buttons/lumos_button.dart';
+import 'package:lumos/presentation/shared/screens/lumos_placeholder_screen.dart';
 
 class StudyModePickerScreen extends StatelessWidget {
   const StudyModePickerScreen({required this.onModeSelected, super.key});
@@ -8,14 +9,14 @@ class StudyModePickerScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppPlaceholderScreen(
+    return LumosPlaceholderScreen(
       title: 'Study Mode Picker',
       actions: [
-        FilledButton(
+        LumosButton.primary(
           onPressed: () {
             onModeSelected('review');
           },
-          child: const Text('Review'),
+          text: 'Review',
         ),
       ],
     );

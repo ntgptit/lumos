@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lumos/app/app_route_data.dart';
 import 'package:lumos/core/theme/extensions/theme_context_ext.dart';
 import 'package:lumos/l10n/l10n.dart';
-import 'package:lumos/presentation/shared/composites/states/app_error_state.dart';
-import 'package:lumos/presentation/shared/primitives/feedback/app_circular_loader.dart';
+import 'package:lumos/presentation/shared/composites/states/lumos_error_state.dart';
+import 'package:lumos/presentation/shared/primitives/feedback/lumos_circular_loader.dart';
 import '../providers/auth_session_provider.dart';
 import 'widgets/blocks/content/auth_form_card.dart';
 
@@ -37,10 +37,10 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     final mode = ref.watch(authScreenModeControllerProvider);
 
     return authAsync.when(
-      loading: () => const Scaffold(body: Center(child: AppCircularLoader())),
+      loading: () => const Scaffold(body: Center(child: LumosCircularLoader())),
       error: (Object error, StackTrace stackTrace) {
         return Scaffold(
-          body: AppErrorState(
+          body: LumosErrorState(
             message: error.toString(),
             primaryActionLabel: context.l10n.commonRetry,
             onPrimaryAction: () {

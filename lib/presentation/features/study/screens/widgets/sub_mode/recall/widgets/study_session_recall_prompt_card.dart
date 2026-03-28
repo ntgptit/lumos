@@ -45,20 +45,20 @@ class StudySessionRecallPromptCard extends StatelessWidget {
         );
         final EdgeInsets cardPadding = StudySessionLayoutMetrics.cardPadding(
           context,
-          horizontal: compactHeight ? AppSpacing.lg : AppSpacing.xl,
-          vertical: compactHeight ? AppSpacing.lg : AppSpacing.xl,
+          horizontal: compactHeight ? LumosSpacing.lg : LumosSpacing.xl,
+          vertical: compactHeight ? LumosSpacing.lg : LumosSpacing.xl,
         );
         final EdgeInsets topTrailingPadding =
             StudySessionLayoutMetrics.topTrailingPadding(
               context,
-              top: compactHeight ? AppSpacing.md : AppSpacing.lg,
-              right: compactHeight ? AppSpacing.md : AppSpacing.lg,
+              top: compactHeight ? LumosSpacing.md : LumosSpacing.lg,
+              right: compactHeight ? LumosSpacing.md : LumosSpacing.lg,
             );
         final EdgeInsets bottomTrailingPadding =
             StudySessionLayoutMetrics.bottomTrailingPadding(
               context,
-              right: compactHeight ? AppSpacing.sm : AppSpacing.md,
-              bottom: compactHeight ? AppSpacing.sm : AppSpacing.md,
+              right: compactHeight ? LumosSpacing.sm : LumosSpacing.md,
+              bottom: compactHeight ? LumosSpacing.sm : LumosSpacing.md,
             );
         return StudySessionContentCard(
           variant: LumosCardVariant.filled,

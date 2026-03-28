@@ -19,9 +19,9 @@ class HomeAnimatedReveal extends StatelessWidget {
       duration: Duration(milliseconds: durationMs),
       tween: Tween<double>(begin: 0, end: 1),
       builder: (BuildContext context, double value, Widget? animatedChild) {
-        final double dy = AppSpacing.lg * (1 - value);
+        final double dy = LumosSpacing.lg * (1 - value);
         return Transform.translate(
-          offset: Offset(AppSpacing.none, dy),
+          offset: Offset(LumosSpacing.none, dy),
           child: animatedChild,
         );
       },

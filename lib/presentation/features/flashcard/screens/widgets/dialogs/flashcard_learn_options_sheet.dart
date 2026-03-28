@@ -10,8 +10,8 @@ enum FlashcardLearnOptionsSheetAction { firstLearning, review, resetProgress }
 abstract final class FlashcardLearnOptionsSheetConst {
   FlashcardLearnOptionsSheetConst._();
 
-  static const double sectionSpacing = AppSpacing.lg;
-  static const double optionSpacing = AppSpacing.md;
+  static const double sectionSpacing = LumosSpacing.lg;
+  static const double optionSpacing = LumosSpacing.md;
   static const double iconContainerSize = WidgetSizes.avatarMedium;
   static const double iconSize = IconSizes.iconSmall;
 }
@@ -48,12 +48,12 @@ Future<FlashcardLearnOptionsSheetAction?> showFlashcardLearnOptionsSheet({
       );
       final double rowGap = ResponsiveDimensions.compactValue(
         context: sheetContext,
-        baseValue: AppSpacing.md,
+        baseValue: LumosSpacing.md,
         minScale: ResponsiveDimensions.compactInsetScale,
       );
       final double subtitleGap = ResponsiveDimensions.compactValue(
         context: sheetContext,
-        baseValue: AppSpacing.xs,
+        baseValue: LumosSpacing.xs,
         minScale: ResponsiveDimensions.compactInsetScale,
       );
       final AppLocalizations l10n = AppLocalizations.of(sheetContext)!;

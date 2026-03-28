@@ -15,7 +15,7 @@ import 'widgets/states/deck_error_banner.dart';
 abstract final class DeckContentConst {
   DeckContentConst._();
 
-  static const double listBottomSpacing = AppSpacing.canvas;
+  static const double listBottomSpacing = LumosSpacing.canvas;
 }
 
 class DeckContent extends ConsumerWidget {
@@ -54,7 +54,7 @@ class DeckContent extends ConsumerWidget {
               if (state.inlineErrorMessage case final String message)
                 DeckErrorBanner(message: message),
               if (state.inlineErrorMessage != null)
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: LumosSpacing.md),
               DeckListContent(
                 providerArgs: providerArgs,
                 visibleDecks: visibleDecks,

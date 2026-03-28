@@ -7,7 +7,7 @@ import '../../../../../providers/study_match_selection_provider.dart';
 import '../../widgets/study_session_layout_metrics.dart';
 import 'study_session_match_pair_row.dart';
 
-const double _matchRowGap = AppSpacing.md;
+const double _matchRowGap = LumosSpacing.md;
 
 class StudySessionMatchPairs extends StatelessWidget {
   const StudySessionMatchPairs({
@@ -54,7 +54,7 @@ class StudySessionMatchPairs extends StatelessWidget {
       builder: (BuildContext context, BoxConstraints constraints) {
         final double rowGap = StudySessionLayoutMetrics.sectionSpacing(
           context,
-          baseValue: constraints.maxWidth < 380 ? AppSpacing.sm : _matchRowGap,
+          baseValue: constraints.maxWidth < 380 ? LumosSpacing.sm : _matchRowGap,
         );
         return AnimatedSize(
           duration: AppDurations.medium,

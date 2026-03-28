@@ -14,7 +14,7 @@ abstract final class FolderHeaderNavigationSectionLayout {
   FolderHeaderNavigationSectionLayout._();
 
   static const double contextMetaPillWidth =
-      AppSpacing.canvas + AppSpacing.canvas + AppSpacing.lg;
+      LumosSpacing.canvas + LumosSpacing.canvas + LumosSpacing.lg;
 }
 
 class FolderHeaderNavigationSection extends StatefulWidget {
@@ -95,17 +95,17 @@ class _FolderHeaderNavigationSectionState
   Widget build(BuildContext context) {
     final double containerPadding = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.sm,
+      baseValue: LumosSpacing.sm,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     final double rowGap = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.sm,
+      baseValue: LumosSpacing.sm,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     final double compactGap = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.xs,
+      baseValue: LumosSpacing.xs,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     final double metaPillWidth = ResponsiveDimensions.compactValue(

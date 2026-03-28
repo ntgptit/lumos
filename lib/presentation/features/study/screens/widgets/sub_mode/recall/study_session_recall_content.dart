@@ -15,8 +15,8 @@ import 'widgets/study_session_recall_action_row.dart';
 import 'widgets/study_session_recall_answer_panel.dart';
 import 'widgets/study_session_recall_prompt_card.dart';
 
-const double _recallSectionSpacing = AppSpacing.lg;
-const double _recallActionSpacing = AppSpacing.xl;
+const double _recallSectionSpacing = LumosSpacing.lg;
+const double _recallActionSpacing = LumosSpacing.xl;
 
 class StudySessionRecallContent extends StatelessWidget {
   const StudySessionRecallContent({
@@ -58,21 +58,21 @@ class StudySessionRecallContent extends StatelessWidget {
         final EdgeInsets contentPadding =
             StudySessionLayoutMetrics.contentPadding(
               context,
-              top: compactHeight ? AppSpacing.sm : AppSpacing.md,
-              bottom: compactHeight ? AppSpacing.lg : AppSpacing.xl,
+              top: compactHeight ? LumosSpacing.sm : LumosSpacing.md,
+              bottom: compactHeight ? LumosSpacing.lg : LumosSpacing.xl,
             );
         final EdgeInsets progressPadding =
             StudySessionLayoutMetrics.progressPadding(
               context,
-              horizontal: compactHeight ? AppSpacing.sm : AppSpacing.md,
+              horizontal: compactHeight ? LumosSpacing.sm : LumosSpacing.md,
             );
         final double sectionSpacing = StudySessionLayoutMetrics.sectionSpacing(
           context,
-          baseValue: compactHeight ? AppSpacing.md : _recallSectionSpacing,
+          baseValue: compactHeight ? LumosSpacing.md : _recallSectionSpacing,
         );
         final double actionSpacing = StudySessionLayoutMetrics.actionSpacing(
           context,
-          baseValue: compactHeight ? AppSpacing.lg : _recallActionSpacing,
+          baseValue: compactHeight ? LumosSpacing.lg : _recallActionSpacing,
         );
         return Padding(
           padding: contentPadding,

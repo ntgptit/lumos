@@ -12,7 +12,7 @@ class FolderErrorBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.md),
+      padding: const EdgeInsets.all(LumosSpacing.md),
       decoration: BoxDecoration(
         color: colorScheme.errorContainer,
         borderRadius: BorderRadii.medium,

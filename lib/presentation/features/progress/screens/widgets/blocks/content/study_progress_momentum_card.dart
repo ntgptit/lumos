@@ -26,7 +26,7 @@ class StudyProgressMomentumCard extends StatelessWidget {
         : analytics.passedAttempts / totalAttempts;
     final double cardPadding = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.lg,
+      baseValue: LumosSpacing.lg,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     return LumosCard(
@@ -39,7 +39,7 @@ class StudyProgressMomentumCard extends StatelessWidget {
               l10n.studyProgressMomentumTitle,
               style: LumosTextStyle.headlineSmall,
             ),
-            const SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: LumosSpacing.sm),
             LumosText(
               l10n.studyProgressMomentumSummary(
                 reminder.dueCount,
@@ -48,7 +48,7 @@ class StudyProgressMomentumCard extends StatelessWidget {
               ),
               style: LumosTextStyle.bodyMedium,
             ),
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: LumosSpacing.md),
             LumosProgressBar(value: progressValue),
           ],
         ),

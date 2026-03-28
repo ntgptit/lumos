@@ -24,47 +24,47 @@ class FolderHeaderBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     final double leadingBoxSize = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.section,
+      baseValue: LumosSpacing.section,
       minScale: ResponsiveDimensions.compactLargeInsetScale,
     );
     final double bannerPadding = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.md,
+      baseValue: LumosSpacing.md,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     final double titleGap = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.sm,
+      baseValue: LumosSpacing.sm,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     final double rowGap = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.lg,
+      baseValue: LumosSpacing.lg,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     final double pillGap = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.sm,
+      baseValue: LumosSpacing.sm,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     final double blobLargeOffset = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.xxxl,
+      baseValue: LumosSpacing.xxxl,
       minScale: ResponsiveDimensions.compactLargeInsetScale,
     );
     final double blobLargeSize = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.canvas * 2,
+      baseValue: LumosSpacing.canvas * 2,
       minScale: ResponsiveDimensions.compactLargeInsetScale,
     );
     final double blobSmallOffset = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.xxl,
+      baseValue: LumosSpacing.xxl,
       minScale: ResponsiveDimensions.compactLargeInsetScale,
     );
     final double blobSmallSize = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.canvas,
+      baseValue: LumosSpacing.canvas,
       minScale: ResponsiveDimensions.compactLargeInsetScale,
     );
     final ColorScheme colorScheme = Theme.of(context).colorScheme;

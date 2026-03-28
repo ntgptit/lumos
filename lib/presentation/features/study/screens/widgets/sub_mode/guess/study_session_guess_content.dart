@@ -15,11 +15,11 @@ import 'widgets/study_session_guess_prompt_card.dart';
 
 const String _submitAnswerActionId = 'SUBMIT_ANSWER';
 const double _guessPromptHeightFactor = 0.45;
-const double _guessSectionSpacing = AppSpacing.md;
-const double _guessBottomSpacing = AppSpacing.none;
+const double _guessSectionSpacing = LumosSpacing.md;
+const double _guessBottomSpacing = LumosSpacing.none;
 const double _guessMinimumChoiceHeight = 56;
-const double _guessScrollableSectionSpacing = AppSpacing.md;
-const double _guessScrollableBottomSpacing = AppSpacing.none;
+const double _guessScrollableSectionSpacing = LumosSpacing.md;
+const double _guessScrollableBottomSpacing = LumosSpacing.none;
 
 class StudySessionGuessContent extends StatelessWidget {
   const StudySessionGuessContent({

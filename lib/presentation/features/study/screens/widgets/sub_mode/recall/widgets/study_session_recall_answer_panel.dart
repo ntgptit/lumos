@@ -30,8 +30,8 @@ class StudySessionRecallAnswerPanel extends StatelessWidget {
     final ColorScheme colorScheme = theme.colorScheme;
     final EdgeInsets cardPadding = StudySessionLayoutMetrics.cardPadding(
       context,
-      horizontal: AppSpacing.xl,
-      vertical: AppSpacing.xl,
+      horizontal: LumosSpacing.xl,
+      vertical: LumosSpacing.xl,
     );
     final double hiddenAnswerWidth = StudySessionLayoutMetrics.compactHeight(
       context,

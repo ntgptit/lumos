@@ -9,12 +9,12 @@ import '../../../../../shared/widgets/lumos_widgets.dart';
 abstract final class FlashcardStudyCardConst {
   FlashcardStudyCardConst._();
 
-  static const double contentHorizontalPadding = AppSpacing.lg;
-  static const double contentVerticalPadding = AppSpacing.lg;
-  static const double actionIconSize = AppSpacing.xl;
-  static const double hintIconSize = AppSpacing.xl;
-  static const double titleGap = AppSpacing.sm;
-  static const double bottomGap = AppSpacing.sm;
+  static const double contentHorizontalPadding = LumosSpacing.lg;
+  static const double contentVerticalPadding = LumosSpacing.lg;
+  static const double actionIconSize = LumosSpacing.xl;
+  static const double hintIconSize = LumosSpacing.xl;
+  static const double titleGap = LumosSpacing.sm;
+  static const double bottomGap = LumosSpacing.sm;
   static const int backTextMaxLines = 8;
   static const int noteMaxLines = 4;
 }

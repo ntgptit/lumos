@@ -2,7 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lumos/app/app_route_data.dart';
 import 'package:lumos/core/di/core_providers.dart';
 import 'package:lumos/presentation/features/auth/providers/auth_provider.dart';
-import 'package:lumos/presentation/shared/screens/not_found_screen.dart';
+import 'package:lumos/presentation/shared/screens/lumos_not_found_screen.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'app_router.g.dart';
@@ -65,7 +65,7 @@ GoRouter appRouter(Ref ref) {
 
       return null;
     },
-    errorBuilder: (context, state) => const NotFoundScreen(),
+    errorBuilder: (context, state) => const LumosNotFoundScreen(),
   );
 
   ref.onDispose(router.dispose);

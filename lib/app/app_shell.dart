@@ -4,8 +4,8 @@ import 'package:lumos/core/config/app_icons.dart';
 import 'package:lumos/core/theme/extensions/screen_context_ext.dart';
 import 'package:lumos/core/theme/extensions/theme_context_ext.dart';
 import 'package:lumos/l10n/l10n.dart';
-import 'package:lumos/presentation/shared/composites/navigation/app_bottom_navigation.dart';
-import 'package:lumos/presentation/shared/composites/navigation/app_navigation_rail.dart';
+import 'package:lumos/presentation/shared/composites/navigation/lumos_bottom_navigation.dart';
+import 'package:lumos/presentation/shared/composites/navigation/lumos_navigation_rail.dart';
 
 class AppShell extends StatelessWidget {
   const AppShell({super.key, required this.navigationShell});
@@ -52,7 +52,7 @@ class AppShell extends StatelessWidget {
                 padding: EdgeInsets.symmetric(
                   vertical: context.layout.pageVerticalPadding,
                 ),
-                child: AppNavigationRail(
+                child: LumosNavigationRail(
                   destinations: [
                     for (final destination in _destinations)
                       NavigationRailDestination(
@@ -81,7 +81,7 @@ class AppShell extends StatelessWidget {
 
     return Scaffold(
       body: navigationShell,
-      bottomNavigationBar: AppBottomNavigation(
+      bottomNavigationBar: LumosBottomNavigation(
         destinations: [
           for (final destination in _destinations)
             NavigationDestination(

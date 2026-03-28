@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lumos/presentation/shared/screens/app_placeholder_screen.dart';
+import 'package:lumos/presentation/shared/screens/lumos_placeholder_screen.dart';
 
 class DeckListScreen extends StatelessWidget {
   const DeckListScreen({this.folderId, super.key});
@@ -11,6 +11,6 @@ class DeckListScreen extends StatelessWidget {
     final String? message = folderId == null
         ? 'Deck list adapter is active.'
         : 'Deck list adapter is active for folder $folderId.';
-    return AppPlaceholderScreen(title: 'Decks', message: message);
+    return LumosPlaceholderScreen(title: 'Decks', message: message);
   }
 }

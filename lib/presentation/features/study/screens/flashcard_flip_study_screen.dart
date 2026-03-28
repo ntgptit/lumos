@@ -17,20 +17,20 @@ import 'widgets/blocks/flashcard_study_card.dart';
 abstract final class FlashcardFlipStudyConst {
   FlashcardFlipStudyConst._();
 
-  static const double screenHorizontalPadding = AppSpacing.lg;
-  static const double screenVerticalPadding = AppSpacing.md;
-  static const double progressTopGap = AppSpacing.sm;
-  static const double progressBottomGap = AppSpacing.lg;
-  static const double cardVerticalInset = AppSpacing.sm;
-  static const double cardContentHorizontalPadding = AppSpacing.lg;
-  static const double cardContentVerticalPadding = AppSpacing.lg;
-  static const double cardActionGap = AppSpacing.sm;
-  static const double cardTitleGap = AppSpacing.sm;
-  static const double cardBottomGap = AppSpacing.sm;
-  static const double bottomBarTopGap = AppSpacing.sm;
-  static const double bottomBarBottomGap = AppSpacing.lg;
-  static const double actionIconSize = AppSpacing.xl;
-  static const double hintIconSize = AppSpacing.xl;
+  static const double screenHorizontalPadding = LumosSpacing.lg;
+  static const double screenVerticalPadding = LumosSpacing.md;
+  static const double progressTopGap = LumosSpacing.sm;
+  static const double progressBottomGap = LumosSpacing.lg;
+  static const double cardVerticalInset = LumosSpacing.sm;
+  static const double cardContentHorizontalPadding = LumosSpacing.lg;
+  static const double cardContentVerticalPadding = LumosSpacing.lg;
+  static const double cardActionGap = LumosSpacing.sm;
+  static const double cardTitleGap = LumosSpacing.sm;
+  static const double cardBottomGap = LumosSpacing.sm;
+  static const double bottomBarTopGap = LumosSpacing.sm;
+  static const double bottomBarBottomGap = LumosSpacing.lg;
+  static const double actionIconSize = LumosSpacing.xl;
+  static const double hintIconSize = LumosSpacing.xl;
   static const int backTextMaxLines = 8;
   static const int noteMaxLines = 4;
 }
@@ -206,7 +206,7 @@ class _FlashcardFlipStudyScreenState
             screenHorizontalPadding,
             screenVerticalPadding,
             screenHorizontalPadding,
-            AppSpacing.none,
+            LumosSpacing.none,
           ),
           child: Column(
             children: <Widget>[

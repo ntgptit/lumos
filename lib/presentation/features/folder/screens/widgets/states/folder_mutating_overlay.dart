@@ -10,22 +10,22 @@ class FolderMutatingOverlay extends StatelessWidget {
   Widget build(BuildContext context) {
     final double overlayWidth = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.canvas * 2,
+      baseValue: LumosSpacing.canvas * 2,
       minScale: ResponsiveDimensions.compactLargeInsetScale,
     );
     final double overlayPadding = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.lg,
+      baseValue: LumosSpacing.lg,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     final double skeletonSize = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.page,
+      baseValue: LumosSpacing.page,
       minScale: ResponsiveDimensions.compactLargeInsetScale,
     );
     final double labelGap = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.md,
+      baseValue: LumosSpacing.md,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     return Center(

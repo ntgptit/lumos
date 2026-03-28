@@ -63,8 +63,8 @@ class StudySessionMatchPairButton extends StatelessWidget {
         final bool compactWidth = constraints.maxWidth < 180;
         final EdgeInsets contentPadding = StudySessionLayoutMetrics.cardPadding(
           context,
-          horizontal: compactWidth ? AppSpacing.lg : AppSpacing.xl,
-          vertical: compactWidth ? AppSpacing.lg : AppSpacing.xl,
+          horizontal: compactWidth ? LumosSpacing.lg : LumosSpacing.xl,
+          vertical: compactWidth ? LumosSpacing.lg : LumosSpacing.xl,
         );
         final TextStyle? textStyle =
             (isMeaningCard

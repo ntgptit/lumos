@@ -24,7 +24,7 @@ class DeckCreateButton extends StatelessWidget {
     }
     final double bottomInset = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.xxl,
+      baseValue: LumosSpacing.xxl,
       minScale: ResponsiveDimensions.compactVerticalInsetScale,
     );
     return Positioned(

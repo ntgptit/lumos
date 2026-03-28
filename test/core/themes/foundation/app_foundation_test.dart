@@ -14,7 +14,7 @@ void main() {
 
     test('returns tablet between mobile and tablet breakpoints', () {
       final DeviceType result = DeviceTypeHelper.fromWidth(
-        width: Breakpoints.kMobileMaxWidth + AppSpacing.xs,
+        width: Breakpoints.kMobileMaxWidth + LumosSpacing.xs,
       );
 
       expect(result, DeviceType.tablet);
@@ -22,7 +22,7 @@ void main() {
 
     test('returns desktop above tablet breakpoint', () {
       final DeviceType result = DeviceTypeHelper.fromWidth(
-        width: Breakpoints.kTabletMaxWidth + AppSpacing.xs,
+        width: Breakpoints.kTabletMaxWidth + LumosSpacing.xs,
       );
 
       expect(result, DeviceType.desktop);
@@ -37,8 +37,8 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
     addTearDown(tester.view.resetPhysicalSize);
 
-    double widthValue = AppSpacing.none;
-    double heightValue = AppSpacing.none;
+    double widthValue = LumosSpacing.none;
+    double heightValue = LumosSpacing.none;
 
     await tester.pumpWidget(
       MaterialApp(
@@ -64,7 +64,7 @@ void main() {
       addTearDown(tester.view.resetDevicePixelRatio);
       addTearDown(tester.view.resetPhysicalSize);
 
-      double compactValue = AppSpacing.none;
+      double compactValue = LumosSpacing.none;
 
       await tester.pumpWidget(
         MaterialApp(
@@ -72,7 +72,7 @@ void main() {
             builder: (BuildContext context) {
               compactValue = ResponsiveDimensions.compactValue(
                 context: context,
-                baseValue: AppSpacing.lg,
+                baseValue: LumosSpacing.lg,
                 minScale: ResponsiveDimensions.compactInsetScale,
               );
               return const SizedBox.shrink();
@@ -81,7 +81,7 @@ void main() {
         ),
       );
 
-      expect(compactValue, lessThan(AppSpacing.lg));
+      expect(compactValue, lessThan(LumosSpacing.lg));
 
       tester.view.physicalSize = const Size(430, 800);
       await tester.pumpWidget(
@@ -90,7 +90,7 @@ void main() {
             builder: (BuildContext context) {
               compactValue = ResponsiveDimensions.compactValue(
                 context: context,
-                baseValue: AppSpacing.lg,
+                baseValue: LumosSpacing.lg,
                 minScale: ResponsiveDimensions.compactInsetScale,
               );
               return const SizedBox.shrink();
@@ -99,7 +99,7 @@ void main() {
         ),
       );
 
-      expect(compactValue, AppSpacing.lg);
+      expect(compactValue, LumosSpacing.lg);
     },
   );
 

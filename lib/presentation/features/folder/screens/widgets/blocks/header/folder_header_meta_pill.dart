@@ -25,13 +25,13 @@ class FolderHeaderMetaPill extends StatelessWidget {
     final EdgeInsets padding = ResponsiveDimensions.compactInsets(
       context: context,
       baseInsets: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.sm,
-        vertical: AppSpacing.xs,
+        horizontal: LumosSpacing.sm,
+        vertical: LumosSpacing.xs,
       ),
     );
     final double inlineGap = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.xs,
+      baseValue: LumosSpacing.xs,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     return Container(

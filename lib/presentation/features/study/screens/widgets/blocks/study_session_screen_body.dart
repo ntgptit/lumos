@@ -66,7 +66,7 @@ class StudySessionScreenBody extends ConsumerWidget {
           builder: (BuildContext context, BoxConstraints constraints) {
             final EdgeInsets shellPadding = ResponsiveDimensions.compactInsets(
               context: context,
-              baseInsets: const EdgeInsets.all(AppSpacing.lg),
+              baseInsets: const EdgeInsets.all(LumosSpacing.lg),
             );
             final double maxWidth = constraints.isDesktop
                 ? WidgetSizes.maxContentWidth
@@ -97,7 +97,7 @@ class StudySessionScreenBody extends ConsumerWidget {
               final EdgeInsets shellPadding =
                   ResponsiveDimensions.compactInsets(
                     context: context,
-                    baseInsets: const EdgeInsets.all(AppSpacing.lg),
+                    baseInsets: const EdgeInsets.all(LumosSpacing.lg),
                   );
               return Padding(
                 padding: shellPadding,

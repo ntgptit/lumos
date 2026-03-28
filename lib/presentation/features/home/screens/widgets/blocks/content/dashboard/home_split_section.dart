@@ -18,12 +18,12 @@ class HomeSplitSection extends StatelessWidget {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final double inlineGap = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.sm,
+      baseValue: LumosSpacing.sm,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     final double itemSpacing = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.md,
+      baseValue: LumosSpacing.md,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     final double activityAccentSize = ResponsiveDimensions.compactValue(
@@ -33,16 +33,16 @@ class HomeSplitSection extends StatelessWidget {
     );
     final double activityItemPadding = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.md,
+      baseValue: LumosSpacing.md,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     final EdgeInsets sectionHeaderPadding = ResponsiveDimensions.compactInsets(
       context: context,
       baseInsets: const EdgeInsets.fromLTRB(
-        AppSpacing.lg,
-        AppSpacing.lg,
-        AppSpacing.lg,
-        AppSpacing.md,
+        LumosSpacing.lg,
+        LumosSpacing.lg,
+        LumosSpacing.lg,
+        LumosSpacing.md,
       ),
     );
     final List<({String title, String subtitle, String trailing, Color color})>
@@ -73,7 +73,7 @@ class HomeSplitSection extends StatelessWidget {
             deviceType == DeviceType.desktop && constraints.maxWidth < 1080;
         final double columnGap = ResponsiveDimensions.compactValue(
           context: context,
-          baseValue: compactDesktop ? AppSpacing.xl : AppSpacing.xxl,
+          baseValue: compactDesktop ? LumosSpacing.xl : LumosSpacing.xxl,
           minScale: ResponsiveDimensions.compactInsetScale,
         );
         final Widget focusCard = Semantics(

@@ -18,7 +18,7 @@ class HomeContent extends StatelessWidget {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final double sectionGap = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.xxl,
+      baseValue: LumosSpacing.xxl,
       minScale: ResponsiveDimensions.compactLargeInsetScale,
     );
     return ColoredBox(

@@ -59,7 +59,7 @@ class StudySessionScreenAppBar extends StatelessWidget
     final bool showsLeadingModeIcon = context.screenWidth >= 390;
     final double leadingModeInset = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: AppSpacing.xs,
+      baseValue: LumosSpacing.xs,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     return LumosAppBar(

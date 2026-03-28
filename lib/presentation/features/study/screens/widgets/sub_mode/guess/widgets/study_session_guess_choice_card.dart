@@ -12,8 +12,8 @@ const double _guessChoiceLineHeight =
     AppTypographyConst.titleSmallFontSize;
 const int _guessChoiceMaxLines = 2;
 const EdgeInsetsGeometry _guessChoiceCardPadding = EdgeInsets.symmetric(
-  horizontal: AppSpacing.md,
-  vertical: AppSpacing.xs,
+  horizontal: LumosSpacing.md,
+  vertical: LumosSpacing.xs,
 );
 
 class StudySessionGuessChoiceCard extends StatelessWidget {
