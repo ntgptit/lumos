@@ -39,6 +39,27 @@ class AppLocalizationsVi extends AppLocalizations {
   String get commonRename => 'Đổi tên';
 
   @override
+  String get commonConfirm => 'Xác nhận';
+
+  @override
+  String get commonShowPassword => 'Hiện mật khẩu';
+
+  @override
+  String get commonHidePassword => 'Ẩn mật khẩu';
+
+  @override
+  String get commonSomethingWentWrong => 'Đã xảy ra lỗi';
+
+  @override
+  String get commonCorrect => 'Đúng';
+
+  @override
+  String get commonIncorrect => 'Sai';
+
+  @override
+  String get commonResult => 'Kết quả';
+
+  @override
   String get folderNewFolder => 'Thư mục mới';
 
   @override

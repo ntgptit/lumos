@@ -4,11 +4,9 @@ import 'package:lumos/presentation/shared/primitives/buttons/lumos_button.dart';
 class LumosSecondaryButton extends LumosButton {
   LumosSecondaryButton({
     super.key,
-    String? text,
-    String? label,
+    required super.text,
     super.onPressed,
-    bool expand = false,
-    bool expanded = false,
+    super.expand,
     super.isLoading,
     Widget? leading,
     super.trailing,
@@ -16,9 +14,7 @@ class LumosSecondaryButton extends LumosButton {
     IconData? icon,
     super.size,
   }) : super(
-         text: text ?? label ?? '',
          leading: leading ?? _icon(icon),
-         expand: expand || expanded,
          variant: AppButtonVariant.secondary,
        );
 

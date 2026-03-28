@@ -43,30 +43,30 @@ class StudySessionRecallActionButton extends StatelessWidget {
         switch (action.style) {
           case StudyModeActionButtonStyle.primary:
             return LumosPrimaryButton(
-              label: resolvedLabel,
+              text: resolvedLabel,
               onPressed: onPressed,
               size: buttonSize,
               icon: action.icon,
               isLoading: isRevealLoading || (isSelected && isInteractionLocked),
-              expanded: true,
+              expand: true,
             );
           case StudyModeActionButtonStyle.secondary:
             return LumosSecondaryButton(
-              label: resolvedLabel,
+              text: resolvedLabel,
               onPressed: onPressed,
               size: buttonSize,
               icon: action.icon,
               isLoading: isRevealLoading || (isSelected && isInteractionLocked),
-              expanded: true,
+              expand: true,
             );
           case StudyModeActionButtonStyle.outline:
             return LumosOutlineButton(
-              label: resolvedLabel,
+              text: resolvedLabel,
               onPressed: onPressed,
               size: buttonSize,
               icon: action.icon,
               isLoading: isRevealLoading || (isSelected && isInteractionLocked),
-              expanded: true,
+              expand: true,
             );
         }
       },

@@ -58,7 +58,7 @@ Future<void> showFolderEditorDialog({
                     });
                   },
                   label: l10n.folderDescriptionLabel,
-                  hint: l10n.folderDescriptionHint,
+                  hintText: l10n.folderDescriptionHint,
                   maxLines: _folderDescriptionMaxLines,
                   textInputAction: TextInputAction.newline,
                 ),

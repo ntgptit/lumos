@@ -68,9 +68,9 @@ class ProfileThemeSection extends StatelessWidget {
             ),
             SizedBox(height: actionGap),
             LumosOutlineButton(
-              label: _quickToggleLabel(l10n: l10n, mode: themeMode),
+              text: _quickToggleLabel(l10n: l10n, mode: themeMode),
               icon: Icons.brightness_6_outlined,
-              expanded: true,
+              expand: true,
               onPressed: onQuickTogglePressed,
             ),
           ],

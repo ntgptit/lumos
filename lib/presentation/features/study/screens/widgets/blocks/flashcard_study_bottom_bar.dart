@@ -27,7 +27,7 @@ class FlashcardStudyBottomBar extends StatelessWidget {
           child: LumosOutlineButton(
             onPressed: onPreviousPressed,
             icon: Icons.navigate_before_rounded,
-            label: l10n.flashcardPreviousButton,
+            text: l10n.flashcardPreviousButton,
           ),
         ),
         SizedBox(width: actionGap),
@@ -35,7 +35,7 @@ class FlashcardStudyBottomBar extends StatelessWidget {
           child: LumosPrimaryButton(
             onPressed: onNextPressed,
             icon: Icons.navigate_next_rounded,
-            label: l10n.flashcardNextButton,
+            text: l10n.flashcardNextButton,
           ),
         ),
       ],

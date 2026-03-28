@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
+import 'package:lumos/core/theme/app_foundation.dart';
+
 class LumosSkeletonBox extends StatelessWidget {
   const LumosSkeletonBox({
     super.key,
     this.width,
-    this.height = 16,
+    this.height = LumosSpacing.md,
     this.borderRadius,
   });
 
@@ -19,7 +21,7 @@ class LumosSkeletonBox extends StatelessWidget {
       height: height,
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surfaceContainerHighest,
-        borderRadius: borderRadius ?? BorderRadius.circular(12),
+        borderRadius: borderRadius ?? BorderRadii.small,
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lumos/core/theme/extensions/theme_context_ext.dart';
+import 'package:lumos/l10n/l10n.dart';
 import 'package:lumos/presentation/shared/primitives/inputs/lumos_text_field.dart';
 
 class LumosPasswordField extends StatefulWidget {
@@ -71,7 +72,9 @@ class _AppPasswordFieldState extends State<LumosPasswordField> {
         onPressed: widget.enabled
             ? () => setState(() => _obscured = !_obscured)
             : null,
-        tooltip: _obscured ? 'Show password' : 'Hide password',
+        tooltip: _obscured
+            ? context.l10n.commonShowPassword
+            : context.l10n.commonHidePassword,
         icon: Icon(
           _obscured ? Icons.visibility_rounded : Icons.visibility_off_rounded,
           size: context.iconSize.md,

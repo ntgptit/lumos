@@ -25,7 +25,7 @@ class ProfileErrorView extends StatelessWidget {
           children: <Widget>[
             LumosText(message, style: LumosTextStyle.bodyMedium),
             const SizedBox(height: LumosSpacing.md),
-            LumosPrimaryButton(onPressed: onRetry, label: l10n.commonRetry),
+            LumosPrimaryButton(onPressed: onRetry, text: l10n.commonRetry),
           ],
         ),
       ),

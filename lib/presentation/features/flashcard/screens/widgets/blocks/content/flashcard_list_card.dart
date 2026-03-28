@@ -115,7 +115,7 @@ class FlashcardListCard extends StatelessWidget {
                         tooltip: l10n.flashcardPlayAudioTooltip,
                         icon: Icons.volume_up_outlined,
                         size: actionIconSize,
-                        selected: isAudioPlaying,
+                        isSelected: isAudioPlaying,
                         selectedIcon: Icons.graphic_eq_rounded,
                       ),
                       LumosIconButton(
@@ -123,7 +123,7 @@ class FlashcardListCard extends StatelessWidget {
                         tooltip: l10n.flashcardBookmarkTooltip,
                         icon: Icons.star_border,
                         size: actionIconSize,
-                        selected: isStarred,
+                        isSelected: isStarred,
                         selectedIcon: Icons.star,
                       ),
                       LumosPopupMenuButton<String>(

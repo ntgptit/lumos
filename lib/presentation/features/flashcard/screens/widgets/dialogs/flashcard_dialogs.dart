@@ -61,14 +61,14 @@ Future<void> showFlashcardEditorDialog({
           return LumosPromptDialog(
             title: titleBuilder(l10n),
             label: l10n.flashcardFrontLabel,
-            hint: l10n.flashcardFrontHint,
+            hintText: l10n.flashcardFrontHint,
             cancelText: l10n.commonCancel,
             confirmText: actionLabelBuilder(l10n),
             controller: formController.frontTextController,
             additionalContent: LumosTextField(
               controller: formController.backTextController,
               label: l10n.flashcardBackLabel,
-              hint: l10n.flashcardBackHint,
+              hintText: l10n.flashcardBackHint,
               maxLines: FlashcardDialogsConst.backTextMaxLines,
               textInputAction: TextInputAction.newline,
             ),

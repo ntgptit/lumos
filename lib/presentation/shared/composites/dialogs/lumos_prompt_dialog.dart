@@ -4,24 +4,21 @@ import 'package:lumos/presentation/shared/composites/dialogs/lumos_alert_dialog.
 import 'package:lumos/presentation/shared/primitives/buttons/lumos_outline_button.dart';
 import 'package:lumos/presentation/shared/primitives/buttons/lumos_primary_button.dart';
 import 'package:lumos/presentation/shared/primitives/inputs/lumos_text_field.dart';
+import 'package:lumos/presentation/shared/primitives/layout/lumos_spacing.dart';
 
 class LumosPromptDialog extends StatefulWidget {
   const LumosPromptDialog({
     super.key,
     required this.title,
-    this.onSubmitted,
     this.onConfirm,
     this.onCancel,
     this.controller,
     this.initialValue,
     this.hintText,
-    this.hint,
     this.label,
     this.additionalContent,
-    this.confirmLabel = 'Save',
-    this.cancelLabel = 'Cancel',
-    this.confirmText,
-    this.cancelText,
+    this.confirmText = 'Save',
+    this.cancelText = 'Cancel',
     this.isCancelEnabled = true,
     this.isConfirmEnabled = true,
     this.type = DialogType.info,
@@ -29,19 +26,15 @@ class LumosPromptDialog extends StatefulWidget {
   });
 
   final String title;
-  final ValueChanged<String>? onSubmitted;
   final ValueChanged<String>? onConfirm;
   final VoidCallback? onCancel;
   final TextEditingController? controller;
   final String? initialValue;
   final String? hintText;
-  final String? hint;
   final String? label;
   final Widget? additionalContent;
-  final String confirmLabel;
-  final String cancelLabel;
-  final String? confirmText;
-  final String? cancelText;
+  final String confirmText;
+  final String cancelText;
   final bool isCancelEnabled;
   final bool isConfirmEnabled;
   final DialogType type;
@@ -83,22 +76,22 @@ class _LumosPromptDialogState extends State<LumosPromptDialog> {
           LumosTextField(
             controller: _controller,
             label: widget.label,
-            hint: widget.hint ?? widget.hintText,
+            hintText: widget.hintText,
             maxLines: widget.maxLines,
           ),
           if (widget.additionalContent != null) ...[
-            const SizedBox(height: 16),
+            SizedBox(height: LumosSpacing.md),
             widget.additionalContent!,
           ],
         ],
       ),
       actions: [
         LumosOutlineButton(
-          text: widget.cancelText ?? widget.cancelLabel,
+          text: widget.cancelText,
           onPressed: widget.isCancelEnabled ? widget.onCancel : null,
         ),
         LumosPrimaryButton(
-          text: widget.confirmText ?? widget.confirmLabel,
+          text: widget.confirmText,
           onPressed: widget.isConfirmEnabled ? _submit : null,
         ),
       ],
@@ -106,7 +99,7 @@ class _LumosPromptDialogState extends State<LumosPromptDialog> {
   }
 
   void _submit() {
-    final callback = widget.onConfirm ?? widget.onSubmitted;
+    final callback = widget.onConfirm;
     if (callback == null) {
       return;
     }

@@ -215,7 +215,7 @@ class _FolderHeaderNavigationSectionState
               LumosIconButton(
                 icon: Icons.sort_rounded,
                 tooltip: currentSortLabel,
-                variant: LumosIconButtonVariant.outlined,
+                variant: AppIconButtonVariant.outline,
                 onPressed: () => _onSortPressed(context),
               ),
             ],

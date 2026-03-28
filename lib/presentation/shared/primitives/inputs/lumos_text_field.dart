@@ -7,7 +7,6 @@ class LumosTextField extends StatelessWidget {
   const LumosTextField({
     super.key,
     this.label,
-    this.hint,
     this.supportingText,
     this.labelTrailing,
     this.isRequired = false,
@@ -45,7 +44,6 @@ class LumosTextField extends StatelessWidget {
   });
 
   final String? label;
-  final String? hint;
   final String? supportingText;
   final Widget? labelTrailing;
   final bool isRequired;
@@ -116,7 +114,7 @@ class LumosTextField extends StatelessWidget {
       decoration:
           decoration ??
           InputDecoration(
-            hintText: hintText ?? hint,
+            hintText: hintText,
             helperText: helperText,
             errorText: errorText,
             prefixIcon: prefixIcon,

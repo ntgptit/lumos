@@ -19,7 +19,7 @@ class ProfileLogoutButton extends StatelessWidget {
         : LumosButtonSize.large;
     return LumosDangerButton(
       onPressed: onPressed,
-      label: label,
+      text: label,
       icon: Icons.logout_rounded,
       size: buttonSize,
     );

@@ -44,7 +44,7 @@ class StudyProgressRecommendationCard extends StatelessWidget {
             const SizedBox(height: LumosSpacing.md),
             LumosPrimaryButton(
               onPressed: onStartReview,
-              label: l10n.studyProgressStartReviewAction,
+              text: l10n.studyProgressStartReviewAction,
               icon: Icons.play_arrow_rounded,
             ),
           ],

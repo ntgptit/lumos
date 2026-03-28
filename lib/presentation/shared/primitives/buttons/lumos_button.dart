@@ -178,7 +178,7 @@ class _AppButtonContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final indicator = SizedBox.square(
+    final Widget indicator = SizedBox.square(
       dimension: context.iconSize.sm,
       child: CircularProgressIndicator(
         strokeWidth: AppBorderTokens.regular,
@@ -186,22 +186,36 @@ class _AppButtonContent extends StatelessWidget {
       ),
     );
 
-    final children = <Widget>[
-      if (isLoading) indicator,
-      if (!isLoading && leading != null) leading!,
+    final List<Widget> contentChildren = <Widget>[
+      if (leading != null) leading!,
       Text(
         text,
         overflow: TextOverflow.ellipsis,
         maxLines: 1,
         textAlign: TextAlign.center,
       ),
-      if (!isLoading && trailing != null) trailing!,
+      if (trailing != null) trailing!,
     ];
 
-    return Row(
+    final Widget content = Row(
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
-      children: _withSpacing(children, context.spacing.xs),
+      children: _withSpacing(contentChildren, context.spacing.xs),
+    );
+
+    return AnimatedSwitcher(
+      duration: AppMotionTokens.fast,
+      switchInCurve: Curves.easeOutCubic,
+      switchOutCurve: Curves.easeInCubic,
+      child: isLoading
+          ? KeyedSubtree(
+              key: const ValueKey<String>('loading'),
+              child: indicator,
+            )
+          : KeyedSubtree(
+              key: const ValueKey<String>('content'),
+              child: content,
+            ),
     );
   }
 

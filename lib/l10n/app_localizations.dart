@@ -155,6 +155,48 @@ abstract class AppLocalizations {
   /// **'Rename'**
   String get commonRename;
 
+  /// No description provided for @commonConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get commonConfirm;
+
+  /// No description provided for @commonShowPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Show password'**
+  String get commonShowPassword;
+
+  /// No description provided for @commonHidePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide password'**
+  String get commonHidePassword;
+
+  /// No description provided for @commonSomethingWentWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong'**
+  String get commonSomethingWentWrong;
+
+  /// No description provided for @commonCorrect.
+  ///
+  /// In en, this message translates to:
+  /// **'Correct'**
+  String get commonCorrect;
+
+  /// No description provided for @commonIncorrect.
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect'**
+  String get commonIncorrect;
+
+  /// No description provided for @commonResult.
+  ///
+  /// In en, this message translates to:
+  /// **'Result'**
+  String get commonResult;
+
   /// No description provided for @folderNewFolder.
   ///
   /// In en, this message translates to:

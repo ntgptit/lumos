@@ -28,20 +28,20 @@ class StudySessionActionButton extends StatelessWidget {
           case StudyModeActionButtonStyle.primary:
             return LumosPrimaryButton(
               onPressed: () => onActionPressed(action.actionId),
-              label: action.label,
+              text: action.label,
               icon: action.icon,
               size: buttonSize,
             );
           case StudyModeActionButtonStyle.secondary:
             return LumosSecondaryButton(
               onPressed: () => onActionPressed(action.actionId),
-              label: action.label,
+              text: action.label,
               size: buttonSize,
             );
           case StudyModeActionButtonStyle.outline:
             return LumosOutlineButton(
               onPressed: () => onActionPressed(action.actionId),
-              label: action.label,
+              text: action.label,
               size: buttonSize,
             );
         }

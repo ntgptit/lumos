@@ -115,7 +115,7 @@ class _ProfileSpeechPreviewPanelState
                         !previewState.isBusy &&
                         !previewState.isPlaying;
                     final Widget playButton = LumosPrimaryButton(
-                      label: l10n.profileSpeechPreviewPlayLabel,
+                      text: l10n.profileSpeechPreviewPlayLabel,
                       icon: Icons.play_arrow_rounded,
                       isLoading: previewState.isBusy,
                       onPressed: canPlayPreview
@@ -135,7 +135,7 @@ class _ProfileSpeechPreviewPanelState
                           : null,
                     );
                     final Widget stopButton = LumosOutlineButton(
-                      label: l10n.profileSpeechPreviewStopLabel,
+                      text: l10n.profileSpeechPreviewStopLabel,
                       icon: Icons.stop_rounded,
                       onPressed: previewState.isBusy || previewState.isPlaying
                           ? () {

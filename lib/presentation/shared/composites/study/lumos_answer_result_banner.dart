@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lumos/core/enums/snackbar_type.dart';
+import 'package:lumos/l10n/l10n.dart';
 import 'package:lumos/presentation/shared/primitives/feedback/lumos_banner.dart';
 
 enum AppAnswerResultKind { correct, incorrect, neutral }
@@ -24,9 +25,10 @@ class LumosAnswerResultBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final resolvedTitle = title ?? _defaultTitle(context: context, kind: kind);
     return LumosBanner(
       message: message,
-      title: title ?? _defaultTitle(kind),
+      title: resolvedTitle,
       type: _snackbarType(kind),
       actionLabel: actionLabel,
       onActionPressed: onActionPressed,
@@ -34,11 +36,15 @@ class LumosAnswerResultBanner extends StatelessWidget {
     );
   }
 
-  String _defaultTitle(AppAnswerResultKind kind) {
+  String _defaultTitle({
+    required BuildContext context,
+    required AppAnswerResultKind kind,
+  }) {
+    final AppLocalizations l10n = context.l10n;
     return switch (kind) {
-      AppAnswerResultKind.correct => 'Correct',
-      AppAnswerResultKind.incorrect => 'Incorrect',
-      AppAnswerResultKind.neutral => 'Result',
+      AppAnswerResultKind.correct => l10n.commonCorrect,
+      AppAnswerResultKind.incorrect => l10n.commonIncorrect,
+      AppAnswerResultKind.neutral => l10n.commonResult,
     };
   }
 

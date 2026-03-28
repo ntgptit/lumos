@@ -45,36 +45,36 @@ class StudySessionFillActionRow extends StatelessWidget {
     if (hasPrimaryOverride && hasSecondaryOverride) {
       actionButtons = <Widget>[
         LumosSecondaryButton(
-          label: resolvedSecondaryLabel,
+          text: resolvedSecondaryLabel,
           onPressed: resolvedSecondaryPressed,
           size: LumosButtonSize.large,
-          expanded: true,
+          expand: true,
         ),
         LumosPrimaryButton(
-          label: resolvedPrimaryLabel,
+          text: resolvedPrimaryLabel,
           onPressed: resolvedPrimaryPressed,
           size: LumosButtonSize.large,
-          expanded: true,
+          expand: true,
         ),
       ];
     }
     if (actionButtons.isEmpty && hasPrimaryOverride) {
       actionButtons = <Widget>[
         LumosPrimaryButton(
-          label: resolvedPrimaryLabel,
+          text: resolvedPrimaryLabel,
           onPressed: resolvedPrimaryPressed,
           size: LumosButtonSize.large,
-          expanded: true,
+          expand: true,
         ),
       ];
     }
     if (actionButtons.isEmpty && showsSubmitAction && actions.isEmpty) {
       actionButtons = <Widget>[
         LumosPrimaryButton(
-          label: resolvedSubmitLabel,
+          text: resolvedSubmitLabel,
           onPressed: resolvedSubmitPressed,
           size: LumosButtonSize.large,
-          expanded: true,
+          expand: true,
         ),
       ];
     }
@@ -82,32 +82,32 @@ class StudySessionFillActionRow extends StatelessWidget {
       actionButtons = <Widget>[
         switch (actions.first.style) {
           StudyModeActionButtonStyle.primary => LumosPrimaryButton(
-            label: actions.first.label,
+            text: actions.first.label,
             onPressed: () => onActionPressed(actions.first.actionId),
             size: LumosButtonSize.large,
             icon: actions.first.icon,
-            expanded: true,
+            expand: true,
           ),
           StudyModeActionButtonStyle.secondary => LumosSecondaryButton(
-            label: actions.first.label,
+            text: actions.first.label,
             onPressed: () => onActionPressed(actions.first.actionId),
             size: LumosButtonSize.large,
             icon: actions.first.icon,
-            expanded: true,
+            expand: true,
           ),
           StudyModeActionButtonStyle.outline => LumosOutlineButton(
-            label: actions.first.label,
+            text: actions.first.label,
             onPressed: () => onActionPressed(actions.first.actionId),
             size: LumosButtonSize.large,
             icon: actions.first.icon,
-            expanded: true,
+            expand: true,
           ),
         },
         LumosPrimaryButton(
-          label: resolvedSubmitLabel,
+          text: resolvedSubmitLabel,
           onPressed: resolvedSubmitPressed,
           size: LumosButtonSize.large,
-          expanded: true,
+          expand: true,
         ),
       ];
     }
@@ -116,25 +116,25 @@ class StudySessionFillActionRow extends StatelessWidget {
           .map(
             (StudyModeActionViewModel action) => switch (action.style) {
               StudyModeActionButtonStyle.primary => LumosPrimaryButton(
-                label: action.label,
+                text: action.label,
                 onPressed: () => onActionPressed(action.actionId),
                 size: LumosButtonSize.large,
                 icon: action.icon,
-                expanded: true,
+                expand: true,
               ),
               StudyModeActionButtonStyle.secondary => LumosSecondaryButton(
-                label: action.label,
+                text: action.label,
                 onPressed: () => onActionPressed(action.actionId),
                 size: LumosButtonSize.large,
                 icon: action.icon,
-                expanded: true,
+                expand: true,
               ),
               StudyModeActionButtonStyle.outline => LumosOutlineButton(
-                label: action.label,
+                text: action.label,
                 onPressed: () => onActionPressed(action.actionId),
                 size: LumosButtonSize.large,
                 icon: action.icon,
-                expanded: true,
+                expand: true,
               ),
             },
           )

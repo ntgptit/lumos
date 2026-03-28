@@ -57,7 +57,7 @@ Future<void> showDeckEditorDialog({
                     });
                   },
                   label: l10n.deckDescriptionLabel,
-                  hint: l10n.deckDescriptionHint,
+                  hintText: l10n.deckDescriptionHint,
                   maxLines: _deckDescriptionMaxLines,
                   textInputAction: TextInputAction.newline,
                 ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lumos/core/theme/extensions/theme_context_ext.dart';
+import 'package:lumos/l10n/l10n.dart';
 import 'package:lumos/presentation/shared/primitives/buttons/lumos_outline_button.dart';
 import 'package:lumos/presentation/shared/primitives/buttons/lumos_primary_button.dart';
 import 'package:lumos/presentation/shared/primitives/displays/lumos_icon.dart';
@@ -10,7 +11,7 @@ import 'package:lumos/presentation/shared/primitives/text/lumos_title_text.dart'
 class LumosErrorState extends StatelessWidget {
   const LumosErrorState({
     super.key,
-    this.title = 'Something went wrong',
+    this.title,
     this.message,
     this.errorMessage,
     this.details,
@@ -24,7 +25,7 @@ class LumosErrorState extends StatelessWidget {
     this.maxWidth,
   });
 
-  final String title;
+  final String? title;
   final String? message;
   final String? errorMessage;
   final String? details;
@@ -52,39 +53,48 @@ class LumosErrorState extends StatelessWidget {
         ),
     ];
 
-    return Center(
-      child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: maxWidth ?? 560),
-        child: Padding(
-          padding: EdgeInsets.all(context.spacing.lg),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              icon ?? const LumosIcon(Icons.error_outline_rounded),
-              SizedBox(height: context.spacing.md),
-              LumosTitleText(text: title, textAlign: TextAlign.center),
-              if ((message ?? errorMessage) != null) ...[
-                SizedBox(height: context.spacing.xs),
-                LumosBodyText(
-                  text: message ?? errorMessage!,
+    return Semantics(
+      liveRegion: true,
+      label: title ?? context.l10n.commonSomethingWentWrong,
+      child: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: maxWidth ?? context.layout.contentMaxWidth,
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(context.spacing.lg),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                icon ?? const LumosIcon(Icons.error_outline_rounded),
+                SizedBox(height: context.spacing.md),
+                LumosTitleText(
+                  text: title ?? context.l10n.commonSomethingWentWrong,
                   textAlign: TextAlign.center,
                 ),
+                if ((message ?? errorMessage) != null) ...[
+                  SizedBox(height: context.spacing.xs),
+                  LumosBodyText(
+                    text: message ?? errorMessage!,
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+                if (details != null) ...[
+                  SizedBox(height: context.spacing.xs),
+                  LumosLabel(text: details!, textAlign: TextAlign.center),
+                ],
+                if (actions.isNotEmpty) ...[
+                  SizedBox(height: context.spacing.md),
+                  Wrap(
+                    spacing: context.spacing.sm,
+                    runSpacing: context.spacing.sm,
+                    alignment: WrapAlignment.center,
+                    children: actions,
+                  ),
+                ],
               ],
-              if (details != null) ...[
-                SizedBox(height: context.spacing.xs),
-                LumosLabel(text: details!, textAlign: TextAlign.center),
-              ],
-              if (actions.isNotEmpty) ...[
-                SizedBox(height: context.spacing.md),
-                Wrap(
-                  spacing: context.spacing.sm,
-                  runSpacing: context.spacing.sm,
-                  alignment: WrapAlignment.center,
-                  children: actions,
-                ),
-              ],
-            ],
+            ),
           ),
         ),
       ),

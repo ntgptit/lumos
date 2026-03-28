@@ -39,6 +39,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String get commonRename => 'Rename';
 
   @override
+  String get commonConfirm => 'Confirm';
+
+  @override
+  String get commonShowPassword => 'Show password';
+
+  @override
+  String get commonHidePassword => 'Hide password';
+
+  @override
+  String get commonSomethingWentWrong => 'Something went wrong';
+
+  @override
+  String get commonCorrect => 'Correct';
+
+  @override
+  String get commonIncorrect => 'Incorrect';
+
+  @override
+  String get commonResult => 'Result';
+
+  @override
   String get folderNewFolder => 'New Folder';
 
   @override

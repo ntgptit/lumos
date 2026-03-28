@@ -164,7 +164,7 @@ class FlashcardPreviewCarousel extends StatelessWidget {
                                 tooltip: l10n.flashcardExpandPreviewTooltip,
                                 icon: Icons.fullscreen_rounded,
                                 size: expandIconSize,
-                                variant: LumosIconButtonVariant.tonal,
+                                variant: AppIconButtonVariant.tonal,
                               ),
                             ),
                           ],

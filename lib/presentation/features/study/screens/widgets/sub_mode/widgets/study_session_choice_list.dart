@@ -40,7 +40,7 @@ class StudySessionChoiceList extends StatelessWidget {
               final StudyChoice choice = choices[index];
               return LumosOutlineButton(
                 onPressed: () => onChoicePressed(choice.label),
-                label: choice.label,
+                text: choice.label,
               );
             },
           );
@@ -54,7 +54,7 @@ class StudySessionChoiceList extends StatelessWidget {
               padding: EdgeInsets.only(bottom: itemSpacing),
               child: LumosOutlineButton(
                 onPressed: () => onChoicePressed(choice.label),
-                label: choice.label,
+                text: choice.label,
               ),
             ),
           )

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:lumos/core/theme/extensions/theme_context_ext.dart';
+
 class LumosPlaceholderScreen extends StatelessWidget {
   const LumosPlaceholderScreen({
     required this.title,
@@ -14,24 +16,26 @@ class LumosPlaceholderScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(title: Text(title)),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(24),
+          padding: EdgeInsets.all(context.spacing.lg),
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 480),
+            constraints: BoxConstraints(
+              maxWidth: context.layout.panelMaxWidth,
+            ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              children: [
+              children: <Widget>[
                 Text(
                   title,
                   style: theme.textTheme.headlineSmall,
                   textAlign: TextAlign.center,
                 ),
                 if (message != null) ...[
-                  const SizedBox(height: 12),
+                  SizedBox(height: context.spacing.sm),
                   Text(
                     message!,
                     style: theme.textTheme.bodyMedium,
@@ -39,10 +43,10 @@ class LumosPlaceholderScreen extends StatelessWidget {
                   ),
                 ],
                 if (actions.isNotEmpty) ...[
-                  const SizedBox(height: 24),
+                  SizedBox(height: context.spacing.lg),
                   Wrap(
-                    spacing: 12,
-                    runSpacing: 12,
+                    spacing: context.spacing.sm,
+                    runSpacing: context.spacing.sm,
                     alignment: WrapAlignment.center,
                     children: actions,
                   ),

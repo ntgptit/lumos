@@ -30,53 +30,56 @@ class LumosEmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxWidth: maxWidth ?? context.layout.panelMaxWidth,
-        ),
-        child: Padding(
-          padding: padding ?? EdgeInsets.all(context.spacing.lg),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              if (icon != null) ...[
-                IconTheme.merge(
-                  data: IconThemeData(
-                    size: context.iconSize.xxxl,
-                    color: context.colorScheme.primary,
+    return Semantics(
+      label: title,
+      child: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: maxWidth ?? context.layout.panelMaxWidth,
+          ),
+          child: Padding(
+            padding: padding ?? EdgeInsets.all(context.spacing.lg),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                if (icon != null) ...[
+                  IconTheme.merge(
+                    data: IconThemeData(
+                      size: context.iconSize.xxxl,
+                      color: context.colorScheme.primary,
+                    ),
+                    child: _resolveIcon(),
                   ),
-                  child: _resolveIcon(),
-                ),
-                SizedBox(height: context.spacing.md),
+                  SizedBox(height: context.spacing.md),
+                ],
+                LumosTitleText(text: title, textAlign: TextAlign.center),
+                if (message != null) ...[
+                  SizedBox(height: context.spacing.xs),
+                  LumosBodyText(text: message!, textAlign: TextAlign.center),
+                ],
+                if (child != null) ...[
+                  SizedBox(height: context.spacing.md),
+                  child!,
+                ],
+                if (actions.isNotEmpty) ...[
+                  SizedBox(height: context.spacing.md),
+                  Wrap(
+                    spacing: context.spacing.sm,
+                    runSpacing: context.spacing.sm,
+                    alignment: WrapAlignment.center,
+                    children: actions,
+                  ),
+                ],
+                if (buttonLabel != null && onButtonPressed != null) ...[
+                  SizedBox(height: context.spacing.md),
+                  LumosPrimaryButton(
+                    text: buttonLabel!,
+                    onPressed: onButtonPressed,
+                  ),
+                ],
               ],
-              LumosTitleText(text: title, textAlign: TextAlign.center),
-              if (message != null) ...[
-                SizedBox(height: context.spacing.xs),
-                LumosBodyText(text: message!, textAlign: TextAlign.center),
-              ],
-              if (child != null) ...[
-                SizedBox(height: context.spacing.md),
-                child!,
-              ],
-              if (actions.isNotEmpty) ...[
-                SizedBox(height: context.spacing.md),
-                Wrap(
-                  spacing: context.spacing.sm,
-                  runSpacing: context.spacing.sm,
-                  alignment: WrapAlignment.center,
-                  children: actions,
-                ),
-              ],
-              if (buttonLabel != null && onButtonPressed != null) ...[
-                SizedBox(height: context.spacing.md),
-                LumosPrimaryButton(
-                  label: buttonLabel,
-                  onPressed: onButtonPressed,
-                ),
-              ],
-            ],
+            ),
           ),
         ),
       ),
