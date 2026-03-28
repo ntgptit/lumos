@@ -1,3 +1,4 @@
+import 'package:lumos/core/theme/extensions/app_theme_palette.dart';
 import 'package:flutter/material.dart';
 import 'package:lumos/core/theme/extensions/color_scheme_ext.dart';
 import 'package:lumos/core/theme/extensions/dimension_theme_ext.dart';
@@ -45,6 +46,11 @@ extension ThemeContextExt on BuildContext {
   ColorSchemeExt get appColors {
     return theme.extension<ColorSchemeExt>() ??
         ResponsiveThemeFactory.colors(theme.brightness);
+  }
+
+  AppThemePalette get palette {
+    return theme.extension<AppThemePalette>() ??
+        AppThemePalette.fromBrightness(theme.brightness);
   }
 
   AdaptiveIconSize get iconSize => dims.iconSize;

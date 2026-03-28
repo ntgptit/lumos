@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:lumos/core/theme/extensions/app_theme_palette.dart';
 import 'package:lumos/core/theme/extensions/dimension_theme_ext.dart';
 import 'package:lumos/core/theme/tokens/tokens.dart';
 
 abstract final class lumosCardTheme {
   static CardThemeData build(ColorScheme colorScheme, DimensionThemeExt dims) {
-    final isLight = colorScheme.brightness == Brightness.light;
-    final side = isLight
-        ? BorderSide(color: AppColorTokens.lightOutlineVariant)
-        : BorderSide(color: AppColorTokens.darkCardStroke);
+    final palette = AppThemePalette.fromBrightness(colorScheme.brightness);
 
     return CardThemeData(
-      elevation: isLight ? AppElevationTokens.level2 : AppElevationTokens.level0,
+      elevation: colorScheme.brightness == Brightness.light
+          ? AppElevationTokens.level2
+          : AppElevationTokens.level0,
       margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
-      color: isLight ? colorScheme.surface : AppColorTokens.darkSurface,
-      shadowColor: isLight ? AppColorTokens.lightShadow : Colors.transparent,
+      color: palette.cardBackground,
+      shadowColor: colorScheme.brightness == Brightness.light
+          ? palette.shadow
+          : Colors.transparent,
       surfaceTintColor: Colors.transparent,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(
-          isLight ? dims.radius.sm : dims.radius.sm,
-        ),
-        side: side,
+        borderRadius: BorderRadius.circular(dims.radius.sm),
+        side: BorderSide(color: palette.cardBorder),
       ),
     );
   }

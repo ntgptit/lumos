@@ -1,3 +1,4 @@
+import 'package:lumos/core/theme/extensions/app_theme_palette.dart';
 import 'package:flutter/material.dart';
 import 'package:lumos/core/theme/extensions/color_scheme_ext.dart';
 import 'package:lumos/core/theme/extensions/dimension_theme_ext.dart';
@@ -25,7 +26,11 @@ abstract final class ResponsiveThemeFactory {
     required DimensionThemeExt dimensions,
     Brightness brightness = Brightness.light,
   }) {
-    return [dimensions, ColorSchemeExt.fromBrightness(brightness)];
+    return [
+      dimensions,
+      ColorSchemeExt.fromBrightness(brightness),
+      AppThemePalette.fromBrightness(brightness),
+    ];
   }
 
   static ColorSchemeExt colors(Brightness brightness) {

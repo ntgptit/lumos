@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lumos/core/theme/extensions/app_theme_palette.dart';
 import 'package:lumos/core/theme/extensions/dimension_theme_ext.dart';
 import 'package:lumos/core/theme/tokens/tokens.dart';
 
@@ -7,24 +8,18 @@ abstract final class lumosInputTheme {
     ColorScheme colorScheme,
     DimensionThemeExt dims,
   ) {
-    final isLight = colorScheme.brightness == Brightness.light;
+    final palette = AppThemePalette.fromBrightness(colorScheme.brightness);
     final border = OutlineInputBorder(
-      borderRadius: BorderRadius.circular(
-        isLight ? dims.radius.sm : dims.radius.sm,
-      ),
+      borderRadius: BorderRadius.circular(dims.radius.sm),
       borderSide: BorderSide(
-        color: isLight
-            ? AppColorTokens.lightOutlineVariant
-            : AppColorTokens.darkOutline,
+        color: palette.outline,
         width: AppBorderTokens.thin,
       ),
     );
 
     return InputDecorationTheme(
       filled: true,
-      fillColor: isLight
-          ? AppColorTokens.lightSurface
-          : AppColorTokens.darkSurface,
+      fillColor: palette.surface,
       contentPadding: EdgeInsets.symmetric(
         horizontal: dims.spacing.md,
         vertical:
@@ -35,9 +30,7 @@ abstract final class lumosInputTheme {
       enabledBorder: border,
       focusedBorder: border.copyWith(
         borderSide: BorderSide(
-          color: isLight
-              ? AppColorTokens.lightPrimary
-              : AppColorTokens.darkPrimary,
+          color: palette.primary,
           width: AppBorderTokens.regular,
         ),
       ),
@@ -52,9 +45,7 @@ abstract final class lumosInputTheme {
       ),
       hintStyle: TextStyle(
         fontSize: AppTypographyTokens.bodyLarge,
-        color: isLight
-            ? AppColorTokens.lightTextDisabled
-            : AppColorTokens.darkTextDisabled,
+        color: palette.textDisabled,
       ),
     );
   }

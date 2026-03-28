@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lumos/core/theme/extensions/app_theme_palette.dart';
 import 'package:lumos/core/theme/extensions/dimension_theme_ext.dart';
 import 'package:lumos/core/theme/tokens/tokens.dart';
 
@@ -7,15 +8,13 @@ abstract final class lumosDialogTheme {
     ColorScheme colorScheme,
     DimensionThemeExt dims,
   ) {
-    final isLight = colorScheme.brightness == Brightness.light;
+    final palette = AppThemePalette.fromBrightness(colorScheme.brightness);
 
     return DialogThemeData(
-      backgroundColor: isLight
-          ? AppColorTokens.lightSurface
-          : AppColorTokens.darkDialogSurface,
+      backgroundColor: palette.dialogBackground,
       surfaceTintColor: Colors.transparent,
       elevation: AppElevationTokens.level3,
-      shadowColor: isLight ? AppColorTokens.lightShadow : AppColorTokens.darkShadow,
+      shadowColor: palette.shadow,
       insetPadding: EdgeInsets.all(dims.componentSize.dialogPadding),
       constraints: BoxConstraints(maxWidth: dims.layout.dialogMaxWidth),
       titleTextStyle: TextStyle(
@@ -30,9 +29,7 @@ abstract final class lumosDialogTheme {
         height: AppTypographyTokens.bodyHeight,
       ),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(
-          isLight ? dims.radius.sm : dims.radius.sm,
-        ),
+        borderRadius: BorderRadius.circular(dims.radius.sm),
       ),
     );
   }

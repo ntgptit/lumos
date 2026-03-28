@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:lumos/core/theme/extensions/app_theme_palette.dart';
 import 'package:lumos/core/theme/tokens/tokens.dart';
 
 abstract final class lumosDividerTheme {
   static DividerThemeData build(ColorScheme colorScheme) {
-    final isLight = colorScheme.brightness == Brightness.light;
+    final palette = AppThemePalette.fromBrightness(colorScheme.brightness);
 
     return DividerThemeData(
-      color: isLight
-          ? colorScheme.outlineVariant
-          : AppColorTokens.darkTextSubtle,
+      color: palette.separator,
       thickness: AppBorderTokens.thin,
       space: 1,
     );

@@ -1,28 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:lumos/core/theme/extensions/app_theme_palette.dart';
 import 'package:lumos/core/theme/extensions/dimension_theme_ext.dart';
-import 'package:lumos/core/theme/tokens/tokens.dart';
 
 abstract final class lumosChipTheme {
   static ChipThemeData build(ColorScheme colorScheme, DimensionThemeExt dims) {
-    final isLight = colorScheme.brightness == Brightness.light;
+    final palette = AppThemePalette.fromBrightness(colorScheme.brightness);
 
     return ChipThemeData(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(
-          isLight ? dims.radius.xs : dims.radius.xs,
-        ),
+        borderRadius: BorderRadius.circular(dims.radius.xs),
       ),
-      side: BorderSide(
-        color: isLight
-            ? AppColorTokens.lightOutlineVariant
-            : AppColorTokens.darkOutline,
-      ),
-      backgroundColor: isLight
-          ? AppColorTokens.lightSurfaceContainerLow
-          : AppColorTokens.darkSurfaceContainerLow,
-      selectedColor: isLight
-          ? AppColorTokens.lightPrimaryContainer
-          : AppColorTokens.darkPrimaryContainer,
+      side: BorderSide(color: palette.outline),
+      backgroundColor: palette.surfaceContainerLow,
+      selectedColor: palette.primaryContainer,
       padding: EdgeInsets.symmetric(horizontal: dims.spacing.sm),
       labelPadding: EdgeInsets.zero,
       showCheckmark: false,

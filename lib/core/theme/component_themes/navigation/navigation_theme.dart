@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lumos/core/theme/extensions/app_theme_palette.dart';
 import 'package:lumos/core/theme/extensions/dimension_theme_ext.dart';
-import 'package:lumos/core/theme/tokens/tokens.dart';
 
 abstract final class lumosNavigationTheme {
   static NavigationBarThemeData bar({
@@ -8,26 +8,18 @@ abstract final class lumosNavigationTheme {
     required DimensionThemeExt dimensions,
     required TextTheme textTheme,
   }) {
-    final isLight = colorScheme.brightness == Brightness.light;
-    final selectedColor = isLight
-        ? AppColorTokens.lightPrimary
-        : AppColorTokens.darkSidebarMenuItemActive;
-    final unselectedColor = isLight
-        ? AppColorTokens.lightSecondary
-        : AppColorTokens.darkSidebarText;
+    final palette = AppThemePalette.fromBrightness(colorScheme.brightness);
 
     return NavigationBarThemeData(
       height: dimensions.componentSize.bottomBarHeight,
-      backgroundColor: isLight
-          ? AppColorTokens.lightSidebarBackground
-          : AppColorTokens.darkSidebarBackground,
-      indicatorColor: isLight
-          ? AppColorTokens.lightPrimaryContainer
-          : AppColorTokens.darkSidebarMenuItemBackgroundActive,
+      backgroundColor: palette.sidebarBackground,
+      indicatorColor: palette.sidebarSelectedBackground,
       labelTextStyle: WidgetStateProperty.resolveWith((states) {
         final isSelected = states.contains(WidgetState.selected);
         return textTheme.labelMedium?.copyWith(
-          color: isSelected ? selectedColor : unselectedColor,
+          color: isSelected
+              ? palette.sidebarSelectedForeground
+              : palette.sidebarText,
           fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
         );
       }),
@@ -35,7 +27,9 @@ abstract final class lumosNavigationTheme {
         final isSelected = states.contains(WidgetState.selected);
         return IconThemeData(
           size: dimensions.iconSize.lg,
-          color: isSelected ? selectedColor : unselectedColor,
+          color: isSelected
+              ? palette.sidebarSelectedForeground
+              : palette.sidebarText,
         );
       }),
       labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
@@ -47,37 +41,27 @@ abstract final class lumosNavigationTheme {
     required DimensionThemeExt dimensions,
     required TextTheme textTheme,
   }) {
-    final isLight = colorScheme.brightness == Brightness.light;
-    final selectedColor = isLight
-        ? AppColorTokens.lightPrimary
-        : AppColorTokens.darkSidebarMenuItemActive;
-    final unselectedColor = isLight
-        ? AppColorTokens.lightSecondary
-        : AppColorTokens.darkSidebarText;
+    final palette = AppThemePalette.fromBrightness(colorScheme.brightness);
 
     return NavigationRailThemeData(
-      backgroundColor: isLight
-          ? AppColorTokens.lightSidebarBackground
-          : AppColorTokens.darkSidebarBackground,
-      indicatorColor: isLight
-          ? AppColorTokens.lightPrimaryContainer
-          : AppColorTokens.darkSidebarMenuItemBackgroundActive,
+      backgroundColor: palette.sidebarBackground,
+      indicatorColor: palette.sidebarSelectedBackground,
       minWidth: dimensions.componentSize.navigationRailWidth,
       minExtendedWidth: dimensions.componentSize.navigationRailWidth * 2.75,
       selectedIconTheme: IconThemeData(
         size: dimensions.iconSize.lg,
-        color: selectedColor,
+        color: palette.sidebarSelectedForeground,
       ),
       unselectedIconTheme: IconThemeData(
         size: dimensions.iconSize.lg,
-        color: unselectedColor,
+        color: palette.sidebarText,
       ),
       selectedLabelTextStyle: textTheme.labelMedium?.copyWith(
-        color: selectedColor,
+        color: palette.sidebarSelectedForeground,
         fontWeight: FontWeight.w600,
       ),
       unselectedLabelTextStyle: textTheme.labelMedium?.copyWith(
-        color: unselectedColor,
+        color: palette.sidebarText,
         fontWeight: FontWeight.w500,
       ),
       useIndicator: true,

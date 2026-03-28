@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:lumos/core/theme/tokens/tokens.dart';
+import 'package:lumos/core/theme/extensions/app_theme_palette.dart';
 
 abstract final class lumosProgressIndicatorTheme {
   static ProgressIndicatorThemeData build(ColorScheme colorScheme) {
-    final isLight = colorScheme.brightness == Brightness.light;
+    final palette = AppThemePalette.fromBrightness(colorScheme.brightness);
 
     return ProgressIndicatorThemeData(
       color: colorScheme.primary,
-      linearTrackColor: isLight
-          ? colorScheme.surfaceContainerHighest
-          : AppColorTokens.darkSurfaceContainerHigh,
-      circularTrackColor: isLight
-          ? colorScheme.surfaceContainerHighest
-          : AppColorTokens.darkSurfaceContainerHigh,
+      linearTrackColor: palette.controlTrack,
+      circularTrackColor: palette.controlTrack,
     );
   }
 }
