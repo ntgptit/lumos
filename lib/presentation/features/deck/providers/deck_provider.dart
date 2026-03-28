@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../../core/error/failures.dart';
+import 'package:lumos/core/errors/failures.dart';
 import '../../../../data/repositories/deck_repository_impl.dart';
 import '../../../../domain/entities/deck_models.dart';
 import '../../../../domain/repositories/deck_repository.dart';
@@ -199,3 +199,4 @@ class DeckAsyncController extends _$DeckAsyncController {
     return failure.message;
   }
 }
+

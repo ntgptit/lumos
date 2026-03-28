@@ -1,4 +1,4 @@
-import '../../../../core/themes/foundation/app_foundation.dart';
+import 'package:lumos/core/theme/app_foundation.dart';
 import 'package:flutter/material.dart';
 
 abstract final class FolderContentSupportConst {
@@ -27,3 +27,4 @@ class FolderContentSupportCreateAction {
   final String label;
   final VoidCallback onPressed;
 }
+

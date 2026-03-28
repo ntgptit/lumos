@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../../core/themes/foundation/app_foundation.dart';
+import 'package:lumos/core/theme/app_foundation.dart';
 import '../../../../mode/study_mode_action_view_model.dart';
 import 'study_session_action_button.dart';
 import 'study_session_layout_metrics.dart';
@@ -42,3 +42,4 @@ class StudySessionActionBar extends StatelessWidget {
     );
   }
 }
+

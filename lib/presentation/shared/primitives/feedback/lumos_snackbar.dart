@@ -3,6 +3,8 @@ import 'package:lumos/core/enums/snackbar_type.dart';
 import 'package:lumos/core/theme/extensions/theme_context_ext.dart';
 import 'package:lumos/core/theme/tokens/tokens.dart';
 
+enum LumosSnackbarType { success, error, info, warning }
+
 class LumosSnackbar extends StatelessWidget {
   const LumosSnackbar({
     super.key,
@@ -16,7 +18,7 @@ class LumosSnackbar extends StatelessWidget {
 
   final String message;
   final String? title;
-  final SnackbarType type;
+  final Object type;
   final String? actionLabel;
   final VoidCallback? onActionPressed;
   final Widget? leading;
@@ -82,7 +84,7 @@ class LumosSnackbar extends StatelessWidget {
   }
 
   _Tone _tone(BuildContext context) {
-    return switch (type) {
+    return switch (_resolveType()) {
       SnackbarType.success => _Tone(
         background: context.appColors.successContainer,
         foreground: context.appColors.onSuccessContainer,
@@ -114,12 +116,25 @@ class LumosSnackbar extends StatelessWidget {
     };
   }
 
-  IconData _iconFor(SnackbarType type) {
-    return switch (type) {
+  IconData _iconFor(Object type) {
+    final resolvedType = _resolveType();
+    return switch (resolvedType) {
       SnackbarType.success => Icons.check_circle_rounded,
       SnackbarType.error => Icons.error_rounded,
       SnackbarType.info => Icons.info_rounded,
       SnackbarType.warning => Icons.warning_rounded,
+    };
+  }
+
+  SnackbarType _resolveType() {
+    if (type is SnackbarType) {
+      return type as SnackbarType;
+    }
+    return switch (type) {
+      LumosSnackbarType.success => SnackbarType.success,
+      LumosSnackbarType.error => SnackbarType.error,
+      LumosSnackbarType.warning => SnackbarType.warning,
+      _ => SnackbarType.info,
     };
   }
 }

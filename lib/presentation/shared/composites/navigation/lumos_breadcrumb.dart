@@ -57,7 +57,7 @@ class LumosBreadcrumb extends StatelessWidget {
       children.add(
         item.isCurrent || item.onTap == null
             ? LumosText(
-                text: item.label,
+                item.label,
                 color: context.colorScheme.onSurfaceVariant,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,

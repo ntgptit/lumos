@@ -9,12 +9,17 @@ class LumosSearchBar extends StatelessWidget {
     super.key,
     this.controller,
     this.focusNode,
+    this.autofocus = false,
+    this.autoFocus = false,
     this.hintText,
+    this.hint,
     this.label,
     this.supportingText,
     this.onChanged,
+    this.onSearch,
     this.onSubmitted,
     this.onClear,
+    this.clearTooltip,
     this.onFilterPressed,
     this.onSortPressed,
     this.actions = const [],
@@ -23,12 +28,17 @@ class LumosSearchBar extends StatelessWidget {
 
   final TextEditingController? controller;
   final FocusNode? focusNode;
+  final bool autofocus;
+  final bool autoFocus;
   final String? hintText;
+  final String? hint;
   final String? label;
   final String? supportingText;
   final ValueChanged<String>? onChanged;
+  final ValueChanged<String>? onSearch;
   final ValueChanged<String>? onSubmitted;
   final VoidCallback? onClear;
+  final String? clearTooltip;
   final VoidCallback? onFilterPressed;
   final VoidCallback? onSortPressed;
   final List<Widget> actions;
@@ -61,12 +71,14 @@ class LumosSearchBar extends StatelessWidget {
           child: LumosSearchField(
             controller: controller,
             focusNode: focusNode,
-            hintText: hintText,
+            autofocus: autofocus || autoFocus,
+            hintText: hintText ?? hint,
             label: label,
             supportingText: supportingText,
-            onChanged: onChanged,
+            onChanged: onChanged ?? onSearch,
             onSubmitted: onSubmitted,
             onClear: onClear,
+            clearTooltip: clearTooltip,
           ),
         ),
         if (actionWidgets.isNotEmpty) ...[

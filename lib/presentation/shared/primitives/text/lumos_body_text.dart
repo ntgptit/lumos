@@ -37,7 +37,7 @@ class LumosBodyText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LumosText(
-      text: text,
+      text,
       style: context.textTheme.bodyLarge
           ?.copyWith(
             color:

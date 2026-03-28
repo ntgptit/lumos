@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../../../core/themes/foundation/app_foundation.dart';
+import 'package:lumos/core/theme/app_foundation.dart';
 import 'home_adaptive_body.dart';
 import '../../footer/home_bottom_nav.dart';
 import '../../header/home_app_bar.dart';
@@ -41,3 +41,4 @@ class HomeNavigationScaffold extends StatelessWidget {
     );
   }
 }
+

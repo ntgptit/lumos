@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../../../core/themes/foundation/app_foundation.dart';
+import 'package:lumos/core/theme/app_foundation.dart';
 import '../../../../../../../../domain/entities/study/study_models.dart';
 import '../../../../../mode/study_match_pair_layout_resolver.dart';
 import '../../../../../providers/study_match_selection_provider.dart';
@@ -83,3 +83,4 @@ class StudySessionMatchPairs extends StatelessWidget {
     );
   }
 }
+

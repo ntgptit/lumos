@@ -12,10 +12,13 @@ class LumosErrorState extends StatelessWidget {
     super.key,
     this.title = 'Something went wrong',
     this.message,
+    this.errorMessage,
     this.details,
     this.icon,
     this.primaryActionLabel,
     this.onPrimaryAction,
+    this.onRetry,
+    this.retryLabel,
     this.secondaryActionLabel,
     this.onSecondaryAction,
     this.maxWidth,
@@ -23,10 +26,13 @@ class LumosErrorState extends StatelessWidget {
 
   final String title;
   final String? message;
+  final String? errorMessage;
   final String? details;
   final Widget? icon;
   final String? primaryActionLabel;
   final VoidCallback? onPrimaryAction;
+  final VoidCallback? onRetry;
+  final String? retryLabel;
   final String? secondaryActionLabel;
   final VoidCallback? onSecondaryAction;
   final double? maxWidth;
@@ -39,8 +45,11 @@ class LumosErrorState extends StatelessWidget {
           text: secondaryActionLabel!,
           onPressed: onSecondaryAction,
         ),
-      if (primaryActionLabel != null)
-        LumosPrimaryButton(text: primaryActionLabel!, onPressed: onPrimaryAction),
+      if ((primaryActionLabel ?? retryLabel) != null)
+        LumosPrimaryButton(
+          text: primaryActionLabel ?? retryLabel!,
+          onPressed: onPrimaryAction ?? onRetry,
+        ),
     ];
 
     return Center(
@@ -55,9 +64,12 @@ class LumosErrorState extends StatelessWidget {
               icon ?? const LumosIcon(Icons.error_outline_rounded),
               SizedBox(height: context.spacing.md),
               LumosTitleText(text: title, textAlign: TextAlign.center),
-              if (message != null) ...[
+              if ((message ?? errorMessage) != null) ...[
                 SizedBox(height: context.spacing.xs),
-                LumosBodyText(text: message!, textAlign: TextAlign.center),
+                LumosBodyText(
+                  text: message ?? errorMessage!,
+                  textAlign: TextAlign.center,
+                ),
               ],
               if (details != null) ...[
                 SizedBox(height: context.spacing.xs),

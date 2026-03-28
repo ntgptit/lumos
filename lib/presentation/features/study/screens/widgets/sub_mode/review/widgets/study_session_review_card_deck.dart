@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../../../core/themes/foundation/app_foundation.dart';
+import 'package:lumos/core/theme/app_foundation.dart';
 import '../../../../../../../../domain/entities/study/study_models.dart';
 import '../../../../../../../../l10n/app_localizations.dart';
 import '../../../../../providers/study_speech_playback_provider.dart';
@@ -86,3 +86,4 @@ class StudySessionReviewCardDeck extends StatelessWidget {
     return currentItem.prompt;
   }
 }
+

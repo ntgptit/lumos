@@ -1,11 +1,9 @@
 import 'dart:async';
 
+import 'package:lumos/core/di/service_providers.dart';
+import 'package:lumos/core/services/text_to_speech_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../../core/speech/providers/tts_engine_registry_provider.dart';
-import '../../../../core/speech/tts_engine_catalog.dart';
-import '../../../../core/speech/tts_engine_registry.dart';
-import '../../../../core/speech/tts_engine_speak_request.dart';
 import '../../../../core/utils/string_utils.dart';
 import '../../../../domain/entities/study/study_models.dart';
 import 'profile_speech_preview_state.dart';
@@ -16,11 +14,11 @@ part 'profile_speech_preview_provider.g.dart';
 class ProfileSpeechPreviewController extends _$ProfileSpeechPreviewController {
   @override
   ProfileSpeechPreviewState build() {
-    final TtsEngineRegistry engineRegistry = ref.read(
-      ttsEngineRegistryProvider,
+    final TextToSpeechService textToSpeechService = ref.read(
+      textToSpeechServiceProvider,
     );
     ref.onDispose(() {
-      unawaited(engineRegistry.stopAll());
+      unawaited(textToSpeechService.stop());
     });
     return const ProfileSpeechPreviewState.initial();
   }
@@ -34,24 +32,16 @@ class ProfileSpeechPreviewController extends _$ProfileSpeechPreviewController {
       return;
     }
     state = state.copyWith(isBusy: true, isPlaying: false, errorMessage: null);
-    final TtsEngineRegistry engineRegistry = ref.read(
-      ttsEngineRegistryProvider,
+    final TextToSpeechService textToSpeechService = ref.read(
+      textToSpeechServiceProvider,
     );
-    final String resolvedAdapter = normalizeTtsAdapter(preference.adapter);
     try {
-      await engineRegistry.stopAll();
+      await textToSpeechService.stop();
       state = state.copyWith(isBusy: false, isPlaying: true);
-      await engineRegistry
-          .resolve(resolvedAdapter)
-          .speak(
-            request: TtsEngineSpeakRequest(
-              text: normalizedText,
-              locale: preference.locale,
-              voice: preference.voice,
-              speed: preference.speed,
-              pitch: preference.pitch,
-            ),
-          );
+      await textToSpeechService.speak(
+        normalizedText,
+        locale: preference.locale,
+      );
       state = state.copyWith(
         isBusy: false,
         isPlaying: false,
@@ -67,10 +57,10 @@ class ProfileSpeechPreviewController extends _$ProfileSpeechPreviewController {
   }
 
   Future<void> stop() async {
-    final TtsEngineRegistry engineRegistry = ref.read(
-      ttsEngineRegistryProvider,
+    final TextToSpeechService textToSpeechService = ref.read(
+      textToSpeechServiceProvider,
     );
-    await engineRegistry.stopAll();
+    await textToSpeechService.stop();
     state = state.copyWith(isBusy: false, isPlaying: false);
   }
 

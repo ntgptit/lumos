@@ -2,8 +2,8 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../core/error/error_mapper.dart';
-import '../../core/error/failures.dart';
+import 'package:lumos/core/errors/error_mapper.dart';
+import 'package:lumos/core/errors/failures.dart';
 import '../../core/network/providers/network_providers.dart';
 import '../../core/utils/string_utils.dart';
 import '../../domain/entities/flashcard_models.dart';
@@ -342,3 +342,4 @@ FlashcardRepository flashcardRepository(Ref ref) {
   final Dio dio = ref.watch(dioClientProvider);
   return DioFlashcardRepository(dio: dio);
 }
+

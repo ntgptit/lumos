@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 
-import '../../core/error/failures.dart';
+import 'package:lumos/core/errors/failures.dart';
 import '../entities/flashcard_models.dart';
 
 abstract class FlashcardRepository {
@@ -25,3 +25,4 @@ abstract class FlashcardRepository {
     required int flashcardId,
   });
 }
+

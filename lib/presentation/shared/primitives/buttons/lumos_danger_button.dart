@@ -1,14 +1,34 @@
+import 'package:flutter/material.dart';
 import 'package:lumos/presentation/shared/primitives/buttons/lumos_button.dart';
 
 class LumosDangerButton extends LumosButton {
-  const LumosDangerButton({
+  LumosDangerButton({
     super.key,
-    required super.text,
+    String? text,
+    String? label,
     super.onPressed,
-    super.expand,
+    bool expand = false,
+    bool expanded = false,
     super.isLoading,
-    super.leading,
-    super.trailing,
-    super.style,
-  }) : super(variant: AppButtonVariant.danger);
+    Widget? leading,
+    Widget? trailing,
+    ButtonStyle? style,
+    IconData? icon,
+    LumosButtonSize size = LumosButtonSize.large,
+  }) : super(
+         text: text ?? label ?? '',
+         leading: leading ?? _icon(icon),
+         trailing: trailing,
+         expand: expand || expanded,
+         style: style,
+         size: size,
+         variant: AppButtonVariant.danger,
+       );
+
+  static Widget? _icon(IconData? icon) {
+    if (icon == null) {
+      return null;
+    }
+    return Icon(icon);
+  }
 }

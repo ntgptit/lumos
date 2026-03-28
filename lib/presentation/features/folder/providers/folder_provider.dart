@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:dartz/dartz.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../../core/error/failures.dart';
+import 'package:lumos/core/errors/failures.dart';
 import '../../../../core/utils/string_utils.dart';
 import '../../../../data/repositories/folder_repository_impl.dart';
 import '../../../../domain/entities/folder_models.dart';
@@ -422,3 +422,4 @@ class FolderAsyncController extends _$FolderAsyncController {
     _cacheState(nextState);
   }
 }
+

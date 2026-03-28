@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../../core/themes/foundation/app_foundation.dart';
+import 'package:lumos/core/theme/app_foundation.dart';
 import 'study_session_layout_metrics.dart';
 
 const double _studySessionActionRowSingleWidthFactor = 0.42;
@@ -79,3 +79,4 @@ class StudySessionActionRowLayout extends StatelessWidget {
     );
   }
 }
+

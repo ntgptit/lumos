@@ -3,6 +3,7 @@ import 'package:lumos/core/theme/extensions/theme_context_ext.dart';
 import 'package:lumos/core/theme/tokens/tokens.dart';
 
 enum AppButtonVariant { primary, secondary, outline, text, danger }
+enum LumosButtonSize { medium, large }
 
 class LumosButton extends StatelessWidget {
   const LumosButton.primary({
@@ -13,6 +14,7 @@ class LumosButton extends StatelessWidget {
     this.leading,
     this.trailing,
     this.style,
+    this.size = LumosButtonSize.large,
     super.key,
   }) : variant = AppButtonVariant.primary;
 
@@ -24,6 +26,7 @@ class LumosButton extends StatelessWidget {
     this.leading,
     this.trailing,
     this.style,
+    this.size = LumosButtonSize.large,
     super.key,
   }) : variant = AppButtonVariant.secondary;
 
@@ -35,6 +38,7 @@ class LumosButton extends StatelessWidget {
     this.leading,
     this.trailing,
     this.style,
+    this.size = LumosButtonSize.large,
     super.key,
   }) : variant = AppButtonVariant.outline;
 
@@ -46,6 +50,7 @@ class LumosButton extends StatelessWidget {
     this.leading,
     this.trailing,
     this.style,
+    this.size = LumosButtonSize.large,
     super.key,
   }) : variant = AppButtonVariant.text;
 
@@ -57,6 +62,7 @@ class LumosButton extends StatelessWidget {
     this.leading,
     this.trailing,
     this.style,
+    this.size = LumosButtonSize.large,
     super.key,
   }) : variant = AppButtonVariant.danger;
 
@@ -70,6 +76,7 @@ class LumosButton extends StatelessWidget {
     this.leading,
     this.trailing,
     this.style,
+    this.size = LumosButtonSize.large,
   });
 
   final String text;
@@ -80,6 +87,7 @@ class LumosButton extends StatelessWidget {
   final Widget? leading;
   final Widget? trailing;
   final ButtonStyle? style;
+  final LumosButtonSize size;
 
   @override
   Widget build(BuildContext context) {
@@ -127,9 +135,16 @@ class LumosButton extends StatelessWidget {
 
     return SizedBox(
       width: expand ? double.infinity : null,
-      height: context.component.buttonHeight,
+      height: _resolveHeight(context),
       child: button,
     );
+  }
+
+  double _resolveHeight(BuildContext context) {
+    if (size == LumosButtonSize.large) {
+      return context.component.buttonHeight;
+    }
+    return context.component.buttonHeight - context.spacing.xxs;
   }
 
   ButtonStyle _dangerStyle(BuildContext context) {

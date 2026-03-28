@@ -1,4 +1,4 @@
-import '../../../../core/themes/foundation/app_foundation.dart';
+import 'package:lumos/core/theme/app_foundation.dart';
 
 abstract final class FlashcardContentSupportConst {
   FlashcardContentSupportConst._();
@@ -14,3 +14,4 @@ abstract final class FlashcardContentSupportConst {
   static const double screenVerticalPadding = LumosSpacing.lg;
   static const int defaultLearningProgressCount = 0;
 }
+

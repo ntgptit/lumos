@@ -20,6 +20,35 @@ abstract final class StringUtils {
     return value.trim().replaceAll(RegExp(r'\s+'), ' ');
   }
 
+  static String normalizeLower(String value) {
+    return normalizeText(value).toLowerCase();
+  }
+
+  static String normalizeUpper(String value) {
+    return normalizeText(value).toUpperCase();
+  }
+
+  static int compareNormalizedLower(String left, String right) {
+    return normalizeLower(left).compareTo(normalizeLower(right));
+  }
+
+  static String prefix(String value, int endIndex) {
+    final resolvedEndIndex = endIndex.clamp(0, value.length);
+    return value.substring(0, resolvedEndIndex);
+  }
+
+  static String suffix(String value, int startIndex) {
+    final resolvedStartIndex = startIndex.clamp(0, value.length);
+    return value.substring(resolvedStartIndex);
+  }
+
+  static String trailingCharacter(String value) {
+    if (value.isEmpty) {
+      return value;
+    }
+    return value.substring(value.length - 1);
+  }
+
   static bool isBlank(String? value) {
     return value == null || value.trim().isEmpty;
   }

@@ -48,7 +48,7 @@ class LumosLinkText extends StatelessWidget {
         behavior: HitTestBehavior.opaque,
         onTap: onTap,
         child: LumosText(
-          text: text,
+          text,
           style: linkStyle?.merge(style),
           textAlign: textAlign,
           maxLines: maxLines,

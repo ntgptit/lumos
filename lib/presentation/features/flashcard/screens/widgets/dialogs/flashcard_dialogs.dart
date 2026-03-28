@@ -7,7 +7,32 @@ import 'package:go_router/go_router.dart';
 import '../../../../../../core/utils/string_utils.dart';
 import '../../../../../../domain/entities/flashcard_models.dart';
 import '../../../../../../l10n/app_localizations.dart';
-import '../../../../../shared/widgets/lumos_widgets.dart';
+import 'package:lumos/presentation/shared/composites/appbars/lumos_app_bar.dart';
+import 'package:lumos/presentation/shared/composites/dialogs/lumos_action_sheet.dart';
+import 'package:lumos/presentation/shared/composites/dialogs/lumos_dialog.dart';
+import 'package:lumos/presentation/shared/composites/dialogs/lumos_prompt_dialog.dart';
+import 'package:lumos/presentation/shared/composites/forms/lumos_search_bar.dart';
+import 'package:lumos/presentation/shared/composites/forms/lumos_sort_bar.dart';
+import 'package:lumos/presentation/shared/composites/lists/lumos_action_list_item.dart';
+import 'package:lumos/presentation/shared/composites/lists/lumos_action_list_item_card.dart';
+import 'package:lumos/presentation/shared/composites/states/lumos_empty_state.dart';
+import 'package:lumos/presentation/shared/composites/states/lumos_error_state.dart';
+import 'package:lumos/presentation/shared/composites/text/lumos_inline_text.dart';
+import 'package:lumos/presentation/shared/layouts/lumos_screen_transition.dart';
+import 'package:lumos/presentation/shared/primitives/buttons/lumos_floating_action_button.dart';
+import 'package:lumos/presentation/shared/primitives/buttons/lumos_icon_button.dart';
+import 'package:lumos/presentation/shared/primitives/buttons/lumos_outline_button.dart';
+import 'package:lumos/presentation/shared/primitives/buttons/lumos_primary_button.dart';
+import 'package:lumos/presentation/shared/primitives/buttons/lumos_secondary_button.dart';
+import 'package:lumos/presentation/shared/primitives/displays/lumos_card.dart';
+import 'package:lumos/presentation/shared/primitives/displays/lumos_icon.dart';
+import 'package:lumos/presentation/shared/primitives/displays/lumos_progress_bar.dart';
+import 'package:lumos/presentation/shared/primitives/feedback/lumos_loading_indicator.dart';
+import 'package:lumos/presentation/shared/primitives/feedback/lumos_snackbar.dart';
+import 'package:lumos/presentation/shared/primitives/inputs/lumos_dropdown.dart';
+import 'package:lumos/presentation/shared/primitives/inputs/lumos_text_field.dart';
+import 'package:lumos/presentation/shared/primitives/layout/lumos_spacing.dart';
+import 'package:lumos/presentation/shared/primitives/text/lumos_text.dart';
 import '../../../providers/flashcard_dialog_form_provider.dart';
 import '../../../providers/flashcard_provider.dart';
 import '../../../providers/states/flashcard_dialog_form_state.dart';
@@ -197,10 +222,12 @@ String? _resolveValidationMessage({
 
 void _showError({required BuildContext context, required String message}) {
   ScaffoldMessenger.of(context).showSnackBar(
-    LumosSnackbar(
-      context: context,
-      message: message,
-      type: LumosSnackbarType.error,
+    SnackBar(
+      content: LumosSnackbar(
+        message: message,
+        type: LumosSnackbarType.error,
+      ),
     ),
   );
 }
+

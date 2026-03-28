@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../../core/themes/foundation/app_foundation.dart';
+import 'package:lumos/core/theme/app_foundation.dart';
 import '../../../../../../../domain/entities/deck_models.dart';
 import '../../../../../../../domain/entities/folder_models.dart';
 import '../../../../providers/states/folder_state.dart';
@@ -120,3 +120,4 @@ class FolderBrowserContent extends StatelessWidget {
     );
   }
 }
+

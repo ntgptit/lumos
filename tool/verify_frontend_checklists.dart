@@ -8,6 +8,8 @@ import 'guards/verify_common_widget_usage_contract.dart'
 import 'guards/verify_component_theme_usage_contract.dart'
     as component_theme_guard;
 import 'guards/verify_feature_surface_contract.dart' as feature_surface_guard;
+import 'guards/verify_feature_screen_widget_composite_boundary.dart'
+    as feature_screen_widget_composite_boundary_guard;
 import 'guards/verify_l10n_usage_contract.dart' as l10n_usage_guard;
 import 'guards/verify_navigation_go_router_contract.dart' as navigation_guard;
 import 'guards/verify_opacity_constants_contract.dart' as opacity_guard;
@@ -241,6 +243,11 @@ List<_GuardTask> _buildDefaultTasks() {
       id: 'feature-surface',
       fileName: 'guards/verify_feature_surface_contract.dart',
       run: feature_surface_guard.main,
+    ),
+    _GuardTask(
+      id: 'feature-screen-widget-composite-boundary',
+      fileName: 'guards/verify_feature_screen_widget_composite_boundary.dart',
+      run: feature_screen_widget_composite_boundary_guard.main,
     ),
     _GuardTask(
       id: 'shared-widget-override',

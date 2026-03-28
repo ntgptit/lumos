@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lumos/core/theme/extensions/theme_context_ext.dart';
+import 'package:lumos/presentation/shared/primitives/buttons/lumos_primary_button.dart';
 import 'package:lumos/presentation/shared/primitives/text/lumos_body_text.dart';
 import 'package:lumos/presentation/shared/primitives/text/lumos_title_text.dart';
 
@@ -11,15 +12,19 @@ class LumosEmptyState extends StatelessWidget {
     this.icon,
     this.child,
     this.actions = const [],
+    this.buttonLabel,
+    this.onButtonPressed,
     this.maxWidth,
     this.padding,
   });
 
   final String title;
   final String? message;
-  final Widget? icon;
+  final Object? icon;
   final Widget? child;
   final List<Widget> actions;
+  final String? buttonLabel;
+  final VoidCallback? onButtonPressed;
   final double? maxWidth;
   final EdgeInsetsGeometry? padding;
 
@@ -42,7 +47,7 @@ class LumosEmptyState extends StatelessWidget {
                     size: context.iconSize.xxxl,
                     color: context.colorScheme.primary,
                   ),
-                  child: icon!,
+                  child: _resolveIcon(),
                 ),
                 SizedBox(height: context.spacing.md),
               ],
@@ -64,10 +69,24 @@ class LumosEmptyState extends StatelessWidget {
                   children: actions,
                 ),
               ],
+              if (buttonLabel != null && onButtonPressed != null) ...[
+                SizedBox(height: context.spacing.md),
+                LumosPrimaryButton(
+                  label: buttonLabel,
+                  onPressed: onButtonPressed,
+                ),
+              ],
             ],
           ),
         ),
       ),
     );
+  }
+
+  Widget _resolveIcon() {
+    if (icon is Widget) {
+      return icon! as Widget;
+    }
+    return Icon(icon as IconData);
   }
 }

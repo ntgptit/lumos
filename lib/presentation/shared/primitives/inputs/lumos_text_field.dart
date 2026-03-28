@@ -7,10 +7,12 @@ class LumosTextField extends StatelessWidget {
   const LumosTextField({
     super.key,
     this.label,
+    this.hint,
     this.supportingText,
     this.labelTrailing,
     this.isRequired = false,
     this.controller,
+    this.initialValue,
     this.focusNode,
     this.hintText,
     this.helperText,
@@ -26,6 +28,10 @@ class LumosTextField extends StatelessWidget {
     this.maxLines = 1,
     this.keyboardType,
     this.textInputAction,
+    this.textAlign = TextAlign.start,
+    this.textAlignVertical,
+    this.textStyle,
+    this.decoration,
     this.autofillHints,
     this.validator,
     this.autovalidateMode,
@@ -39,10 +45,12 @@ class LumosTextField extends StatelessWidget {
   });
 
   final String? label;
+  final String? hint;
   final String? supportingText;
   final Widget? labelTrailing;
   final bool isRequired;
   final TextEditingController? controller;
+  final String? initialValue;
   final FocusNode? focusNode;
   final String? hintText;
   final String? helperText;
@@ -58,6 +66,10 @@ class LumosTextField extends StatelessWidget {
   final int? maxLines;
   final TextInputType? keyboardType;
   final TextInputAction? textInputAction;
+  final TextAlign textAlign;
+  final TextAlignVertical? textAlignVertical;
+  final TextStyle? textStyle;
+  final InputDecoration? decoration;
   final Iterable<String>? autofillHints;
   final FormFieldValidator<String>? validator;
   final AutovalidateMode? autovalidateMode;
@@ -77,6 +89,7 @@ class LumosTextField extends StatelessWidget {
         (minLines == null || minLines == 1);
     final field = TextFormField(
       controller: controller,
+      initialValue: controller == null ? initialValue : null,
       focusNode: focusNode,
       enabled: enabled,
       readOnly: readOnly,
@@ -87,6 +100,9 @@ class LumosTextField extends StatelessWidget {
       expands: expands,
       keyboardType: keyboardType,
       textInputAction: textInputAction,
+      textAlign: textAlign,
+      textAlignVertical: textAlignVertical,
+      style: textStyle,
       autofillHints: autofillHints,
       validator: validator,
       autovalidateMode: autovalidateMode,
@@ -97,14 +113,16 @@ class LumosTextField extends StatelessWidget {
       inputFormatters: inputFormatters,
       maxLength: maxLength,
       textCapitalization: textCapitalization,
-      decoration: InputDecoration(
-        hintText: hintText,
-        helperText: helperText,
-        errorText: errorText,
-        prefixIcon: prefixIcon,
-        suffixIcon: suffixIcon,
-        counterText: '',
-      ),
+      decoration:
+          decoration ??
+          InputDecoration(
+            hintText: hintText ?? hint,
+            helperText: helperText,
+            errorText: errorText,
+            prefixIcon: prefixIcon,
+            suffixIcon: suffixIcon,
+            counterText: '',
+          ),
     );
 
     return Column(

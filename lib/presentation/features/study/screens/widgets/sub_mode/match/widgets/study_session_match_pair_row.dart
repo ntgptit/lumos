@@ -2,7 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-import '../../../../../../../../core/themes/foundation/app_foundation.dart';
+import 'package:lumos/core/theme/app_foundation.dart';
 import '../../../../../../../../domain/entities/study/study_models.dart';
 import '../../../../../providers/study_match_selection_provider.dart';
 import '../../widgets/study_session_layout_metrics.dart';
@@ -104,3 +104,4 @@ class StudySessionMatchPairRow extends StatelessWidget {
     );
   }
 }
+

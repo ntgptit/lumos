@@ -9,6 +9,7 @@ class LumosSearchField extends StatefulWidget {
     this.controller,
     this.focusNode,
     this.hintText,
+    this.clearTooltip,
     this.label,
     this.supportingText,
     this.enabled = true,
@@ -21,6 +22,7 @@ class LumosSearchField extends StatefulWidget {
   final TextEditingController? controller;
   final FocusNode? focusNode;
   final String? hintText;
+  final String? clearTooltip;
   final String? label;
   final String? supportingText;
   final bool enabled;
@@ -85,7 +87,7 @@ class _AppSearchFieldState extends State<LumosSearchField> {
           ? null
           : IconButton(
               onPressed: widget.enabled ? _clear : null,
-              tooltip: context.l10n.clearSearchTooltip,
+              tooltip: widget.clearTooltip ?? context.l10n.clearSearchTooltip,
               icon: Icon(Icons.close_rounded, size: context.iconSize.md),
             ),
     );

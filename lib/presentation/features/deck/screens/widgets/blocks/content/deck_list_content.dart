@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../../../../../../app/app_routes.dart';
-import '../../../../../../../core/themes/foundation/app_foundation.dart';
+import 'package:lumos/app/app_route_data.dart';
+import 'package:lumos/core/theme/app_foundation.dart';
 import '../../../../../../../domain/entities/deck_models.dart';
 import '../../../../../../../l10n/app_localizations.dart';
 import '../../../../providers/deck_provider.dart';
@@ -37,15 +36,10 @@ class DeckListContent extends ConsumerWidget {
                   child: DeckListTile(
                     item: item,
                     onOpen: () {
-                      context.pushNamed(
-                        AppRouteName.flashcard,
-                        pathParameters: <String, String>{
-                          AppRouteParam.deckId: item.id.toString(),
-                        },
-                        queryParameters: <String, String>{
-                          AppRouteQuery.deckName: item.name,
-                        },
-                      );
+                      DeckDetailRouteData(
+                        folderId: providerArgs.folderId,
+                        deckId: item.id,
+                      ).push(context);
                     },
                     onRename: () => showDeckEditorDialog(
                       context: context,
@@ -100,3 +94,4 @@ class DeckListContent extends ConsumerWidget {
     );
   }
 }
+

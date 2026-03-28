@@ -3,14 +3,38 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lumos/core/themes/foundation/app_responsive.dart';
-
-import '../../../../app/app_routes.dart';
-import '../../../../core/error/failures.dart';
+import 'package:lumos/app/app_route_data.dart';
+import 'package:lumos/core/theme/app_foundation.dart';
+import 'package:lumos/core/errors/failures.dart';
 import '../../../../domain/entities/deck_models.dart';
 import '../../../../domain/entities/folder_models.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../shared/widgets/lumos_widgets.dart';
+import 'package:lumos/presentation/shared/composites/appbars/lumos_app_bar.dart';
+import 'package:lumos/presentation/shared/composites/dialogs/lumos_action_sheet.dart';
+import 'package:lumos/presentation/shared/composites/dialogs/lumos_dialog.dart';
+import 'package:lumos/presentation/shared/composites/dialogs/lumos_prompt_dialog.dart';
+import 'package:lumos/presentation/shared/composites/forms/lumos_search_bar.dart';
+import 'package:lumos/presentation/shared/composites/forms/lumos_sort_bar.dart';
+import 'package:lumos/presentation/shared/composites/lists/lumos_action_list_item.dart';
+import 'package:lumos/presentation/shared/composites/lists/lumos_action_list_item_card.dart';
+import 'package:lumos/presentation/shared/composites/states/lumos_empty_state.dart';
+import 'package:lumos/presentation/shared/composites/states/lumos_error_state.dart';
+import 'package:lumos/presentation/shared/composites/text/lumos_inline_text.dart';
+import 'package:lumos/presentation/shared/layouts/lumos_screen_transition.dart';
+import 'package:lumos/presentation/shared/primitives/buttons/lumos_floating_action_button.dart';
+import 'package:lumos/presentation/shared/primitives/buttons/lumos_icon_button.dart';
+import 'package:lumos/presentation/shared/primitives/buttons/lumos_outline_button.dart';
+import 'package:lumos/presentation/shared/primitives/buttons/lumos_primary_button.dart';
+import 'package:lumos/presentation/shared/primitives/buttons/lumos_secondary_button.dart';
+import 'package:lumos/presentation/shared/primitives/displays/lumos_card.dart';
+import 'package:lumos/presentation/shared/primitives/displays/lumos_icon.dart';
+import 'package:lumos/presentation/shared/primitives/displays/lumos_progress_bar.dart';
+import 'package:lumos/presentation/shared/primitives/feedback/lumos_loading_indicator.dart';
+import 'package:lumos/presentation/shared/primitives/feedback/lumos_snackbar.dart';
+import 'package:lumos/presentation/shared/primitives/inputs/lumos_dropdown.dart';
+import 'package:lumos/presentation/shared/primitives/inputs/lumos_text_field.dart';
+import 'package:lumos/presentation/shared/primitives/layout/lumos_spacing.dart';
+import 'package:lumos/presentation/shared/primitives/text/lumos_text.dart';
 import '../../deck/providers/deck_provider.dart';
 import '../../deck/providers/states/deck_state.dart';
 import '../../deck/screens/widgets/dialogs/deck_dialogs.dart';
@@ -200,15 +224,13 @@ class _FolderContentState extends ConsumerState<FolderContent> {
                   );
                 },
                 onOpenDeck: (DeckNode item) {
-                  context.pushNamed(
-                    AppRouteName.flashcard,
-                    pathParameters: <String, String>{
-                      AppRouteParam.deckId: item.id.toString(),
-                    },
-                    queryParameters: <String, String>{
-                      AppRouteQuery.deckName: item.name,
-                    },
-                  );
+                  if (currentFolderId == null) {
+                    return;
+                  }
+                  DeckDetailRouteData(
+                    folderId: currentFolderId,
+                    deckId: item.id,
+                  ).push(context);
                 },
                 onRenameDeck: (BuildContext context, DeckNode item) {
                   if (currentFolderId == null) {
@@ -606,3 +628,5 @@ class _FolderContentState extends ConsumerState<FolderContent> {
     return true;
   }
 }
+
+

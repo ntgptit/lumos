@@ -4,7 +4,7 @@ import '../../../../../mode/study_mode_view_model.dart';
 import '../../../../../providers/study_fill_selection_provider.dart';
 import 'study_session_fill_answer_panel.dart';
 import 'study_session_fill_input_panel.dart';
-import '../../../../../../../../core/themes/foundation/app_foundation.dart';
+import 'package:lumos/core/theme/app_foundation.dart';
 
 class StudySessionFillBodyPanel extends StatelessWidget {
   const StudySessionFillBodyPanel({
@@ -69,3 +69,4 @@ class StudySessionFillBodyPanel extends StatelessWidget {
     );
   }
 }
+

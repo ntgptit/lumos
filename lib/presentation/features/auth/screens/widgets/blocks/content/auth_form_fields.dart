@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:lumos/core/theme/extensions/theme_context_ext.dart';
 import 'package:lumos/l10n/l10n.dart';
-import 'package:lumos/presentation/shared/primitives/inputs/lumos_password_field.dart';
-import 'package:lumos/presentation/shared/primitives/inputs/lumos_text_field.dart';
+import 'package:lumos/presentation/shared/composites/forms/lumos_password_input.dart';
+import 'package:lumos/presentation/shared/composites/forms/lumos_text_input.dart';
 import '../../../../providers/auth_session_provider.dart';
 
 class AuthFormFields extends StatelessWidget {
@@ -31,17 +31,17 @@ class AuthFormFields extends StatelessWidget {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          LumosTextField(
+          LumosTextInput(
             controller: usernameController,
             label: l10n.authUsernameLabel,
           ),
           SizedBox(height: fieldSpacing),
-          LumosTextField(
+          LumosTextInput(
             controller: emailController,
             label: l10n.authEmailLabel,
           ),
           SizedBox(height: fieldSpacing),
-          LumosPasswordField(
+          LumosPasswordInput(
             controller: passwordController,
             label: l10n.authPasswordLabel,
           ),
@@ -52,12 +52,12 @@ class AuthFormFields extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        LumosTextField(
+        LumosTextInput(
           controller: identifierController,
           label: l10n.authUsernameOrEmailLabel,
         ),
         SizedBox(height: fieldSpacing),
-        LumosPasswordField(
+        LumosPasswordInput(
           controller: passwordController,
           label: l10n.authPasswordLabel,
         ),

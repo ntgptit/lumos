@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 
-import '../../core/error/failures.dart';
+import 'package:lumos/core/errors/failures.dart';
 import '../entities/deck_models.dart';
 
 abstract class DeckRepository {
@@ -29,3 +29,4 @@ abstract class DeckRepository {
     required int deckId,
   });
 }
+

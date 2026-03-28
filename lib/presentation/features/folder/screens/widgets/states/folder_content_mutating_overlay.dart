@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../core/themes/foundation/app_foundation.dart';
+import 'package:lumos/core/theme/app_foundation.dart';
 import 'folder_mutating_overlay.dart';
 
 class FolderContentMutatingOverlay extends StatelessWidget {
@@ -25,3 +25,4 @@ class FolderContentMutatingOverlay extends StatelessWidget {
     );
   }
 }
+

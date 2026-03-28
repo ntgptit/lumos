@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../../../core/themes/foundation/app_foundation.dart';
+import 'package:lumos/core/theme/app_foundation.dart';
 import '../../../../../mode/study_mode_action_view_model.dart';
 import '../../../../../providers/study_recall_selection_provider.dart';
 import '../../widgets/study_session_action_row_layout.dart';
@@ -43,3 +43,4 @@ class StudySessionRecallActionRow extends StatelessWidget {
     );
   }
 }
+

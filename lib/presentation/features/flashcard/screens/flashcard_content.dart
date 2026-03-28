@@ -3,14 +3,39 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lumos/app/app_route_data.dart';
 
-import '../../../../core/themes/foundation/app_foundation.dart';
-import '../../../../app/app_routes.dart';
+import 'package:lumos/core/theme/app_foundation.dart';
 import '../../../../core/utils/string_utils.dart';
 import '../../../../domain/entities/flashcard_models.dart';
 import '../../../../domain/entities/study/study_models.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../shared/widgets/lumos_widgets.dart';
+import 'package:lumos/presentation/shared/composites/appbars/lumos_app_bar.dart';
+import 'package:lumos/presentation/shared/composites/dialogs/lumos_action_sheet.dart';
+import 'package:lumos/presentation/shared/composites/dialogs/lumos_dialog.dart';
+import 'package:lumos/presentation/shared/composites/dialogs/lumos_prompt_dialog.dart';
+import 'package:lumos/presentation/shared/composites/forms/lumos_search_bar.dart';
+import 'package:lumos/presentation/shared/composites/forms/lumos_sort_bar.dart';
+import 'package:lumos/presentation/shared/composites/lists/lumos_action_list_item.dart';
+import 'package:lumos/presentation/shared/composites/lists/lumos_action_list_item_card.dart';
+import 'package:lumos/presentation/shared/composites/states/lumos_empty_state.dart';
+import 'package:lumos/presentation/shared/composites/states/lumos_error_state.dart';
+import 'package:lumos/presentation/shared/composites/text/lumos_inline_text.dart';
+import 'package:lumos/presentation/shared/layouts/lumos_screen_transition.dart';
+import 'package:lumos/presentation/shared/primitives/buttons/lumos_floating_action_button.dart';
+import 'package:lumos/presentation/shared/primitives/buttons/lumos_icon_button.dart';
+import 'package:lumos/presentation/shared/primitives/buttons/lumos_outline_button.dart';
+import 'package:lumos/presentation/shared/primitives/buttons/lumos_primary_button.dart';
+import 'package:lumos/presentation/shared/primitives/buttons/lumos_secondary_button.dart';
+import 'package:lumos/presentation/shared/primitives/displays/lumos_card.dart';
+import 'package:lumos/presentation/shared/primitives/displays/lumos_icon.dart';
+import 'package:lumos/presentation/shared/primitives/displays/lumos_progress_bar.dart';
+import 'package:lumos/presentation/shared/primitives/feedback/lumos_loading_indicator.dart';
+import 'package:lumos/presentation/shared/primitives/feedback/lumos_snackbar.dart';
+import 'package:lumos/presentation/shared/primitives/inputs/lumos_dropdown.dart';
+import 'package:lumos/presentation/shared/primitives/inputs/lumos_text_field.dart';
+import 'package:lumos/presentation/shared/primitives/layout/lumos_spacing.dart';
+import 'package:lumos/presentation/shared/primitives/text/lumos_text.dart';
 import '../../home/screens/widgets/blocks/footer/home_bottom_nav.dart';
 import '../../study/providers/study_session_launcher_provider.dart';
 import '../providers/flashcard_provider.dart';
@@ -541,13 +566,7 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
       );
       return;
     }
-    context.pushNamed(
-      AppRouteName.studySession,
-      pathParameters: <String, String>{
-        AppRouteParam.deckId: state.deckId.toString(),
-      },
-      queryParameters: <String, String>{AppRouteQuery.deckName: state.deckName},
-    );
+    const StudySessionRouteData().push(context);
   }
 
   Future<void> _showLearnOptionsSheet() async {
@@ -597,16 +616,7 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
       if (!mounted) {
         return;
       }
-      context.pushNamed(
-        AppRouteName.studySession,
-        pathParameters: <String, String>{
-          AppRouteParam.deckId: state.deckId.toString(),
-        },
-        queryParameters: <String, String>{
-          AppRouteQuery.deckName: state.deckName,
-          AppRouteQuery.sessionId: session.sessionId.toString(),
-        },
-      );
+      const StudySessionRouteData().push(context);
     } catch (_) {
       if (!mounted) {
         return;
@@ -681,10 +691,11 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
     required String message,
   }) {
     ScaffoldMessenger.of(context).showSnackBar(
-      LumosSnackbar(
-        context: context,
-        message: message,
-        type: LumosSnackbarType.info,
+      SnackBar(
+        content: LumosSnackbar(
+          message: message,
+          type: LumosSnackbarType.info,
+        ),
       ),
     );
   }
@@ -694,11 +705,13 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
     required String message,
   }) {
     ScaffoldMessenger.of(context).showSnackBar(
-      LumosSnackbar(
-        context: context,
-        message: message,
-        type: LumosSnackbarType.error,
+      SnackBar(
+        content: LumosSnackbar(
+          message: message,
+          type: LumosSnackbarType.error,
+        ),
       ),
     );
   }
 }
+

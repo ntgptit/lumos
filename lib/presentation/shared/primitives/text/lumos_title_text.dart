@@ -35,7 +35,7 @@ class LumosTitleText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LumosText(
-      text: text,
+      text,
       style: context.textTheme.titleLarge
           ?.copyWith(
             color: color ?? context.colorScheme.onSurface,

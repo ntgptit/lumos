@@ -35,7 +35,7 @@ class LumosCaptionText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LumosText(
-      text: text,
+      text,
       style: context.textTheme.labelMedium
           ?.copyWith(color: color ?? context.colorScheme.onSurfaceVariant)
           .merge(style),

@@ -2,16 +2,39 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../../../core/speech/providers/tts_voice_options_provider.dart';
-import '../../../../core/speech/tts_voice_option.dart';
-import '../../../../core/providers/theme_provider.dart';
-import '../../../../core/theme/app_theme_mode.dart';
-import '../../../../core/themes/foundation/app_foundation.dart';
+import 'package:lumos/app/app_providers.dart';
+import 'package:lumos/core/enums/app_theme_type.dart';
+import 'package:lumos/core/theme/app_theme_mode.dart';
+import 'package:lumos/core/theme/app_foundation.dart';
 import '../../../../domain/entities/profile/profile_models.dart';
 import '../../../../domain/entities/study/study_speech_contract.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../shared/widgets/lumos_widgets.dart';
+import 'package:lumos/presentation/shared/composites/appbars/lumos_app_bar.dart';
+import 'package:lumos/presentation/shared/composites/dialogs/lumos_action_sheet.dart';
+import 'package:lumos/presentation/shared/composites/dialogs/lumos_dialog.dart';
+import 'package:lumos/presentation/shared/composites/dialogs/lumos_prompt_dialog.dart';
+import 'package:lumos/presentation/shared/composites/forms/lumos_search_bar.dart';
+import 'package:lumos/presentation/shared/composites/forms/lumos_sort_bar.dart';
+import 'package:lumos/presentation/shared/composites/lists/lumos_action_list_item.dart';
+import 'package:lumos/presentation/shared/composites/lists/lumos_action_list_item_card.dart';
+import 'package:lumos/presentation/shared/composites/states/lumos_empty_state.dart';
+import 'package:lumos/presentation/shared/composites/states/lumos_error_state.dart';
+import 'package:lumos/presentation/shared/composites/text/lumos_inline_text.dart';
+import 'package:lumos/presentation/shared/layouts/lumos_screen_transition.dart';
+import 'package:lumos/presentation/shared/primitives/buttons/lumos_floating_action_button.dart';
+import 'package:lumos/presentation/shared/primitives/buttons/lumos_icon_button.dart';
+import 'package:lumos/presentation/shared/primitives/buttons/lumos_outline_button.dart';
+import 'package:lumos/presentation/shared/primitives/buttons/lumos_primary_button.dart';
+import 'package:lumos/presentation/shared/primitives/buttons/lumos_secondary_button.dart';
+import 'package:lumos/presentation/shared/primitives/displays/lumos_card.dart';
+import 'package:lumos/presentation/shared/primitives/displays/lumos_icon.dart';
+import 'package:lumos/presentation/shared/primitives/displays/lumos_progress_bar.dart';
+import 'package:lumos/presentation/shared/primitives/feedback/lumos_loading_indicator.dart';
+import 'package:lumos/presentation/shared/primitives/feedback/lumos_snackbar.dart';
+import 'package:lumos/presentation/shared/primitives/inputs/lumos_dropdown.dart';
+import 'package:lumos/presentation/shared/primitives/inputs/lumos_text_field.dart';
+import 'package:lumos/presentation/shared/primitives/layout/lumos_spacing.dart';
+import 'package:lumos/presentation/shared/primitives/text/lumos_text.dart';
 import '../../auth/providers/auth_session_provider.dart';
 import '../providers/profile_provider.dart';
 import 'widgets/blocks/content/profile_account_card.dart';
@@ -46,7 +69,8 @@ class ProfileContent extends ConsumerWidget {
     final AsyncValue<ProfileData> profileAsync = ref.watch(
       profileControllerProvider,
     );
-    final ThemeMode themeMode = ref.watch(appThemeModeProvider);
+    final AppThemeType themeType = ref.watch(themeTypeControllerProvider);
+    final ThemeMode themeMode = themeType.appThemeMode.materialThemeMode;
     return ColoredBox(
       color: Theme.of(context).colorScheme.surface,
       child: Center(
@@ -69,15 +93,7 @@ class ProfileContent extends ConsumerWidget {
                 );
               },
               data: (ProfileData profile) {
-                final AsyncValue<List<TtsVoiceOption>> voiceOptionsAsync = ref
-                    .watch(
-                      ttsVoiceOptionsProvider(
-                        profile.speechPreference.adapter,
-                        profile.speechPreference.locale,
-                      ),
-                    );
-                final List<TtsVoiceOption> voiceOptions =
-                    voiceOptionsAsync.asData?.value ?? const <TtsVoiceOption>[];
+                const List<TtsVoiceOption> voiceOptions = <TtsVoiceOption>[];
                 String selectedVoiceId = studySpeechVoiceUnspecified;
                 for (final TtsVoiceOption option in voiceOptions) {
                   if (option.id != profile.speechPreference.voice) {
@@ -92,17 +108,18 @@ class ProfileContent extends ConsumerWidget {
                     ProfileAccountCard(user: profile.user),
                     SizedBox(height: sectionGap),
                     ProfileThemeSection(
+                      themeType: themeType,
                       themeMode: themeMode,
-                      onPreferenceChanged: (AppThemeModeOption preference) {
+                      onPreferenceChanged: (AppThemeType preference) {
                         unawaited(
                           ref
-                              .read(appThemeModeProvider.notifier)
-                              .setPreference(preference),
+                              .read(themeTypeControllerProvider.notifier)
+                              .setTheme(preference),
                         );
                       },
                       onQuickTogglePressed: () {
                         unawaited(
-                          ref.read(appThemeModeProvider.notifier).toggleTheme(),
+                          ref.read(themeTypeControllerProvider.notifier).toggle(),
                         );
                       },
                     ),
@@ -209,3 +226,4 @@ class ProfileContent extends ConsumerWidget {
     );
   }
 }
+

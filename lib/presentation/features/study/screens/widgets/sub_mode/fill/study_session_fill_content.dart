@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../../core/themes/foundation/app_foundation.dart';
+import 'package:lumos/core/theme/app_foundation.dart';
 import '../../../../../../../domain/entities/study/study_models.dart';
 import '../../../../mode/study_fill_content_state.dart';
 import '../../../../mode/study_mode_action_view_model.dart';
@@ -143,3 +143,4 @@ class StudySessionFillContent extends StatelessWidget {
     );
   }
 }
+

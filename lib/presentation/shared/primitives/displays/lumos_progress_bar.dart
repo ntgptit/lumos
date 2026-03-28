@@ -6,12 +6,14 @@ class LumosProgressBar extends StatelessWidget {
     super.key,
     this.value,
     this.minHeight,
+    this.height,
     this.backgroundColor,
     this.valueColor,
   });
 
   final double? value;
   final double? minHeight;
+  final double? height;
   final Color? backgroundColor;
   final Animation<Color?>? valueColor;
 
@@ -19,7 +21,7 @@ class LumosProgressBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return LinearProgressIndicator(
       value: value,
-      minHeight: minHeight ?? context.spacing.xs,
+      minHeight: height ?? minHeight ?? context.spacing.xs,
       backgroundColor:
           backgroundColor ?? context.colorScheme.surfaceContainerHighest,
       valueColor: valueColor,

@@ -62,6 +62,10 @@ abstract final class ErrorMapper {
     );
   }
 
+  static Failure mapToFailure(Object error, {StackTrace? stackTrace}) {
+    return map(error, stackTrace: stackTrace);
+  }
+
   static Failure _mapAppException(AppException error) {
     final normalizedCode = error.code?.trim().toLowerCase();
 
@@ -251,5 +255,11 @@ abstract final class ErrorMapper {
     });
 
     return fieldErrors;
+  }
+}
+
+extension ErrorMapperObjectExt on Object {
+  Failure toFailure({StackTrace? stackTrace}) {
+    return ErrorMapper.map(this, stackTrace: stackTrace);
   }
 }

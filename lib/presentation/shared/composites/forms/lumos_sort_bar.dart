@@ -69,3 +69,116 @@ class LumosSortBar extends StatelessWidget {
     );
   }
 }
+
+Future<void> showLumosSortBottomSheet<T>({
+  required BuildContext context,
+  required String title,
+  required String? subtitle,
+  required String optionSectionTitle,
+  required List<({T value, String label, IconData? icon})> options,
+  required T initialValue,
+  required String directionSectionTitle,
+  required int initialDirectionIndex,
+  required String Function(T selectedSortBy, int directionIndex)
+  directionLabelBuilder,
+  required String applyLabel,
+  required void Function(T selectedSortBy, int directionIndex) onApply,
+}) async {
+  T selectedValue = initialValue;
+  int selectedDirection = initialDirectionIndex;
+  await showModalBottomSheet<void>(
+    context: context,
+    showDragHandle: true,
+    builder: (sheetContext) {
+      return StatefulBuilder(
+        builder: (context, setState) {
+          return SafeArea(
+            child: Padding(
+              padding: EdgeInsets.all(sheetContext.spacing.md),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: sheetContext.textTheme.titleLarge,
+                  ),
+                  if (subtitle != null) ...[
+                    SizedBox(height: sheetContext.spacing.xs),
+                    Text(
+                      subtitle,
+                      style: sheetContext.textTheme.bodyMedium,
+                    ),
+                  ],
+                  SizedBox(height: sheetContext.spacing.md),
+                  Text(
+                    optionSectionTitle,
+                    style: sheetContext.textTheme.titleMedium,
+                  ),
+                  ...options.map((option) {
+                    return RadioListTile<T>(
+                      value: option.value,
+                      groupValue: selectedValue,
+                      onChanged: (value) {
+                        if (value == null) {
+                          return;
+                        }
+                        setState(() {
+                          selectedValue = value;
+                        });
+                      },
+                      title: Text(option.label),
+                      secondary: option.icon == null ? null : Icon(option.icon),
+                    );
+                  }),
+                  SizedBox(height: sheetContext.spacing.sm),
+                  Text(
+                    directionSectionTitle,
+                    style: sheetContext.textTheme.titleMedium,
+                  ),
+                  RadioListTile<int>(
+                    value: 0,
+                    groupValue: selectedDirection,
+                    onChanged: (value) {
+                      if (value == null) {
+                        return;
+                      }
+                      setState(() {
+                        selectedDirection = value;
+                      });
+                    },
+                    title: Text(directionLabelBuilder(selectedValue, 0)),
+                  ),
+                  RadioListTile<int>(
+                    value: 1,
+                    groupValue: selectedDirection,
+                    onChanged: (value) {
+                      if (value == null) {
+                        return;
+                      }
+                      setState(() {
+                        selectedDirection = value;
+                      });
+                    },
+                    title: Text(directionLabelBuilder(selectedValue, 1)),
+                  ),
+                  SizedBox(height: sheetContext.spacing.md),
+                  SizedBox(
+                    width: double.infinity,
+                    child: FilledButton(
+                      onPressed: () {
+                        Navigator.of(sheetContext).pop();
+                        onApply(selectedValue, selectedDirection);
+                      },
+                      child: Text(applyLabel),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    },
+  );
+}

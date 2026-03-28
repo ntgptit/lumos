@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../../../core/themes/foundation/app_foundation.dart';
+import 'package:lumos/core/theme/app_foundation.dart';
 
 class HomeAnimatedReveal extends StatelessWidget {
   const HomeAnimatedReveal({
@@ -29,3 +29,4 @@ class HomeAnimatedReveal extends StatelessWidget {
     );
   }
 }
+

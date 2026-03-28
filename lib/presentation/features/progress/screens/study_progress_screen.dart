@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../../../app/app_routes.dart';
-import '../../../../core/themes/foundation/app_foundation.dart';
+import 'package:lumos/app/app_route_data.dart';
+import 'package:lumos/core/theme/app_foundation.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../providers/study_overview_provider.dart';
 import 'widgets/blocks/content/study_progress_distribution_card.dart';
@@ -56,15 +55,7 @@ class StudyProgressScreen extends ConsumerWidget {
                 recommendation: recommendation,
                 l10n: l10n,
                 onStartReview: () {
-                  context.pushNamed(
-                    AppRouteName.studySession,
-                    pathParameters: <String, String>{
-                      AppRouteParam.deckId: recommendation.deckId.toString(),
-                    },
-                    queryParameters: <String, String>{
-                      AppRouteQuery.deckName: recommendation.deckName,
-                    },
-                  );
+                  const StudySessionRouteData().push(context);
                 },
               ),
             SizedBox(height: sectionGap),
@@ -78,3 +69,4 @@ class StudyProgressScreen extends ConsumerWidget {
     );
   }
 }
+

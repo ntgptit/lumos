@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/error/async_value_error_extensions.dart';
-import '../../../../core/error/failures.dart';
+import 'package:lumos/core/errors/async_value_error_extensions.dart';
+import 'package:lumos/core/errors/failures.dart';
 import '../providers/folder_provider.dart';
 import '../providers/states/folder_state.dart';
 import 'folder_content.dart';
@@ -32,3 +32,4 @@ class FolderScreen extends ConsumerWidget {
     );
   }
 }
+

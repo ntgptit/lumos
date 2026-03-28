@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../../core/themes/foundation/app_foundation.dart';
+import 'package:lumos/core/theme/app_foundation.dart';
 import '../../../../../../../domain/entities/study/study_models.dart';
 import '../../../../../../../l10n/app_localizations.dart';
 import '../../../../mode/study_recall_layout_resolver.dart';
@@ -128,3 +128,4 @@ class StudySessionRecallContent extends StatelessWidget {
     );
   }
 }
+

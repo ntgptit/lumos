@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 
-import '../../core/error/failures.dart';
+import 'package:lumos/core/errors/failures.dart';
 import '../entities/folder_models.dart';
 
 abstract class FolderRepository {
@@ -24,3 +24,4 @@ abstract class FolderRepository {
 
   Future<Either<Failure, Unit>> deleteFolder({required int folderId});
 }
+

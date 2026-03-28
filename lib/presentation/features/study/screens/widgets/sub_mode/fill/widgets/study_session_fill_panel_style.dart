@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../../../core/constants/text_styles.dart';
+import 'package:lumos/core/theme/foundation/app_typography_const.dart';
 
 abstract final class StudySessionFillPanelStyle {
   StudySessionFillPanelStyle._();
@@ -32,3 +32,4 @@ abstract final class StudySessionFillPanelStyle {
     );
   }
 }
+

@@ -1,12 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:lumos/core/di/service_providers.dart';
+import 'package:lumos/core/services/text_to_speech_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../../core/speech/providers/tts_engine_registry_provider.dart';
-import '../../../../core/speech/tts_engine_catalog.dart';
-import '../../../../core/speech/tts_engine_registry.dart';
-import '../../../../core/speech/tts_engine_speak_request.dart';
 import '../../../../domain/entities/study/study_models.dart';
 
 part 'study_speech_playback_provider.g.dart';
@@ -70,11 +68,11 @@ const Object _unsetSpeechValue = Object();
 class StudySpeechPlaybackController extends _$StudySpeechPlaybackController {
   @override
   StudySpeechPlaybackState build(int sessionId) {
-    final TtsEngineRegistry engineRegistry = ref.read(
-      ttsEngineRegistryProvider,
+    final TextToSpeechService textToSpeechService = ref.read(
+      textToSpeechServiceProvider,
     );
     ref.onDispose(() {
-      unawaited(engineRegistry.stopAll());
+      unawaited(textToSpeechService.stop());
     });
     return const StudySpeechPlaybackState.initial();
   }
@@ -86,10 +84,10 @@ class StudySpeechPlaybackController extends _$StudySpeechPlaybackController {
     if (state.activeFlashcardId == flashcardId) {
       return;
     }
-    final TtsEngineRegistry engineRegistry = ref.read(
-      ttsEngineRegistryProvider,
+    final TextToSpeechService textToSpeechService = ref.read(
+      textToSpeechServiceProvider,
     );
-    await engineRegistry.stopAll();
+    await textToSpeechService.stop();
     state = state.copyWith(
       isBusy: false,
       isPlaying: false,
@@ -123,24 +121,16 @@ class StudySpeechPlaybackController extends _$StudySpeechPlaybackController {
       activeFlashcardId: flashcardId,
       errorMessage: null,
     );
-    final TtsEngineRegistry engineRegistry = ref.read(
-      ttsEngineRegistryProvider,
+    final TextToSpeechService textToSpeechService = ref.read(
+      textToSpeechServiceProvider,
     );
-    final String resolvedAdapter = normalizeTtsAdapter(speech.adapter);
     try {
-      await engineRegistry.stopAll();
+      await textToSpeechService.stop();
       state = state.copyWith(isBusy: false, isPlaying: true);
-      await engineRegistry
-          .resolve(resolvedAdapter)
-          .speak(
-            request: TtsEngineSpeakRequest(
-              text: speech.speechText,
-              locale: speech.locale,
-              voice: speech.voice,
-              speed: speech.speed,
-              pitch: speech.pitch,
-            ),
-          );
+      await textToSpeechService.speak(
+        speech.speechText,
+        locale: speech.locale,
+      );
       state = state.copyWith(
         isBusy: false,
         isPlaying: false,
@@ -159,10 +149,10 @@ class StudySpeechPlaybackController extends _$StudySpeechPlaybackController {
   }
 
   Future<void> stop() async {
-    final TtsEngineRegistry engineRegistry = ref.read(
-      ttsEngineRegistryProvider,
+    final TextToSpeechService textToSpeechService = ref.read(
+      textToSpeechServiceProvider,
     );
-    await engineRegistry.stopAll();
+    await textToSpeechService.stop();
     state = state.copyWith(isBusy: false, isPlaying: false);
   }
 }

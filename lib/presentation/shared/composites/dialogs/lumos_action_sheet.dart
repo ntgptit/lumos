@@ -9,16 +9,20 @@ import 'package:lumos/presentation/shared/primitives/buttons/lumos_text_button.d
 class LumosActionSheet extends StatelessWidget {
   const LumosActionSheet({
     super.key,
-    required this.title,
+    this.title,
     required this.actions,
     this.subtitle,
     this.cancelLabel = 'Cancel',
+    this.cancelText,
+    this.onCancel,
   });
 
-  final String title;
+  final String? title;
   final String? subtitle;
   final List<AppActionSheetAction> actions;
   final String cancelLabel;
+  final String? cancelText;
+  final VoidCallback? onCancel;
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +31,8 @@ class LumosActionSheet extends StatelessWidget {
       subtitle: subtitle,
       actions: [
         LumosTextButton(text: cancelLabel, onPressed: () => context.pop()),
+        if (cancelText != null)
+          LumosTextButton(text: cancelText!, onPressed: onCancel),
       ],
       child: ListView.separated(
         shrinkWrap: true,
@@ -58,6 +64,18 @@ class LumosActionSheet extends StatelessWidget {
       ),
     );
   }
+}
+
+class LumosActionItem extends AppActionSheetAction {
+  const LumosActionItem({
+    required super.label,
+    super.onPressed,
+    super.destructive,
+    super.variant,
+    this.icon,
+  });
+
+  final IconData? icon;
 }
 
 class AppActionSheetAction {
