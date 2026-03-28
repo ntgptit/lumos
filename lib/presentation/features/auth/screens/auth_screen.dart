@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
-import '../../../../app/app_routes.dart';
-import '../../../../core/themes/foundation/app_foundation.dart';
-import '../../../shared/widgets/lumos_widgets.dart';
+import 'package:lumos/app/app_route_data.dart';
+import 'package:lumos/core/theme/extensions/theme_context_ext.dart';
+import 'package:lumos/l10n/l10n.dart';
+import 'package:lumos/presentation/shared/composites/states/app_error_state.dart';
+import 'package:lumos/presentation/shared/primitives/feedback/app_circular_loader.dart';
 import '../providers/auth_session_provider.dart';
 import 'widgets/blocks/content/auth_form_card.dart';
 
@@ -32,51 +33,36 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final AsyncValue<AuthViewState> authAsync = ref.watch(
-      authSessionControllerProvider,
-    );
-    final AuthScreenModeState mode = ref.watch(
-      authScreenModeControllerProvider,
-    );
-    final bool passwordObscured = ref.watch(
-      authPasswordVisibilityControllerProvider,
-    );
+    final authAsync = ref.watch(authSessionControllerProvider);
+    final mode = ref.watch(authScreenModeControllerProvider);
+
     return authAsync.when(
-      loading: () =>
-          const Scaffold(body: Center(child: LumosLoadingIndicator())),
+      loading: () => const Scaffold(body: Center(child: AppCircularLoader())),
       error: (Object error, StackTrace stackTrace) {
         return Scaffold(
-          body: Center(
-            child: LumosErrorState(
-              errorMessage: error.toString(),
-              onRetry: () {
-                ref.invalidate(authSessionControllerProvider);
-              },
-            ),
+          body: AppErrorState(
+            message: error.toString(),
+            primaryActionLabel: context.l10n.commonRetry,
+            onPrimaryAction: () {
+              ref.invalidate(authSessionControllerProvider);
+            },
           ),
         );
       },
       data: (AuthViewState authState) {
         if (authState.isAuthenticated) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (!mounted) {
-              return;
-            }
-            context.goNamed(AppRouteName.home);
+            if (!mounted) return;
+            const DashboardRouteData().go(context);
           });
         }
-        final double screenPadding = ResponsiveDimensions.compactValue(
-          context: context,
-          baseValue: AppSpacing.xl,
-          minScale: ResponsiveDimensions.compactLargeInsetScale,
-        );
         return Scaffold(
           body: SafeArea(
             child: Center(
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 520),
                 child: SingleChildScrollView(
-                  padding: EdgeInsets.all(screenPadding),
+                  padding: EdgeInsets.all(context.spacing.xl),
                   child: AuthFormCard(
                     mode: mode,
                     authState: authState,
@@ -84,15 +70,12 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                     emailController: _emailController,
                     identifierController: _identifierController,
                     passwordController: _passwordController,
-                    passwordObscured: passwordObscured,
                     onModeChanged: (AuthScreenModeState nextMode) {
                       ref
                           .read(authScreenModeControllerProvider.notifier)
                           .setMode(nextMode);
                     },
-                    onSubmit: () {
-                      _submit(mode: mode);
-                    },
+                    onSubmit: () => _submit(mode: mode),
                   ),
                 ),
               ),
@@ -104,9 +87,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   }
 
   Future<void> _submit({required AuthScreenModeState mode}) async {
-    final AuthSessionController controller = ref.read(
-      authSessionControllerProvider.notifier,
-    );
+    final controller = ref.read(authSessionControllerProvider.notifier);
     if (mode == AuthScreenModeState.login) {
       await controller.login(
         identifier: _identifierController.text,

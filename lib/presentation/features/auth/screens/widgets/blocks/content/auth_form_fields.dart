@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../../../../core/themes/foundation/app_foundation.dart';
-import '../../../../../../../l10n/app_localizations.dart';
-import '../../../../../../shared/widgets/lumos_widgets.dart';
+import 'package:lumos/core/theme/extensions/theme_context_ext.dart';
+import 'package:lumos/l10n/l10n.dart';
+import 'package:lumos/presentation/shared/primitives/inputs/app_password_field.dart';
+import 'package:lumos/presentation/shared/primitives/inputs/app_text_field.dart';
 import '../../../../providers/auth_session_provider.dart';
 
-class AuthFormFields extends ConsumerWidget {
+class AuthFormFields extends StatelessWidget {
   const AuthFormFields({
     required this.mode,
     required this.usernameController,
     required this.emailController,
     required this.identifierController,
     required this.passwordController,
-    required this.passwordObscured,
     super.key,
   });
 
@@ -22,63 +21,45 @@ class AuthFormFields extends ConsumerWidget {
   final TextEditingController emailController;
   final TextEditingController identifierController;
   final TextEditingController passwordController;
-  final bool passwordObscured;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final AppLocalizations l10n = AppLocalizations.of(context)!;
-    final double fieldSpacing = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: AppSpacing.md,
-      minScale: ResponsiveDimensions.compactInsetScale,
-    );
-    final Widget passwordToggle = LumosIconButton(
-      onPressed: () {
-        ref.read(authPasswordVisibilityControllerProvider.notifier).toggle();
-      },
-      icon: Icons.visibility_rounded,
-      selectedIcon: Icons.visibility_off_rounded,
-      selected: !passwordObscured,
-      tooltip: passwordObscured
-          ? l10n.authShowPasswordTooltip
-          : l10n.authHidePasswordTooltip,
-    );
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final fieldSpacing = context.spacing.md;
+
     if (mode == AuthScreenModeState.register) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          LumosTextField(
+          AppTextField(
             controller: usernameController,
             label: l10n.authUsernameLabel,
           ),
           SizedBox(height: fieldSpacing),
-          LumosTextField(
+          AppTextField(
             controller: emailController,
             label: l10n.authEmailLabel,
           ),
           SizedBox(height: fieldSpacing),
-          LumosTextField(
+          AppPasswordField(
             controller: passwordController,
-            obscureText: passwordObscured,
             label: l10n.authPasswordLabel,
-            suffixIcon: passwordToggle,
           ),
         ],
       );
     }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        LumosTextField(
+        AppTextField(
           controller: identifierController,
           label: l10n.authUsernameOrEmailLabel,
         ),
         SizedBox(height: fieldSpacing),
-        LumosTextField(
+        AppPasswordField(
           controller: passwordController,
-          obscureText: passwordObscured,
           label: l10n.authPasswordLabel,
-          suffixIcon: passwordToggle,
         ),
       ],
     );

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
-import '../../../../app/app_routes.dart';
-import '../../../../core/themes/foundation/app_foundation.dart';
-import '../../../shared/widgets/lumos_widgets.dart';
+import 'package:lumos/app/app_route_data.dart';
+import 'package:lumos/presentation/shared/composites/states/app_error_state.dart';
+import 'package:lumos/presentation/shared/primitives/feedback/app_circular_loader.dart';
 import '../providers/auth_session_provider.dart';
 
 class LaunchScreen extends ConsumerWidget {
@@ -12,41 +11,25 @@ class LaunchScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final AsyncValue<AuthViewState> authAsync = ref.watch(
-      authSessionControllerProvider,
-    );
-    final EdgeInsets errorPadding = ResponsiveDimensions.compactInsets(
-      context: context,
-      baseInsets: const EdgeInsets.all(AppSpacing.lg),
-    );
+    final authAsync = ref.watch(authSessionControllerProvider);
+
     return authAsync.when(
-      loading: () =>
-          const Scaffold(body: Center(child: LumosLoadingIndicator())),
+      loading: () => const Scaffold(body: Center(child: AppCircularLoader())),
       error: (Object error, StackTrace stackTrace) {
         return Scaffold(
-          body: Center(
-            child: Padding(
-              padding: errorPadding,
-              child: LumosText(
-                error.toString(),
-                style: LumosTextStyle.bodySmall,
-              ),
-            ),
-          ),
+          body: AppErrorState(message: error.toString()),
         );
       },
       data: (AuthViewState state) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (!context.mounted) {
-            return;
-          }
+          if (!context.mounted) return;
           if (state.isAuthenticated) {
-            context.goNamed(AppRouteName.home);
+            const DashboardRouteData().go(context);
             return;
           }
-          context.goNamed(AppRouteName.auth);
+          const LoginRouteData().go(context);
         });
-        return const Scaffold(body: Center(child: LumosLoadingIndicator()));
+        return const Scaffold(body: Center(child: AppCircularLoader()));
       },
     );
   }

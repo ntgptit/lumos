@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../../core/themes/foundation/app_foundation.dart';
-import '../../../../../../../l10n/app_localizations.dart';
-import '../../../../../../shared/widgets/lumos_widgets.dart';
+import 'package:lumos/core/enums/snackbar_type.dart';
+import 'package:lumos/core/theme/extensions/theme_context_ext.dart';
+import 'package:lumos/l10n/l10n.dart';
+import 'package:lumos/presentation/shared/primitives/buttons/app_primary_button.dart';
+import 'package:lumos/presentation/shared/primitives/displays/app_card.dart';
+import 'package:lumos/presentation/shared/primitives/feedback/app_banner.dart';
+import 'package:lumos/presentation/shared/primitives/text/app_body_text.dart';
+import 'package:lumos/presentation/shared/primitives/text/app_title_text.dart';
 import '../../../../providers/auth_session_provider.dart';
 import 'auth_form_fields.dart';
 
@@ -14,7 +19,6 @@ class AuthFormCard extends StatelessWidget {
     required this.emailController,
     required this.identifierController,
     required this.passwordController,
-    required this.passwordObscured,
     required this.onModeChanged,
     required this.onSubmit,
     super.key,
@@ -26,80 +30,69 @@ class AuthFormCard extends StatelessWidget {
   final TextEditingController emailController;
   final TextEditingController identifierController;
   final TextEditingController passwordController;
-  final bool passwordObscured;
   final ValueChanged<AuthScreenModeState> onModeChanged;
   final VoidCallback onSubmit;
 
   @override
   Widget build(BuildContext context) {
-    final AppLocalizations l10n = AppLocalizations.of(context)!;
-    final double cardPadding = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: AppSpacing.xl,
-      minScale: ResponsiveDimensions.compactLargeInsetScale,
-    );
-    final double sectionGap = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: AppSpacing.lg,
-      minScale: ResponsiveDimensions.compactInsetScale,
-    );
-    final double titleGap = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: AppSpacing.xl,
-      minScale: ResponsiveDimensions.compactLargeInsetScale,
-    );
-    return LumosCard(
-      child: Padding(
-        padding: EdgeInsets.all(cardPadding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            LumosText(l10n.authTitle, style: LumosTextStyle.displaySmall),
-            const SizedBox(height: AppSpacing.sm),
-            LumosText(l10n.authSubtitle, style: LumosTextStyle.bodyMedium),
-            SizedBox(height: titleGap),
-            SegmentedButton<AuthScreenModeState>(
-              segments: <ButtonSegment<AuthScreenModeState>>[
-                ButtonSegment<AuthScreenModeState>(
-                  value: AuthScreenModeState.login,
-                  label: LumosText(l10n.authLoginTab),
-                ),
-                ButtonSegment<AuthScreenModeState>(
-                  value: AuthScreenModeState.register,
-                  label: LumosText(l10n.authRegisterTab),
-                ),
-              ],
-              selected: <AuthScreenModeState>{mode},
-              onSelectionChanged: (Set<AuthScreenModeState> nextValue) {
-                onModeChanged(nextValue.first);
-              },
-            ),
-            SizedBox(height: sectionGap),
-            AuthFormFields(
-              mode: mode,
-              usernameController: usernameController,
-              emailController: emailController,
-              identifierController: identifierController,
-              passwordController: passwordController,
-              passwordObscured: passwordObscured,
-            ),
-            if (authState.errorMessage
-                case final String errorMessage) ...<Widget>[
-              const SizedBox(height: AppSpacing.md),
-              LumosText(errorMessage, style: LumosTextStyle.bodySmall),
+    final l10n = context.l10n;
+
+    return AppCard(
+      padding: EdgeInsets.all(context.spacing.xl),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          AppTitleText(text: l10n.authTitle),
+          SizedBox(height: context.spacing.xs),
+          AppBodyText(text: l10n.authSubtitle, isSecondary: true),
+          SizedBox(height: context.spacing.xl),
+          SegmentedButton<AuthScreenModeState>(
+            segments: <ButtonSegment<AuthScreenModeState>>[
+              ButtonSegment<AuthScreenModeState>(
+                value: AuthScreenModeState.login,
+                label: Text(l10n.authLoginTab),
+              ),
+              ButtonSegment<AuthScreenModeState>(
+                value: AuthScreenModeState.register,
+                label: Text(l10n.authRegisterTab),
+              ),
             ],
-            SizedBox(height: sectionGap),
-            LumosPrimaryButton(
-              onPressed: authState.isBusy ? null : onSubmit,
-              label: mode == AuthScreenModeState.login
-                  ? l10n.authSignInAction
-                  : l10n.authCreateAccountAction,
-              icon: mode == AuthScreenModeState.login
+            selected: <AuthScreenModeState>{mode},
+            onSelectionChanged: (Set<AuthScreenModeState> nextValue) {
+              onModeChanged(nextValue.first);
+            },
+          ),
+          SizedBox(height: context.spacing.lg),
+          AuthFormFields(
+            mode: mode,
+            usernameController: usernameController,
+            emailController: emailController,
+            identifierController: identifierController,
+            passwordController: passwordController,
+          ),
+          if (authState.errorMessage case final String errorMessage) ...<Widget>[
+            SizedBox(height: context.spacing.md),
+            AppBanner(
+              message: errorMessage,
+              type: SnackbarType.error,
+              dense: true,
+            ),
+          ],
+          SizedBox(height: context.spacing.lg),
+          AppPrimaryButton(
+            onPressed: onSubmit,
+            isLoading: authState.isBusy,
+            text: mode == AuthScreenModeState.login
+                ? l10n.authSignInAction
+                : l10n.authCreateAccountAction,
+            expand: true,
+            leading: Icon(
+              mode == AuthScreenModeState.login
                   ? Icons.login_rounded
                   : Icons.person_add_alt_1_rounded,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
