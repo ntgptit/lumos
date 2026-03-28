@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lumos/core/config/app_debounce.dart';
+import 'package:lumos/core/utils/string_utils.dart';
 import 'package:lumos/presentation/shared/controllers/app_debounce_controller.dart';
 
 class AppSearchController {
@@ -25,7 +26,7 @@ class AppSearchController {
   ValueListenable<int> get changes => _revision;
   String get query => _query;
   String get submittedQuery => _submittedQuery;
-  bool get hasQuery => _query.trim().isNotEmpty;
+  bool get hasQuery => StringUtils.hasText(_query);
 
   void updateQuery(String value, {bool debounced = false}) {
     if (debounced) {

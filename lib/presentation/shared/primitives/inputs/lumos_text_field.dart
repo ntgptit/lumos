@@ -122,6 +122,13 @@ class LumosTextField extends StatelessWidget {
             counterText: '',
           ),
     );
+    Widget resolvedField = field;
+    if (isSingleLine) {
+      resolvedField = ConstrainedBox(
+        constraints: BoxConstraints(minHeight: context.component.inputHeight),
+        child: field,
+      );
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,15 +142,7 @@ class LumosTextField extends StatelessWidget {
           ),
           SizedBox(height: context.spacing.xs),
         ],
-        if (isSingleLine)
-          ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight: context.component.inputHeight,
-            ),
-            child: field,
-          )
-        else
-          field,
+        resolvedField,
       ],
     );
   }

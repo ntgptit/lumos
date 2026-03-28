@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:lumos/core/config/app_constants.dart';
 import 'package:lumos/core/enums/app_language.dart';
+import 'package:lumos/core/utils/string_utils.dart';
 
 enum AppLocale {
   en(
@@ -38,7 +39,7 @@ enum AppLocale {
   bool get isDefault => languageCode == AppConstants.defaultLocaleCode;
 
   static AppLocale fromLanguageCode(String? value) {
-    final normalized = value?.trim().toLowerCase();
+    final normalized = StringUtils.normalizedLowerOrNull(value);
     for (final locale in AppLocale.values) {
       if (locale.languageCode == normalized) {
         return locale;

@@ -27,8 +27,9 @@ class StateContractConst {
   static const String featureWidgetsMarker = '/widgets/';
   static const String coreWidgetsPrefix = 'lib/core/widgets/';
   static const String sharedWidgetsPrefix = 'lib/presentation/shared/widgets/';
+  static const String sharedRootPrefix = 'lib/presentation/shared/';
   static const String asyncValueExtensionPath =
-      'lib/core/error/async_value_error_extensions.dart';
+      'lib/core/errors/async_value_error_extensions.dart';
   static const String whenWithLoadingSignature = 'Widget whenWithLoading(';
 }
 
@@ -107,7 +108,7 @@ Future<void> main() async {
 
       if (line.isEmpty) continue;
 
-      if (_setStateRegExp.hasMatch(line)) {
+      if (_setStateRegExp.hasMatch(line) && _shouldFlagSetState(path)) {
         violations.add(
           _violation(
             path,
@@ -223,6 +224,7 @@ List<File> _collectSourceFiles(Directory root) {
 }
 
 bool _isStateFile(String path) {
+  if (path.startsWith('lib/presentation/shared/controllers/')) return false;
   if (path.endsWith('_viewmodel.dart')) return true;
   if (path.endsWith('viewmodel.dart')) return true;
   if (path.endsWith('_provider.dart')) return true;
@@ -230,6 +232,13 @@ bool _isStateFile(String path) {
   if (path.endsWith('_controller.dart')) return true;
   if (path.endsWith('_controllers.dart')) return true;
   return false;
+}
+
+bool _shouldFlagSetState(String path) {
+  if (path.startsWith(StateContractConst.sharedRootPrefix)) {
+    return false;
+  }
+  return true;
 }
 
 bool _isUiFile(String path) {

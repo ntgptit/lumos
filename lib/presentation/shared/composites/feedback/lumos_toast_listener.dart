@@ -15,7 +15,7 @@ class LumosToastListener extends StatefulWidget {
     required this.child,
     this.title,
     this.type = SnackbarType.info,
-    this.duration = const Duration(seconds: 3),
+    this.duration = AppDurations.toast,
     this.position = LumosToastPosition.bottom,
   });
 
@@ -84,14 +84,14 @@ class _AppToastListenerState extends State<LumosToastListener>
       LumosToastPosition.bottom => const Offset(0, 1),
       LumosToastPosition.top => const Offset(0, -1),
     };
-    _slideAnimation = Tween<Offset>(
-      begin: beginOffset,
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: AppMotion.standardCurve,
-      reverseCurve: Curves.easeIn,
-    ));
+    _slideAnimation = Tween<Offset>(begin: beginOffset, end: Offset.zero)
+        .animate(
+          CurvedAnimation(
+            parent: _animationController,
+            curve: AppMotion.standardCurve,
+            reverseCurve: Curves.easeIn,
+          ),
+        );
   }
 
   void _maybeShow() {

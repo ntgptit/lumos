@@ -5,6 +5,9 @@ import 'package:lumos/core/theme/foundation/widget_sizes.dart';
 import 'package:lumos/presentation/shared/primitives/feedback/lumos_shimmer.dart';
 import 'package:lumos/presentation/shared/primitives/feedback/lumos_skeleton_box.dart';
 
+const double _primaryLineWidthFactor = 0.7;
+const double _secondaryLineWidthFactor = 0.45;
+
 class LumosSkeletonListItem extends StatelessWidget {
   const LumosSkeletonListItem({
     super.key,
@@ -49,7 +52,7 @@ class LumosSkeletonListItem extends StatelessWidget {
                 children: <Widget>[
                   FractionallySizedBox(
                     alignment: Alignment.centerLeft,
-                    widthFactor: 0.7,
+                    widthFactor: _primaryLineWidthFactor,
                     child: LumosSkeletonBox(
                       height: context.spacing.md,
                       borderRadius: radius,
@@ -59,7 +62,7 @@ class LumosSkeletonListItem extends StatelessWidget {
                     SizedBox(height: context.spacing.xs),
                     FractionallySizedBox(
                       alignment: Alignment.centerLeft,
-                      widthFactor: 0.45,
+                      widthFactor: _secondaryLineWidthFactor,
                       child: LumosSkeletonBox(
                         height: context.spacing.sm,
                         borderRadius: radius,

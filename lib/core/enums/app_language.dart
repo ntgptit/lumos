@@ -1,3 +1,5 @@
+import 'package:lumos/core/utils/string_utils.dart';
+
 enum AppLanguage {
   english(code: 'en', label: 'English', nativeLabel: 'English'),
   vietnamese(code: 'vi', label: 'Vietnamese', nativeLabel: 'Tiếng Việt'),
@@ -14,7 +16,7 @@ enum AppLanguage {
   final String nativeLabel;
 
   static AppLanguage fromCode(String? value) {
-    final normalized = value?.trim().toLowerCase();
+    final normalized = StringUtils.normalizedLowerOrNull(value);
     for (final language in AppLanguage.values) {
       if (language.code == normalized) {
         return language;

@@ -9,10 +9,10 @@ class FeatureScreenWidgetCompositeBoundaryConst {
   static const String generatedExtension = '.g.dart';
   static const String freezedExtension = '.freezed.dart';
   static const String importPrefix = 'import ';
-  static const String sharedPrimitivesImportPrefix =
-      'package:lumos/presentation/shared/primitives/';
-  static const String sharedPrimitivesRelativeMarker =
-      'presentation/shared/primitives/';
+  static const String legacySharedWidgetsImportPrefix =
+      'package:lumos/presentation/shared/widgets/';
+  static const String legacySharedWidgetsRelativeMarker =
+      'presentation/shared/widgets/';
 }
 
 class FeatureScreenWidgetCompositeBoundaryViolation {
@@ -76,10 +76,12 @@ List<FeatureScreenWidgetCompositeBoundaryViolation> _collectViolations({
     for (int index = 0; index < lines.length; index++) {
       final String rawLine = lines[index];
       final String line = _stripLineComment(rawLine).trim();
-      if (!line.startsWith(FeatureScreenWidgetCompositeBoundaryConst.importPrefix)) {
+      if (!line.startsWith(
+        FeatureScreenWidgetCompositeBoundaryConst.importPrefix,
+      )) {
         continue;
       }
-      if (!_isSharedPrimitiveImport(line)) {
+      if (!_isLegacySharedWidgetsImport(line)) {
         continue;
       }
       violations.add(
@@ -87,9 +89,11 @@ List<FeatureScreenWidgetCompositeBoundaryViolation> _collectViolations({
           filePath: normalizedPath,
           lineNumber: index + 1,
           reason:
-              'Feature `screens/widgets` files must depend on '
-              '`lib/presentation/shared/composites/**` instead of direct '
-              '`lib/presentation/shared/primitives/**` imports.',
+              'Feature `screens/widgets` files must use the current shared UI '
+              'roots (`lib/presentation/shared/primitives/**`, '
+              '`lib/presentation/shared/composites/**`, `lib/presentation/shared/layouts/**`, '
+              '`lib/presentation/shared/screens/**`) instead of legacy '
+              '`lib/presentation/shared/widgets/**` imports.',
           lineContent: rawLine.trim(),
         ),
       );
@@ -106,7 +110,9 @@ List<File> _collectSourceFiles({required Directory root}) {
       continue;
     }
     final String path = _normalizePath(entity.path);
-    if (!path.endsWith(FeatureScreenWidgetCompositeBoundaryConst.dartExtension)) {
+    if (!path.endsWith(
+      FeatureScreenWidgetCompositeBoundaryConst.dartExtension,
+    )) {
       continue;
     }
     if (path.endsWith(
@@ -135,14 +141,14 @@ bool _isFeatureScreenWidgetPath(String normalizedPath) {
   );
 }
 
-bool _isSharedPrimitiveImport(String line) {
+bool _isLegacySharedWidgetsImport(String line) {
   if (line.contains(
-    FeatureScreenWidgetCompositeBoundaryConst.sharedPrimitivesImportPrefix,
+    FeatureScreenWidgetCompositeBoundaryConst.legacySharedWidgetsImportPrefix,
   )) {
     return true;
   }
   return line.contains(
-    FeatureScreenWidgetCompositeBoundaryConst.sharedPrimitivesRelativeMarker,
+    FeatureScreenWidgetCompositeBoundaryConst.legacySharedWidgetsRelativeMarker,
   );
 }
 

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:lumos/core/utils/string_utils.dart';
 
 abstract final class RetryInterceptorConst {
   static const retryCountKey = RetryInterceptor.retryCountKey;
@@ -66,7 +67,9 @@ class RetryInterceptor extends Interceptor {
       return false;
     }
 
-    if (!_retryableMethods.contains(requestOptions.method.toUpperCase())) {
+    if (!_retryableMethods.contains(
+      StringUtils.normalizeUpper(requestOptions.method),
+    )) {
       return false;
     }
 

@@ -1,6 +1,8 @@
+import 'package:lumos/core/utils/string_utils.dart';
+
 abstract final class FileUtils {
   static String fileName(String path) {
-    final segments = path.split(RegExp(r'[\\/]'));
+    final segments = StringUtils.splitByPattern(path, RegExp(r'[\\/]'));
     return segments.isEmpty ? path : segments.last;
   }
 
@@ -10,7 +12,7 @@ abstract final class FileUtils {
     if (index <= 0) {
       return name;
     }
-    return name.substring(0, index);
+    return StringUtils.prefix(name, index);
   }
 
   static String extension(String path) {
@@ -20,11 +22,12 @@ abstract final class FileUtils {
       return '';
     }
 
-    return name.substring(index + 1).toLowerCase();
+    return StringUtils.normalizeLower(StringUtils.suffix(name, index + 1));
   }
 
   static bool hasExtension(String path, String expected) {
-    return extension(path) == expected.toLowerCase().replaceFirst('.', '');
+    return extension(path) ==
+        StringUtils.normalizeLower(expected).replaceFirst('.', '');
   }
 
   static bool isImageFile(String path) {

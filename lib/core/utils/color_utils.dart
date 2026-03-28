@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lumos/core/utils/string_utils.dart';
 
 abstract final class ColorUtils {
   static Color withOpacityPercent(Color color, double opacityPercent) {
@@ -7,7 +8,7 @@ abstract final class ColorUtils {
   }
 
   static Color fromHex(String hex) {
-    final sanitized = hex.replaceAll('#', '');
+    final sanitized = StringUtils.replacePattern(hex, '#');
     final normalized = sanitized.length == 6 ? 'FF$sanitized' : sanitized;
     return Color(int.parse(normalized, radix: 16));
   }

@@ -3,14 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lumos/core/theme/app_foundation.dart';
 
 import '../../../../../../core/utils/string_utils.dart';
 import '../../../../../../domain/entities/flashcard_models.dart';
 import '../../../../../../l10n/app_localizations.dart';
-import 'package:lumos/presentation/shared/composites/dialogs/lumos_dialog.dart';
-import 'package:lumos/presentation/shared/composites/dialogs/lumos_prompt_dialog.dart';
-import 'package:lumos/presentation/shared/primitives/feedback/lumos_snackbar.dart';
-import 'package:lumos/presentation/shared/primitives/inputs/lumos_text_field.dart';
 import '../../../providers/flashcard_dialog_form_provider.dart';
 import '../../../providers/flashcard_provider.dart';
 import '../../../providers/states/flashcard_dialog_form_state.dart';
@@ -201,11 +198,7 @@ String? _resolveValidationMessage({
 void _showError({required BuildContext context, required String message}) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
-      content: LumosSnackbar(
-        message: message,
-        type: LumosSnackbarType.error,
-      ),
+      content: LumosSnackbar(message: message, type: LumosSnackbarType.error),
     ),
   );
 }
-

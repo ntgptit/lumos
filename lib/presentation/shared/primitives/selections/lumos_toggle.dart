@@ -31,22 +31,73 @@ class LumosToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ToggleButtons(
-      isSelected: isSelected,
-      onPressed: enabled ? onPressed : null,
-      borderRadius: borderRadius ?? BorderRadius.circular(context.radius.md),
-      constraints:
-          constraints ??
-          BoxConstraints.tightFor(
-            width: context.component.buttonHeight,
-            height: context.component.buttonHeight,
+    final Set<int> selectedIndexes = <int>{
+      for (int index = 0; index < isSelected.length; index += 1)
+        if (isSelected[index]) index,
+    };
+    final Size resolvedMinimumSize = Size(
+      constraints == null || constraints!.minWidth <= 0
+          ? context.component.buttonHeight
+          : constraints!.minWidth,
+      constraints == null || constraints!.minHeight <= 0
+          ? context.component.buttonHeight
+          : constraints!.minHeight,
+    );
+    final BorderSide resolvedBorderSide = renderBorder
+        ? BorderSide(color: context.colorScheme.outline)
+        : BorderSide.none;
+
+    return SegmentedButton<int>(
+      segments: List<ButtonSegment<int>>.generate(
+        children.length,
+        (index) => ButtonSegment<int>(
+          value: index,
+          label: children[index],
+          enabled: enabled,
+        ),
+      ),
+      selected: selectedIndexes,
+      onSelectionChanged: enabled && onPressed != null
+          ? (Set<int> nextSelection) {
+              for (int index = 0; index < children.length; index += 1) {
+                final bool wasSelected = selectedIndexes.contains(index);
+                final bool isNowSelected = nextSelection.contains(index);
+                if (wasSelected == isNowSelected) {
+                  continue;
+                }
+                onPressed?.call(index);
+                return;
+              }
+            }
+          : null,
+      multiSelectionEnabled: true,
+      emptySelectionAllowed: true,
+      showSelectedIcon: false,
+      style: ButtonStyle(
+        textStyle: WidgetStatePropertyAll(
+          textStyle ?? context.textTheme.labelLarge,
+        ),
+        minimumSize: WidgetStatePropertyAll(resolvedMinimumSize),
+        shape: WidgetStatePropertyAll(
+          RoundedRectangleBorder(
+            borderRadius:
+                borderRadius ?? BorderRadius.circular(context.radius.md),
           ),
-      renderBorder: renderBorder,
-      fillColor: fillColor ?? context.colorScheme.secondaryContainer,
-      selectedColor: selectedColor ?? context.colorScheme.onSecondaryContainer,
-      color: color ?? context.colorScheme.onSurfaceVariant,
-      textStyle: textStyle ?? context.textTheme.labelLarge,
-      children: children,
+        ),
+        side: WidgetStatePropertyAll(resolvedBorderSide),
+        backgroundColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return fillColor ?? context.colorScheme.secondaryContainer;
+          }
+          return Colors.transparent;
+        }),
+        foregroundColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return selectedColor ?? context.colorScheme.onSecondaryContainer;
+          }
+          return color ?? context.colorScheme.onSurfaceVariant;
+        }),
+      ),
     );
   }
 }

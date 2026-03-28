@@ -8,7 +8,7 @@ class LumosAnimatedListItem extends StatefulWidget {
     required this.index,
     required this.child,
     this.duration = AppMotion.medium,
-    this.staggerDelay = const Duration(milliseconds: 50),
+    this.staggerDelay = AppDurations.stagger,
     this.slideOffset = 0.04,
   });
 
@@ -31,23 +31,18 @@ class _LumosAnimatedListItemState extends State<LumosAnimatedListItem>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: widget.duration,
-    );
+    _controller = AnimationController(vsync: this, duration: widget.duration);
     _fadeAnimation = CurvedAnimation(
       parent: _controller,
       curve: AppMotion.standardCurve,
     );
-    _slideAnimation = Tween<Offset>(
-      begin: Offset(0, widget.slideOffset),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: AppMotion.standardCurve,
-      ),
-    );
+    _slideAnimation =
+        Tween<Offset>(
+          begin: Offset(0, widget.slideOffset),
+          end: Offset.zero,
+        ).animate(
+          CurvedAnimation(parent: _controller, curve: AppMotion.standardCurve),
+        );
     _scheduleAnimation();
   }
 
@@ -71,10 +66,7 @@ class _LumosAnimatedListItemState extends State<LumosAnimatedListItem>
   Widget build(BuildContext context) {
     return FadeTransition(
       opacity: _fadeAnimation,
-      child: SlideTransition(
-        position: _slideAnimation,
-        child: widget.child,
-      ),
+      child: SlideTransition(position: _slideAnimation, child: widget.child),
     );
   }
 }

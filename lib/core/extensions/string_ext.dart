@@ -13,11 +13,9 @@ extension StringExt on String {
   String get normalizedWhitespace => StringUtils.normalizeWhitespace(this);
 
   String get capitalizedWords {
-    return normalizedWhitespace
-        .split(' ')
-        .where((word) => word.isNotEmpty)
-        .map(StringUtils.capitalize)
-        .join(' ');
+    return StringUtils.words(
+      this,
+    ).where((word) => word.isNotEmpty).map(StringUtils.capitalize).join(' ');
   }
 
   bool equalsIgnoreCase(String? other) {

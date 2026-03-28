@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lumos/l10n/l10n.dart';
 import 'package:lumos/presentation/shared/screens/lumos_placeholder_screen.dart';
 
 class ReminderTimeSlotsScreen extends StatelessWidget {
@@ -6,6 +7,8 @@ class ReminderTimeSlotsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const LumosPlaceholderScreen(title: 'Reminder Time Slots');
+    return LumosPlaceholderScreen(
+      title: context.l10n.placeholderReminderTimeSlotsTitle,
+    );
   }
 }

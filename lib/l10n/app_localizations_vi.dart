@@ -87,7 +87,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get folderManagerTitle => 'Quản lý thư mục';
 
   @override
-  String get folderManagerSubtitle => 'Duyệt cây thư mục, tạo, đổi tên và xóa mềm thư mục.';
+  String get folderManagerSubtitle =>
+      'Duyệt cây thư mục, tạo, đổi tên và xóa mềm thư mục.';
 
   @override
   String get deckManagerTitle => 'Quản lý deck';
@@ -138,7 +139,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get folderEmptyTitle => 'Chưa có thư mục nào.';
 
   @override
-  String get folderEmptySubtitle => 'Hãy tạo một thư mục để bắt đầu sắp xếp nội dung.';
+  String get folderEmptySubtitle =>
+      'Hãy tạo một thư mục để bắt đầu sắp xếp nội dung.';
 
   @override
   String get folderSearchEmptyTitle => 'Không có thư mục phù hợp.';
@@ -342,7 +344,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get flashcardBackHint => 'Nhập nội dung mặt sau';
 
   @override
-  String get flashcardFrontRequiredValidation => 'Nội dung mặt trước là bắt buộc.';
+  String get flashcardFrontRequiredValidation =>
+      'Nội dung mặt trước là bắt buộc.';
 
   @override
   String flashcardFrontMaxLengthValidation(int max) {
@@ -399,7 +402,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get flashcardProgressTitle => 'Tiến độ của bạn';
 
   @override
-  String get flashcardProgressDescription => 'Tiến độ dựa trên hai lần học gần nhất của bạn ở tất cả chế độ, ngoại trừ trò chơi.';
+  String get flashcardProgressDescription =>
+      'Tiến độ dựa trên hai lần học gần nhất của bạn ở tất cả chế độ, ngoại trừ trò chơi.';
 
   @override
   String get flashcardProgressNotStartedLabel => 'Chưa học';
@@ -446,7 +450,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get flashcardShareComingSoonToast => 'Tính năng chia sẻ sẽ sớm có.';
 
   @override
-  String get flashcardMoreOptionsComingSoonToast => 'Các tùy chọn bổ sung sẽ sớm có.';
+  String get flashcardMoreOptionsComingSoonToast =>
+      'Các tùy chọn bổ sung sẽ sớm có.';
 
   @override
   String get flashcardStudyUnavailableToast => 'Không có thẻ để học.';
@@ -458,37 +463,45 @@ class AppLocalizationsVi extends AppLocalizations {
   String get flashcardLearnSheetTitle => 'Chọn cách học';
 
   @override
-  String get flashcardLearnSheetSubtitle => 'Chọn phiên học bạn muốn bắt đầu cho bộ thẻ này.';
+  String get flashcardLearnSheetSubtitle =>
+      'Chọn phiên học bạn muốn bắt đầu cho bộ thẻ này.';
 
   @override
-  String get flashcardLearnContinueOptionTitle => 'Học tiếp từ chưa học/chưa pass';
+  String get flashcardLearnContinueOptionTitle =>
+      'Học tiếp từ chưa học/chưa pass';
 
   @override
-  String get flashcardLearnContinueOptionSubtitle => 'Học các từ vựng còn mới hoặc chưa vượt qua.';
+  String get flashcardLearnContinueOptionSubtitle =>
+      'Học các từ vựng còn mới hoặc chưa vượt qua.';
 
   @override
   String get flashcardLearnReviewOptionTitle => 'Review từ đến hạn SRS';
 
   @override
-  String get flashcardLearnReviewOptionSubtitle => 'Ôn tập các từ vựng đã đến hạn theo lịch SRS.';
+  String get flashcardLearnReviewOptionSubtitle =>
+      'Ôn tập các từ vựng đã đến hạn theo lịch SRS.';
 
   @override
   String get flashcardLearnResetOptionTitle => 'Reset chế độ học';
 
   @override
-  String get flashcardLearnResetOptionSubtitle => 'Xóa tiến trình học của bộ thẻ này để bắt đầu lại.';
+  String get flashcardLearnResetOptionSubtitle =>
+      'Xóa tiến trình học của bộ thẻ này để bắt đầu lại.';
 
   @override
-  String get flashcardLearnContinueUnavailableToast => 'Hiện không có từ mới hoặc từ chưa pass để học.';
+  String get flashcardLearnContinueUnavailableToast =>
+      'Hiện không có từ mới hoặc từ chưa pass để học.';
 
   @override
-  String get flashcardLearnReviewUnavailableToast => 'Hiện không có từ vựng nào đến hạn review.';
+  String get flashcardLearnReviewUnavailableToast =>
+      'Hiện không có từ vựng nào đến hạn review.';
 
   @override
   String get flashcardLearnResetConfirmTitle => 'Reset tiến trình học?';
 
   @override
-  String get flashcardLearnResetConfirmMessage => 'Thao tác này sẽ reset toàn bộ tiến trình học của bộ thẻ hiện tại.';
+  String get flashcardLearnResetConfirmMessage =>
+      'Thao tác này sẽ reset toàn bộ tiến trình học của bộ thẻ hiện tại.';
 
   @override
   String get flashcardLearnResetConfirmAction => 'Reset tiến trình';
@@ -515,7 +528,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get homeHeroTitle => 'Xây dựng độ trôi chảy với đà tiến bộ';
 
   @override
-  String get homeHeroBody => 'Các phiên học hằng ngày, luyện tập tập trung và theo dõi tiến độ trực quan trong một không gian hiện đại.';
+  String get homeHeroBody =>
+      'Các phiên học hằng ngày, luyện tập tập trung và theo dõi tiến độ trực quan trong một không gian hiện đại.';
 
   @override
   String get homeAiLearningPath => 'Lộ trình học bằng AI';
@@ -605,25 +619,30 @@ class AppLocalizationsVi extends AppLocalizations {
   String get homeProfileQuickName => 'Người học';
 
   @override
-  String get homeLibrarySubtitle => 'Bộ thẻ, bài học và gói học đã tuyển chọn của bạn.';
+  String get homeLibrarySubtitle =>
+      'Bộ thẻ, bài học và gói học đã tuyển chọn của bạn.';
 
   @override
-  String get homeProgressSubtitle => 'Theo dõi chuỗi ngày, xu hướng XP và kỹ năng còn yếu.';
+  String get homeProgressSubtitle =>
+      'Theo dõi chuỗi ngày, xu hướng XP và kỹ năng còn yếu.';
 
   @override
-  String get homeProfileSubtitle => 'Quản lý mục tiêu và tùy chọn học tập của bạn.';
+  String get homeProfileSubtitle =>
+      'Quản lý mục tiêu và tùy chọn học tập của bạn.';
 
   @override
   String get profileAccountSectionTitle => 'Tài khoản';
 
   @override
-  String get profileAccountSectionSubtitle => 'Xem lại thông tin nhận diện và trạng thái của tài khoản đang đăng nhập.';
+  String get profileAccountSectionSubtitle =>
+      'Xem lại thông tin nhận diện và trạng thái của tài khoản đang đăng nhập.';
 
   @override
   String get profileThemeSectionTitle => 'Giao diện';
 
   @override
-  String get profileThemeSectionSubtitle => 'Chọn cách hiển thị chủ đề của ứng dụng.';
+  String get profileThemeSectionSubtitle =>
+      'Chọn cách hiển thị chủ đề của ứng dụng.';
 
   @override
   String get profileThemeSystem => 'Theo hệ thống';
@@ -697,7 +716,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get noResultsTitle => 'Không tìm thấy kết quả';
 
   @override
-  String get noResultsMessage => 'Hãy thử điều chỉnh bộ lọc hoặc từ khóa tìm kiếm.';
+  String get noResultsMessage =>
+      'Hãy thử điều chỉnh bộ lọc hoặc từ khóa tìm kiếm.';
 
   @override
   String get offlineTitle => 'Bạn đang ngoại tuyến';
@@ -754,7 +774,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get authTitle => 'Lumos';
 
   @override
-  String get authSubtitle => 'Xác thực trước, sau đó tiếp tục học theo trạng thái chuẩn từ backend.';
+  String get authSubtitle =>
+      'Xác thực trước, sau đó tiếp tục học theo trạng thái chuẩn từ backend.';
 
   @override
   String get authLoginTab => 'Đăng nhập';
@@ -790,7 +811,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get profileSpeechSectionTitle => 'Tùy chọn giọng đọc';
 
   @override
-  String get profileSpeechSectionSubtitle => 'Chọn giọng đọc mặc định cho thiết bị này và nghe thử trước khi vào chế độ học.';
+  String get profileSpeechSectionSubtitle =>
+      'Chọn giọng đọc mặc định cho thiết bị này và nghe thử trước khi vào chế độ học.';
 
   @override
   String get profileSpeechEnabledLabel => 'Bật giọng đọc tiếng Hàn';
@@ -802,7 +824,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get profileSpeechAdapterLabel => 'Bộ máy đọc';
 
   @override
-  String get profileSpeechAdapterFlutterTtsLabel => 'TTS thiết bị (Flutter TTS)';
+  String get profileSpeechAdapterFlutterTtsLabel =>
+      'TTS thiết bị (Flutter TTS)';
 
   @override
   String get profileSpeechVoiceLabel => 'Giọng đọc';
@@ -820,7 +843,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get profileSpeechPreviewTitle => 'Nghe thử giọng đọc';
 
   @override
-  String get profileSpeechPreviewSubtitle => 'Chỉnh nội dung mẫu bên dưới rồi nghe thử với giọng đọc, tốc độ và độ trầm bổng hiện tại.';
+  String get profileSpeechPreviewSubtitle =>
+      'Chỉnh nội dung mẫu bên dưới rồi nghe thử với giọng đọc, tốc độ và độ trầm bổng hiện tại.';
 
   @override
   String get profileSpeechPreviewTextLabel => 'Nội dung nghe thử';
@@ -832,19 +856,23 @@ class AppLocalizationsVi extends AppLocalizations {
   String get profileSpeechPreviewStopLabel => 'Dừng';
 
   @override
-  String get profileSpeechPreviewDefaultText => '안녕하세요. 이 문장은 현재 음성과 속도, 음높이를 테스트하기 위한 예시입니다.';
+  String get profileSpeechPreviewDefaultText =>
+      '안녕하세요. 이 문장은 현재 음성과 속도, 음높이를 테스트하기 위한 예시입니다.';
 
   @override
-  String get profileSpeechPreviewPlaybackError => 'Thiết bị không thể phát đoạn nghe thử.';
+  String get profileSpeechPreviewPlaybackError =>
+      'Thiết bị không thể phát đoạn nghe thử.';
 
   @override
   String get profileStudySectionTitle => 'Tùy chọn phiên học';
 
   @override
-  String get profileStudySectionSubtitle => 'Thiết lập số thẻ mới mà backend được phép nạp cho mỗi phiên FIRST_LEARNING.';
+  String get profileStudySectionSubtitle =>
+      'Thiết lập số thẻ mới mà backend được phép nạp cho mỗi phiên FIRST_LEARNING.';
 
   @override
-  String get profileStudyFirstLearningLimitLabel => 'Số thẻ mới mỗi phiên FIRST_LEARNING';
+  String get profileStudyFirstLearningLimitLabel =>
+      'Số thẻ mới mỗi phiên FIRST_LEARNING';
 
   @override
   String profileStudyFirstLearningLimitValue(int count) {
@@ -852,13 +880,18 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
-  String get profileStudyReviewHint => 'Phiên REVIEW luôn lấy toàn bộ thẻ đã đến hạn.';
+  String get profileStudyReviewHint =>
+      'Phiên REVIEW luôn lấy toàn bộ thẻ đã đến hạn.';
 
   @override
   String get studyProgressMomentumTitle => 'Nhịp độ học tập';
 
   @override
-  String studyProgressMomentumSummary(int dueCount, int overdueCount, Object escalationLevel) {
+  String studyProgressMomentumSummary(
+    int dueCount,
+    int overdueCount,
+    Object escalationLevel,
+  ) {
     return 'Đến hạn $dueCount | Quá hạn $overdueCount | Leo thang $escalationLevel';
   }
 
@@ -918,7 +951,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get studyResetCurrentModeTitle => 'Đặt lại chế độ hiện tại?';
 
   @override
-  String get studyResetCurrentModeMessage => 'Thao tác này sẽ xóa toàn bộ tiến độ trong chế độ học hiện tại và bắt đầu lại từ mục đầu tiên.';
+  String get studyResetCurrentModeMessage =>
+      'Thao tác này sẽ xóa toàn bộ tiến độ trong chế độ học hiện tại và bắt đầu lại từ mục đầu tiên.';
 
   @override
   String get studyResetCurrentModeConfirm => 'Đặt lại chế độ';
@@ -1057,4 +1091,112 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get formFillBlankHint => 'Điền vào chỗ trống';
+
+  @override
+  String get placeholderForgotPasswordTitle => 'Quên mật khẩu';
+
+  @override
+  String get placeholderForgotPasswordMessage =>
+      'Luồng khôi phục mật khẩu vẫn chưa được nối lại.';
+
+  @override
+  String get placeholderDeckListTitle => 'Bộ thẻ';
+
+  @override
+  String get placeholderDeckListMessage =>
+      'Bộ điều hợp danh sách bộ thẻ đang hoạt động.';
+
+  @override
+  String placeholderDeckListInFolderMessage(int folderId) {
+    return 'Bộ điều hợp danh sách bộ thẻ đang hoạt động cho thư mục $folderId.';
+  }
+
+  @override
+  String get placeholderOnboardingTitle => 'Onboarding';
+
+  @override
+  String get placeholderPermissionsTitle => 'Quyền truy cập';
+
+  @override
+  String get placeholderStudyGoalSetupTitle => 'Thiết lập mục tiêu học tập';
+
+  @override
+  String get placeholderDeckProgressTitle => 'Tiến độ bộ thẻ';
+
+  @override
+  String placeholderDeckProgressMessage(int deckId) {
+    return 'Bộ điều hợp tiến độ của bộ thẻ $deckId đang hoạt động.';
+  }
+
+  @override
+  String get placeholderStudyCalendarTitle => 'Lịch học tập';
+
+  @override
+  String get placeholderReminderPreviewTitle => 'Xem trước nhắc nhở';
+
+  @override
+  String get placeholderReminderSettingsTitle => 'Cài đặt nhắc nhở';
+
+  @override
+  String get placeholderReminderTimeSlotsTitle => 'Khung giờ nhắc nhở';
+
+  @override
+  String get placeholderAboutTitle => 'Giới thiệu';
+
+  @override
+  String get placeholderAudioSettingsTitle => 'Cài đặt âm thanh';
+
+  @override
+  String get placeholderBackupRestoreTitle => 'Sao lưu và khôi phục';
+
+  @override
+  String get placeholderLanguageSettingsTitle => 'Cài đặt ngôn ngữ';
+
+  @override
+  String get placeholderThemeSettingsTitle => 'Cài đặt giao diện';
+
+  @override
+  String get placeholderStudyHistoryTitle => 'Lịch sử học tập';
+
+  @override
+  String get placeholderStudyModePickerTitle => 'Chọn chế độ học';
+
+  @override
+  String get placeholderStudyModePickerReviewAction => 'Ôn tập';
+
+  @override
+  String get placeholderStudyResultTitle => 'Kết quả học tập';
+
+  @override
+  String get placeholderStudyResultRestartAction => 'Bắt đầu lại';
+
+  @override
+  String get placeholderStudyResultHistoryAction => 'Lịch sử';
+
+  @override
+  String get placeholderStudyResultReturnAction => 'Quay lại';
+
+  @override
+  String get placeholderStudySessionTitle => 'Phiên học';
+
+  @override
+  String get placeholderStudySessionModePickerAction => 'Chọn chế độ';
+
+  @override
+  String get placeholderStudySessionFinishAction => 'Kết thúc phiên';
+
+  @override
+  String get placeholderStudySessionExitAction => 'Thoát';
+
+  @override
+  String get placeholderStudySetupTitle => 'Thiết lập phiên học';
+
+  @override
+  String get placeholderStudySetupStartAction => 'Bắt đầu phiên';
+
+  @override
+  String get placeholderStudySetupModePickerAction => 'Chọn chế độ';
+
+  @override
+  String get placeholderStudySetupHistoryAction => 'Lịch sử';
 }

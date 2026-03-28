@@ -87,7 +87,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get folderManagerTitle => 'Folder Manager';
 
   @override
-  String get folderManagerSubtitle => 'Browse tree, create, rename, and soft-delete folders.';
+  String get folderManagerSubtitle =>
+      'Browse tree, create, rename, and soft-delete folders.';
 
   @override
   String get deckManagerTitle => 'Deck Manager';
@@ -321,7 +322,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get flashcardEmptyTitle => 'No flashcards yet.';
 
   @override
-  String get flashcardEmptySubtitle => 'Create your first card to start learning.';
+  String get flashcardEmptySubtitle =>
+      'Create your first card to start learning.';
 
   @override
   String get flashcardSearchEmptyTitle => 'No matching flashcards.';
@@ -399,7 +401,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get flashcardProgressTitle => 'Your progress';
 
   @override
-  String get flashcardProgressDescription => 'Your progress is based on your last two study attempts across every mode, excluding games.';
+  String get flashcardProgressDescription =>
+      'Your progress is based on your last two study attempts across every mode, excluding games.';
 
   @override
   String get flashcardProgressNotStartedLabel => 'Not started';
@@ -446,7 +449,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get flashcardShareComingSoonToast => 'Sharing will be available soon.';
 
   @override
-  String get flashcardMoreOptionsComingSoonToast => 'More options will be available soon.';
+  String get flashcardMoreOptionsComingSoonToast =>
+      'More options will be available soon.';
 
   @override
   String get flashcardStudyUnavailableToast => 'No cards available for study.';
@@ -458,43 +462,51 @@ class AppLocalizationsEn extends AppLocalizations {
   String get flashcardLearnSheetTitle => 'Choose your study path';
 
   @override
-  String get flashcardLearnSheetSubtitle => 'Pick the session you want to start for this deck.';
+  String get flashcardLearnSheetSubtitle =>
+      'Pick the session you want to start for this deck.';
 
   @override
   String get flashcardLearnContinueOptionTitle => 'Continue learning';
 
   @override
-  String get flashcardLearnContinueOptionSubtitle => 'Study vocabulary that is still new or not yet passed.';
+  String get flashcardLearnContinueOptionSubtitle =>
+      'Study vocabulary that is still new or not yet passed.';
 
   @override
   String get flashcardLearnReviewOptionTitle => 'Review due cards';
 
   @override
-  String get flashcardLearnReviewOptionSubtitle => 'Review vocabulary that has reached its SRS deadline.';
+  String get flashcardLearnReviewOptionSubtitle =>
+      'Review vocabulary that has reached its SRS deadline.';
 
   @override
   String get flashcardLearnResetOptionTitle => 'Reset study progress';
 
   @override
-  String get flashcardLearnResetOptionSubtitle => 'Clear the learning progress for this deck and start again.';
+  String get flashcardLearnResetOptionSubtitle =>
+      'Clear the learning progress for this deck and start again.';
 
   @override
-  String get flashcardLearnContinueUnavailableToast => 'No new or unfinished vocabulary is available right now.';
+  String get flashcardLearnContinueUnavailableToast =>
+      'No new or unfinished vocabulary is available right now.';
 
   @override
-  String get flashcardLearnReviewUnavailableToast => 'No vocabulary is currently due for review.';
+  String get flashcardLearnReviewUnavailableToast =>
+      'No vocabulary is currently due for review.';
 
   @override
   String get flashcardLearnResetConfirmTitle => 'Reset study progress?';
 
   @override
-  String get flashcardLearnResetConfirmMessage => 'This will reset the learning progress for the current deck.';
+  String get flashcardLearnResetConfirmMessage =>
+      'This will reset the learning progress for the current deck.';
 
   @override
   String get flashcardLearnResetConfirmAction => 'Reset progress';
 
   @override
-  String get flashcardLearnResetSuccessToast => 'Study progress has been reset.';
+  String get flashcardLearnResetSuccessToast =>
+      'Study progress has been reset.';
 
   @override
   String get flashcardCloseTooltip => 'Close study';
@@ -515,7 +527,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeHeroTitle => 'Build fluency with momentum';
 
   @override
-  String get homeHeroBody => 'Daily sessions, focused practice, and visual progress in one modern workspace.';
+  String get homeHeroBody =>
+      'Daily sessions, focused practice, and visual progress in one modern workspace.';
 
   @override
   String get homeAiLearningPath => 'AI Learning Path';
@@ -608,22 +621,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeLibrarySubtitle => 'Your decks, lessons, and curated packs.';
 
   @override
-  String get homeProgressSubtitle => 'Track streaks, XP trends, and weak skills.';
+  String get homeProgressSubtitle =>
+      'Track streaks, XP trends, and weak skills.';
 
   @override
-  String get homeProfileSubtitle => 'Manage your goals and learning preferences.';
+  String get homeProfileSubtitle =>
+      'Manage your goals and learning preferences.';
 
   @override
   String get profileAccountSectionTitle => 'Account';
 
   @override
-  String get profileAccountSectionSubtitle => 'Review the identity and status for your current signed-in account.';
+  String get profileAccountSectionSubtitle =>
+      'Review the identity and status for your current signed-in account.';
 
   @override
   String get profileThemeSectionTitle => 'Appearance';
 
   @override
-  String get profileThemeSectionSubtitle => 'Choose how the app theme is displayed.';
+  String get profileThemeSectionSubtitle =>
+      'Choose how the app theme is displayed.';
 
   @override
   String get profileThemeSystem => 'Follow system';
@@ -754,7 +771,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get authTitle => 'Lumos';
 
   @override
-  String get authSubtitle => 'Authenticate first, then resume study from canonical backend state.';
+  String get authSubtitle =>
+      'Authenticate first, then resume study from canonical backend state.';
 
   @override
   String get authLoginTab => 'Login';
@@ -790,7 +808,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileSpeechSectionTitle => 'Speech preference';
 
   @override
-  String get profileSpeechSectionSubtitle => 'Choose the default reading voice for this device and test it before studying.';
+  String get profileSpeechSectionSubtitle =>
+      'Choose the default reading voice for this device and test it before studying.';
 
   @override
   String get profileSpeechEnabledLabel => 'Enable Korean speech';
@@ -820,7 +839,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileSpeechPreviewTitle => 'Voice preview';
 
   @override
-  String get profileSpeechPreviewSubtitle => 'Edit the sample text below and listen with the current voice, speed, and pitch.';
+  String get profileSpeechPreviewSubtitle =>
+      'Edit the sample text below and listen with the current voice, speed, and pitch.';
 
   @override
   String get profileSpeechPreviewTextLabel => 'Preview text';
@@ -832,19 +852,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileSpeechPreviewStopLabel => 'Stop';
 
   @override
-  String get profileSpeechPreviewDefaultText => '안녕하세요. 이 문장은 현재 음성과 속도, 음높이를 테스트하기 위한 예시입니다.';
+  String get profileSpeechPreviewDefaultText =>
+      '안녕하세요. 이 문장은 현재 음성과 속도, 음높이를 테스트하기 위한 예시입니다.';
 
   @override
-  String get profileSpeechPreviewPlaybackError => 'The device could not play the preview audio.';
+  String get profileSpeechPreviewPlaybackError =>
+      'The device could not play the preview audio.';
 
   @override
   String get profileStudySectionTitle => 'Study preference';
 
   @override
-  String get profileStudySectionSubtitle => 'Set how many new cards a FIRST_LEARNING session can load from the backend.';
+  String get profileStudySectionSubtitle =>
+      'Set how many new cards a FIRST_LEARNING session can load from the backend.';
 
   @override
-  String get profileStudyFirstLearningLimitLabel => 'New cards per FIRST_LEARNING session';
+  String get profileStudyFirstLearningLimitLabel =>
+      'New cards per FIRST_LEARNING session';
 
   @override
   String profileStudyFirstLearningLimitValue(int count) {
@@ -852,13 +876,18 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get profileStudyReviewHint => 'REVIEW sessions always include every due card.';
+  String get profileStudyReviewHint =>
+      'REVIEW sessions always include every due card.';
 
   @override
   String get studyProgressMomentumTitle => 'Study momentum';
 
   @override
-  String studyProgressMomentumSummary(int dueCount, int overdueCount, Object escalationLevel) {
+  String studyProgressMomentumSummary(
+    int dueCount,
+    int overdueCount,
+    Object escalationLevel,
+  ) {
     return 'Due $dueCount | Overdue $overdueCount | Escalation $escalationLevel';
   }
 
@@ -918,7 +947,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get studyResetCurrentModeTitle => 'Reset current mode?';
 
   @override
-  String get studyResetCurrentModeMessage => 'This will clear all progress in the current mode and start that mode again from the first item.';
+  String get studyResetCurrentModeMessage =>
+      'This will clear all progress in the current mode and start that mode again from the first item.';
 
   @override
   String get studyResetCurrentModeConfirm => 'Reset mode';
@@ -1057,4 +1087,111 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get formFillBlankHint => 'Fill the blank';
+
+  @override
+  String get placeholderForgotPasswordTitle => 'Forgot Password';
+
+  @override
+  String get placeholderForgotPasswordMessage =>
+      'Password recovery flow has not been wired back yet.';
+
+  @override
+  String get placeholderDeckListTitle => 'Decks';
+
+  @override
+  String get placeholderDeckListMessage => 'Deck list adapter is active.';
+
+  @override
+  String placeholderDeckListInFolderMessage(int folderId) {
+    return 'Deck list adapter is active for folder $folderId.';
+  }
+
+  @override
+  String get placeholderOnboardingTitle => 'Onboarding';
+
+  @override
+  String get placeholderPermissionsTitle => 'Permissions';
+
+  @override
+  String get placeholderStudyGoalSetupTitle => 'Study Goal Setup';
+
+  @override
+  String get placeholderDeckProgressTitle => 'Deck Progress';
+
+  @override
+  String placeholderDeckProgressMessage(int deckId) {
+    return 'Deck $deckId progress adapter is active.';
+  }
+
+  @override
+  String get placeholderStudyCalendarTitle => 'Study Calendar';
+
+  @override
+  String get placeholderReminderPreviewTitle => 'Reminder Preview';
+
+  @override
+  String get placeholderReminderSettingsTitle => 'Reminder Settings';
+
+  @override
+  String get placeholderReminderTimeSlotsTitle => 'Reminder Time Slots';
+
+  @override
+  String get placeholderAboutTitle => 'About';
+
+  @override
+  String get placeholderAudioSettingsTitle => 'Audio Settings';
+
+  @override
+  String get placeholderBackupRestoreTitle => 'Backup & Restore';
+
+  @override
+  String get placeholderLanguageSettingsTitle => 'Language Settings';
+
+  @override
+  String get placeholderThemeSettingsTitle => 'Theme Settings';
+
+  @override
+  String get placeholderStudyHistoryTitle => 'Study History';
+
+  @override
+  String get placeholderStudyModePickerTitle => 'Study Mode Picker';
+
+  @override
+  String get placeholderStudyModePickerReviewAction => 'Review';
+
+  @override
+  String get placeholderStudyResultTitle => 'Study Result';
+
+  @override
+  String get placeholderStudyResultRestartAction => 'Restart';
+
+  @override
+  String get placeholderStudyResultHistoryAction => 'History';
+
+  @override
+  String get placeholderStudyResultReturnAction => 'Return';
+
+  @override
+  String get placeholderStudySessionTitle => 'Study Session';
+
+  @override
+  String get placeholderStudySessionModePickerAction => 'Mode Picker';
+
+  @override
+  String get placeholderStudySessionFinishAction => 'Finish Session';
+
+  @override
+  String get placeholderStudySessionExitAction => 'Exit';
+
+  @override
+  String get placeholderStudySetupTitle => 'Study Setup';
+
+  @override
+  String get placeholderStudySetupStartAction => 'Start Session';
+
+  @override
+  String get placeholderStudySetupModePickerAction => 'Mode Picker';
+
+  @override
+  String get placeholderStudySetupHistoryAction => 'History';
 }

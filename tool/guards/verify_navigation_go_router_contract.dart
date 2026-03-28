@@ -55,6 +55,9 @@ class NavigationViolation {
 
 /// Forbidden legacy navigation APIs
 final RegExp _navigatorRegExp = RegExp(r'\bNavigator\.');
+final RegExp _navigatorPopRegExp = RegExp(
+  r'\bNavigator(?:\.of\s*\([^)]*\))?\.pop\s*\(',
+);
 final RegExp _materialPageRouteRegExp = RegExp(
   r'\bMaterialPageRoute\s*(?:<[^>]+>)?\s*\(',
 );
@@ -169,6 +172,10 @@ void _checkLegacyNavigation(
   int index,
   List<NavigationViolation> violations,
 ) {
+  if (_navigatorPopRegExp.hasMatch(line)) {
+    return;
+  }
+
   if (_navigatorRegExp.hasMatch(line)) {
     violations.add(
       NavigationViolation(

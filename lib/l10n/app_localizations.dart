@@ -62,7 +62,8 @@ import 'app_localizations_vi.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale)
+    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -70,7 +71,8 @@ abstract class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate =
+      _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -82,17 +84,18 @@ abstract class AppLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
-    delegate,
-    GlobalMaterialLocalizations.delegate,
-    GlobalCupertinoLocalizations.delegate,
-    GlobalWidgetsLocalizations.delegate,
-  ];
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
-    Locale('vi')
+    Locale('vi'),
   ];
 
   /// Default application title
@@ -1725,7 +1728,11 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Due {dueCount} | Overdue {overdueCount} | Escalation {escalationLevel}'**
-  String studyProgressMomentumSummary(int dueCount, int overdueCount, Object escalationLevel);
+  String studyProgressMomentumSummary(
+    int dueCount,
+    int overdueCount,
+    Object escalationLevel,
+  );
 
   /// No description provided for @studyProgressRecommendedReviewTitle.
   ///
@@ -2038,9 +2045,214 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Fill the blank'**
   String get formFillBlankHint;
+
+  /// No description provided for @placeholderForgotPasswordTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot Password'**
+  String get placeholderForgotPasswordTitle;
+
+  /// No description provided for @placeholderForgotPasswordMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Password recovery flow has not been wired back yet.'**
+  String get placeholderForgotPasswordMessage;
+
+  /// No description provided for @placeholderDeckListTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Decks'**
+  String get placeholderDeckListTitle;
+
+  /// No description provided for @placeholderDeckListMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Deck list adapter is active.'**
+  String get placeholderDeckListMessage;
+
+  /// No description provided for @placeholderDeckListInFolderMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Deck list adapter is active for folder {folderId}.'**
+  String placeholderDeckListInFolderMessage(int folderId);
+
+  /// No description provided for @placeholderOnboardingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Onboarding'**
+  String get placeholderOnboardingTitle;
+
+  /// No description provided for @placeholderPermissionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Permissions'**
+  String get placeholderPermissionsTitle;
+
+  /// No description provided for @placeholderStudyGoalSetupTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Study Goal Setup'**
+  String get placeholderStudyGoalSetupTitle;
+
+  /// No description provided for @placeholderDeckProgressTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Deck Progress'**
+  String get placeholderDeckProgressTitle;
+
+  /// No description provided for @placeholderDeckProgressMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Deck {deckId} progress adapter is active.'**
+  String placeholderDeckProgressMessage(int deckId);
+
+  /// No description provided for @placeholderStudyCalendarTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Study Calendar'**
+  String get placeholderStudyCalendarTitle;
+
+  /// No description provided for @placeholderReminderPreviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder Preview'**
+  String get placeholderReminderPreviewTitle;
+
+  /// No description provided for @placeholderReminderSettingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder Settings'**
+  String get placeholderReminderSettingsTitle;
+
+  /// No description provided for @placeholderReminderTimeSlotsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder Time Slots'**
+  String get placeholderReminderTimeSlotsTitle;
+
+  /// No description provided for @placeholderAboutTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get placeholderAboutTitle;
+
+  /// No description provided for @placeholderAudioSettingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Audio Settings'**
+  String get placeholderAudioSettingsTitle;
+
+  /// No description provided for @placeholderBackupRestoreTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup & Restore'**
+  String get placeholderBackupRestoreTitle;
+
+  /// No description provided for @placeholderLanguageSettingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Language Settings'**
+  String get placeholderLanguageSettingsTitle;
+
+  /// No description provided for @placeholderThemeSettingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme Settings'**
+  String get placeholderThemeSettingsTitle;
+
+  /// No description provided for @placeholderStudyHistoryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Study History'**
+  String get placeholderStudyHistoryTitle;
+
+  /// No description provided for @placeholderStudyModePickerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Study Mode Picker'**
+  String get placeholderStudyModePickerTitle;
+
+  /// No description provided for @placeholderStudyModePickerReviewAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Review'**
+  String get placeholderStudyModePickerReviewAction;
+
+  /// No description provided for @placeholderStudyResultTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Study Result'**
+  String get placeholderStudyResultTitle;
+
+  /// No description provided for @placeholderStudyResultRestartAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Restart'**
+  String get placeholderStudyResultRestartAction;
+
+  /// No description provided for @placeholderStudyResultHistoryAction.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get placeholderStudyResultHistoryAction;
+
+  /// No description provided for @placeholderStudyResultReturnAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Return'**
+  String get placeholderStudyResultReturnAction;
+
+  /// No description provided for @placeholderStudySessionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Study Session'**
+  String get placeholderStudySessionTitle;
+
+  /// No description provided for @placeholderStudySessionModePickerAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Mode Picker'**
+  String get placeholderStudySessionModePickerAction;
+
+  /// No description provided for @placeholderStudySessionFinishAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish Session'**
+  String get placeholderStudySessionFinishAction;
+
+  /// No description provided for @placeholderStudySessionExitAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Exit'**
+  String get placeholderStudySessionExitAction;
+
+  /// No description provided for @placeholderStudySetupTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Study Setup'**
+  String get placeholderStudySetupTitle;
+
+  /// No description provided for @placeholderStudySetupStartAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Session'**
+  String get placeholderStudySetupStartAction;
+
+  /// No description provided for @placeholderStudySetupModePickerAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Mode Picker'**
+  String get placeholderStudySetupModePickerAction;
+
+  /// No description provided for @placeholderStudySetupHistoryAction.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get placeholderStudySetupHistoryAction;
 }
 
-class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate
+    extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -2049,25 +2261,26 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   }
 
   @override
-  bool isSupported(Locale locale) => <String>['en', 'vi'].contains(locale.languageCode);
+  bool isSupported(Locale locale) =>
+      <String>['en', 'vi'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
-
-
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'en': return AppLocalizationsEn();
-    case 'vi': return AppLocalizationsVi();
+    case 'en':
+      return AppLocalizationsEn();
+    case 'vi':
+      return AppLocalizationsVi();
   }
 
   throw FlutterError(
     'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
     'an issue with the localizations generation tool. Please file an issue '
     'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.'
+    'that was used.',
   );
 }

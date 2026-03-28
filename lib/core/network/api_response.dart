@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:lumos/core/utils/object_utils.dart';
+import 'package:lumos/core/utils/string_utils.dart';
 
 @immutable
 class ApiResponse<T> {
@@ -15,7 +16,7 @@ class ApiResponse<T> {
   final Map<String, Object?> meta;
   final int? statusCode;
 
-  bool get hasMessage => message != null && message!.trim().isNotEmpty;
+  bool get hasMessage => StringUtils.hasText(message);
 
   factory ApiResponse.fromJson(
     Map<String, Object?> json,
@@ -32,7 +33,7 @@ class ApiResponse<T> {
   }
 
   static String? _readString(Object? value) {
-    return ObjectUtils.castOrNull<String>(value)?.trim();
+    return StringUtils.trimmedOrNull(ObjectUtils.castOrNull<String>(value));
   }
 
   static Map<String, Object?> _readMap(Object? value) {

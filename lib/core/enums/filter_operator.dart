@@ -1,3 +1,5 @@
+import 'package:lumos/core/utils/string_utils.dart';
+
 enum FilterOperator {
   equals(symbol: '=', label: 'Equals'),
   contains(symbol: '~', label: 'Contains'),
@@ -19,7 +21,7 @@ enum FilterOperator {
   }
 
   static FilterOperator fromName(String? value) {
-    final normalized = value?.trim().toLowerCase();
+    final normalized = StringUtils.normalizedLowerOrNull(value);
     for (final operator in FilterOperator.values) {
       if (operator.name == normalized) {
         return operator;

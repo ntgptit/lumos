@@ -604,5 +604,53 @@
   "formAnswerHint": "Type your answer",
   "studyFillAnswerRequiredValidation": "Answer is required.",
   "formTapToSpeakAction": "Tap to speak",
-  "formFillBlankHint": "Fill the blank"
+  "formFillBlankHint": "Fill the blank",
+  "placeholderForgotPasswordTitle": "Forgot Password",
+  "placeholderForgotPasswordMessage": "Password recovery flow has not been wired back yet.",
+  "placeholderDeckListTitle": "Decks",
+  "placeholderDeckListMessage": "Deck list adapter is active.",
+  "placeholderDeckListInFolderMessage": "Deck list adapter is active for folder {folderId}.",
+  "@placeholderDeckListInFolderMessage": {
+    "placeholders": {
+      "folderId": {
+        "type": "int"
+      }
+    }
+  },
+  "placeholderOnboardingTitle": "Onboarding",
+  "placeholderPermissionsTitle": "Permissions",
+  "placeholderStudyGoalSetupTitle": "Study Goal Setup",
+  "placeholderDeckProgressTitle": "Deck Progress",
+  "placeholderDeckProgressMessage": "Deck {deckId} progress adapter is active.",
+  "@placeholderDeckProgressMessage": {
+    "placeholders": {
+      "deckId": {
+        "type": "int"
+      }
+    }
+  },
+  "placeholderStudyCalendarTitle": "Study Calendar",
+  "placeholderReminderPreviewTitle": "Reminder Preview",
+  "placeholderReminderSettingsTitle": "Reminder Settings",
+  "placeholderReminderTimeSlotsTitle": "Reminder Time Slots",
+  "placeholderAboutTitle": "About",
+  "placeholderAudioSettingsTitle": "Audio Settings",
+  "placeholderBackupRestoreTitle": "Backup & Restore",
+  "placeholderLanguageSettingsTitle": "Language Settings",
+  "placeholderThemeSettingsTitle": "Theme Settings",
+  "placeholderStudyHistoryTitle": "Study History",
+  "placeholderStudyModePickerTitle": "Study Mode Picker",
+  "placeholderStudyModePickerReviewAction": "Review",
+  "placeholderStudyResultTitle": "Study Result",
+  "placeholderStudyResultRestartAction": "Restart",
+  "placeholderStudyResultHistoryAction": "History",
+  "placeholderStudyResultReturnAction": "Return",
+  "placeholderStudySessionTitle": "Study Session",
+  "placeholderStudySessionModePickerAction": "Mode Picker",
+  "placeholderStudySessionFinishAction": "Finish Session",
+  "placeholderStudySessionExitAction": "Exit",
+  "placeholderStudySetupTitle": "Study Setup",
+  "placeholderStudySetupStartAction": "Start Session",
+  "placeholderStudySetupModePickerAction": "Mode Picker",
+  "placeholderStudySetupHistoryAction": "History"
 }

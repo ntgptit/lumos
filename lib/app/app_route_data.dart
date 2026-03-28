@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lumos/app/app_shell.dart';
 import 'package:lumos/core/utils/route_utils.dart';
+import 'package:lumos/core/utils/string_utils.dart';
 import 'package:lumos/presentation/features/auth/providers/auth_session_provider.dart';
 import 'package:lumos/presentation/features/auth/screens/auth_screen.dart';
 import 'package:lumos/presentation/features/auth/screens/forgot_password_screen.dart';
@@ -386,15 +387,15 @@ class DeckDetailRouteData extends GoRouteData with $DeckDetailRouteData {
     final String baseLocation = GoRouteData.$location(
       '/folders/${Uri.encodeComponent(folderId.toString())}/decks/${Uri.encodeComponent(deckId.toString())}',
     );
-    final String? normalizedDeckName = deckName?.trim();
+    final String? normalizedDeckName = StringUtils.trimmedOrNull(deckName);
     if (normalizedDeckName == null || normalizedDeckName.isEmpty) {
       return baseLocation;
     }
-    return Uri.parse(
-      baseLocation,
-    ).replace(queryParameters: <String, String>{
-      'deckName': normalizedDeckName,
-    }).toString();
+    return Uri.parse(baseLocation)
+        .replace(
+          queryParameters: <String, String>{'deckName': normalizedDeckName},
+        )
+        .toString();
   }
 
   @override

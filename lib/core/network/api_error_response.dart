@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:lumos/core/utils/object_utils.dart';
+import 'package:lumos/core/utils/string_utils.dart';
 
 @immutable
 class ApiErrorResponse {
@@ -23,14 +24,14 @@ class ApiErrorResponse {
   }) {
     return ApiErrorResponse(
       message: _readString(json['message']) ?? 'Unexpected server error.',
-      code: _readString(json['code'])?.toLowerCase(),
+      code: StringUtils.normalizedLowerOrNull(_readString(json['code'])),
       statusCode: statusCode ?? _readInt(json['statusCode']),
       fieldErrors: _readFieldErrors(json['fieldErrors']),
     );
   }
 
   static String? _readString(Object? value) {
-    return ObjectUtils.castOrNull<String>(value)?.trim();
+    return StringUtils.trimmedOrNull(ObjectUtils.castOrNull<String>(value));
   }
 
   static int? _readInt(Object? value) {

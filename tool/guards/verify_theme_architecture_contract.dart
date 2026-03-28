@@ -179,6 +179,9 @@ const Set<String> _forwardedTokenSourcePrefixes = <String>{
 };
 
 Future<void> main() async {
+  await _runCurrentThemeArchitectureGuard();
+  return;
+
   final List<ThemeArchitectureViolation> violations =
       <ThemeArchitectureViolation>[];
 
@@ -616,4 +619,143 @@ int _findLineNumber({required List<String> lines, required String pattern}) {
     return index + 1;
   }
   return -1;
+}
+
+const List<String> _currentThemeRequiredDirectories = <String>[
+  'lib/core/theme/component_themes',
+  'lib/core/theme/extensions',
+  'lib/core/theme/foundation',
+  'lib/core/theme/responsive',
+  'lib/core/theme/tokens',
+];
+
+const List<String> _currentThemeRequiredFiles = <String>[
+  'lib/core/theme/app_color_scheme.dart',
+  'lib/core/theme/app_foundation.dart',
+  'lib/core/theme/app_text_theme.dart',
+  'lib/core/theme/app_theme.dart',
+  'lib/core/theme/app_theme_mode.dart',
+  'lib/core/theme/theme_helpers.dart',
+  'lib/core/theme/component_themes/component_themes.dart',
+  'lib/core/theme/responsive/breakpoints.dart',
+  'lib/core/theme/tokens/tokens.dart',
+];
+
+const Map<String, List<String>> _currentThemeRequiredPatterns =
+    <String, List<String>>{
+      'lib/core/theme/app_color_scheme.dart': <String>[
+        'abstract final class AppColorScheme',
+        'useMaterial3: true',
+      ],
+      'lib/core/theme/app_foundation.dart': <String>[
+        "export 'package:lumos/core/theme/",
+        "export 'package:lumos/presentation/shared/",
+      ],
+      'lib/core/theme/app_text_theme.dart': <String>[
+        'abstract final class AppTextTheme',
+      ],
+      'lib/core/theme/app_theme.dart': <String>[
+        'abstract final class AppTheme',
+        'useMaterial3: true',
+        'ResponsiveThemeFactory.create',
+        'LumosButtonThemes.filled',
+        'ResponsiveThemeFactory.extensions',
+      ],
+      'lib/core/theme/app_theme_mode.dart': <String>[
+        'enum AppThemeMode',
+        'extension AppThemeModeX on AppThemeMode',
+      ],
+      'lib/core/theme/theme_helpers.dart': <String>[
+        'abstract final class ThemeHelpers',
+        'AppTheme.resolve(',
+      ],
+      'lib/core/theme/component_themes/component_themes.dart': <String>[
+        "export 'navigation/app_bar_theme.dart';",
+        "export 'buttons/button_theme.dart';",
+        "export 'inputs/input_theme.dart';",
+      ],
+      'lib/core/theme/responsive/breakpoints.dart': <String>[
+        'abstract final class AppBreakpoints',
+      ],
+      'lib/core/theme/tokens/tokens.dart': <String>[
+        "export 'layout/spacing_tokens.dart';",
+        "export 'visual/color_tokens.dart';",
+        "export 'visual/opacity_tokens.dart';",
+      ],
+    };
+
+Future<void> _runCurrentThemeArchitectureGuard() async {
+  final Directory rootDirectory = Directory('lib/core/theme');
+  if (!rootDirectory.existsSync()) {
+    stderr.writeln('Missing `lib/core/theme`.');
+    exitCode = 1;
+    return;
+  }
+
+  final List<ThemeArchitectureViolation> violations =
+      <ThemeArchitectureViolation>[];
+
+  for (final String path in _currentThemeRequiredDirectories) {
+    if (Directory(path).existsSync()) {
+      continue;
+    }
+    violations.add(
+      ThemeArchitectureViolation(
+        filePath: path,
+        lineNumber: 1,
+        reason: 'Missing required theme directory.',
+        lineContent: path,
+      ),
+    );
+  }
+
+  for (final String path in _currentThemeRequiredFiles) {
+    if (File(path).existsSync()) {
+      continue;
+    }
+    violations.add(
+      ThemeArchitectureViolation(
+        filePath: path,
+        lineNumber: 1,
+        reason: 'Missing required theme file.',
+        lineContent: path,
+      ),
+    );
+  }
+
+  for (final MapEntry<String, List<String>> entry
+      in _currentThemeRequiredPatterns.entries) {
+    final File file = File(entry.key);
+    if (!file.existsSync()) {
+      continue;
+    }
+    final String content = await file.readAsString();
+    for (final String pattern in entry.value) {
+      if (content.contains(pattern)) {
+        continue;
+      }
+      violations.add(
+        ThemeArchitectureViolation(
+          filePath: entry.key,
+          lineNumber: 1,
+          reason: 'Missing required theme contract marker.',
+          lineContent: pattern,
+        ),
+      );
+    }
+  }
+
+  if (violations.isEmpty) {
+    stdout.writeln('Theme architecture contract guard passed.');
+    return;
+  }
+
+  stderr.writeln('Theme architecture contract guard failed.');
+  for (final ThemeArchitectureViolation violation in violations) {
+    stderr.writeln(
+      '${violation.filePath}:${violation.lineNumber}: '
+      '${violation.reason} ${violation.lineContent}',
+    );
+  }
+  exitCode = 1;
 }

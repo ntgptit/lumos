@@ -16,29 +16,26 @@ class LumosPlaceholderScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(title: Text(title)),
       body: Center(
         child: Padding(
           padding: EdgeInsets.all(context.spacing.lg),
           child: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: context.layout.panelMaxWidth,
-            ),
+            constraints: BoxConstraints(maxWidth: context.layout.panelMaxWidth),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Text(
                   title,
-                  style: theme.textTheme.headlineSmall,
+                  style: context.textTheme.headlineSmall,
                   textAlign: TextAlign.center,
                 ),
                 if (message != null) ...[
                   SizedBox(height: context.spacing.sm),
                   Text(
                     message!,
-                    style: theme.textTheme.bodyMedium,
+                    style: context.textTheme.bodyMedium,
                     textAlign: TextAlign.center,
                   ),
                 ],

@@ -598,5 +598,53 @@
   "formAnswerHint": "Nhập câu trả lời",
   "studyFillAnswerRequiredValidation": "Câu trả lời là bắt buộc.",
   "formTapToSpeakAction": "Chạm để nói",
-  "formFillBlankHint": "Điền vào chỗ trống"
+  "formFillBlankHint": "Điền vào chỗ trống",
+  "placeholderForgotPasswordTitle": "Quên mật khẩu",
+  "placeholderForgotPasswordMessage": "Luồng khôi phục mật khẩu vẫn chưa được nối lại.",
+  "placeholderDeckListTitle": "Bộ thẻ",
+  "placeholderDeckListMessage": "Bộ điều hợp danh sách bộ thẻ đang hoạt động.",
+  "placeholderDeckListInFolderMessage": "Bộ điều hợp danh sách bộ thẻ đang hoạt động cho thư mục {folderId}.",
+  "@placeholderDeckListInFolderMessage": {
+    "placeholders": {
+      "folderId": {
+        "type": "int"
+      }
+    }
+  },
+  "placeholderOnboardingTitle": "Onboarding",
+  "placeholderPermissionsTitle": "Quyền truy cập",
+  "placeholderStudyGoalSetupTitle": "Thiết lập mục tiêu học tập",
+  "placeholderDeckProgressTitle": "Tiến độ bộ thẻ",
+  "placeholderDeckProgressMessage": "Bộ điều hợp tiến độ của bộ thẻ {deckId} đang hoạt động.",
+  "@placeholderDeckProgressMessage": {
+    "placeholders": {
+      "deckId": {
+        "type": "int"
+      }
+    }
+  },
+  "placeholderStudyCalendarTitle": "Lịch học tập",
+  "placeholderReminderPreviewTitle": "Xem trước nhắc nhở",
+  "placeholderReminderSettingsTitle": "Cài đặt nhắc nhở",
+  "placeholderReminderTimeSlotsTitle": "Khung giờ nhắc nhở",
+  "placeholderAboutTitle": "Giới thiệu",
+  "placeholderAudioSettingsTitle": "Cài đặt âm thanh",
+  "placeholderBackupRestoreTitle": "Sao lưu và khôi phục",
+  "placeholderLanguageSettingsTitle": "Cài đặt ngôn ngữ",
+  "placeholderThemeSettingsTitle": "Cài đặt giao diện",
+  "placeholderStudyHistoryTitle": "Lịch sử học tập",
+  "placeholderStudyModePickerTitle": "Chọn chế độ học",
+  "placeholderStudyModePickerReviewAction": "Ôn tập",
+  "placeholderStudyResultTitle": "Kết quả học tập",
+  "placeholderStudyResultRestartAction": "Bắt đầu lại",
+  "placeholderStudyResultHistoryAction": "Lịch sử",
+  "placeholderStudyResultReturnAction": "Quay lại",
+  "placeholderStudySessionTitle": "Phiên học",
+  "placeholderStudySessionModePickerAction": "Chọn chế độ",
+  "placeholderStudySessionFinishAction": "Kết thúc phiên",
+  "placeholderStudySessionExitAction": "Thoát",
+  "placeholderStudySetupTitle": "Thiết lập phiên học",
+  "placeholderStudySetupStartAction": "Bắt đầu phiên",
+  "placeholderStudySetupModePickerAction": "Chọn chế độ",
+  "placeholderStudySetupHistoryAction": "Lịch sử"
 }

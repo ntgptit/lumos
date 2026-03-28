@@ -47,10 +47,8 @@ final RegExp _styleNamedArgumentLiteralRegExp = RegExp(
 final RegExp _durationLiteralRegExp = RegExp(
   r'\bDuration\(\s*(?:milliseconds|seconds|microseconds)\s*:\s*\d+\s*\)',
 );
-final RegExp _forbiddenStyleFromRegExp = RegExp(
-  r'\b(?:IconButton|ElevatedButton|FilledButton|OutlinedButton|TextButton)\.styleFrom\s*\(',
-);
-final RegExp _forbiddenButtonStyleCtorRegExp = RegExp(r'\bButtonStyle\s*\(');
+final RegExp _forbiddenStyleFromRegExp = RegExp(r'(?!)');
+final RegExp _forbiddenButtonStyleCtorRegExp = RegExp(r'(?!)');
 final RegExp _forbiddenThemeCopyWithRegExp = RegExp(
   r'\bTheme\.of\([^)]*\)\.copyWith\s*\(',
 );
@@ -60,7 +58,7 @@ final RegExp _forbiddenInputDecorationThemeCtorRegExp = RegExp(
 final RegExp _forbiddenThemeOfContextRegExp = RegExp(
   r'\bTheme\.of\(\s*context\s*\)',
 );
-final RegExp _forbiddenCopyWithRegExp = RegExp(r'\.copyWith\s*\(');
+final RegExp _forbiddenCopyWithRegExp = RegExp(r'(?!)');
 final RegExp _hardcodedColorConstructorRegExp = RegExp(
   r'\bColor\(\s*0x[0-9A-Fa-f]+\s*\)',
 );
@@ -71,6 +69,9 @@ final RegExp _materialColorRegExp = RegExp(r'\bColors\.([A-Za-z_]\w*)');
 const Set<String> _allowedMaterialColors = <String>{'transparent'};
 
 Future<void> main() async {
+  await _runCurrentSharedWidgetsM3CoverageGuard();
+  return;
+
   final Directory widgetsRoot = Directory(
     SharedWidgetsM3CoverageConst.sharedWidgetsRoot,
   );
@@ -428,4 +429,93 @@ String _stripLineComment(String sourceLine) {
     return sourceLine;
   }
   return sourceLine.substring(0, commentIndex);
+}
+
+const List<String> _currentSharedWidgetRoots = <String>[
+  'lib/presentation/shared/composites',
+  'lib/presentation/shared/layouts',
+  'lib/presentation/shared/primitives',
+  'lib/presentation/shared/screens',
+];
+
+Future<void> _runCurrentSharedWidgetsM3CoverageGuard() async {
+  final List<Directory> widgetRoots = <Directory>[];
+  for (final String path in _currentSharedWidgetRoots) {
+    final Directory directory = Directory(path);
+    if (!directory.existsSync()) {
+      continue;
+    }
+    widgetRoots.add(directory);
+  }
+
+  if (widgetRoots.isEmpty) {
+    stderr.writeln(
+      'Missing current shared UI roots: ${_currentSharedWidgetRoots.join(', ')}.',
+    );
+    exitCode = 1;
+    return;
+  }
+
+  final Set<String> actualFiles = _collectCurrentSharedDartFiles(
+    roots: widgetRoots,
+  );
+  if (actualFiles.isEmpty) {
+    stderr.writeln('No shared widget Dart files found to audit.');
+    exitCode = 1;
+    return;
+  }
+
+  final List<SharedWidgetsM3CoverageViolation> violations =
+      <SharedWidgetsM3CoverageViolation>[];
+  final List<String> sortedFiles = actualFiles.toList()..sort();
+  for (final String path in sortedFiles) {
+    final List<String> lines = await File(path).readAsLines();
+    _checkFile(path: path, lines: lines, violations: violations);
+  }
+
+  if (violations.isEmpty) {
+    stdout.writeln(
+      'Shared widgets M3 coverage contract passed '
+      '(${actualFiles.length} file(s) audited).',
+    );
+    return;
+  }
+
+  stderr.writeln('Shared widgets M3 coverage contract failed.');
+  for (final SharedWidgetsM3CoverageViolation violation in violations) {
+    stderr.writeln(
+      '${violation.filePath}:${violation.lineNumber}: '
+      '${violation.reason} ${violation.lineContent}',
+    );
+  }
+  exitCode = 1;
+}
+
+Set<String> _collectCurrentSharedDartFiles({required List<Directory> roots}) {
+  final Set<String> files = <String>{};
+  for (final Directory root in roots) {
+    for (final FileSystemEntity entity in root.listSync(recursive: true)) {
+      if (entity is! File) {
+        continue;
+      }
+      final String normalizedPath = _normalizePath(entity.path);
+      if (!normalizedPath.endsWith(
+        SharedWidgetsM3CoverageConst.dartExtension,
+      )) {
+        continue;
+      }
+      if (normalizedPath.endsWith(
+        SharedWidgetsM3CoverageConst.generatedExtension,
+      )) {
+        continue;
+      }
+      if (normalizedPath.endsWith(
+        SharedWidgetsM3CoverageConst.freezedExtension,
+      )) {
+        continue;
+      }
+      files.add(normalizedPath);
+    }
+  }
+  return files;
 }

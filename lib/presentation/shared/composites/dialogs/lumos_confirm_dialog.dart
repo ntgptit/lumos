@@ -29,16 +29,16 @@ class LumosConfirmDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Widget confirmAction = isDestructive
+        ? LumosDangerButton(text: confirmLabel, onPressed: onConfirm)
+        : LumosPrimaryButton(text: confirmLabel, onPressed: onConfirm);
     return LumosAlertDialog(
       title: title,
       content: content,
       type: type,
       actions: [
         LumosOutlineButton(text: cancelLabel, onPressed: onCancel),
-        if (isDestructive)
-          LumosDangerButton(text: confirmLabel, onPressed: onConfirm)
-        else
-          LumosPrimaryButton(text: confirmLabel, onPressed: onConfirm),
+        confirmAction,
       ],
     );
   }

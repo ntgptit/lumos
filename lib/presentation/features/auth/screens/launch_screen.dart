@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:lumos/app/app_route_data.dart';
+import 'package:lumos/core/theme/app_foundation.dart';
 import 'package:lumos/l10n/l10n.dart';
 import 'package:lumos/presentation/shared/composites/states/lumos_error_state.dart';
 import 'package:lumos/presentation/shared/screens/lumos_splash_screen.dart';

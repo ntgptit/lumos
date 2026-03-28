@@ -16,7 +16,7 @@ class CommonWidgetUsageGuardConst {
     'lib/core/widgets/',
     'lib/presentation/shared/',
   ];
-  static const String coreThemesPrefix = 'lib/core/themes/';
+  static const String coreThemesPrefix = 'lib/core/theme/';
   static const String allowMaterialWidgetOverrideMarker =
       'common-widget-usage-guard: allow-material-widget';
   static const String baselinePath = 'tool/common_widget_usage_baseline.txt';

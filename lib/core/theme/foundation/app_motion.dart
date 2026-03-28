@@ -7,6 +7,8 @@ abstract final class AppDurations {
   static const Duration fast = AppMotionTokens.fast;
   static const Duration medium = AppMotionTokens.medium;
   static const Duration slow = AppMotionTokens.slow;
+  static const Duration toast = Duration(seconds: 3);
+  static const Duration stagger = Duration(milliseconds: 50);
 }
 
 abstract final class AppMotion {

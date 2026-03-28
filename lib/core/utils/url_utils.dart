@@ -1,3 +1,5 @@
+import 'package:lumos/core/utils/string_utils.dart';
+
 abstract final class UrlUtils {
   static bool isAbsolute(String value) {
     final uri = Uri.tryParse(value);
@@ -5,10 +7,11 @@ abstract final class UrlUtils {
   }
 
   static Uri? tryParse(String? value) {
-    if (value == null || value.trim().isEmpty) {
+    final normalizedValue = StringUtils.trimmedOrNull(value);
+    if (normalizedValue == null) {
       return null;
     }
-    return Uri.tryParse(value.trim());
+    return Uri.tryParse(normalizedValue);
   }
 
   static bool isWebUrl(String value) {
@@ -30,7 +33,7 @@ abstract final class UrlUtils {
   }
 
   static String normalize(String value) {
-    final uri = Uri.parse(value.trim());
+    final uri = Uri.parse(StringUtils.normalizeText(value));
     return uri.toString();
   }
 }

@@ -4,6 +4,7 @@ import 'package:lumos/core/network/interceptors/retry_interceptor.dart';
 import 'package:lumos/core/services/auth_session_service.dart';
 import 'package:lumos/core/storage/secure_storage.dart';
 import 'package:lumos/core/storage/storage_keys.dart';
+import 'package:lumos/core/utils/string_utils.dart';
 
 abstract final class SessionRefreshInterceptorConst {
   static const bypassRefreshKey =
@@ -130,11 +131,7 @@ class SessionRefreshInterceptor extends QueuedInterceptor {
 
   Future<String?> _readToken(String key) async {
     final value = await _secureStorage.read(key);
-    final normalizedValue = value?.trim();
-    if (normalizedValue == null || normalizedValue.isEmpty) {
-      return null;
-    }
-    return normalizedValue;
+    return StringUtils.trimmedOrNull(value);
   }
 
   String? _extractBearerToken(Object? rawAuthorizationHeader) {
@@ -147,11 +144,9 @@ class SessionRefreshInterceptor extends QueuedInterceptor {
       return null;
     }
 
-    final token = rawAuthorizationHeader.substring(prefix.length).trim();
-    if (token.isEmpty) {
-      return null;
-    }
-    return token;
+    return StringUtils.trimmedOrNull(
+      StringUtils.suffix(rawAuthorizationHeader, prefix.length),
+    );
   }
 
   Future<_RefreshedTokens> _refreshTokens(String refreshToken) async {
@@ -212,11 +207,7 @@ class SessionRefreshInterceptor extends QueuedInterceptor {
       return null;
     }
 
-    final normalizedValue = rawValue.trim();
-    if (normalizedValue.isEmpty) {
-      return null;
-    }
-    return normalizedValue;
+    return StringUtils.trimmedOrNull(rawValue);
   }
 
   Future<void> _persistTokens(_RefreshedTokens tokens) async {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lumos/l10n/l10n.dart';
 import 'package:lumos/presentation/shared/primitives/buttons/lumos_button.dart';
 import 'package:lumos/presentation/shared/screens/lumos_placeholder_screen.dart';
 
@@ -17,19 +18,19 @@ class StudySetupScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LumosPlaceholderScreen(
-      title: 'Study Setup',
+      title: context.l10n.placeholderStudySetupTitle,
       actions: [
         LumosButton.primary(
           onPressed: onStartSession,
-          text: 'Start Session',
+          text: context.l10n.placeholderStudySetupStartAction,
         ),
         LumosButton.outline(
           onPressed: onOpenModePicker,
-          text: 'Mode Picker',
+          text: context.l10n.placeholderStudySetupModePickerAction,
         ),
         LumosButton.outline(
           onPressed: onOpenHistory,
-          text: 'History',
+          text: context.l10n.placeholderStudySetupHistoryAction,
         ),
       ],
     );

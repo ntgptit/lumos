@@ -2,6 +2,7 @@ abstract final class AppSizeTokens {
   static const double compactButtonHeight = 44;
   static const double regularButtonHeight = 48;
   static const double comfortableButtonHeight = 52;
+  static const double expandedToolbarHeight = 72;
   static const double compactListItemLeadingSize = 44;
   static const double regularListItemLeadingSize = 48;
   static const double comfortableListItemLeadingSize = 52;

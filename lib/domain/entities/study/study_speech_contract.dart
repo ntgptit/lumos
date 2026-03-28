@@ -1,3 +1,6 @@
+import 'package:flutter/foundation.dart';
+import 'package:lumos/core/utils/string_utils.dart';
+
 const String studySpeechAdapterFlutterTts = 'FLUTTER_TTS';
 const String studySpeechVoiceUnspecified = '';
 const List<String> supportedTtsAdapters = <String>[
@@ -6,6 +9,7 @@ const List<String> supportedTtsAdapters = <String>[
 const List<double> supportedTtsSpeeds = <double>[0.5, 0.75, 1, 1.25, 1.5];
 const List<double> supportedTtsPitches = <double>[0.8, 1, 1.2];
 
+@immutable
 class TtsVoiceOption {
   const TtsVoiceOption({required this.id, required this.label});
 
@@ -14,7 +18,7 @@ class TtsVoiceOption {
 }
 
 String normalizeTtsAdapter(String adapter) {
-  final normalized = adapter.trim().toUpperCase();
+  final normalized = StringUtils.normalizeUpper(adapter);
   if (supportedTtsAdapters.contains(normalized)) {
     return normalized;
   }

@@ -20,15 +20,16 @@ class LumosPagedSliverList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Widget contentSliver = SliverList.builder(
+      itemCount: itemCount,
+      itemBuilder: itemBuilder,
+    );
+    if (itemCount == 0 && emptySliver != null) {
+      contentSliver = SliverToBoxAdapter(child: emptySliver);
+    }
     final slivers = <Widget>[
       ...leadingSlivers,
-      if (itemCount == 0 && emptySliver != null)
-        SliverToBoxAdapter(child: emptySliver)
-      else
-        SliverList.builder(
-          itemCount: itemCount,
-          itemBuilder: itemBuilder,
-        ),
+      contentSliver,
       ...trailingSlivers,
     ];
     return CustomScrollView(controller: controller, slivers: slivers);

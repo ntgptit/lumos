@@ -8,6 +8,7 @@ import 'package:lumos/core/errors/network_failure.dart';
 import 'package:lumos/core/errors/storage_failure.dart';
 import 'package:lumos/core/errors/validation_failure.dart';
 import 'package:lumos/core/utils/object_utils.dart';
+import 'package:lumos/core/utils/string_utils.dart';
 
 abstract final class ErrorMapper {
   static const _fallbackMessage = 'Unexpected application error.';
@@ -67,7 +68,7 @@ abstract final class ErrorMapper {
   }
 
   static Failure _mapAppException(AppException error) {
-    final normalizedCode = error.code?.trim().toLowerCase();
+    final normalizedCode = StringUtils.normalizedLowerOrNull(error.code);
 
     switch (error.type) {
       case AppExceptionType.auth:
@@ -211,12 +212,14 @@ abstract final class ErrorMapper {
   }
 
   static String? _extractMessage(Object? data) {
-    if (data is String && data.trim().isNotEmpty) {
-      return data.trim();
+    if (data is String && StringUtils.hasText(data)) {
+      return StringUtils.normalizeText(data);
     }
 
     if (data is Map) {
-      return ObjectUtils.castOrNull<String>(data['message'])?.trim();
+      return StringUtils.trimmedOrNull(
+        ObjectUtils.castOrNull<String>(data['message']),
+      );
     }
 
     return null;
@@ -224,7 +227,9 @@ abstract final class ErrorMapper {
 
   static String? _extractCode(Object? data) {
     if (data is Map) {
-      return ObjectUtils.castOrNull<String>(data['code'])?.trim().toLowerCase();
+      return StringUtils.normalizedLowerOrNull(
+        ObjectUtils.castOrNull<String>(data['code']),
+      );
     }
 
     return null;

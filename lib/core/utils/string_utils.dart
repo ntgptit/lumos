@@ -1,4 +1,6 @@
 abstract final class StringUtils {
+  static const String empty = '';
+
   static String normalizeName(String value) {
     if (value.isEmpty) {
       return value;
@@ -28,6 +30,22 @@ abstract final class StringUtils {
     return normalizeText(value).toUpperCase();
   }
 
+  static String? normalizedLowerOrNull(String? value) {
+    final normalized = trimmedOrNull(value);
+    if (normalized == null) {
+      return null;
+    }
+    return normalized.toLowerCase();
+  }
+
+  static String? normalizedUpperOrNull(String? value) {
+    final normalized = trimmedOrNull(value);
+    if (normalized == null) {
+      return null;
+    }
+    return normalized.toUpperCase();
+  }
+
   static int compareNormalizedLower(String left, String right) {
     return normalizeLower(left).compareTo(normalizeLower(right));
   }
@@ -53,6 +71,10 @@ abstract final class StringUtils {
     return value == null || value.trim().isEmpty;
   }
 
+  static bool hasText(String? value) {
+    return !isBlank(value);
+  }
+
   static String? trimmedOrNull(String? value) {
     final trimmed = value?.trim();
     if (trimmed == null || trimmed.isEmpty) {
@@ -72,19 +94,34 @@ abstract final class StringUtils {
     return value.trim().replaceAll(RegExp(r'\s+'), ' ');
   }
 
+  static String replacePattern(
+    String value,
+    Pattern from, [
+    String replaceWith = empty,
+  ]) {
+    return value.replaceAll(from, replaceWith);
+  }
+
+  static List<String> splitByPattern(String value, Pattern pattern) {
+    return value.split(pattern);
+  }
+
+  static Iterable<String> words(String value) {
+    return splitByPattern(
+      normalizeWhitespace(value),
+      ' ',
+    ).where((word) => word.isNotEmpty);
+  }
+
   static bool equalsIgnoreCase(String? left, String? right) {
     return trimmedOrNull(left)?.toLowerCase() ==
         trimmedOrNull(right)?.toLowerCase();
   }
 
   static String initials(String value, {int maxLength = 2}) {
-    final words = normalizeWhitespace(
+    final chars = words(
       value,
-    ).split(' ').where((word) => word.isNotEmpty);
-    final chars = words
-        .take(maxLength)
-        .map((word) => word[0].toUpperCase())
-        .join();
+    ).take(maxLength).map((word) => word[0].toUpperCase()).join();
     return chars;
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:lumos/core/config/app_strings.dart';
+import 'package:lumos/core/utils/string_utils.dart';
 
 const _appFlavorEnv = String.fromEnvironment(
   'APP_FLAVOR',
@@ -42,14 +43,15 @@ enum AppFlavor {
   final String value;
 
   static AppFlavor fromValue(String value) {
-    switch (value.trim().toLowerCase()) {
+    final normalizedValue = StringUtils.normalizeLower(value);
+    switch (normalizedValue) {
       case 'dev':
       case 'development':
         return AppFlavor.development;
       case 'stage':
       case 'production':
       case 'staging':
-        return value.trim().toLowerCase() == 'production'
+        return normalizedValue == 'production'
             ? AppFlavor.production
             : AppFlavor.staging;
       case 'prod':
@@ -139,7 +141,7 @@ class EnvConfig {
 }
 
 String _resolveString(String rawValue, {required String fallback}) {
-  final value = rawValue.trim();
+  final value = StringUtils.normalizeText(rawValue);
   if (value.isEmpty) {
     return fallback;
   }
@@ -148,7 +150,7 @@ String _resolveString(String rawValue, {required String fallback}) {
 }
 
 bool _resolveBool(String rawValue, {required bool fallback}) {
-  final raw = rawValue.trim().toLowerCase();
+  final raw = StringUtils.normalizeLower(rawValue);
   switch (raw) {
     case 'true':
     case '1':
@@ -186,5 +188,8 @@ String _normalizePath(String path) {
     return '';
   }
 
-  return path.endsWith('/') ? path.substring(0, path.length - 1) : path;
+  if (!path.endsWith('/')) {
+    return path;
+  }
+  return StringUtils.prefix(path, path.length - 1);
 }

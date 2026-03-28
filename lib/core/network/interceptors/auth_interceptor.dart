@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:lumos/core/utils/string_utils.dart';
 
 typedef AuthTokenReader = FutureOr<String?> Function();
 
@@ -28,8 +29,8 @@ class AuthInterceptor extends QueuedInterceptor {
     }
 
     final token = await _tokenReader();
-    final normalizedToken = token?.trim();
-    if (normalizedToken != null && normalizedToken.isNotEmpty) {
+    final normalizedToken = StringUtils.trimmedOrNull(token);
+    if (normalizedToken != null) {
       options.headers.putIfAbsent(
         'Authorization',
         () => 'Bearer $normalizedToken',

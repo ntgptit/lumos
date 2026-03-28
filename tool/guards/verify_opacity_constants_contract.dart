@@ -5,10 +5,9 @@ class OpacityContractConst {
 
   static const String libRoot = 'lib';
   static const String dimensionsPath =
-      'lib/core/themes/foundation/app_opacity.dart';
-  static const String allowedSharedWidgetsPath =
-      'lib/presentation/shared/widgets/';
-  static const String allowedCoreThemesPath = 'lib/core/themes/';
+      'lib/core/theme/foundation/app_motion.dart';
+  static const String allowedSharedWidgetsPath = 'lib/presentation/shared/';
+  static const String allowedCoreThemesPath = 'lib/core/theme/';
   static const String allowedFeaturePath = 'lib/presentation/features/';
   static const String allowedClassName = 'AppOpacity';
   static const String generatedSuffix = '.g.dart';
@@ -31,28 +30,12 @@ class OpacityViolation {
 }
 
 const Map<String, String> _allowedOpacityConstants = <String, String>{
-  'transparent': '0.0',
-  'divider': '0.12',
-  'scrimLight': '0.32',
-  'scrimDark': '0.40',
-  'disabledContent': '0.38',
-  'stateHover': '0.08',
-  'stateFocus': '0.12',
-  'statePress': '0.12',
-  'stateDrag': '0.16',
-  'elevationLevel1': '0.05',
-  'elevationLevel2': '0.08',
-  'elevationLevel3': '0.11',
-  'elevationLevel4': '0.12',
-  'elevationLevel5': '0.14',
-  'lowEmphasis': '0.60',
-  'hint': '0.38',
-  'faint': '0.08',
-  'subtle': '0.12',
-  'soft': '0.16',
-  'medium': '0.24',
-  'strong': '0.48',
-  'disabled': '0.38',
+  'transparent': '0',
+  'subtle': 'AppOpacityTokens.subtle',
+  'lowEmphasis': 'AppOpacityTokens.muted',
+  'stateHover': 'AppOpacityTokens.subtle',
+  'strong': 'AppOpacityTokens.strong',
+  'scrimLight': 'AppOpacityTokens.outline',
 };
 
 final RegExp _constDoubleRegExp = RegExp(
