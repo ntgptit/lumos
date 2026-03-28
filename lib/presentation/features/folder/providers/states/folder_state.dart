@@ -1,3 +1,4 @@
+import 'package:lumos/core/enums/sort_direction.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../../../domain/entities/folder_models.dart';
@@ -10,8 +11,6 @@ abstract final class FolderStateConst {
   static const String emptySearchQuery = '';
   static const String sortByName = 'NAME';
   static const String sortByCreatedAt = 'CREATED_AT';
-  static const String sortTypeAscending = 'ASC';
-  static const String sortTypeDescending = 'DESC';
   static const int rootDepth = 0;
   static const int firstPage = 0;
   static const int pageSize = 20;
@@ -41,11 +40,15 @@ extension FolderSortByApiExtension on FolderSortBy {
 }
 
 extension FolderSortTypeApiExtension on FolderSortType {
-  String get apiValue {
+  SortDirection get direction {
     if (this == FolderSortType.desc) {
-      return FolderStateConst.sortTypeDescending;
+      return SortDirection.desc;
     }
-    return FolderStateConst.sortTypeAscending;
+    return SortDirection.asc;
+  }
+
+  String get apiValue {
+    return direction.apiValue;
   }
 }
 

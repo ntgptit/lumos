@@ -4,9 +4,16 @@ import '../../../../../../l10n/app_localizations.dart';
 import 'package:lumos/presentation/shared/composites/states/lumos_empty_state.dart';
 
 class DeckEmptyView extends StatelessWidget {
-  const DeckEmptyView({required this.isSearchResult, super.key});
+  const DeckEmptyView({
+    required this.isSearchResult,
+    this.buttonLabel,
+    this.onButtonPressed,
+    super.key,
+  });
 
   final bool isSearchResult;
+  final String? buttonLabel;
+  final VoidCallback? onButtonPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +27,12 @@ class DeckEmptyView extends StatelessWidget {
     final IconData icon = isSearchResult
         ? Icons.search_off_rounded
         : Icons.style_outlined;
-    return LumosEmptyState(title: title, message: message, icon: icon);
+    return LumosEmptyState(
+      title: title,
+      message: message,
+      icon: icon,
+      buttonLabel: buttonLabel,
+      onButtonPressed: onButtonPressed,
+    );
   }
 }
-

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:lumos/core/theme/app_foundation.dart';
 import '../../../../domain/entities/deck_models.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -19,11 +20,15 @@ abstract final class DeckContentConst {
 
 class DeckContent extends ConsumerWidget {
   const DeckContent({
+    required this.scrollController,
+    required this.leadingSlivers,
     required this.state,
     required this.providerArgs,
     super.key,
   });
 
+  final ScrollController scrollController;
+  final List<Widget> leadingSlivers;
   final DeckState state;
   final ({int folderId, String searchQuery, String sortType}) providerArgs;
 
@@ -43,62 +48,82 @@ class DeckContent extends ConsumerWidget {
       ).notifier,
     );
     final List<DeckNode> visibleDecks = state.decks;
+    final List<Widget> contentLeadingSlivers = <Widget>[...leadingSlivers];
+    if (state.inlineErrorMessage case final String message) {
+      contentLeadingSlivers.add(
+        SliverToBoxAdapter(child: DeckErrorBanner(message: message)),
+      );
+      contentLeadingSlivers.add(
+        SliverToBoxAdapter(child: SizedBox(height: LumosSpacing.md)),
+      );
+    }
     return Stack(
       children: <Widget>[
-        RefreshIndicator(
-          onRefresh: controller.refresh,
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              if (state.inlineErrorMessage case final String message)
-                DeckErrorBanner(message: message),
-              if (state.inlineErrorMessage != null)
-                const SizedBox(height: LumosSpacing.md),
-              DeckListContent(
+        AbsorbPointer(
+          absorbing: state.isMutating,
+          child: RefreshIndicator(
+            onRefresh: controller.refresh,
+            child: LumosScreenFrame(
+              child: DeckListContent(
+                scrollController: scrollController,
+                leadingSlivers: contentLeadingSlivers,
                 providerArgs: providerArgs,
                 visibleDecks: visibleDecks,
+                listBottomSpacing: listBottomSpacing,
+                emptyState: DeckEmptyView(
+                  isSearchResult: state.searchQuery.isNotEmpty,
+                  buttonLabel: state.searchQuery.isNotEmpty
+                      ? null
+                      : l10n.deckNewDeck,
+                  onButtonPressed: state.searchQuery.isNotEmpty
+                      ? null
+                      : () {
+                          _showDeckEditorDialog(context: context, ref: ref);
+                        },
+                ),
               ),
-              if (visibleDecks.isEmpty) ...<Widget>[
-                DeckEmptyView(isSearchResult: state.searchQuery.isNotEmpty),
-              ],
-              SizedBox(height: listBottomSpacing),
-            ],
+            ),
           ),
         ),
         DeckCreateButton(
           horizontalInset: LumosScreenFrame.resolveHorizontalInset(context),
           label: l10n.deckNewDeck,
           isMutating: state.isMutating,
-          onPressed: () {
-            showDeckEditorDialog(
-              context: context,
-              titleBuilder: (AppLocalizations l10n) => l10n.deckCreateTitle,
-              actionLabelBuilder: (AppLocalizations l10n) => l10n.commonCreate,
-              initialDeck: null,
-              onSubmitted: (DeckUpsertInput input) {
-                return ref
-                    .read(
-                      deckAsyncControllerProvider(
-                        providerArgs.folderId,
-                        providerArgs.searchQuery,
-                        providerArgs.sortType,
-                      ).notifier,
-                    )
-                    .createDeck(input);
-              },
-            );
-          },
+          onPressed: () => _showDeckEditorDialog(context: context, ref: ref),
         ),
         if (state.isMutating)
           Positioned.fill(
             child: IgnorePointer(
               child: ColoredBox(
-                color: Theme.of(context).colorScheme.scrim,
+                color: context.colorScheme.scrim,
                 child: const Center(child: LumosLoadingIndicator()),
               ),
             ),
           ),
       ],
+    );
+  }
+
+  void _showDeckEditorDialog({
+    required BuildContext context,
+    required WidgetRef ref,
+  }) {
+    showDeckEditorDialog(
+      context: context,
+      titleBuilder: (AppLocalizations l10n) => l10n.deckCreateTitle,
+      actionLabelBuilder: (AppLocalizations l10n) => l10n.commonCreate,
+      initialDeck: null,
+      onSubmitted: (DeckUpsertInput input) {
+        return ref
+            .read(
+              deckAsyncControllerProvider(
+                providerArgs.folderId,
+                providerArgs.searchQuery,
+                providerArgs.sortType,
+              ).notifier,
+            )
+            .createDeck(input);
+      },
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import 'package:lumos/core/enums/sort_direction.dart';
 import 'package:lumos/core/errors/failures.dart';
 import '../../core/network/providers/network_providers.dart';
 import '../../core/utils/string_utils.dart';
@@ -24,8 +25,6 @@ abstract final class FlashcardRepositoryImplConst {
   static const String sortByCreatedAt = 'CREATED_AT';
   static const String sortByUpdatedAt = 'UPDATED_AT';
   static const String sortByFrontText = 'FRONT_TEXT';
-  static const String sortTypeAscending = 'ASC';
-  static const String sortTypeDescending = 'DESC';
   static const String frontTextField = 'frontText';
   static const String backTextField = 'backText';
   static const String frontLangCodeField = 'frontLangCode';
@@ -43,7 +42,8 @@ abstract final class FlashcardRepositoryImplConst {
   static const String backTextRequiredMessage = 'Back text is required.';
   static const String backTextMaxLengthMessage =
       'Back text must be at most ${FlashcardDomainConst.backTextMaxLength} characters.';
-  static const String flashcardInputInvalidMessage = 'Flashcard input is invalid.';
+  static const String flashcardInputInvalidMessage =
+      'Flashcard input is invalid.';
   static const int badRequestStatusCode = 400;
   static const int conflictStatusCode = 409;
   static const int unprocessableEntityStatusCode = 422;
@@ -224,9 +224,9 @@ class DioFlashcardRepository implements FlashcardRepository {
 
   String _toSortTypeToken(FlashcardSortDirection sortDirection) {
     if (sortDirection == FlashcardSortDirection.asc) {
-      return FlashcardRepositoryImplConst.sortTypeAscending;
+      return SortDirection.asc.apiValue;
     }
-    return FlashcardRepositoryImplConst.sortTypeDescending;
+    return SortDirection.desc.apiValue;
   }
 
   int _resolvePage(int page) {
@@ -267,7 +267,8 @@ class DioFlashcardRepository implements FlashcardRepository {
     if (statusCode == FlashcardRepositoryImplConst.conflictStatusCode) {
       return true;
     }
-    if (statusCode == FlashcardRepositoryImplConst.unprocessableEntityStatusCode) {
+    if (statusCode ==
+        FlashcardRepositoryImplConst.unprocessableEntityStatusCode) {
       return true;
     }
     return false;
@@ -341,4 +342,3 @@ FlashcardRepository flashcardRepository(Ref ref) {
   final Dio dio = ref.watch(dioClientProvider);
   return DioFlashcardRepository(dio: dio);
 }
-

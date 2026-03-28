@@ -107,6 +107,9 @@
   "deckEmptySubtitle": "Create a deck to start organizing cards.",
   "deckSearchEmptyTitle": "No decks match your search.",
   "deckSearchEmptySubtitle": "Try a different keyword.",
+  "deckLibraryEntryTitle": "Decks live inside folders.",
+  "deckLibraryEntryMessage": "Open your folders to create, search, and manage decks in context.",
+  "deckLibraryEntryAction": "Open folders",
   "deckNameRequiredValidation": "Deck name is required.",
   "deckNameMinLengthValidation": "Deck name must be at least {min} character(s).",
   "@deckNameMinLengthValidation": {

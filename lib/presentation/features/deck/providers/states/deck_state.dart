@@ -1,3 +1,4 @@
+import 'package:lumos/core/enums/sort_direction.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../../../domain/entities/deck_models.dart';
@@ -8,7 +9,7 @@ abstract final class DeckStateConst {
   DeckStateConst._();
 
   static const String sortByName = 'NAME';
-  static const String sortTypeAscending = 'ASC';
+  static const SortDirection defaultSortDirection = SortDirection.asc;
   static const int firstPage = 0;
   static const int pageSize = 50;
   static const int deckNameMinLength = DeckDomainConst.nameMinLength;

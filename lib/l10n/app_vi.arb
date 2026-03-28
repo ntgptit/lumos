@@ -101,6 +101,9 @@
   "deckEmptySubtitle": "Hãy tạo deck để bắt đầu sắp xếp thẻ.",
   "deckSearchEmptyTitle": "Không có deck phù hợp.",
   "deckSearchEmptySubtitle": "Hãy thử từ khóa khác.",
+  "deckLibraryEntryTitle": "Deck nằm trong thư mục.",
+  "deckLibraryEntryMessage": "Hãy mở thư mục để tạo, tìm kiếm và quản lý deck theo đúng ngữ cảnh.",
+  "deckLibraryEntryAction": "Mở thư mục",
   "deckNameRequiredValidation": "Tên deck là bắt buộc.",
   "deckNameMinLengthValidation": "Tên deck phải có ít nhất {min} ký tự.",
   "@deckNameMinLengthValidation": {
