@@ -17,9 +17,6 @@ abstract final class FlashcardPreviewCarouselConst {
   static const double titleVerticalPadding = LumosSpacing.lg;
   static const double expandButtonInset = LumosSpacing.sm;
   static const double expandIconSize = LumosSpacing.xl;
-  static const double frontTextFontSize = AppTypographyConst.titleLargeFontSize;
-  static const double frontTextHeight =
-      AppTypographyConst.titleLargeLineHeight / frontTextFontSize;
   static const double horizontalScrollActivationOffset = LumosSpacing.xs;
 }
 
@@ -66,11 +63,6 @@ class FlashcardPreviewCarousel extends StatelessWidget {
       context: context,
       baseValue: FlashcardPreviewCarouselConst.expandIconSize,
       minScale: ResponsiveDimensions.compactInsetScale,
-    );
-    final double frontTextFontSize = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: FlashcardPreviewCarouselConst.frontTextFontSize,
-      minScale: ResponsiveDimensions.compactLargeInsetScale,
     );
     final double indicatorGap = ResponsiveDimensions.compactValue(
       context: context,
@@ -129,7 +121,7 @@ class FlashcardPreviewCarousel extends StatelessWidget {
                       ),
                       child: LumosCard(
                         variant: LumosCardVariant.filled,
-                        borderRadius: BorderRadii.xLarge,
+                        borderRadius: context.shapes.hero,
                         child: Stack(
                           children: <Widget>[
                             Center(
@@ -143,16 +135,8 @@ class FlashcardPreviewCarousel extends StatelessWidget {
                                   align: TextAlign.center,
                                   maxLines: 3,
                                   overflow: TextOverflow.ellipsis,
-                                  style: Theme.of(context).textTheme.titleMedium
-                                      ?.copyWith(
-                                        fontSize: frontTextFontSize,
-                                        height: FlashcardPreviewCarouselConst
-                                            .frontTextHeight,
-                                        letterSpacing: AppTypographyConst
-                                            .titleMediumLetterSpacing,
-                                        fontWeight: AppTypographyConst
-                                            .kFontWeightSemiBold,
-                                      ),
+                                  style: Theme.of(context).textTheme.titleLarge
+                                      ?.copyWith(fontWeight: FontWeight.w600),
                                 ),
                               ),
                             ),
@@ -294,4 +278,3 @@ class FlashcardPreviewCarousel extends StatelessWidget {
     return true;
   }
 }
-

@@ -180,7 +180,9 @@ const Set<String> _forwardedTokenSourcePrefixes = <String>{
 
 Future<void> main() async {
   await _runCurrentThemeArchitectureGuard();
-  return;
+  if (!_shouldRunLegacyThemeArchitecturePass()) {
+    return;
+  }
 
   final List<ThemeArchitectureViolation> violations =
       <ThemeArchitectureViolation>[];
@@ -215,6 +217,10 @@ Future<void> main() async {
     );
   }
   exitCode = 1;
+}
+
+bool _shouldRunLegacyThemeArchitecturePass() {
+  return false;
 }
 
 Future<void> _appendForwardedTokenDeclarationViolations({

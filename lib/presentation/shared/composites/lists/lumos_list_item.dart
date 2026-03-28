@@ -33,7 +33,7 @@ class LumosListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final itemRadius = borderRadius ?? BorderRadius.circular(context.radius.md);
+    final itemRadius = borderRadius ?? context.shapes.card;
     final itemPadding =
         padding ??
         EdgeInsets.symmetric(

@@ -13,12 +13,19 @@ abstract final class HomeAppBarConst {
   static const double notificationDotSize = LumosSpacing.sm;
   static const double compactNotificationDotSize =
       LumosSpacing.xs + LumosSpacing.xxs;
-  static const double brandMarkSizeCompact = LumosSpacing.xxxl + LumosSpacing.xs;
+  static const double brandMarkSizeCompact =
+      LumosSpacing.xxxl + LumosSpacing.xs;
   static const double brandMarkSizeExpanded = WidgetSizes.avatarLarge;
   static const EdgeInsetsGeometry profilePillPaddingCompact =
-      EdgeInsets.symmetric(horizontal: LumosSpacing.xs, vertical: LumosSpacing.xxs);
+      EdgeInsets.symmetric(
+        horizontal: LumosSpacing.xs,
+        vertical: LumosSpacing.xxs,
+      );
   static const EdgeInsetsGeometry profilePillPaddingExpanded =
-      EdgeInsets.symmetric(horizontal: LumosSpacing.xs, vertical: LumosSpacing.xs);
+      EdgeInsets.symmetric(
+        horizontal: LumosSpacing.xs,
+        vertical: LumosSpacing.xs,
+      );
 }
 
 class HomeAppBar extends ConsumerWidget implements PreferredSizeWidget {
@@ -49,7 +56,7 @@ class HomeAppBar extends ConsumerWidget implements PreferredSizeWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadii.large,
+        borderRadius: context.shapes.card,
       ),
       child: SizedBox.square(
         dimension: isCompact
@@ -68,7 +75,7 @@ class HomeAppBar extends ConsumerWidget implements PreferredSizeWidget {
         ? DecoratedBox(
             decoration: BoxDecoration(
               color: colorScheme.secondaryContainer,
-              borderRadius: BorderRadii.pill,
+              borderRadius: context.shapes.pill,
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(
@@ -185,4 +192,3 @@ class HomeAppBar extends ConsumerWidget implements PreferredSizeWidget {
     LumosAppBarConst.expandedToolbarHeight + AppStroke.thin,
   );
 }
-

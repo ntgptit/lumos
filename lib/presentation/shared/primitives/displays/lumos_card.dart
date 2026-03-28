@@ -43,7 +43,7 @@ class _LumosCardState extends State<LumosCard> {
   Widget build(BuildContext context) {
     final resolvedBorderRadius = widget.borderRadius is BorderRadius
         ? widget.borderRadius! as BorderRadius
-        : BorderRadius.circular(context.radius.lg);
+        : context.shapes.card;
     final childWidget = ConstrainedBox(
       constraints: BoxConstraints(
         minHeight: widget.minHeight ?? context.component.cardMinHeight,
@@ -68,12 +68,12 @@ class _LumosCardState extends State<LumosCard> {
 
     final card = Card(
       margin: widget.margin,
-      elevation: widget.elevation ??
+      elevation:
+          widget.elevation ??
           (widget.variant == LumosCardVariant.elevated ? null : 0),
       clipBehavior: Clip.antiAlias,
       color: switch (widget.variant) {
-        LumosCardVariant.filled =>
-          context.colorScheme.surfaceContainerHighest,
+        LumosCardVariant.filled => context.colorScheme.surfaceContainerHighest,
         _ => null,
       },
       shape: RoundedRectangleBorder(

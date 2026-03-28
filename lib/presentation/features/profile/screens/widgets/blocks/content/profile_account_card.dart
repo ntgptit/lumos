@@ -55,7 +55,7 @@ class ProfileAccountCard extends StatelessWidget {
             DecoratedBox(
               decoration: BoxDecoration(
                 color: theme.colorScheme.secondaryContainer,
-                borderRadius: BorderRadii.pill,
+                borderRadius: context.shapes.pill,
               ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(
@@ -77,4 +77,3 @@ class ProfileAccountCard extends StatelessWidget {
     );
   }
 }
-

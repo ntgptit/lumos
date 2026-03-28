@@ -14,7 +14,7 @@ class DeckErrorBanner extends StatelessWidget {
       padding: const EdgeInsets.all(LumosSpacing.md),
       decoration: BoxDecoration(
         color: colorScheme.errorContainer,
-        borderRadius: BorderRadii.medium,
+        borderRadius: context.shapes.card,
       ),
       child: LumosText(
         message,
@@ -24,4 +24,3 @@ class DeckErrorBanner extends StatelessWidget {
     );
   }
 }
-

@@ -35,9 +35,7 @@ class LumosAlertDialog extends StatelessWidget {
           BoxConstraints(maxWidth: context.layout.dialogMaxWidth),
       backgroundColor: tone.background,
       surfaceTintColor: Colors.transparent,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(context.radius.lg),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: context.shapes.dialog),
     );
   }
 

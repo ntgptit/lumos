@@ -37,7 +37,7 @@ class FolderHeaderMetaPill extends StatelessWidget {
       padding: padding,
       decoration: BoxDecoration(
         color: backgroundColor,
-        borderRadius: BorderRadii.medium,
+        borderRadius: context.shapes.pill,
       ),
       child: Row(
         mainAxisSize: expandLabel ? MainAxisSize.max : MainAxisSize.min,
@@ -68,4 +68,3 @@ class FolderHeaderMetaPill extends StatelessWidget {
     );
   }
 }
-

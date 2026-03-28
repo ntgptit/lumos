@@ -109,7 +109,7 @@ class _HomeAdaptiveBodyState extends ConsumerState<HomeAdaptiveBody> {
                       key: const ValueKey<String>('home-tab-loading-mask'),
                       padding: loadingMaskPadding,
                       child: ClipRRect(
-                        borderRadius: BorderRadii.medium,
+                        borderRadius: context.shapes.control,
                         child: LumosLoadingIndicator(
                           isLinear: true,
                           size: loadingMaskHeight,
@@ -161,7 +161,9 @@ class _HomeAdaptiveBodyState extends ConsumerState<HomeAdaptiveBody> {
                     (HomeNavigationItem item) => NavigationRailDestination(
                       icon: LumosIcon(item.icon),
                       selectedIcon: LumosIcon(item.selectedIcon),
-                      label: LumosInlineText(item.tabId.toLocalizedLabel(l10n)),
+                      label: LumosInlineText(
+                        item.tabId.toLocalizedLabel(l10n),
+                      ),
                     ),
                   )
                   .toList(),
@@ -194,4 +196,3 @@ class _HomeAdaptiveBodyState extends ConsumerState<HomeAdaptiveBody> {
     _pageCacheByTab.clear();
   }
 }
-

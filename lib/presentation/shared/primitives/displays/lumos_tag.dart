@@ -32,7 +32,7 @@ class LumosTag extends StatelessWidget {
           ),
       decoration: BoxDecoration(
         color: backgroundColor ?? context.colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(context.radius.pill),
+        borderRadius: context.shapes.pill,
         border: Border.all(color: context.colorScheme.outlineVariant),
       ),
       child: IconTheme.merge(

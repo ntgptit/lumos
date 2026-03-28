@@ -4,6 +4,7 @@ import 'package:lumos/core/theme/extensions/color_scheme_ext.dart';
 import 'package:lumos/core/theme/extensions/dimension_theme_ext.dart';
 import 'package:lumos/core/theme/responsive/adaptive_layout.dart';
 import 'package:lumos/core/theme/responsive/adaptive_radius.dart';
+import 'package:lumos/core/theme/responsive/adaptive_shape_roles.dart';
 import 'package:lumos/core/theme/responsive/adaptive_spacing.dart';
 import 'package:lumos/core/theme/responsive/adaptive_typography.dart';
 import 'package:lumos/core/theme/responsive/adaptive_component_size.dart';
@@ -12,9 +13,12 @@ import 'package:lumos/core/theme/responsive/screen_class.dart';
 
 abstract final class ResponsiveThemeFactory {
   static DimensionThemeExt create(ScreenClass screenClass) {
+    final radius = AdaptiveRadius.fromScreen(screenClass);
+
     return DimensionThemeExt(
       spacing: AdaptiveSpacing.fromScreen(screenClass),
-      radius: AdaptiveRadius.fromScreen(screenClass),
+      radius: radius,
+      shapes: AdaptiveShapeRoles.fromRadius(radius),
       typography: AdaptiveTypography.fromScreen(screenClass),
       iconSize: AdaptiveIconSize.fromScreen(screenClass),
       componentSize: AdaptiveComponentSize.fromScreen(screenClass),

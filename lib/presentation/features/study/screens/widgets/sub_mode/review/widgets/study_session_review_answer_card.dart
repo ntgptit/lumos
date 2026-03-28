@@ -4,10 +4,6 @@ import 'package:lumos/core/theme/app_foundation.dart';
 import '../../widgets/study_session_content_card.dart';
 import '../../widgets/study_session_layout_metrics.dart';
 
-const double _reviewAnswerLineHeight =
-    AppTypographyConst.headlineLargeLineHeight /
-    AppTypographyConst.headlineLargeFontSize;
-
 class StudySessionReviewAnswerCard extends StatelessWidget {
   const StudySessionReviewAnswerCard({
     required this.content,
@@ -64,7 +60,6 @@ class StudySessionReviewAnswerCard extends StatelessWidget {
                   style: theme.textTheme.headlineLarge?.copyWith(
                     color: colorScheme.onSurface,
                     fontWeight: FontWeight.w400,
-                    height: _reviewAnswerLineHeight,
                   ),
                 ),
               ),
@@ -75,4 +70,3 @@ class StudySessionReviewAnswerCard extends StatelessWidget {
     );
   }
 }
-

@@ -7,6 +7,7 @@ import 'package:lumos/presentation/shared/composites/cards/lumos_info_card.dart'
 import 'package:lumos/presentation/shared/composites/feedback/lumos_message_banner.dart';
 import 'package:lumos/presentation/shared/composites/forms/lumos_primary_submit_bar.dart';
 import 'package:lumos/presentation/shared/composites/text/lumos_inline_text.dart';
+import 'package:lumos/presentation/shared/primitives/selections/lumos_segmented_control.dart';
 import '../../../../providers/auth_session_provider.dart';
 import 'auth_form_fields.dart';
 
@@ -43,7 +44,7 @@ class AuthFormCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          SegmentedButton<AuthScreenModeState>(
+          LumosSegmentedControl<AuthScreenModeState>(
             segments: <ButtonSegment<AuthScreenModeState>>[
               ButtonSegment<AuthScreenModeState>(
                 value: AuthScreenModeState.login,
@@ -67,7 +68,8 @@ class AuthFormCard extends StatelessWidget {
             identifierController: identifierController,
             passwordController: passwordController,
           ),
-          if (authState.errorMessage case final String errorMessage) ...<Widget>[
+          if (authState.errorMessage
+              case final String errorMessage) ...<Widget>[
             SizedBox(height: context.spacing.md),
             LumosMessageBanner(
               message: errorMessage,
@@ -88,4 +90,3 @@ class AuthFormCard extends StatelessWidget {
     );
   }
 }
-

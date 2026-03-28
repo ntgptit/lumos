@@ -89,7 +89,7 @@ Future<FlashcardLearnOptionsSheetAction?> showFlashcardLearnOptionsSheet({
                         color: Theme.of(
                           sheetContext,
                         ).colorScheme.secondaryContainer,
-                        borderRadius: BorderRadii.medium,
+                        borderRadius: sheetContext.shapes.card,
                       ),
                       child: IconTheme(
                         data: IconThemeData(
@@ -137,7 +137,7 @@ Future<FlashcardLearnOptionsSheetAction?> showFlashcardLearnOptionsSheet({
                         color: Theme.of(
                           sheetContext,
                         ).colorScheme.secondaryContainer,
-                        borderRadius: BorderRadii.medium,
+                        borderRadius: sheetContext.shapes.card,
                       ),
                       child: IconTheme(
                         data: IconThemeData(
@@ -187,7 +187,7 @@ Future<FlashcardLearnOptionsSheetAction?> showFlashcardLearnOptionsSheet({
                         color: Theme.of(
                           sheetContext,
                         ).colorScheme.errorContainer,
-                        borderRadius: BorderRadii.medium,
+                        borderRadius: sheetContext.shapes.card,
                       ),
                       child: IconTheme(
                         data: IconThemeData(
@@ -226,4 +226,3 @@ Future<FlashcardLearnOptionsSheetAction?> showFlashcardLearnOptionsSheet({
     },
   );
 }
-

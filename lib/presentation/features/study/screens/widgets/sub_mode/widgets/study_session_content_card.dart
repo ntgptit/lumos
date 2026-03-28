@@ -29,8 +29,8 @@ class StudySessionContentCard extends StatelessWidget {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         final BorderRadius borderRadius = constraints.maxWidth < 390
-            ? BorderRadii.large
-            : BorderRadii.xLarge;
+            ? context.shapes.card
+            : context.shapes.hero;
         final Widget stackedChild = Stack(
           children: <Widget>[
             child,
@@ -68,4 +68,3 @@ class StudySessionContentCard extends StatelessWidget {
     );
   }
 }
-

@@ -70,7 +70,9 @@ const Set<String> _allowedMaterialColors = <String>{'transparent'};
 
 Future<void> main() async {
   await _runCurrentSharedWidgetsM3CoverageGuard();
-  return;
+  if (!_shouldRunLegacyCoveragePass()) {
+    return;
+  }
 
   final Directory widgetsRoot = Directory(
     SharedWidgetsM3CoverageConst.sharedWidgetsRoot,
@@ -214,6 +216,10 @@ void _appendManifestViolations({
       ),
     );
   }
+}
+
+bool _shouldRunLegacyCoveragePass() {
+  return false;
 }
 
 void _checkFile({

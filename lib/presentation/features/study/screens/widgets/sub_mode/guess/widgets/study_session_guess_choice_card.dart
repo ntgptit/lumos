@@ -4,9 +4,6 @@ import 'package:lumos/core/theme/app_foundation.dart';
 import '../../widgets/study_session_layout_metrics.dart';
 
 const double studySessionGuessChoiceCardDefaultHeight = 64;
-const double _guessChoiceLineHeight =
-    AppTypographyConst.titleSmallLineHeight /
-    AppTypographyConst.titleSmallFontSize;
 const int _guessChoiceMaxLines = 2;
 const EdgeInsetsGeometry _guessChoiceCardPadding = EdgeInsets.symmetric(
   horizontal: LumosSpacing.md,
@@ -64,7 +61,7 @@ class StudySessionGuessChoiceCard extends StatelessWidget {
       onTap: isInteractive ? onPressed : null,
       isSelected: isSelected && !isSuccessFeedback && !isErrorFeedback,
       variant: LumosCardVariant.filled,
-      borderRadius: BorderRadii.xLarge,
+      borderRadius: context.shapes.hero,
       padding: EdgeInsets.zero,
       child: AnimatedContainer(
         duration: AppDurations.medium,
@@ -73,7 +70,7 @@ class StudySessionGuessChoiceCard extends StatelessWidget {
           color: isSuccessFeedback || isErrorFeedback
               ? backgroundColor
               : colorScheme.surface.withValues(alpha: AppOpacity.transparent),
-          borderRadius: BorderRadii.xLarge,
+          borderRadius: context.shapes.hero,
         ),
         child: SizedBox(
           height: resolvedHeight,
@@ -88,7 +85,6 @@ class StudySessionGuessChoiceCard extends StatelessWidget {
                 style: theme.textTheme.titleSmall?.copyWith(
                   color: textColor,
                   fontWeight: FontWeight.w400,
-                  height: _guessChoiceLineHeight,
                 ),
               ),
             ),
@@ -98,4 +94,3 @@ class StudySessionGuessChoiceCard extends StatelessWidget {
     );
   }
 }
-

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lumos/core/theme/extensions/theme_context_ext.dart';
 
 class LumosSegmentedControl<T> extends StatelessWidget {
   const LumosSegmentedControl({
@@ -11,6 +10,7 @@ class LumosSegmentedControl<T> extends StatelessWidget {
     this.multiSelectionEnabled = false,
     this.emptySelectionAllowed = false,
     this.showSelectedIcon = false,
+    this.style,
   });
 
   final List<ButtonSegment<T>> segments;
@@ -20,6 +20,7 @@ class LumosSegmentedControl<T> extends StatelessWidget {
   final bool multiSelectionEnabled;
   final bool emptySelectionAllowed;
   final bool showSelectedIcon;
+  final ButtonStyle? style;
 
   @override
   Widget build(BuildContext context) {
@@ -30,18 +31,7 @@ class LumosSegmentedControl<T> extends StatelessWidget {
       multiSelectionEnabled: multiSelectionEnabled,
       emptySelectionAllowed: emptySelectionAllowed,
       showSelectedIcon: showSelectedIcon,
-      style: ButtonStyle(
-        textStyle: WidgetStatePropertyAll(context.textTheme.labelLarge),
-        iconSize: WidgetStatePropertyAll(context.iconSize.md),
-        minimumSize: WidgetStatePropertyAll(
-          Size.fromHeight(context.component.buttonHeight),
-        ),
-        shape: WidgetStatePropertyAll(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(context.radius.md),
-          ),
-        ),
-      ),
+      style: style,
     );
   }
 }

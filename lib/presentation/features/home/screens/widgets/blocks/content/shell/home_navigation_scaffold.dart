@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:lumos/core/theme/app_foundation.dart';
+import '../../../../../constants/home_contract.dart';
 import 'home_adaptive_body.dart';
 import '../../footer/home_bottom_nav.dart';
 import '../../header/home_app_bar.dart';
@@ -32,6 +33,7 @@ class HomeNavigationScaffold extends StatelessWidget {
         child: ColoredBox(
           color: colorScheme.surface,
           child: HomeAdaptiveBody(
+            key: _layoutKey(),
             deviceType: deviceType,
             useNavigationRail: useNavigationRail,
           ),
@@ -39,6 +41,16 @@ class HomeNavigationScaffold extends StatelessWidget {
       ),
       bottomNavigationBar: useNavigationRail ? null : const HomeBottomNav(),
     );
+  }
+
+  Key _layoutKey() {
+    if (deviceType == DeviceType.mobile) {
+      return HomeScreenKeys.mobileLayout;
+    }
+    if (deviceType == DeviceType.tablet) {
+      return HomeScreenKeys.tabletLayout;
+    }
+    return HomeScreenKeys.desktopLayout;
   }
 }
 

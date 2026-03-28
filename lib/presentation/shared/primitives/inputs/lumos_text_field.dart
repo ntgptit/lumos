@@ -100,7 +100,7 @@ class LumosTextField extends StatelessWidget {
       textInputAction: textInputAction,
       textAlign: textAlign,
       textAlignVertical: textAlignVertical,
-      style: textStyle,
+      style: textStyle ?? context.textTheme.bodyMedium,
       autofillHints: autofillHints,
       validator: validator,
       autovalidateMode: autovalidateMode,
@@ -129,11 +129,14 @@ class LumosTextField extends StatelessWidget {
         child: field,
       );
     }
+    if (label == null) {
+      return resolvedField;
+    }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (label != null) ...[
+    if (expands) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
           LumosFormFieldLabel(
             label: label!,
             supportingText: supportingText,
@@ -141,7 +144,21 @@ class LumosTextField extends StatelessWidget {
             isRequired: isRequired,
           ),
           SizedBox(height: context.spacing.xs),
+          Expanded(child: resolvedField),
         ],
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        LumosFormFieldLabel(
+          label: label!,
+          supportingText: supportingText,
+          trailing: labelTrailing,
+          isRequired: isRequired,
+        ),
+        SizedBox(height: context.spacing.xs),
         resolvedField,
       ],
     );

@@ -10,7 +10,7 @@ abstract final class LumosInputTheme {
   ) {
     final palette = AppThemePalette.fromBrightness(colorScheme.brightness);
     final border = OutlineInputBorder(
-      borderRadius: BorderRadius.circular(dims.radius.sm),
+      borderRadius: dims.shapes.control,
       borderSide: BorderSide(
         color: palette.outline,
         width: AppBorderTokens.thin,

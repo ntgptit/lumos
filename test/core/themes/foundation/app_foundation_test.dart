@@ -1,122 +1,119 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:lumos/core/themes/foundation/app_foundation.dart';
+import 'package:lumos/core/theme/app_foundation.dart';
+import 'package:lumos/core/theme/responsive/breakpoints.dart';
+import 'package:lumos/core/theme/responsive/screen_class.dart';
 
 void main() {
-  group('DeviceTypeHelper', () {
-    test('returns mobile for widths up to mobile breakpoint', () {
-      final DeviceType result = DeviceTypeHelper.fromWidth(
-        width: Breakpoints.kMobileMaxWidth,
-      );
-
-      expect(result, DeviceType.mobile);
+  group('Breakpoints and screen classes', () {
+    test('bridge foundation breakpoints to responsive breakpoints', () {
+      expect(Breakpoints.kMobileMaxWidth, AppBreakpoints.compactMaxWidth);
+      expect(Breakpoints.kTabletMaxWidth, AppBreakpoints.expandedMaxWidth);
     });
 
-    test('returns tablet between mobile and tablet breakpoints', () {
-      final DeviceType result = DeviceTypeHelper.fromWidth(
-        width: Breakpoints.kMobileMaxWidth + LumosSpacing.xs,
-      );
-
-      expect(result, DeviceType.tablet);
-    });
-
-    test('returns desktop above tablet breakpoint', () {
-      final DeviceType result = DeviceTypeHelper.fromWidth(
-        width: Breakpoints.kTabletMaxWidth + LumosSpacing.xs,
-      );
-
-      expect(result, DeviceType.desktop);
+    test('resolves screen classes at the configured width ranges', () {
+      expect(ScreenClass.fromWidth(390), ScreenClass.compact);
+      expect(ScreenClass.fromWidth(700), ScreenClass.medium);
+      expect(ScreenClass.fromWidth(900), ScreenClass.expanded);
+      expect(ScreenClass.fromWidth(1280), ScreenClass.large);
     });
   });
 
-  testWidgets('percent dimension extensions compute expected size', (
+  testWidgets('device type context extension follows screen width', (
     WidgetTester tester,
   ) async {
     tester.view.devicePixelRatio = 1;
-    tester.view.physicalSize = const Size(400, 800);
+    tester.view.physicalSize = const Size(390, 844);
     addTearDown(tester.view.resetDevicePixelRatio);
     addTearDown(tester.view.resetPhysicalSize);
 
-    double widthValue = LumosSpacing.none;
-    double heightValue = LumosSpacing.none;
+    DeviceType? resolvedDeviceType;
 
     await tester.pumpWidget(
       MaterialApp(
         home: Builder(
           builder: (BuildContext context) {
-            widthValue = 0.5.percentWidth(context);
-            heightValue = 0.25.percentHeight(context);
+            resolvedDeviceType = context.deviceType;
             return const SizedBox.shrink();
           },
         ),
       ),
     );
 
-    expect(widthValue, 200);
-    expect(heightValue, 200);
-  });
+    expect(resolvedDeviceType, DeviceType.mobile);
 
-  testWidgets(
-    'compact value scales down on narrow screens without scaling up',
-    (WidgetTester tester) async {
-      tester.view.devicePixelRatio = 1;
-      tester.view.physicalSize = const Size(320, 800);
-      addTearDown(tester.view.resetDevicePixelRatio);
-      addTearDown(tester.view.resetPhysicalSize);
-
-      double compactValue = LumosSpacing.none;
-
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Builder(
-            builder: (BuildContext context) {
-              compactValue = ResponsiveDimensions.compactValue(
-                context: context,
-                baseValue: LumosSpacing.lg,
-                minScale: ResponsiveDimensions.compactInsetScale,
-              );
-              return const SizedBox.shrink();
-            },
-          ),
+    tester.view.physicalSize = const Size(700, 844);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Builder(
+          builder: (BuildContext context) {
+            resolvedDeviceType = context.deviceType;
+            return const SizedBox.shrink();
+          },
         ),
-      );
-
-      expect(compactValue, lessThan(LumosSpacing.lg));
-
-      tester.view.physicalSize = const Size(430, 800);
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Builder(
-            builder: (BuildContext context) {
-              compactValue = ResponsiveDimensions.compactValue(
-                context: context,
-                baseValue: LumosSpacing.lg,
-                minScale: ResponsiveDimensions.compactInsetScale,
-              );
-              return const SizedBox.shrink();
-            },
-          ),
-        ),
-      );
-
-      expect(compactValue, LumosSpacing.lg);
-    },
-  );
-
-  test('screen percentage helper fails fast for invalid input', () {
-    expect(
-      () => ResponsiveDimensions.screenWidthPercentage(
-        context: _FakeBuildContext(),
-        percentage: 1.1,
       ),
-      throwsArgumentError,
     );
-  });
-}
 
-class _FakeBuildContext implements BuildContext {
-  @override
-  dynamic noSuchMethod(Invocation invocation) {
-    return super.noSuchMethod(invocation);
-  }
+    expect(resolvedDeviceType, DeviceType.tablet);
+
+    tester.view.physicalSize = const Size(1280, 844);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Builder(
+          builder: (BuildContext context) {
+            resolvedDeviceType = context.deviceType;
+            return const SizedBox.shrink();
+          },
+        ),
+      ),
+    );
+
+    expect(resolvedDeviceType, DeviceType.desktop);
+  });
+
+  testWidgets('compact value scales only on compact widths', (
+    WidgetTester tester,
+  ) async {
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(320, 800);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    addTearDown(tester.view.resetPhysicalSize);
+
+    var compactValue = 0.0;
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Builder(
+          builder: (BuildContext context) {
+            compactValue = ResponsiveDimensions.compactValue(
+              context: context,
+              baseValue: LumosSpacing.lg,
+              minScale: ResponsiveDimensions.compactInsetScale,
+            );
+            return const SizedBox.shrink();
+          },
+        ),
+      ),
+    );
+
+    expect(compactValue, lessThan(LumosSpacing.lg));
+
+    tester.view.physicalSize = const Size(430, 800);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Builder(
+          builder: (BuildContext context) {
+            compactValue = ResponsiveDimensions.compactValue(
+              context: context,
+              baseValue: LumosSpacing.lg,
+              minScale: ResponsiveDimensions.compactInsetScale,
+            );
+            return const SizedBox.shrink();
+          },
+        ),
+      ),
+    );
+
+    expect(compactValue, LumosSpacing.lg);
+  });
 }

@@ -69,7 +69,7 @@ class DeckHeaderSection extends StatelessWidget {
           LumosSkeletonBox(
             width: context.spacing.xxxl * 2,
             height: context.spacing.xl,
-            borderRadius: BorderRadius.circular(context.radius.pill),
+            borderRadius: context.shapes.pill,
           ),
         if (deckCount != null)
           LumosPill(

@@ -32,7 +32,7 @@ class FolderMutatingOverlay extends StatelessWidget {
         width: overlayWidth,
         padding: EdgeInsets.all(overlayPadding),
         decoration: BoxDecoration(
-          borderRadius: BorderRadii.large,
+          borderRadius: context.shapes.card,
           color: Theme.of(context).colorScheme.surface,
         ),
         child: Column(
@@ -41,7 +41,7 @@ class FolderMutatingOverlay extends StatelessWidget {
             LumosSkeletonBox(
               width: skeletonSize,
               height: skeletonSize,
-              borderRadius: BorderRadii.large,
+              borderRadius: context.shapes.card,
             ),
             SizedBox(height: labelGap),
             LumosSkeletonBox(height: labelGap),
@@ -51,4 +51,3 @@ class FolderMutatingOverlay extends StatelessWidget {
     );
   }
 }
-

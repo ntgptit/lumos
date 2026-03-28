@@ -12,9 +12,6 @@ const double _guessHeroCardMinHeight = 184;
 const double _guessHeroCardMaxHeight = 240;
 const double _guessHeroCardHeightFactor = 0.58;
 const double _guessHeroIconSize = IconSizes.iconMedium;
-const double _guessHeroPromptLineHeight =
-    AppTypographyConst.headlineLargeLineHeight /
-    AppTypographyConst.headlineLargeFontSize;
 const int _guessHeroPromptMaxLines = 2;
 
 class StudySessionGuessPromptCard extends StatelessWidget {
@@ -91,7 +88,6 @@ class StudySessionGuessPromptCard extends StatelessWidget {
                 style: theme.textTheme.headlineLarge?.copyWith(
                   color: colorScheme.onSurface,
                   fontWeight: FontWeight.w500,
-                  height: _guessHeroPromptLineHeight,
                 ),
               ),
             ),
@@ -101,4 +97,3 @@ class StudySessionGuessPromptCard extends StatelessWidget {
     );
   }
 }
-

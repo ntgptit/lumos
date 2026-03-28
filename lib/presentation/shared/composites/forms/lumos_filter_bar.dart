@@ -39,9 +39,7 @@ class LumosFilterBar extends StatelessWidget {
     return LumosSurface(
       color: backgroundColor ?? context.colorScheme.surface,
       surfaceTintColor: Colors.transparent,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(context.radius.lg),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: context.shapes.card),
       clipBehavior: Clip.antiAlias,
       child: Padding(
         padding: padding ?? EdgeInsets.all(context.spacing.md),

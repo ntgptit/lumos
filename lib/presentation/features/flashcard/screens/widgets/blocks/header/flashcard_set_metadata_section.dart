@@ -92,7 +92,7 @@ class FlashcardSetMetadataSection extends StatelessWidget {
             DecoratedBox(
               decoration: BoxDecoration(
                 color: colorScheme.surfaceContainerHighest,
-                borderRadius: BorderRadii.large,
+                borderRadius: context.shapes.pill,
               ),
               child: Padding(
                 padding: EdgeInsets.symmetric(
@@ -125,4 +125,3 @@ class FlashcardSetMetadataSection extends StatelessWidget {
     );
   }
 }
-

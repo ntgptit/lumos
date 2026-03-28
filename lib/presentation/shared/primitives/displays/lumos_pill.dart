@@ -22,7 +22,7 @@ class LumosPill extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         color: backgroundColor ?? context.colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(context.radius.pill),
+        borderRadius: context.shapes.pill,
         border: borderColor == null ? null : Border.all(color: borderColor!),
       ),
       child: Padding(

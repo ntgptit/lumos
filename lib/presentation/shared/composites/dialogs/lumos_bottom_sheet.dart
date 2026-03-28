@@ -41,8 +41,9 @@ class LumosBottomSheet extends StatelessWidget {
         child: Material(
           color: context.colorScheme.surface,
           surfaceTintColor: Colors.transparent,
-          borderRadius: BorderRadius.vertical(
-            top: Radius.circular(context.radius.lg),
+          borderRadius: BorderRadius.only(
+            topLeft: context.shapes.sheet.topLeft,
+            topRight: context.shapes.sheet.topRight,
           ),
           clipBehavior: Clip.antiAlias,
           child: Padding(
@@ -58,9 +59,7 @@ class LumosBottomSheet extends StatelessWidget {
                       height: context.component.bottomSheetHandleHeight,
                       decoration: BoxDecoration(
                         color: context.colorScheme.outlineVariant,
-                        borderRadius: BorderRadius.circular(
-                          context.radius.pill,
-                        ),
+                        borderRadius: context.shapes.pill,
                       ),
                     ),
                   ),

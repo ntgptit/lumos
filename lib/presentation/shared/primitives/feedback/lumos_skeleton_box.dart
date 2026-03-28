@@ -21,7 +21,7 @@ class LumosSkeletonBox extends StatelessWidget {
       height: height,
       decoration: BoxDecoration(
         color: context.colorScheme.surfaceContainerHighest,
-        borderRadius: borderRadius ?? BorderRadii.small,
+        borderRadius: borderRadius ?? context.shapes.control,
       ),
     );
   }

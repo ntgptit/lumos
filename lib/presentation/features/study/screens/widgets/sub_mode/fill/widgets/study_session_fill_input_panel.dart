@@ -53,7 +53,7 @@ class StudySessionFillInputPanel extends StatelessWidget {
         return LumosCard(
           margin: EdgeInsets.zero,
           variant: LumosCardVariant.filled,
-          borderRadius: BorderRadii.xLarge,
+          borderRadius: context.shapes.hero,
           padding: EdgeInsets.zero,
           child: SizedBox.expand(
             child: Stack(
@@ -100,7 +100,7 @@ class StudySessionFillInputPanel extends StatelessWidget {
                                 padding: errorBannerPadding,
                                 decoration: BoxDecoration(
                                   color: colorScheme.errorContainer,
-                                  borderRadius: BorderRadii.pill,
+                                  borderRadius: context.shapes.pill,
                                   border: Border.all(
                                     color: colorScheme.error.withValues(
                                       alpha: AppOpacity.stateHover,
@@ -145,4 +145,3 @@ class StudySessionFillInputPanel extends StatelessWidget {
     );
   }
 }
-

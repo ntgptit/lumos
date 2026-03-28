@@ -128,7 +128,7 @@ class _FolderHeaderNavigationSectionState
       padding: EdgeInsets.all(containerPadding),
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerHigh,
-        borderRadius: BorderRadii.large,
+        borderRadius: context.shapes.card,
         border: Border.all(
           color: colorScheme.outlineVariant,
           width: WidgetSizes.borderWidthRegular,
@@ -139,7 +139,7 @@ class _FolderHeaderNavigationSectionState
         children: <Widget>[
           Row(
             children: <Widget>[
-              SegmentedButton<_FolderNavigationAction>(
+              LumosSegmentedControl<_FolderNavigationAction>(
                 showSelectedIcon: false,
                 selected: const <_FolderNavigationAction>{},
                 emptySelectionAllowed: true,
@@ -386,4 +386,3 @@ class _FolderHeaderNavigationSectionState
     return widget.l10n.deckSortNameDescending;
   }
 }
-

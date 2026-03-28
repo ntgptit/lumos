@@ -7,9 +7,6 @@ import '../../widgets/study_session_content_card.dart';
 import '../../widgets/study_session_layout_metrics.dart';
 
 const double _fillHeroIconSize = IconSizes.iconMedium;
-const double _fillHeroPromptLineHeight =
-    AppTypographyConst.titleMediumLineHeight /
-    AppTypographyConst.titleMediumFontSize;
 const int _fillHeroPromptMaxLines = 3;
 
 class StudySessionFillPromptCard extends StatelessWidget {
@@ -82,7 +79,6 @@ class StudySessionFillPromptCard extends StatelessWidget {
                   style: theme.textTheme.titleMedium?.copyWith(
                     color: colorScheme.onSurface,
                     fontWeight: FontWeight.w500,
-                    height: _fillHeroPromptLineHeight,
                   ),
                 ),
               ),
@@ -93,4 +89,3 @@ class StudySessionFillPromptCard extends StatelessWidget {
     );
   }
 }
-

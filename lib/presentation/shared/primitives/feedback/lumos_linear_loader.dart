@@ -24,7 +24,7 @@ class LumosLinearLoader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bar = ClipRRect(
-      borderRadius: BorderRadius.circular(context.radius.pill),
+      borderRadius: context.shapes.pill,
       child: SizedBox(
         width: minWidth,
         height: height ?? LumosSpacing.xxs,

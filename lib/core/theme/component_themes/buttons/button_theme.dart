@@ -9,9 +9,7 @@ abstract final class LumosButtonThemes {
     DimensionThemeExt dims,
   ) {
     final palette = AppThemePalette.fromBrightness(colorScheme.brightness);
-    final shape = RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(dims.radius.xs),
-    );
+    final shape = RoundedRectangleBorder(borderRadius: dims.shapes.control);
 
     return FilledButtonThemeData(
       style: ButtonStyle(
@@ -51,13 +49,9 @@ abstract final class LumosButtonThemes {
         padding: WidgetStatePropertyAll(
           EdgeInsets.symmetric(horizontal: dims.spacing.lg),
         ),
-        side: WidgetStatePropertyAll(
-          BorderSide(color: palette.outline),
-        ),
+        side: WidgetStatePropertyAll(BorderSide(color: palette.outline)),
         shape: WidgetStatePropertyAll(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(dims.radius.xs),
-          ),
+          RoundedRectangleBorder(borderRadius: dims.shapes.control),
         ),
         textStyle: const WidgetStatePropertyAll(
           TextStyle(
@@ -82,9 +76,7 @@ abstract final class LumosButtonThemes {
           EdgeInsets.symmetric(horizontal: dims.spacing.md),
         ),
         shape: WidgetStatePropertyAll(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(dims.radius.xs),
-          ),
+          RoundedRectangleBorder(borderRadius: dims.shapes.control),
         ),
         textStyle: const WidgetStatePropertyAll(
           TextStyle(

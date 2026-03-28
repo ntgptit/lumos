@@ -7,9 +7,6 @@ import '../../widgets/study_session_content_card.dart';
 import '../../widgets/study_session_layout_metrics.dart';
 
 const double _recallPromptIconSize = IconSizes.iconMedium;
-const double _recallPromptLineHeight =
-    AppTypographyConst.headlineLargeLineHeight /
-    AppTypographyConst.headlineLargeFontSize;
 const int _recallPromptMaxLines = 3;
 
 class StudySessionRecallPromptCard extends StatelessWidget {
@@ -80,7 +77,6 @@ class StudySessionRecallPromptCard extends StatelessWidget {
                   style: theme.textTheme.headlineLarge?.copyWith(
                     color: colorScheme.onSurface,
                     fontWeight: FontWeight.w400,
-                    height: _recallPromptLineHeight,
                   ),
                 ),
               ),
@@ -91,4 +87,3 @@ class StudySessionRecallPromptCard extends StatelessWidget {
     );
   }
 }
-

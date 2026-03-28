@@ -1,7 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lumos/core/di/core_providers.dart';
+import 'package:lumos/core/services/auth_session_service.dart';
 import 'package:lumos/data/repositories/auth/auth_repository_impl.dart';
-import 'package:lumos/core/session/providers/session_invalidation_provider.dart';
 import 'package:lumos/presentation/features/auth/providers/auth_session_provider.dart';
 
 import '../../../../testkit/feature_fixtures.dart';
@@ -69,7 +70,7 @@ void main() {
           .read(authSessionControllerProvider)
           .requireValue;
       expect(result, isFalse);
-      expect(state.errorMessage, contains('register failed'));
+      expect(state.errorMessage, 'Unexpected application error.');
       expect(state.isAuthenticated, isFalse);
     });
 
@@ -96,15 +97,21 @@ void main() {
       final FakeAuthRepository repository = FakeAuthRepository(
         bootstrapResult: sampleAuthSession(),
       );
+      final AuthSessionService authSessionService = AuthSessionService();
       final ProviderContainer container = ProviderContainer(
-        overrides: [authRepositoryProvider.overrideWithValue(repository)],
+        overrides: [
+          authRepositoryProvider.overrideWithValue(repository),
+          authSessionServiceProvider.overrideWithValue(authSessionService),
+        ],
       );
-      addTearDown(container.dispose);
+      addTearDown(() async {
+        container.dispose();
+        await authSessionService.dispose();
+      });
       await container.read(authSessionControllerProvider.future);
 
-      container
-          .read(sessionInvalidationControllerProvider.notifier)
-          .invalidateSession();
+      authSessionService.notifyExpired();
+      await Future<void>.delayed(Duration.zero);
 
       final AuthViewState state = container
           .read(authSessionControllerProvider)

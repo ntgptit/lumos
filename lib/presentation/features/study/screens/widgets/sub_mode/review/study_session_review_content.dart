@@ -168,7 +168,6 @@ class _StudySessionReviewContentState extends State<StudySessionReviewContent> {
       return;
     }
     _isPerformingSwipeAction = true;
-    _jumpToCurrentPage();
     try {
       await _submitSwipeAction(actionId);
     } finally {

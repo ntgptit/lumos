@@ -76,7 +76,7 @@ class FlashcardStudyCard extends StatelessWidget {
     );
     return LumosCard(
       variant: LumosCardVariant.filled,
-      borderRadius: BorderRadii.xLarge,
+      borderRadius: context.shapes.hero,
       onTap: onFlipPressed,
       child: Padding(
         padding: EdgeInsets.symmetric(
@@ -162,4 +162,3 @@ class FlashcardStudyCard extends StatelessWidget {
     );
   }
 }
-

@@ -31,8 +31,7 @@ class LumosFlashcardFace extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final resolvedRadius =
-        borderRadius ?? BorderRadius.circular(context.radius.lg);
+    final resolvedRadius = borderRadius ?? context.shapes.hero;
     final resolvedPadding =
         padding ?? EdgeInsets.all(context.component.cardPadding);
     final resolvedMinHeight = minHeight ?? context.component.cardMinHeight;

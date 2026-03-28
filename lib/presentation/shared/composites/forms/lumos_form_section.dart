@@ -46,8 +46,7 @@ class LumosFormSection extends StatelessWidget {
         elevation: elevation,
         surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(
-          borderRadius:
-              borderRadius ?? BorderRadius.circular(context.radius.lg),
+          borderRadius: borderRadius ?? context.shapes.card,
         ),
         clipBehavior: Clip.antiAlias,
         child: Padding(

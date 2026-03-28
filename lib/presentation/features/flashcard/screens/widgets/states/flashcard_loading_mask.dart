@@ -29,7 +29,7 @@ class FlashcardLoadingMask extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.only(top: topInset),
           child: ClipRRect(
-            borderRadius: BorderRadii.medium,
+            borderRadius: context.shapes.control,
             child: LumosLoadingIndicator(isLinear: true, size: progressHeight),
           ),
         ),
@@ -37,4 +37,3 @@ class FlashcardLoadingMask extends StatelessWidget {
     );
   }
 }
-

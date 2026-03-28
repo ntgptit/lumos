@@ -7,9 +7,7 @@ abstract final class LumosChipTheme {
     final palette = AppThemePalette.fromBrightness(colorScheme.brightness);
 
     return ChipThemeData(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(dims.radius.xs),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: dims.shapes.chip),
       side: BorderSide(color: palette.outline),
       backgroundColor: palette.surfaceContainerLow,
       selectedColor: palette.primaryContainer,

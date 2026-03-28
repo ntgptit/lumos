@@ -14,7 +14,7 @@ class FolderErrorBanner extends StatelessWidget {
       padding: const EdgeInsets.all(LumosSpacing.md),
       decoration: BoxDecoration(
         color: colorScheme.errorContainer,
-        borderRadius: BorderRadii.medium,
+        borderRadius: context.shapes.card,
       ),
       child: LumosText(
         message,
@@ -24,4 +24,3 @@ class FolderErrorBanner extends StatelessWidget {
     );
   }
 }
-

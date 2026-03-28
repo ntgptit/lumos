@@ -94,7 +94,7 @@ class FolderListTile extends StatelessWidget {
                 color: isRoot
                     ? colorScheme.secondaryContainer
                     : colorScheme.primaryContainer,
-                borderRadius: BorderRadii.large,
+                borderRadius: context.shapes.card,
                 border: Border.all(
                   color: colorScheme.outlineVariant,
                   width: FolderListTileConst.leadingBorderWidth,
@@ -123,7 +123,7 @@ class FolderListTile extends StatelessWidget {
                 ),
                 decoration: BoxDecoration(
                   color: isRoot ? colorScheme.secondary : colorScheme.primary,
-                  borderRadius: BorderRadii.large,
+                  borderRadius: context.shapes.pill,
                 ),
                 child: Center(
                   child: LumosInlineText(
@@ -179,4 +179,3 @@ class FolderListTile extends StatelessWidget {
     }
   }
 }
-

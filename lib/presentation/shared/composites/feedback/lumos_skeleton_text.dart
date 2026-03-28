@@ -23,7 +23,7 @@ class LumosSkeletonText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final BorderRadius radius = BorderRadius.circular(context.radius.xs);
+    final BorderRadius radius = context.shapes.control;
     return LumosShimmer(
       enabled: enabled,
       borderRadius: radius,
@@ -33,16 +33,11 @@ class LumosSkeletonText extends StatelessWidget {
         children: List<Widget>.generate(lines, (int index) {
           final bool isLast = index == lines - 1;
           return Padding(
-            padding: EdgeInsets.only(
-              bottom: isLast ? 0 : lineSpacing,
-            ),
+            padding: EdgeInsets.only(bottom: isLast ? 0 : lineSpacing),
             child: FractionallySizedBox(
               alignment: Alignment.centerLeft,
               widthFactor: isLast ? lastLineWidthFraction : 1.0,
-              child: LumosSkeletonBox(
-                height: lineHeight,
-                borderRadius: radius,
-              ),
+              child: LumosSkeletonBox(height: lineHeight, borderRadius: radius),
             ),
           );
         }),

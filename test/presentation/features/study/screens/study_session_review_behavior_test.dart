@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:lumos/core/theme/app_theme.dart';
+import 'package:lumos/core/theme/responsive/screen_info.dart';
 import 'package:lumos/domain/entities/study/study_models.dart';
 import 'package:lumos/l10n/app_localizations.dart';
 import 'package:lumos/presentation/features/study/providers/study_speech_playback_provider.dart';
 import 'package:lumos/presentation/features/study/screens/widgets/sub_mode/review/study_session_review_content.dart';
-import 'package:lumos/presentation/shared/widgets/lumos_widgets.dart';
+import 'package:lumos/presentation/shared/primitives/displays/lumos_progress_bar.dart';
 
 import '../../../../testkit/feature_fixtures.dart';
 
@@ -80,6 +82,7 @@ Future<void> _pumpReviewContent({
 
   await tester.pumpWidget(
     MaterialApp(
+      theme: AppTheme.light(screenInfo: ScreenInfo.fromSize(const Size(430, 932))),
       locale: locale,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,

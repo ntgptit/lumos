@@ -28,9 +28,7 @@ abstract final class LumosDialogTheme {
         fontWeight: AppTypographyTokens.regular,
         height: AppTypographyTokens.bodyHeight,
       ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(dims.radius.sm),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: dims.shapes.dialog),
     );
   }
 }

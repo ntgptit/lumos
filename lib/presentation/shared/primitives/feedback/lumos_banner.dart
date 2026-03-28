@@ -27,7 +27,7 @@ class LumosBanner extends StatelessWidget {
     final content = Container(
       decoration: BoxDecoration(
         color: tone.background,
-        borderRadius: BorderRadius.circular(context.radius.lg),
+        borderRadius: context.shapes.card,
         border: Border.all(color: tone.border),
       ),
       child: Padding(

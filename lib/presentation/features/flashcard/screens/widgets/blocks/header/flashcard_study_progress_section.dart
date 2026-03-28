@@ -88,7 +88,7 @@ class FlashcardStudyProgressSection extends StatelessWidget {
         Expanded(
           child: InkWell(
             onTap: item.onPressed,
-            borderRadius: BorderRadii.medium,
+            borderRadius: context.shapes.card,
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: ringLabelSpacing),
               child: Column(
@@ -130,10 +130,7 @@ class FlashcardStudyProgressSection extends StatelessWidget {
       children: <Widget>[
         LumosText(title, style: LumosTextStyle.titleMedium),
         SizedBox(height: columnSpacing),
-        LumosInlineText(
-          description,
-          style: theme.textTheme.bodyMedium,
-        ),
+        LumosInlineText(description, style: theme.textTheme.bodyMedium),
         SizedBox(height: sectionSpacing),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -254,4 +251,3 @@ class _FlashcardStudyProgressItem {
   final _FlashcardStudyProgressTone tone;
   final VoidCallback onPressed;
 }
-

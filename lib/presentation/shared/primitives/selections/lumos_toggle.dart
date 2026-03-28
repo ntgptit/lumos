@@ -78,12 +78,11 @@ class LumosToggle extends StatelessWidget {
           textStyle ?? context.textTheme.labelLarge,
         ),
         minimumSize: WidgetStatePropertyAll(resolvedMinimumSize),
-        shape: WidgetStatePropertyAll(
-          RoundedRectangleBorder(
-            borderRadius:
-                borderRadius ?? BorderRadius.circular(context.radius.md),
-          ),
-        ),
+        shape: borderRadius == null
+            ? null
+            : WidgetStatePropertyAll(
+                RoundedRectangleBorder(borderRadius: borderRadius!),
+              ),
         side: WidgetStatePropertyAll(resolvedBorderSide),
         backgroundColor: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {

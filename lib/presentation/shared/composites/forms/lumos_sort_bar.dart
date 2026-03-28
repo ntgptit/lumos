@@ -39,9 +39,7 @@ class LumosSortBar extends StatelessWidget {
     return LumosSurface(
       color: backgroundColor ?? context.colorScheme.surface,
       surfaceTintColor: Colors.transparent,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(context.radius.lg),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: context.shapes.card),
       clipBehavior: Clip.antiAlias,
       child: Padding(
         padding: padding ?? EdgeInsets.all(context.spacing.md),
@@ -99,16 +97,10 @@ Future<void> showLumosSortBottomSheet<T>({
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    title,
-                    style: sheetContext.textTheme.titleLarge,
-                  ),
+                  Text(title, style: sheetContext.textTheme.titleLarge),
                   if (subtitle != null) ...[
                     SizedBox(height: sheetContext.spacing.xs),
-                    Text(
-                      subtitle,
-                      style: sheetContext.textTheme.bodyMedium,
-                    ),
+                    Text(subtitle, style: sheetContext.textTheme.bodyMedium),
                   ],
                   SizedBox(height: sheetContext.spacing.md),
                   Text(
@@ -126,14 +118,17 @@ Future<void> showLumosSortBottomSheet<T>({
                       });
                     },
                     child: Column(
-                      children: options.map((option) {
-                        return RadioListTile<T>(
-                          value: option.value,
-                          title: Text(option.label),
-                          secondary:
-                              option.icon == null ? null : Icon(option.icon),
-                        );
-                      }).toList(growable: false),
+                      children: options
+                          .map((option) {
+                            return RadioListTile<T>(
+                              value: option.value,
+                              title: Text(option.label),
+                              secondary: option.icon == null
+                                  ? null
+                                  : Icon(option.icon),
+                            );
+                          })
+                          .toList(growable: false),
                     ),
                   ),
                   SizedBox(height: sheetContext.spacing.sm),

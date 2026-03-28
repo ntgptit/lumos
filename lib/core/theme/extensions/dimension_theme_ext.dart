@@ -3,6 +3,7 @@ import 'package:lumos/core/theme/responsive/adaptive_component_size.dart';
 import 'package:lumos/core/theme/responsive/adaptive_icon_size.dart';
 import 'package:lumos/core/theme/responsive/adaptive_layout.dart';
 import 'package:lumos/core/theme/responsive/adaptive_radius.dart';
+import 'package:lumos/core/theme/responsive/adaptive_shape_roles.dart';
 import 'package:lumos/core/theme/responsive/adaptive_spacing.dart';
 import 'package:lumos/core/theme/responsive/adaptive_typography.dart';
 
@@ -11,6 +12,7 @@ class DimensionThemeExt extends ThemeExtension<DimensionThemeExt> {
   const DimensionThemeExt({
     required this.spacing,
     required this.radius,
+    required this.shapes,
     required this.typography,
     required this.iconSize,
     required this.componentSize,
@@ -19,6 +21,7 @@ class DimensionThemeExt extends ThemeExtension<DimensionThemeExt> {
 
   final AdaptiveSpacing spacing;
   final AdaptiveRadius radius;
+  final AdaptiveShapeRoles shapes;
   final AdaptiveTypography typography;
   final AdaptiveIconSize iconSize;
   final AdaptiveComponentSize componentSize;
@@ -28,6 +31,7 @@ class DimensionThemeExt extends ThemeExtension<DimensionThemeExt> {
   DimensionThemeExt copyWith({
     AdaptiveSpacing? spacing,
     AdaptiveRadius? radius,
+    AdaptiveShapeRoles? shapes,
     AdaptiveTypography? typography,
     AdaptiveIconSize? iconSize,
     AdaptiveComponentSize? componentSize,
@@ -36,6 +40,7 @@ class DimensionThemeExt extends ThemeExtension<DimensionThemeExt> {
     return DimensionThemeExt(
       spacing: spacing ?? this.spacing,
       radius: radius ?? this.radius,
+      shapes: shapes ?? this.shapes,
       typography: typography ?? this.typography,
       iconSize: iconSize ?? this.iconSize,
       componentSize: componentSize ?? this.componentSize,

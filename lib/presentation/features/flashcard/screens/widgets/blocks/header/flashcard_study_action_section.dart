@@ -116,7 +116,7 @@ class FlashcardStudyActionSection extends StatelessWidget {
                   vertical: cardVerticalPadding,
                 ),
                 variant: LumosCardVariant.outlined,
-                borderRadius: BorderRadii.medium,
+                borderRadius: context.shapes.card,
                 onTap: action.onPressed,
                 child: Row(
                   children: <Widget>[
@@ -125,13 +125,10 @@ class FlashcardStudyActionSection extends StatelessWidget {
                       height: iconContainerSize,
                       decoration: BoxDecoration(
                         color: containerColor,
-                        borderRadius: BorderRadii.medium,
+                        borderRadius: context.shapes.card,
                       ),
                       child: IconTheme(
-                        data: IconThemeData(
-                          color: iconColor,
-                          size: iconSize,
-                        ),
+                        data: IconThemeData(color: iconColor, size: iconSize),
                         child: LumosIcon(action.icon),
                       ),
                     ),
@@ -196,4 +193,3 @@ Color _resolveFlashcardActionIconColor({
   }
   return colorScheme.onSecondaryContainer;
 }
-

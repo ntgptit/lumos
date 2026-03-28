@@ -20,8 +20,9 @@ abstract final class LumosBottomSheetTheme {
       constraints: BoxConstraints(maxWidth: dims.layout.panelMaxWidth),
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(dims.radius.sm),
+        borderRadius: BorderRadius.only(
+          topLeft: dims.shapes.sheet.topLeft,
+          topRight: dims.shapes.sheet.topRight,
         ),
       ),
       showDragHandle: true,

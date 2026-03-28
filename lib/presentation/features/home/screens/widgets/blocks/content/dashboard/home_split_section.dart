@@ -151,7 +151,7 @@ class HomeSplitSection extends StatelessWidget {
                   yield Container(
                     padding: EdgeInsets.all(activityItemPadding),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadii.medium,
+                      borderRadius: context.shapes.card,
                       color: colorScheme.surfaceContainerLow,
                     ),
                     child: Row(
@@ -161,7 +161,7 @@ class HomeSplitSection extends StatelessWidget {
                           height: activityAccentSize,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadii.pill,
+                            borderRadius: context.shapes.pill,
                             color: item.color.withValues(
                               alpha: AppOpacity.stateHover,
                             ),
@@ -209,7 +209,6 @@ class HomeSplitSection extends StatelessWidget {
         );
         if (deviceType == DeviceType.mobile) {
           return Column(
-            key: HomeScreenKeys.mobileLayout,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               focusCard,
@@ -220,7 +219,6 @@ class HomeSplitSection extends StatelessWidget {
         }
         if (deviceType == DeviceType.tablet) {
           return Row(
-            key: HomeScreenKeys.tabletLayout,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Expanded(child: focusCard),
@@ -230,7 +228,6 @@ class HomeSplitSection extends StatelessWidget {
           );
         }
         return Row(
-          key: HomeScreenKeys.desktopLayout,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Expanded(flex: 5, child: focusCard),
@@ -242,4 +239,3 @@ class HomeSplitSection extends StatelessWidget {
     );
   }
 }
-

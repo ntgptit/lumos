@@ -43,6 +43,7 @@ export 'package:lumos/presentation/shared/primitives/feedback/lumos_skeleton_box
 export 'package:lumos/presentation/shared/primitives/feedback/lumos_snackbar.dart';
 export 'package:lumos/presentation/shared/primitives/inputs/lumos_dropdown.dart';
 export 'package:lumos/presentation/shared/primitives/inputs/lumos_radio_group.dart';
+export 'package:lumos/presentation/shared/primitives/selections/lumos_segmented_control.dart';
 export 'package:lumos/presentation/shared/primitives/inputs/lumos_text_field.dart';
 export 'package:lumos/presentation/shared/primitives/layout/lumos_section_card.dart';
 export 'package:lumos/presentation/shared/primitives/layout/lumos_spacing.dart';

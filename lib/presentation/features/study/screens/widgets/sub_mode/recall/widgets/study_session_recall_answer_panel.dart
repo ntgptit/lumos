@@ -4,9 +4,6 @@ import 'package:lumos/core/theme/app_foundation.dart';
 import '../../widgets/study_session_content_card.dart';
 import '../../widgets/study_session_layout_metrics.dart';
 
-const double _recallAnswerLineHeight =
-    AppTypographyConst.titleLargeLineHeight /
-    AppTypographyConst.titleLargeFontSize;
 const double _recallHiddenAnswerWidth = 88;
 const double _recallHiddenAnswerHeight = 18;
 const double _recallHiddenAnswerBlurRadius = 28;
@@ -65,7 +62,6 @@ class StudySessionRecallAnswerPanel extends StatelessWidget {
                   style: theme.textTheme.titleLarge?.copyWith(
                     color: colorScheme.onSurfaceVariant,
                     fontWeight: FontWeight.w400,
-                    height: _recallAnswerLineHeight,
                   ),
                 ),
               ),
@@ -78,7 +74,7 @@ class StudySessionRecallAnswerPanel extends StatelessWidget {
                 color: colorScheme.onSurface.withValues(
                   alpha: AppOpacity.stateHover,
                 ),
-                borderRadius: BorderRadii.pill,
+                borderRadius: context.shapes.pill,
                 boxShadow: <BoxShadow>[
                   BoxShadow(
                     color: colorScheme.onSurface.withValues(
@@ -106,4 +102,3 @@ class StudySessionRecallAnswerPanel extends StatelessWidget {
     );
   }
 }
-

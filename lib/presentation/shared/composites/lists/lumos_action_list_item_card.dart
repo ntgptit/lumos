@@ -23,10 +23,18 @@ class LumosActionListItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final minHeight =
+        context.component.listItemLeadingSize + (context.spacing.lg * 2);
+
     return LumosCard(
+      minHeight: minHeight,
+      onTap: onTap,
+      padding: EdgeInsets.zero,
       child: ListTile(
-        onTap: onTap,
-        contentPadding: EdgeInsets.zero,
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: context.component.cardPadding,
+          vertical: context.spacing.xs,
+        ),
         leading: leading,
         title: Text(title),
         subtitle: subtitle == null ? null : Text(subtitle!),
@@ -35,26 +43,31 @@ class LumosActionListItemCard extends StatelessWidget {
             : PopupMenuButton<String>(
                 onSelected: onActionSelected,
                 itemBuilder: (context) {
-                  return actions.map((action) {
-                    final color = action.tone == LumosActionListItemTone.critical
-                        ? context.colorScheme.error
-                        : null;
-                    return PopupMenuItem<String>(
-                      value: action.key,
-                      child: Row(
-                        children: [
-                          Icon(action.icon, color: color),
-                          SizedBox(width: context.spacing.sm),
-                          Expanded(
-                            child: Text(
-                              action.label,
-                              style: color == null ? null : TextStyle(color: color),
-                            ),
+                  return actions
+                      .map((action) {
+                        final color =
+                            action.tone == LumosActionListItemTone.critical
+                            ? context.colorScheme.error
+                            : null;
+                        return PopupMenuItem<String>(
+                          value: action.key,
+                          child: Row(
+                            children: [
+                              Icon(action.icon, color: color),
+                              SizedBox(width: context.spacing.sm),
+                              Expanded(
+                                child: Text(
+                                  action.label,
+                                  style: color == null
+                                      ? null
+                                      : TextStyle(color: color),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    );
-                  }).toList(growable: false);
+                        );
+                      })
+                      .toList(growable: false);
                 },
               ),
       ),

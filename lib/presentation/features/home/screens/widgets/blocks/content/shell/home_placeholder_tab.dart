@@ -44,7 +44,7 @@ class HomePlaceholderTab extends StatelessWidget {
                       width: emphasizedBorderWidth,
                     ),
                     color: colorScheme.surfaceContainer,
-                    borderRadius: BorderRadii.large,
+                    borderRadius: context.shapes.card,
                   ),
                   child: IconTheme(
                     data: IconThemeData(color: colorScheme.primary),
@@ -67,4 +67,3 @@ class HomePlaceholderTab extends StatelessWidget {
     );
   }
 }
-

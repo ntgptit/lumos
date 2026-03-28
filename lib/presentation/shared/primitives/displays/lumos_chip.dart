@@ -38,9 +38,7 @@ class LumosChip extends StatelessWidget {
           backgroundColor ?? context.colorScheme.surfaceContainerLow,
       selectedColor: selectedColor ?? context.colorScheme.secondaryContainer,
       labelStyle: labelStyle ?? context.textTheme.labelMedium,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(context.radius.pill),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: context.shapes.chip),
       side: BorderSide(color: context.colorScheme.outlineVariant),
       padding: EdgeInsets.symmetric(horizontal: context.spacing.sm),
       showCheckmark: false,

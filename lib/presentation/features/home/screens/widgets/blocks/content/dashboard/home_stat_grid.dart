@@ -7,7 +7,8 @@ import '../../../../../../../../l10n/app_localizations.dart';
 abstract final class HomeStatGridConst {
   HomeStatGridConst._();
 
-  static const double statIconContainerSize = LumosSpacing.xxxl + LumosSpacing.sm;
+  static const double statIconContainerSize =
+      LumosSpacing.xxxl + LumosSpacing.sm;
   static const double activityAccentSize = LumosSpacing.xxxl;
   static const double cardElevation = AppElevationTokens.level1;
   static const EdgeInsetsGeometry sectionHeaderPadding = EdgeInsets.fromLTRB(
@@ -73,7 +74,7 @@ class HomeStatGrid extends StatelessWidget {
                             height: HomeStatGridConst.statIconContainerSize,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadii.medium,
+                              borderRadius: context.shapes.card,
                               color: Theme.of(
                                 context,
                               ).colorScheme.secondaryContainer,
@@ -133,7 +134,7 @@ class HomeStatGrid extends StatelessWidget {
                             height: HomeStatGridConst.statIconContainerSize,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadii.medium,
+                              borderRadius: context.shapes.card,
                               color: Theme.of(
                                 context,
                               ).colorScheme.secondaryContainer,
@@ -189,4 +190,3 @@ class _HomeStatItem {
   final String value;
   final IconData icon;
 }
-

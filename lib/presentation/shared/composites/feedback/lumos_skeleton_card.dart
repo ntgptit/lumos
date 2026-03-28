@@ -23,9 +23,10 @@ class LumosSkeletonCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final BorderRadius radius = BorderRadius.circular(context.radius.xs);
+    final BorderRadius radius = context.shapes.control;
     return LumosCard(
       variant: LumosCardVariant.filled,
+      borderRadius: context.shapes.card,
       child: LumosShimmer(
         enabled: enabled,
         borderRadius: radius,

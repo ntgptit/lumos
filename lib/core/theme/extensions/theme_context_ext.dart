@@ -7,6 +7,7 @@ import 'package:lumos/core/theme/responsive/adaptive_layout.dart';
 import 'package:lumos/core/theme/responsive/adaptive_component_size.dart';
 import 'package:lumos/core/theme/responsive/adaptive_icon_size.dart';
 import 'package:lumos/core/theme/responsive/adaptive_radius.dart';
+import 'package:lumos/core/theme/responsive/adaptive_shape_roles.dart';
 import 'package:lumos/core/theme/responsive/adaptive_spacing.dart';
 import 'package:lumos/core/theme/responsive/adaptive_typography.dart';
 import 'package:lumos/core/theme/responsive/screen_class.dart';
@@ -40,6 +41,7 @@ extension ThemeContextExt on BuildContext {
   DimensionThemeExt get dims => lumos;
   AdaptiveSpacing get spacing => dims.spacing;
   AdaptiveRadius get radius => dims.radius;
+  AdaptiveShapeRoles get shapes => dims.shapes;
   AdaptiveTypography get typography => dims.typography;
   AdaptiveLayout get layout => dims.layout;
 

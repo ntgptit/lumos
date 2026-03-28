@@ -82,7 +82,7 @@ class FolderHeaderBanner extends StatelessWidget {
       height: leadingBoxSize,
       decoration: BoxDecoration(
         color: colorScheme.primaryContainer,
-        borderRadius: BorderRadii.medium,
+        borderRadius: context.shapes.card,
         border: Border.all(
           color: colorScheme.outlineVariant,
           width: WidgetSizes.borderWidthRegular,
@@ -94,7 +94,7 @@ class FolderHeaderBanner extends StatelessWidget {
       ),
     );
     return ClipRRect(
-      borderRadius: BorderRadii.large,
+      borderRadius: context.shapes.hero,
       child: Stack(
         children: <Widget>[
           Positioned.fill(
@@ -234,4 +234,3 @@ class FolderHeaderBanner extends StatelessWidget {
     return colorScheme.onTertiaryContainer;
   }
 }
-

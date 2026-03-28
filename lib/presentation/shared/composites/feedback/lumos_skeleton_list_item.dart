@@ -26,7 +26,7 @@ class LumosSkeletonListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final BorderRadius radius = BorderRadius.circular(context.radius.xs);
+    final BorderRadius radius = context.shapes.control;
     return LumosShimmer(
       enabled: enabled,
       borderRadius: radius,
@@ -41,7 +41,7 @@ class LumosSkeletonListItem extends StatelessWidget {
               LumosSkeletonBox(
                 width: leadingSize,
                 height: leadingSize,
-                borderRadius: BorderRadius.circular(context.radius.md),
+                borderRadius: context.shapes.card,
               ),
               SizedBox(width: context.spacing.md),
             ],

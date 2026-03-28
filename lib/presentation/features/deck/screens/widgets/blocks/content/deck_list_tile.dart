@@ -55,7 +55,7 @@ class DeckListTile extends StatelessWidget {
         height: leadingSize,
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.tertiaryContainer,
-          borderRadius: BorderRadii.large,
+          borderRadius: context.shapes.card,
           border: Border.all(
             color: Theme.of(context).colorScheme.outlineVariant,
             width: DeckListTileConst.leadingBorderWidth,
@@ -65,10 +65,7 @@ class DeckListTile extends StatelessWidget {
           data: IconThemeData(
             color: Theme.of(context).colorScheme.onTertiaryContainer,
           ),
-          child: LumosIcon(
-            Icons.style_rounded,
-            size: leadingIconSize,
-          ),
+          child: LumosIcon(Icons.style_rounded, size: leadingIconSize),
         ),
       ),
       actions: _buildActions(l10n: l10n),
@@ -111,4 +108,3 @@ class DeckListTile extends StatelessWidget {
     }
   }
 }
-

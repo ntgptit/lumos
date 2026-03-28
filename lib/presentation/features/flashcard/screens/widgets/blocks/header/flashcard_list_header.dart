@@ -59,7 +59,7 @@ class FlashcardListHeader extends StatelessWidget {
     );
     final Widget sortAction = InkWell(
       onTap: onSortPressed,
-      borderRadius: BorderRadii.large,
+      borderRadius: context.shapes.card,
       child: Padding(
         padding: sortPadding,
         child: Row(
@@ -95,4 +95,3 @@ class FlashcardListHeader extends StatelessWidget {
     );
   }
 }
-

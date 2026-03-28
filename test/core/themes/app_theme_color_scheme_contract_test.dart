@@ -2,16 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:lumos/core/themes/color_schemes.dart';
+import 'package:lumos/core/theme/app_color_scheme.dart';
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-  GoogleFonts.config.allowRuntimeFetching = false;
-
-  group('AppTheme ColorScheme contract', () {
+  group('AppColorScheme contract', () {
     test('light theme exposes all required color tokens', () {
-      final ColorScheme colorScheme = buildLightColorScheme();
+      final ColorScheme colorScheme = AppColorScheme.light();
       final List<Color> colors = _collectRequiredColors(colorScheme);
 
       expect(colors, hasLength(36));
@@ -21,7 +17,7 @@ void main() {
     });
 
     test('dark theme exposes all required color tokens', () {
-      final ColorScheme colorScheme = buildDarkColorScheme();
+      final ColorScheme colorScheme = AppColorScheme.dark();
       final List<Color> colors = _collectRequiredColors(colorScheme);
 
       expect(colors, hasLength(36));
@@ -34,7 +30,6 @@ void main() {
 
 List<Color> _collectRequiredColors(ColorScheme colorScheme) {
   return <Color>[
-    // I. Core Brand Colors
     colorScheme.primary,
     colorScheme.onPrimary,
     colorScheme.primaryContainer,
@@ -51,8 +46,6 @@ List<Color> _collectRequiredColors(ColorScheme colorScheme) {
     colorScheme.onError,
     colorScheme.errorContainer,
     colorScheme.onErrorContainer,
-
-    // II. Neutral & System Colors
     colorScheme.background,
     colorScheme.onBackground,
     colorScheme.surface,
@@ -61,8 +54,6 @@ List<Color> _collectRequiredColors(ColorScheme colorScheme) {
     colorScheme.onSurfaceVariant,
     colorScheme.outline,
     colorScheme.outlineVariant,
-
-    // III. Elevation Colors
     colorScheme.surfaceDim,
     colorScheme.surfaceBright,
     colorScheme.surfaceContainerLowest,
@@ -70,13 +61,9 @@ List<Color> _collectRequiredColors(ColorScheme colorScheme) {
     colorScheme.surfaceContainer,
     colorScheme.surfaceContainerHigh,
     colorScheme.surfaceContainerHighest,
-
-    // IV. Inverse Colors
     colorScheme.inversePrimary,
     colorScheme.inverseSurface,
     colorScheme.onInverseSurface,
-
-    // V. Scrim / Shadow
     colorScheme.shadow,
     colorScheme.scrim,
   ];

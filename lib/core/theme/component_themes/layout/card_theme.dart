@@ -19,7 +19,7 @@ abstract final class LumosCardTheme {
           : Colors.transparent,
       surfaceTintColor: Colors.transparent,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(dims.radius.sm),
+        borderRadius: dims.shapes.card,
         side: BorderSide(color: palette.cardBorder),
       ),
     );

@@ -47,9 +47,7 @@ class LumosTooltip extends StatelessWidget {
           ),
       decoration: ShapeDecoration(
         color: context.colorScheme.inverseSurface,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(context.radius.md),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: context.shapes.control),
       ),
       textStyle: context.textTheme.labelMedium?.copyWith(
         color: context.colorScheme.onInverseSurface,

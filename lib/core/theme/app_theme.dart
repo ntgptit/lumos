@@ -60,12 +60,15 @@ abstract final class AppTheme {
         dims: dimensions,
       ),
       filledButtonTheme: LumosButtonThemes.filled(colorScheme, dimensions),
-      outlinedButtonTheme: LumosButtonThemes.outlined(
+      outlinedButtonTheme: LumosButtonThemes.outlined(colorScheme, dimensions),
+      textButtonTheme: LumosButtonThemes.text(colorScheme, dimensions),
+      iconButtonTheme: LumosIconButtonTheme.build(colorScheme, dimensions),
+      inputDecorationTheme: LumosInputTheme.build(colorScheme, dimensions),
+      segmentedButtonTheme: LumosSegmentedButtonTheme.build(
         colorScheme,
         dimensions,
+        textTheme,
       ),
-      textButtonTheme: LumosButtonThemes.text(colorScheme, dimensions),
-      inputDecorationTheme: LumosInputTheme.build(colorScheme, dimensions),
       cardTheme: LumosCardTheme.build(colorScheme, dimensions),
       dialogTheme: LumosDialogTheme.build(colorScheme, dimensions),
       chipTheme: LumosChipTheme.build(colorScheme, dimensions),

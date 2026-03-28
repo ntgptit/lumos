@@ -33,7 +33,7 @@ class FlashcardLoadingShell extends StatelessWidget {
           child: Padding(
             padding: _flashcardLoadingMaskPadding,
             child: ClipRRect(
-              borderRadius: BorderRadii.medium,
+              borderRadius: context.shapes.control,
               child: const LumosLoadingIndicator(
                 isLinear: true,
                 size: _flashcardLoadingMaskHeight,
@@ -45,4 +45,3 @@ class FlashcardLoadingShell extends StatelessWidget {
     );
   }
 }
-

@@ -6,12 +6,6 @@ import '../../widgets/study_session_layout_metrics.dart';
 const int _matchMeaningMaxLines = 5;
 const int _matchWordMaxLines = 2;
 const Duration _matchDisappearAnimationDuration = AppMotion.verySlow;
-const double _matchMeaningLineHeight =
-    AppTypographyConst.titleMediumLineHeight /
-    AppTypographyConst.titleMediumFontSize;
-const double _matchTermLineHeight =
-    AppTypographyConst.titleLargeLineHeight /
-    AppTypographyConst.titleLargeFontSize;
 
 class StudySessionMatchPairButton extends StatelessWidget {
   const StudySessionMatchPairButton({
@@ -74,9 +68,6 @@ class StudySessionMatchPairButton extends StatelessWidget {
                 ?.copyWith(
                   color: textColor,
                   fontWeight: isMeaningCard ? FontWeight.w500 : FontWeight.w300,
-                  height: isMeaningCard
-                      ? _matchTermLineHeight
-                      : _matchMeaningLineHeight,
                 );
         return AnimatedSlide(
           duration: _matchDisappearAnimationDuration,
@@ -97,7 +88,7 @@ class StudySessionMatchPairButton extends StatelessWidget {
                     !isSuccessFeedback &&
                     !isErrorFeedback,
                 variant: LumosCardVariant.filled,
-                borderRadius: BorderRadii.xLarge,
+                borderRadius: context.shapes.hero,
                 padding: EdgeInsets.zero,
                 child: AnimatedContainer(
                   duration: AppDurations.medium,
@@ -108,7 +99,7 @@ class StudySessionMatchPairButton extends StatelessWidget {
                         : colorScheme.surface.withValues(
                             alpha: AppOpacity.transparent,
                           ),
-                    borderRadius: BorderRadii.xLarge,
+                    borderRadius: context.shapes.hero,
                   ),
                   padding: contentPadding,
                   child: Center(
@@ -138,4 +129,3 @@ class StudySessionMatchPairButton extends StatelessWidget {
     );
   }
 }
-

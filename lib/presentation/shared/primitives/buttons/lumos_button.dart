@@ -188,11 +188,13 @@ class _AppButtonContent extends StatelessWidget {
 
     final List<Widget> contentChildren = <Widget>[
       if (leading != null) leading!,
-      Text(
-        text,
-        overflow: TextOverflow.ellipsis,
-        maxLines: 1,
-        textAlign: TextAlign.center,
+      Flexible(
+        child: Text(
+          text,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
+          textAlign: TextAlign.center,
+        ),
       ),
       if (trailing != null) trailing!,
     ];

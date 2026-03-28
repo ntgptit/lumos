@@ -49,7 +49,7 @@ class HomeHeroCard extends StatelessWidget {
               : HomeHeroCardConst.heroMinHeightLarge,
         ),
         decoration: BoxDecoration(
-          borderRadius: BorderRadii.large,
+          borderRadius: context.shapes.hero,
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -71,7 +71,7 @@ class HomeHeroCard extends StatelessWidget {
           ],
         ),
         child: ClipRRect(
-          borderRadius: BorderRadii.large,
+          borderRadius: context.shapes.hero,
           child: Padding(
             padding: EdgeInsets.all(heroPadding),
             child: Column(
@@ -95,7 +95,7 @@ class HomeHeroCard extends StatelessWidget {
                       ),
                       decoration: BoxDecoration(
                         color: colorScheme.surfaceContainerLowest,
-                        borderRadius: BorderRadii.large,
+                        borderRadius: context.shapes.pill,
                         border: Border.all(
                           color: colorScheme.outlineVariant,
                           width: HomeHeroCardConst.emphasizedBorderWidth,
@@ -147,4 +147,3 @@ class HomeHeroCard extends StatelessWidget {
     );
   }
 }
-
