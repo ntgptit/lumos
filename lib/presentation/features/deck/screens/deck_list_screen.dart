@@ -8,7 +8,7 @@ class DeckListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String? message = folderId == null
+    final String message = folderId == null
         ? 'Deck list adapter is active.'
         : 'Deck list adapter is active for folder $folderId.';
     return LumosPlaceholderScreen(title: 'Decks', message: message);

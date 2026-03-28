@@ -3,7 +3,7 @@ import 'package:lumos/core/theme/extensions/app_theme_palette.dart';
 import 'package:lumos/core/theme/extensions/dimension_theme_ext.dart';
 import 'package:lumos/core/theme/tokens/tokens.dart';
 
-abstract final class lumosCardTheme {
+abstract final class LumosCardTheme {
   static CardThemeData build(ColorScheme colorScheme, DimensionThemeExt dims) {
     final palette = AppThemePalette.fromBrightness(colorScheme.brightness);
 

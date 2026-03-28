@@ -16,6 +16,7 @@ class SessionRefreshInterceptor extends QueuedInterceptor {
     required SecureStorage secureStorage,
     required AuthSessionService authSessionService,
   }) : _dio = dio,
+       _refreshDio = _createRefreshDio(dio),
        _secureStorage = secureStorage,
        _authSessionService = authSessionService;
 
@@ -27,6 +28,7 @@ class SessionRefreshInterceptor extends QueuedInterceptor {
   static const _logoutPath = '/api/v1/auth/logout';
 
   final Dio _dio;
+  final Dio _refreshDio;
   final SecureStorage _secureStorage;
   final AuthSessionService _authSessionService;
 
@@ -153,7 +155,7 @@ class SessionRefreshInterceptor extends QueuedInterceptor {
   }
 
   Future<_RefreshedTokens> _refreshTokens(String refreshToken) async {
-    final response = await _dio.post<Map<String, dynamic>>(
+    final response = await _refreshDio.post<Map<String, dynamic>>(
       _refreshPath,
       data: <String, String>{'refreshToken': refreshToken},
       options: Options(
@@ -180,6 +182,29 @@ class SessionRefreshInterceptor extends QueuedInterceptor {
       accessToken: accessToken,
       refreshToken: nextRefreshToken,
     );
+  }
+
+  static Dio _createRefreshDio(Dio sourceDio) {
+    final sourceOptions = sourceDio.options;
+    final refreshDio = Dio(
+      BaseOptions(
+        baseUrl: sourceOptions.baseUrl,
+        connectTimeout: sourceOptions.connectTimeout,
+        receiveTimeout: sourceOptions.receiveTimeout,
+        sendTimeout: sourceOptions.sendTimeout,
+        headers: Map<String, Object?>.from(sourceOptions.headers),
+        responseType: sourceOptions.responseType,
+        contentType: sourceOptions.contentType,
+        followRedirects: sourceOptions.followRedirects,
+        receiveDataWhenStatusError: sourceOptions.receiveDataWhenStatusError,
+        extra: Map<String, Object?>.from(sourceOptions.extra),
+        listFormat: sourceOptions.listFormat,
+        validateStatus: sourceOptions.validateStatus,
+      ),
+    );
+    refreshDio.httpClientAdapter = sourceDio.httpClientAdapter;
+    refreshDio.transformer = sourceDio.transformer;
+    return refreshDio;
   }
 
   String? _normalizeTokenValue(Object? rawValue) {

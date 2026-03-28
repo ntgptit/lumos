@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import 'package:lumos/core/errors/error_mapper.dart';
 import 'package:lumos/core/errors/failures.dart';
+import 'package:lumos/core/di/core_providers.dart';
+import 'package:lumos/core/services/auth_session_service.dart';
 import '../../../../data/repositories/auth/auth_repository_impl.dart';
 import '../../../../domain/entities/auth/auth_models.dart';
 import '../../../../domain/repositories/auth/auth_repository.dart';
@@ -74,12 +77,24 @@ class AuthPasswordVisibilityController
 class AuthSessionController extends _$AuthSessionController {
   @override
   Future<AuthViewState> build() async {
+    final authSessionService = ref.watch(authSessionServiceProvider);
+    final subscription = authSessionService.events.listen(_onSessionEvent);
+    ref.onDispose(subscription.cancel);
+
     final AuthRepository repository = ref.read(authRepositoryProvider);
     final AuthSession? session = await repository.bootstrapSession();
     if (session == null) {
       return const AuthViewState.signedOut();
     }
     return AuthViewState(session: session, isBusy: false, errorMessage: null);
+  }
+
+  void _onSessionEvent(AuthSessionEvent event) {
+    if (event != AuthSessionEvent.expired) {
+      return;
+    }
+
+    state = const AsyncData<AuthViewState>(AuthViewState.signedOut());
   }
 
   Future<bool> login({

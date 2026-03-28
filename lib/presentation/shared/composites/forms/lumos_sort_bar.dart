@@ -115,29 +115,33 @@ Future<void> showLumosSortBottomSheet<T>({
                     optionSectionTitle,
                     style: sheetContext.textTheme.titleMedium,
                   ),
-                  ...options.map((option) {
-                    return RadioListTile<T>(
-                      value: option.value,
-                      groupValue: selectedValue,
-                      onChanged: (value) {
-                        if (value == null) {
-                          return;
-                        }
-                        setState(() {
-                          selectedValue = value;
-                        });
-                      },
-                      title: Text(option.label),
-                      secondary: option.icon == null ? null : Icon(option.icon),
-                    );
-                  }),
+                  RadioGroup<T>(
+                    groupValue: selectedValue,
+                    onChanged: (value) {
+                      if (value == null) {
+                        return;
+                      }
+                      setState(() {
+                        selectedValue = value;
+                      });
+                    },
+                    child: Column(
+                      children: options.map((option) {
+                        return RadioListTile<T>(
+                          value: option.value,
+                          title: Text(option.label),
+                          secondary:
+                              option.icon == null ? null : Icon(option.icon),
+                        );
+                      }).toList(growable: false),
+                    ),
+                  ),
                   SizedBox(height: sheetContext.spacing.sm),
                   Text(
                     directionSectionTitle,
                     style: sheetContext.textTheme.titleMedium,
                   ),
-                  RadioListTile<int>(
-                    value: 0,
+                  RadioGroup<int>(
                     groupValue: selectedDirection,
                     onChanged: (value) {
                       if (value == null) {
@@ -147,20 +151,18 @@ Future<void> showLumosSortBottomSheet<T>({
                         selectedDirection = value;
                       });
                     },
-                    title: Text(directionLabelBuilder(selectedValue, 0)),
-                  ),
-                  RadioListTile<int>(
-                    value: 1,
-                    groupValue: selectedDirection,
-                    onChanged: (value) {
-                      if (value == null) {
-                        return;
-                      }
-                      setState(() {
-                        selectedDirection = value;
-                      });
-                    },
-                    title: Text(directionLabelBuilder(selectedValue, 1)),
+                    child: Column(
+                      children: [
+                        RadioListTile<int>(
+                          value: 0,
+                          title: Text(directionLabelBuilder(selectedValue, 0)),
+                        ),
+                        RadioListTile<int>(
+                          value: 1,
+                          title: Text(directionLabelBuilder(selectedValue, 1)),
+                        ),
+                      ],
+                    ),
                   ),
                   SizedBox(height: sheetContext.spacing.md),
                   SizedBox(

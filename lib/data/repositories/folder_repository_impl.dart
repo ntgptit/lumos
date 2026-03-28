@@ -2,7 +2,6 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import 'package:lumos/core/errors/error_mapper.dart';
 import 'package:lumos/core/errors/failures.dart';
 import '../../core/network/providers/network_providers.dart';
 import '../../core/utils/string_utils.dart';

@@ -12,7 +12,7 @@ import 'package:lumos/core/theme/responsive/adaptive_typography.dart';
 import 'package:lumos/core/theme/responsive/screen_class.dart';
 import 'package:lumos/core/theme/responsive/responsive_theme_factory.dart';
 
-extension lumosThemeDataExt on ThemeData {
+extension LumosThemeDataExt on ThemeData {
   DimensionThemeExt get lumos {
     final dimensions = extension<DimensionThemeExt>();
     assert(

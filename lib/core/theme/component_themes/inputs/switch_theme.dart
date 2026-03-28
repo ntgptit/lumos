@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lumos/core/theme/extensions/app_theme_palette.dart';
 
-abstract final class lumosSwitchTheme {
+abstract final class LumosSwitchTheme {
   static SwitchThemeData build(ColorScheme colorScheme) {
     final palette = AppThemePalette.fromBrightness(colorScheme.brightness);
 

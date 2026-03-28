@@ -10,7 +10,12 @@ import '../providers/auth_session_provider.dart';
 import 'widgets/blocks/content/auth_form_card.dart';
 
 class AuthScreen extends ConsumerStatefulWidget {
-  const AuthScreen({super.key});
+  const AuthScreen({
+    super.key,
+    this.initialMode = AuthScreenModeState.login,
+  });
+
+  final AuthScreenModeState initialMode;
 
   @override
   ConsumerState<AuthScreen> createState() => _AuthScreenState();
@@ -35,6 +40,17 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   Widget build(BuildContext context) {
     final authAsync = ref.watch(authSessionControllerProvider);
     final mode = ref.watch(authScreenModeControllerProvider);
+
+    if (mode != widget.initialMode) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) {
+          return;
+        }
+        ref
+            .read(authScreenModeControllerProvider.notifier)
+            .setMode(widget.initialMode);
+      });
+    }
 
     return authAsync.when(
       loading: () => const Scaffold(body: Center(child: LumosCircularLoader())),

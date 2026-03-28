@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:lumos/app/app_route_data.dart';
 
 import 'package:lumos/core/theme/app_foundation.dart';
@@ -10,33 +9,6 @@ import '../../../../core/utils/string_utils.dart';
 import '../../../../domain/entities/flashcard_models.dart';
 import '../../../../domain/entities/study/study_models.dart';
 import '../../../../l10n/app_localizations.dart';
-import 'package:lumos/presentation/shared/composites/appbars/lumos_app_bar.dart';
-import 'package:lumos/presentation/shared/composites/dialogs/lumos_action_sheet.dart';
-import 'package:lumos/presentation/shared/composites/dialogs/lumos_dialog.dart';
-import 'package:lumos/presentation/shared/composites/dialogs/lumos_prompt_dialog.dart';
-import 'package:lumos/presentation/shared/composites/forms/lumos_search_bar.dart';
-import 'package:lumos/presentation/shared/composites/forms/lumos_sort_bar.dart';
-import 'package:lumos/presentation/shared/composites/lists/lumos_action_list_item.dart';
-import 'package:lumos/presentation/shared/composites/lists/lumos_action_list_item_card.dart';
-import 'package:lumos/presentation/shared/composites/states/lumos_empty_state.dart';
-import 'package:lumos/presentation/shared/composites/states/lumos_error_state.dart';
-import 'package:lumos/presentation/shared/composites/text/lumos_inline_text.dart';
-import 'package:lumos/presentation/shared/layouts/lumos_screen_transition.dart';
-import 'package:lumos/presentation/shared/primitives/buttons/lumos_floating_action_button.dart';
-import 'package:lumos/presentation/shared/primitives/buttons/lumos_icon_button.dart';
-import 'package:lumos/presentation/shared/primitives/buttons/lumos_outline_button.dart';
-import 'package:lumos/presentation/shared/primitives/buttons/lumos_primary_button.dart';
-import 'package:lumos/presentation/shared/primitives/buttons/lumos_secondary_button.dart';
-import 'package:lumos/presentation/shared/primitives/displays/lumos_card.dart';
-import 'package:lumos/presentation/shared/primitives/displays/lumos_icon.dart';
-import 'package:lumos/presentation/shared/primitives/displays/lumos_progress_bar.dart';
-import 'package:lumos/presentation/shared/primitives/feedback/lumos_loading_indicator.dart';
-import 'package:lumos/presentation/shared/primitives/feedback/lumos_snackbar.dart';
-import 'package:lumos/presentation/shared/primitives/inputs/lumos_dropdown.dart';
-import 'package:lumos/presentation/shared/primitives/inputs/lumos_text_field.dart';
-import 'package:lumos/presentation/shared/primitives/layout/lumos_spacing.dart';
-import 'package:lumos/presentation/shared/primitives/text/lumos_text.dart';
-import '../../home/screens/widgets/blocks/footer/home_bottom_nav.dart';
 import '../../study/providers/study_session_launcher_provider.dart';
 import '../providers/flashcard_provider.dart';
 import '../providers/states/flashcard_state.dart';
@@ -227,9 +199,6 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
             FlashcardMutatingOverlay(isVisible: state.isMutating),
           ],
         ),
-        bottomNavigationBar: context.deviceType == DeviceType.mobile
-            ? const HomeBottomNav()
-            : null,
       ),
     );
   }
@@ -607,12 +576,10 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
   }) async {
     final FlashcardState state = widget.state;
     try {
-      final StudySessionData session = await ref
-          .read(studySessionLauncherProvider.notifier)
-          .startSession(
-            deckId: state.deckId,
-            preferredSessionType: preferredSessionType,
-          );
+      await ref.read(studySessionLauncherProvider.notifier).startSession(
+        deckId: state.deckId,
+        preferredSessionType: preferredSessionType,
+      );
       if (!mounted) {
         return;
       }

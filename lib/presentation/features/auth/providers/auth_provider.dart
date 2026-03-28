@@ -1,4 +1,8 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import 'package:lumos/presentation/features/auth/providers/auth_session_provider.dart';
+
+part 'auth_provider.g.dart';
 
 class AuthControllerState {
   const AuthControllerState({
@@ -14,6 +18,19 @@ class AuthControllerState {
   final bool isAuthenticated;
 }
 
-final authControllerProvider = Provider<AuthControllerState>((ref) {
-  return const AuthControllerState.signedOut();
-});
+@Riverpod(keepAlive: true)
+AuthControllerState authController(Ref ref) {
+  final authAsync = ref.watch(authSessionControllerProvider);
+
+  return authAsync.when(
+    loading: () => const AuthControllerState(
+      isCheckingSession: true,
+      isAuthenticated: false,
+    ),
+    error: (_, _) => const AuthControllerState.signedOut(),
+    data: (authState) => AuthControllerState(
+      isCheckingSession: false,
+      isAuthenticated: authState.isAuthenticated,
+    ),
+  );
+}

@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:lumos/app/app_route_data.dart';
+import 'package:lumos/l10n/l10n.dart';
 import 'package:lumos/presentation/shared/composites/states/lumos_error_state.dart';
-import 'package:lumos/presentation/shared/primitives/feedback/lumos_circular_loader.dart';
+import 'package:lumos/presentation/shared/screens/lumos_splash_screen.dart';
 import '../providers/auth_session_provider.dart';
 
 class LaunchScreen extends ConsumerWidget {
@@ -14,10 +15,16 @@ class LaunchScreen extends ConsumerWidget {
     final authAsync = ref.watch(authSessionControllerProvider);
 
     return authAsync.when(
-      loading: () => const Scaffold(body: Center(child: LumosCircularLoader())),
+      loading: () => const LumosSplashScreen(),
       error: (Object error, StackTrace stackTrace) {
         return Scaffold(
-          body: LumosErrorState(message: error.toString()),
+          body: LumosErrorState(
+            message: error.toString(),
+            primaryActionLabel: context.l10n.commonRetry,
+            onPrimaryAction: () {
+              ref.invalidate(authSessionControllerProvider);
+            },
+          ),
         );
       },
       data: (AuthViewState state) {
@@ -29,7 +36,7 @@ class LaunchScreen extends ConsumerWidget {
           }
           const LoginRouteData().go(context);
         });
-        return const Scaffold(body: Center(child: LumosCircularLoader()));
+        return const LumosSplashScreen();
       },
     );
   }

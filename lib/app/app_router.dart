@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lumos/app/app_route_data.dart';
 import 'package:lumos/core/di/core_providers.dart';
@@ -11,7 +12,11 @@ part 'app_router.g.dart';
 GoRouter appRouter(Ref ref) {
   final envConfig = ref.watch(envConfigProvider);
   final navigatorKey = ref.watch(rootNavigatorKeyProvider);
-  final authState = ref.watch(authControllerProvider);
+  final routerRefreshNotifier = ValueNotifier<int>(0);
+  ref.onDispose(routerRefreshNotifier.dispose);
+  ref.listen<AuthControllerState>(authControllerProvider, (_, _) {
+    routerRefreshNotifier.value++;
+  });
 
   final splashLocation = const SplashRouteData().location;
   final authLocation = const AuthRouteData().location;
@@ -27,8 +32,10 @@ GoRouter appRouter(Ref ref) {
     navigatorKey: navigatorKey,
     debugLogDiagnostics: envConfig.enableRouterLogs,
     initialLocation: splashLocation,
+    refreshListenable: routerRefreshNotifier,
     routes: $appRoutes,
     redirect: (context, state) {
+      final authState = ref.read(authControllerProvider);
       final location = state.uri.path;
       final isCheckingSession = authState.isCheckingSession;
       final isAuthenticated = authState.isAuthenticated;

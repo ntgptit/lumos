@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lumos/core/theme/extensions/app_theme_palette.dart';
 
-abstract final class lumosCheckboxTheme {
+abstract final class LumosCheckboxTheme {
   static CheckboxThemeData build(ColorScheme colorScheme) {
     final palette = AppThemePalette.fromBrightness(colorScheme.brightness);
 

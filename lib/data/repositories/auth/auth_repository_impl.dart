@@ -3,8 +3,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/constants/storage_keys.dart';
-import '../../../core/network/interceptors/retry_interceptor.dart';
-import '../../../core/network/interceptors/session_refresh_interceptor.dart';
 import '../../../core/network/providers/network_providers.dart';
 import '../../../domain/entities/auth/auth_models.dart';
 import '../../../domain/repositories/auth/auth_repository.dart';
@@ -17,7 +15,6 @@ abstract final class AuthRepositoryImplConst {
   static const String authPath = '/api/v1/auth';
   static const String registerPath = '$authPath/register';
   static const String loginPath = '$authPath/login';
-  static const String refreshPath = '$authPath/refresh';
   static const String logoutPath = '$authPath/logout';
   static const String mePath = '$authPath/me';
 }
@@ -62,29 +59,12 @@ class DioAuthRepository implements AuthRepository {
         authenticated: true,
       );
     } on DioException catch (error) {
-      final String? latestRefreshToken = await _storage.read(
-        key: StorageKeys.refreshToken,
-      );
-      if (error.response?.statusCode != 401 ||
-          (latestRefreshToken ?? '').isEmpty) {
+      if (_isUnauthorized(error)) {
         await _clearSession();
         return null;
       }
-      try {
-        final AuthSession refreshedSession = await _refreshSession(
-          refreshToken: latestRefreshToken!,
-        );
-        return refreshedSession;
-      } on DioException catch (refreshError) {
-        if (_isUnauthorized(refreshError)) {
-          await _clearSession();
-          return null;
-        }
-        rethrow;
-      } on Object {
-        await _clearSession();
-        return null;
-      }
+
+      rethrow;
     }
   }
 
@@ -140,22 +120,6 @@ class DioAuthRepository implements AuthRepository {
       rethrow;
     }
     await _clearSession();
-  }
-
-  Future<AuthSession> _refreshSession({required String refreshToken}) async {
-    final Response<dynamic> response = await _dio.post<dynamic>(
-      AuthRepositoryImplConst.refreshPath,
-      data: <String, dynamic>{'refreshToken': refreshToken},
-      options: Options(
-        extra: <String, dynamic>{
-          SessionRefreshInterceptorConst.bypassRefreshKey: true,
-          RetryInterceptorConst.bypassRetryKey: true,
-        },
-      ),
-    );
-    final AuthSession session = AuthSession.fromJson(_castMap(response.data));
-    await _persistSession(session);
-    return session;
   }
 
   Future<void> _persistSession(AuthSession session) async {

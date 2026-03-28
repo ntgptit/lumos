@@ -11,17 +11,14 @@ class LumosPrimaryButton extends LumosButton {
     bool expanded = false,
     super.isLoading,
     Widget? leading,
-    Widget? trailing,
-    ButtonStyle? style,
+    super.trailing,
+    super.style,
     IconData? icon,
-    LumosButtonSize size = LumosButtonSize.large,
+    super.size,
   }) : super(
          text: text ?? label ?? '',
          leading: leading ?? _icon(icon),
-         trailing: trailing,
          expand: expand || expanded,
-         style: style,
-         size: size,
        );
 
   static Widget? _icon(IconData? icon) {

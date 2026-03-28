@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lumos/core/theme/extensions/app_theme_palette.dart';
 
-abstract final class lumosProgressIndicatorTheme {
+abstract final class LumosProgressIndicatorTheme {
   static ProgressIndicatorThemeData build(ColorScheme colorScheme) {
     final palette = AppThemePalette.fromBrightness(colorScheme.brightness);
 

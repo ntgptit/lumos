@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:lumos/app/app_route_data.dart';
 import 'package:lumos/core/theme/app_foundation.dart';
 import '../../../../../../../domain/entities/deck_models.dart';
@@ -39,6 +38,7 @@ class DeckListContent extends ConsumerWidget {
                       DeckDetailRouteData(
                         folderId: providerArgs.folderId,
                         deckId: item.id,
+                        deckName: item.name,
                       ).push(context);
                     },
                     onRename: () => showDeckEditorDialog(

@@ -2,19 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lumos/app/app_shell.dart';
 import 'package:lumos/core/utils/route_utils.dart';
+import 'package:lumos/presentation/features/auth/providers/auth_session_provider.dart';
+import 'package:lumos/presentation/features/auth/screens/auth_screen.dart';
 import 'package:lumos/presentation/features/auth/screens/forgot_password_screen.dart';
-import 'package:lumos/presentation/features/auth/screens/login_screen.dart';
-import 'package:lumos/presentation/features/auth/screens/register_screen.dart';
-import 'package:lumos/presentation/features/deck/screens/deck_detail_screen.dart';
+import 'package:lumos/presentation/features/auth/screens/launch_screen.dart';
 import 'package:lumos/presentation/features/deck/screens/deck_list_screen.dart';
-import 'package:lumos/presentation/features/dashboard/screens/dashboard_screen.dart';
-import 'package:lumos/presentation/features/folder/screens/folder_list_screen.dart';
+import 'package:lumos/presentation/features/deck/screens/deck_screen.dart';
+import 'package:lumos/presentation/features/flashcard/screens/flashcard_screen.dart';
+import 'package:lumos/presentation/features/folder/screens/folder_screen.dart';
+import 'package:lumos/presentation/features/home/screens/home_content.dart';
 import 'package:lumos/presentation/features/onboarding/screens/onboarding_screen.dart';
 import 'package:lumos/presentation/features/onboarding/screens/permissions_intro_screen.dart';
 import 'package:lumos/presentation/features/onboarding/screens/study_goal_setup_screen.dart';
 import 'package:lumos/presentation/features/progress/screens/deck_progress_screen.dart';
-import 'package:lumos/presentation/features/progress/screens/learning_progress_screen.dart';
+import 'package:lumos/presentation/features/profile/screens/profile_content.dart';
 import 'package:lumos/presentation/features/progress/screens/study_calendar_screen.dart';
+import 'package:lumos/presentation/features/progress/screens/study_progress_screen.dart';
 import 'package:lumos/presentation/features/reminder/screens/reminder_preview_screen.dart';
 import 'package:lumos/presentation/features/reminder/screens/reminder_settings_screen.dart';
 import 'package:lumos/presentation/features/reminder/screens/reminder_time_slots_screen.dart';
@@ -22,7 +25,6 @@ import 'package:lumos/presentation/features/settings/screens/about_screen.dart';
 import 'package:lumos/presentation/features/settings/screens/audio_settings_screen.dart';
 import 'package:lumos/presentation/features/settings/screens/backup_restore_screen.dart';
 import 'package:lumos/presentation/features/settings/screens/language_settings_screen.dart';
-import 'package:lumos/presentation/features/settings/screens/settings_screen.dart';
 import 'package:lumos/presentation/features/settings/screens/theme_settings_screen.dart';
 import 'package:lumos/presentation/features/study/screens/study_history_screen.dart';
 import 'package:lumos/presentation/features/study/screens/study_session_route_screen.dart';
@@ -32,7 +34,6 @@ import 'package:lumos/presentation/features/study/screens/study_setup_screen.dar
 import 'package:lumos/presentation/shared/screens/lumos_maintenance_screen.dart';
 import 'package:lumos/presentation/shared/screens/lumos_not_found_screen.dart';
 import 'package:lumos/presentation/shared/screens/lumos_offline_screen.dart';
-import 'package:lumos/presentation/shared/screens/lumos_splash_screen.dart';
 
 part 'app_route_data.g.dart';
 
@@ -42,7 +43,7 @@ class SplashRouteData extends GoRouteData with $SplashRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const LumosSplashScreen();
+    return const LaunchScreen();
   }
 }
 
@@ -61,6 +62,11 @@ class AuthRouteData extends GoRouteData with $AuthRouteData {
   String? redirect(BuildContext context, GoRouterState state) {
     return const LoginRouteData().location;
   }
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const AuthScreen(initialMode: AuthScreenModeState.login);
+  }
 }
 
 class LoginRouteData extends GoRouteData with $LoginRouteData {
@@ -68,7 +74,7 @@ class LoginRouteData extends GoRouteData with $LoginRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const LoginScreen();
+    return const AuthScreen(initialMode: AuthScreenModeState.login);
   }
 }
 
@@ -77,7 +83,7 @@ class RegisterRouteData extends GoRouteData with $RegisterRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const RegisterScreen();
+    return const AuthScreen(initialMode: AuthScreenModeState.register);
   }
 }
 
@@ -143,6 +149,15 @@ class StudyRouteData extends GoRouteData with $StudyRouteData {
   @override
   String? redirect(BuildContext context, GoRouterState state) {
     return const StudySetupRouteData().location;
+  }
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return StudySetupScreen(
+      onStartSession: () => const StudySessionRouteData().push(context),
+      onOpenModePicker: () => const StudyModePickerRouteData().push(context),
+      onOpenHistory: () => const StudyHistoryRouteData().push(context),
+    );
   }
 }
 
@@ -320,7 +335,7 @@ class DashboardRouteData extends GoRouteData with $DashboardRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const DashboardScreen();
+    return const HomeContent();
   }
 }
 
@@ -329,7 +344,7 @@ class FoldersRouteData extends GoRouteData with $FoldersRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const FolderListScreen();
+    return const FolderScreen();
   }
 }
 
@@ -340,7 +355,7 @@ class FolderDetailRouteData extends GoRouteData with $FolderDetailRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return FolderListScreen(folderId: folderId);
+    return const FolderScreen();
   }
 }
 
@@ -351,19 +366,42 @@ class FolderDecksRouteData extends GoRouteData with $FolderDecksRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return DeckListScreen(folderId: folderId);
+    return DeckScreen(folderId: folderId);
   }
 }
 
 class DeckDetailRouteData extends GoRouteData with $DeckDetailRouteData {
-  const DeckDetailRouteData({required this.folderId, required this.deckId});
+  const DeckDetailRouteData({
+    required this.folderId,
+    required this.deckId,
+    this.deckName,
+  });
 
   final int folderId;
   final int deckId;
+  final String? deckName;
+
+  @override
+  String get location {
+    final String baseLocation = GoRouteData.$location(
+      '/folders/${Uri.encodeComponent(folderId.toString())}/decks/${Uri.encodeComponent(deckId.toString())}',
+    );
+    final String? normalizedDeckName = deckName?.trim();
+    if (normalizedDeckName == null || normalizedDeckName.isEmpty) {
+      return baseLocation;
+    }
+    return Uri.parse(
+      baseLocation,
+    ).replace(queryParameters: <String, String>{
+      'deckName': normalizedDeckName,
+    }).toString();
+  }
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return DeckDetailScreen(folderId: folderId, deckId: deckId);
+    final String resolvedDeckName =
+        state.uri.queryParameters['deckName'] ?? deckName ?? '';
+    return FlashcardScreen(deckId: deckId, deckName: resolvedDeckName);
   }
 }
 
@@ -381,7 +419,7 @@ class ProgressRouteData extends GoRouteData with $ProgressRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const LearningProgressScreen();
+    return const StudyProgressScreen();
   }
 }
 
@@ -411,7 +449,7 @@ class SettingsRouteData extends GoRouteData with $SettingsRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const SettingsScreen();
+    return const ProfileContent();
   }
 }
 
