@@ -9,6 +9,7 @@ class LumosCard extends StatelessWidget {
     required this.child,
     this.padding,
     this.margin,
+    this.minHeight,
     this.variant = LumosCardVariant.elevated,
     this.borderRadius,
     this.isSelected = false,
@@ -19,6 +20,7 @@ class LumosCard extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
+  final double? minHeight;
   final LumosCardVariant variant;
   final BorderRadiusGeometry? borderRadius;
   final bool isSelected;
@@ -31,7 +33,9 @@ class LumosCard extends StatelessWidget {
         ? borderRadius! as BorderRadius
         : BorderRadius.circular(context.radius.lg);
     final childWidget = ConstrainedBox(
-      constraints: BoxConstraints(minHeight: context.component.cardMinHeight),
+      constraints: BoxConstraints(
+        minHeight: minHeight ?? context.component.cardMinHeight,
+      ),
       child: Padding(
         padding: padding ?? EdgeInsets.all(context.component.cardPadding),
         child: child,

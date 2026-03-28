@@ -66,9 +66,13 @@ class FlashcardListContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool compactLayout =
+        MediaQuery.sizeOf(context).width < Breakpoints.kMobileMaxWidth;
     final double sectionSpacing = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: FlashcardContentSupportConst.sectionSpacing,
+      baseValue: compactLayout
+          ? LumosSpacing.md
+          : FlashcardContentSupportConst.sectionSpacing,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     final double itemSpacing = ResponsiveDimensions.compactValue(

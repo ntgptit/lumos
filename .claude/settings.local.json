@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__Claude_Preview__preview_start",
+      "Bash(netstat -aon)",
+      "Bash(findstr :8080)",
+      "Bash(tasklist /FI \"PID eq 12712\" /FO TABLE)",
+      "Bash(MSYS_NO_PATHCONV=1 tasklist //FI \"PID eq 12712\" //FO TABLE)",
+      "Bash(wmic process:*)",
+      "Bash(powershell -Command \"Get-Process -Id 12712 | Select-Object Name,Id | Format-Table\")",
+      "Bash(powershell -Command \"Get-Process -Id 12712 | Select-Object Name,Id | Format-Table -AutoSize\")"
+    ]
+  }
+}

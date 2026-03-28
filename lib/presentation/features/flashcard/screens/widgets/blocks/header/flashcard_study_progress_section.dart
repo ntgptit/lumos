@@ -6,9 +6,9 @@ abstract final class FlashcardStudyProgressSectionConst {
   FlashcardStudyProgressSectionConst._();
 
   static const double sectionSpacing = LumosSpacing.lg;
-  static const double itemSpacing = LumosSpacing.md;
+  static const double columnSpacing = LumosSpacing.sm;
+  static const double ringLabelSpacing = LumosSpacing.xs;
   static const double progressRingSize = WidgetSizes.avatarMedium;
-  static const double actionIconSize = IconSizes.iconSmall;
   static const double progressTextMaxValue = 1;
 }
 
@@ -49,9 +49,9 @@ class FlashcardStudyProgressSection extends StatelessWidget {
       baseValue: FlashcardStudyProgressSectionConst.sectionSpacing,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double itemSpacing = ResponsiveDimensions.compactValue(
+    final double columnSpacing = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: FlashcardStudyProgressSectionConst.itemSpacing,
+      baseValue: FlashcardStudyProgressSectionConst.columnSpacing,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     final double ringSize = ResponsiveDimensions.compactValue(
@@ -59,42 +59,39 @@ class FlashcardStudyProgressSection extends StatelessWidget {
       baseValue: FlashcardStudyProgressSectionConst.progressRingSize,
       minScale: ResponsiveDimensions.compactLargeInsetScale,
     );
-    final double rowGap = ResponsiveDimensions.compactValue(
+    final double ringLabelSpacing = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: LumosSpacing.lg,
+      baseValue: FlashcardStudyProgressSectionConst.ringLabelSpacing,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     final int safeTotalCount = _safeTotalCount();
     final List<_FlashcardStudyProgressItem> items = _buildItems(
       safeTotalCount: safeTotalCount,
     );
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        LumosText(title, style: LumosTextStyle.titleMedium),
-        SizedBox(height: itemSpacing),
-        LumosInlineText(
-          description,
-          style: Theme.of(context).textTheme.bodyMedium,
-        ),
-        SizedBox(height: sectionSpacing),
-        ...items.map((_FlashcardStudyProgressItem item) {
-          final ThemeData theme = Theme.of(context);
-          final Color ringColor = _resolveFlashcardRingColor(
-            theme: theme,
-            tone: item.tone,
-          );
-          final Color textColor = _resolveFlashcardLabelColor(
-            theme: theme,
-            tone: item.tone,
-            value: item.value,
-          );
-          return Padding(
-            padding: EdgeInsets.only(bottom: itemSpacing),
-            child: LumosCard(
-              variant: LumosCardVariant.filled,
-              onTap: item.onPressed,
-              child: Row(
+    final ThemeData theme = Theme.of(context);
+    final List<Widget> ringChildren = <Widget>[];
+    for (int i = 0; i < items.length; i++) {
+      if (i > 0) {
+        ringChildren.add(SizedBox(width: columnSpacing));
+      }
+      final _FlashcardStudyProgressItem item = items[i];
+      final Color ringColor = _resolveFlashcardRingColor(
+        theme: theme,
+        tone: item.tone,
+      );
+      final Color textColor = _resolveFlashcardLabelColor(
+        theme: theme,
+        tone: item.tone,
+        value: item.value,
+      );
+      ringChildren.add(
+        Expanded(
+          child: InkWell(
+            onTap: item.onPressed,
+            borderRadius: BorderRadii.medium,
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: ringLabelSpacing),
+              child: Column(
                 children: <Widget>[
                   Theme(
                     data: theme.copyWith(
@@ -113,28 +110,35 @@ class FlashcardStudyProgressSection extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(width: rowGap),
-                  Expanded(
-                    child: LumosInlineText(
-                      item.label,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        color: textColor,
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: rowGap),
-                  IconTheme(
-                    data: IconThemeData(color: textColor),
-                    child: const LumosIcon(
-                      Icons.arrow_forward_rounded,
-                      size: FlashcardStudyProgressSectionConst.actionIconSize,
+                  SizedBox(height: ringLabelSpacing),
+                  LumosInlineText(
+                    item.label,
+                    align: TextAlign.center,
+                    style: theme.textTheme.labelMedium?.copyWith(
+                      color: textColor,
                     ),
                   ),
                 ],
               ),
             ),
-          );
-        }),
+          ),
+        ),
+      );
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        LumosText(title, style: LumosTextStyle.titleMedium),
+        SizedBox(height: columnSpacing),
+        LumosInlineText(
+          description,
+          style: theme.textTheme.bodyMedium,
+        ),
+        SizedBox(height: sectionSpacing),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: ringChildren,
+        ),
       ],
     );
   }
