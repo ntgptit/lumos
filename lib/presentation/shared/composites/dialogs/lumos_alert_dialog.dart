@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:lumos/core/enums/dialog_type.dart';
 import 'package:lumos/core/theme/extensions/theme_context_ext.dart';
@@ -22,57 +24,43 @@ class LumosAlertDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tone = _tone(context);
     return AlertDialog(
-      icon: icon ?? Icon(tone.icon, color: tone.foreground),
+      icon: icon,
       iconPadding: EdgeInsets.only(top: context.spacing.xs),
       title: Text(title),
       content: content,
       actions: actions,
-      insetPadding: EdgeInsets.all(context.spacing.lg),
-      constraints:
-          constraints ??
-          BoxConstraints(maxWidth: context.layout.dialogMaxWidth),
-      backgroundColor: tone.background,
+      insetPadding: _resolveInsetPadding(context),
+      constraints: constraints ?? _resolveConstraints(context),
+      backgroundColor: _resolveBackgroundColor(context),
       surfaceTintColor: Colors.transparent,
       shape: RoundedRectangleBorder(borderRadius: context.shapes.dialog),
     );
   }
 
-  _DialogTone _tone(BuildContext context) {
+  EdgeInsets _resolveInsetPadding(BuildContext context) {
+    final double inset = context.component.dialogPadding;
+    return EdgeInsets.all(inset);
+  }
+
+  BoxConstraints _resolveConstraints(BuildContext context) {
+    final EdgeInsets insetPadding = _resolveInsetPadding(context);
+    final double availableWidth =
+        MediaQuery.sizeOf(context).width - insetPadding.horizontal;
+    final double safeAvailableWidth = math.max(0.0, availableWidth);
+    final double dialogWidth = math.min(
+      context.layout.dialogMaxWidth,
+      safeAvailableWidth,
+    );
+    return BoxConstraints(minWidth: dialogWidth, maxWidth: dialogWidth);
+  }
+
+  Color _resolveBackgroundColor(BuildContext context) {
     return switch (type) {
-      DialogType.info => _DialogTone(
-        background: context.colorScheme.surface,
-        foreground: context.colorScheme.primary,
-        icon: Icons.info_rounded,
-      ),
-      DialogType.warning => _DialogTone(
-        background: context.colorScheme.surface,
-        foreground: context.appColors.warning,
-        icon: Icons.warning_rounded,
-      ),
-      DialogType.error => _DialogTone(
-        background: context.colorScheme.surface,
-        foreground: context.colorScheme.error,
-        icon: Icons.error_rounded,
-      ),
-      DialogType.confirm => _DialogTone(
-        background: context.colorScheme.surface,
-        foreground: context.colorScheme.primary,
-        icon: Icons.help_rounded,
-      ),
+      DialogType.info => context.colorScheme.surface,
+      DialogType.warning => context.colorScheme.surface,
+      DialogType.error => context.colorScheme.surface,
+      DialogType.confirm => context.colorScheme.surface,
     };
   }
-}
-
-class _DialogTone {
-  const _DialogTone({
-    required this.background,
-    required this.foreground,
-    required this.icon,
-  });
-
-  final Color background;
-  final Color foreground;
-  final IconData icon;
 }

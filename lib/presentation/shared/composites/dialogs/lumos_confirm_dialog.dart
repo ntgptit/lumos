@@ -11,6 +11,7 @@ class LumosConfirmDialog extends StatelessWidget {
     required this.title,
     required this.onConfirm,
     this.content,
+    this.icon,
     this.confirmLabel = 'Confirm',
     this.cancelLabel = 'Cancel',
     this.onCancel,
@@ -20,6 +21,7 @@ class LumosConfirmDialog extends StatelessWidget {
 
   final String title;
   final Widget? content;
+  final Widget? icon;
   final VoidCallback onConfirm;
   final String confirmLabel;
   final String cancelLabel;
@@ -35,6 +37,7 @@ class LumosConfirmDialog extends StatelessWidget {
     return LumosAlertDialog(
       title: title,
       content: content,
+      icon: icon,
       type: type,
       actions: [
         LumosOutlineButton(text: cancelLabel, onPressed: onCancel),

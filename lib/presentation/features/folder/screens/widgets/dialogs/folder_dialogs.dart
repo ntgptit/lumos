@@ -42,6 +42,11 @@ Future<void> showFolderEditorDialog({
             (BuildContext _, void Function(void Function()) setDialogState) {
               return LumosPromptDialog(
                 title: titleBuilder(l10n),
+                icon: initialFolder == null
+                    ? const LumosDialogIcon(Icons.create_new_folder_outlined)
+                    : const LumosDialogIcon(
+                        Icons.drive_file_rename_outline_rounded,
+                      ),
                 label: l10n.folderNameLabel,
                 maxLines: 1,
                 cancelText: l10n.commonCancel,
@@ -114,6 +119,7 @@ Future<void> showFolderConfirmDialog({
       final AppLocalizations l10n = AppLocalizations.of(dialogContext)!;
       return LumosDialog(
         title: titleBuilder(l10n),
+        icon: const LumosDialogIcon.destructive(Icons.delete_outline_rounded),
         content: messageBuilder(l10n),
         cancelText: l10n.commonCancel,
         confirmText: confirmLabelBuilder(l10n),

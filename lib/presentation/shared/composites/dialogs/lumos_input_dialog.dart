@@ -13,6 +13,7 @@ class LumosInputDialog extends StatefulWidget {
     required this.title,
     required this.onSubmitted,
     this.content,
+    this.icon,
     this.initialValue,
     this.hintText,
     this.confirmLabel = 'Save',
@@ -24,6 +25,7 @@ class LumosInputDialog extends StatefulWidget {
 
   final String title;
   final Widget? content;
+  final Widget? icon;
   final String? initialValue;
   final String? hintText;
   final String confirmLabel;
@@ -57,8 +59,10 @@ class _AppInputDialogState extends State<LumosInputDialog> {
     return LumosAlertDialog(
       title: widget.title,
       type: widget.type,
+      icon: widget.icon,
       content: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           if (widget.content != null) ...[
             widget.content!,

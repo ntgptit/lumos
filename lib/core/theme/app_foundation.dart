@@ -16,6 +16,7 @@ export 'package:lumos/presentation/shared/composites/appbars/lumos_app_bar.dart'
 export 'package:lumos/presentation/shared/composites/dialogs/lumos_action_sheet.dart';
 export 'package:lumos/presentation/shared/composites/dialogs/lumos_dialog.dart';
 export 'package:lumos/presentation/shared/composites/dialogs/lumos_bottom_sheet.dart';
+export 'package:lumos/presentation/shared/composites/dialogs/lumos_dialog_icon.dart';
 export 'package:lumos/presentation/shared/composites/dialogs/lumos_prompt_dialog.dart';
 export 'package:lumos/presentation/shared/composites/forms/lumos_search_bar.dart';
 export 'package:lumos/presentation/shared/composites/forms/lumos_sort_bar.dart';

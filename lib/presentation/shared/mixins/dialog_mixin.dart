@@ -21,6 +21,7 @@ mixin DialogMixin<T extends StatefulWidget> on State<T> {
   Future<bool?> showConfirmDialog({
     required String title,
     Widget? content,
+    Widget? icon,
     String confirmLabel = 'Confirm',
     String cancelLabel = 'Cancel',
     DialogType type = DialogType.confirm,
@@ -31,6 +32,7 @@ mixin DialogMixin<T extends StatefulWidget> on State<T> {
         return LumosConfirmDialog(
           title: title,
           content: content,
+          icon: icon,
           confirmLabel: confirmLabel,
           cancelLabel: cancelLabel,
           type: type,

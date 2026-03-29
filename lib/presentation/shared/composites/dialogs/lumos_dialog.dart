@@ -11,6 +11,7 @@ class LumosDialog extends StatelessWidget {
     required this.title,
     this.content,
     this.actions,
+    this.icon,
     this.type = DialogType.info,
     this.cancelText,
     this.confirmText,
@@ -22,6 +23,7 @@ class LumosDialog extends StatelessWidget {
   final String title;
   final Object? content;
   final List<Widget>? actions;
+  final Widget? icon;
   final DialogType type;
   final String? cancelText;
   final String? confirmText;
@@ -35,6 +37,7 @@ class LumosDialog extends StatelessWidget {
       title: title,
       content: _resolveContent(),
       actions: actions ?? _resolveActions(),
+      icon: icon,
       type: type,
     );
   }

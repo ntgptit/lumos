@@ -12,6 +12,7 @@ class LumosPromptDialog extends StatefulWidget {
     required this.title,
     this.onConfirm,
     this.onCancel,
+    this.icon,
     this.controller,
     this.initialValue,
     this.hintText,
@@ -28,6 +29,7 @@ class LumosPromptDialog extends StatefulWidget {
   final String title;
   final ValueChanged<String>? onConfirm;
   final VoidCallback? onCancel;
+  final Widget? icon;
   final TextEditingController? controller;
   final String? initialValue;
   final String? hintText;
@@ -70,8 +72,10 @@ class _LumosPromptDialogState extends State<LumosPromptDialog> {
     return LumosAlertDialog(
       title: widget.title,
       type: widget.type,
+      icon: widget.icon,
       content: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           LumosTextField(
             controller: _controller,

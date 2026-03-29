@@ -642,6 +642,7 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
       builder: (BuildContext dialogContext) {
         return LumosDialog(
           title: l10n.studyResetCurrentModeTitle,
+          icon: const LumosDialogIcon(Icons.restart_alt_rounded),
           content: l10n.studyResetCurrentModeMessage,
           cancelText: l10n.commonCancel,
           confirmText: l10n.studyResetCurrentModeConfirm,
@@ -659,4 +660,3 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
     );
   }
 }
-

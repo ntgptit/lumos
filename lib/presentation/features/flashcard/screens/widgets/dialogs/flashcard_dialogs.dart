@@ -57,6 +57,9 @@ Future<void> showFlashcardEditorDialog({
 
           return LumosPromptDialog(
             title: titleBuilder(l10n),
+            icon: initialFlashcard == null
+                ? const LumosDialogIcon(Icons.layers_rounded)
+                : const LumosDialogIcon(Icons.edit_note_rounded),
             label: l10n.flashcardFrontLabel,
             hintText: l10n.flashcardFrontHint,
             cancelText: l10n.commonCancel,
@@ -118,6 +121,7 @@ Future<void> showFlashcardConfirmDialog({
       final AppLocalizations l10n = AppLocalizations.of(dialogContext)!;
       return LumosDialog(
         title: titleBuilder(l10n),
+        icon: const LumosDialogIcon.destructive(Icons.delete_outline_rounded),
         content: messageBuilder(l10n),
         cancelText: l10n.commonCancel,
         confirmText: confirmLabelBuilder(l10n),
