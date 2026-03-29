@@ -28,6 +28,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 
 import com.lumos.deck.repository.DeckRepository;
+import com.lumos.deck.repository.projection.DeckFolderCountProjection;
 import com.lumos.folder.constant.FolderConstants;
 import com.lumos.folder.dto.response.FolderResponse;
 import com.lumos.folder.entity.Folder;
@@ -62,7 +63,7 @@ class FolderServiceImplTest {
         final var mappedFolder = this
                 .folder(FOLDER_ID, null, 1, "Folder A", "Description");
         final var response = this
-                .folderResponse(FOLDER_ID, null, 1, 0);
+                .folderResponse(FOLDER_ID, null, 1, 0, 0);
         when(this.folderRepository
                 .existsActiveSiblingName(null, "Folder A", null))
                 .thenReturn(false);
@@ -70,7 +71,6 @@ class FolderServiceImplTest {
                 .toFolderEntity(
                         "Folder A",
                         "Description",
-                        FolderConstants.DEFAULT_COLOR_HEX,
                         null,
                         FolderConstants.ROOT_FOLDER_DEPTH))
                 .thenReturn(mappedFolder);
@@ -99,7 +99,6 @@ class FolderServiceImplTest {
                 .toFolderEntity(
                         "Folder A",
                         FolderConstants.EMPTY_DESCRIPTION,
-                        FolderConstants.DEFAULT_COLOR_HEX,
                         null,
                         FolderConstants.ROOT_FOLDER_DEPTH))
                 .thenReturn(mappedFolder);
@@ -109,7 +108,7 @@ class FolderServiceImplTest {
         when(this.folderMapper
                 .toFolderResponse(mappedFolder))
                 .thenReturn(this
-                        .folderResponse(FOLDER_ID, null, 1, 0));
+                        .folderResponse(FOLDER_ID, null, 1, 0, 0));
 
         this.folderService
                 .createFolder(request);
@@ -118,7 +117,6 @@ class FolderServiceImplTest {
                 .toFolderEntity(
                         "Folder A",
                         FolderConstants.EMPTY_DESCRIPTION,
-                        FolderConstants.DEFAULT_COLOR_HEX,
                         null,
                         FolderConstants.ROOT_FOLDER_DEPTH);
     }
@@ -180,7 +178,7 @@ class FolderServiceImplTest {
                 .folder(FOLDER_ID, parent, 2, "Old Name", "Description");
         final var request = renameFolderRequest("  New Name  ");
         final var response = this
-                .folderResponse(FOLDER_ID, PARENT_ID, 2, 0);
+                .folderResponse(FOLDER_ID, PARENT_ID, 2, 0, 0);
         when(this.folderRepository
                 .findByIdAndDeletedAtIsNull(FOLDER_ID))
                 .thenReturn(Optional
@@ -207,7 +205,7 @@ class FolderServiceImplTest {
                 .folder(FOLDER_ID, parent, 2, "Old Name", "Old Description");
         final var request = updateFolderRequest("  New Name  ", "  New Description  ", null);
         final var response = this
-                .folderResponse(FOLDER_ID, PARENT_ID, 2, 0);
+                .folderResponse(FOLDER_ID, PARENT_ID, 2, 0, 0);
         when(this.folderRepository
                 .findByIdAndDeletedAtIsNull(FOLDER_ID))
                 .thenReturn(Optional
@@ -265,12 +263,15 @@ class FolderServiceImplTest {
         final var projection = this
                 .projection(folderOne
                         .getId(), 3L);
+        final var deckProjection = this
+                .deckProjection(folderOne
+                        .getId(), 4L);
         final var responseOne = this
                 .folderResponse(folderOne
-                        .getId(), PARENT_ID, 2, 3);
+                        .getId(), PARENT_ID, 2, 3, 4);
         final var responseTwo = this
                 .folderResponse(folderTwo
-                        .getId(), PARENT_ID, 2, 0);
+                        .getId(), PARENT_ID, 2, 0, 0);
         when(this.folderRepository
                 .findAll(any(Specification.class), any(PageRequest.class)))
                 .thenReturn(folderPage);
@@ -282,11 +283,19 @@ class FolderServiceImplTest {
                                         .getId())))
                 .thenReturn(List
                         .of(projection));
+        when(this.deckRepository
+                .findDeckCountByFolderIds(List
+                        .of(folderOne
+                                .getId(),
+                                folderTwo
+                                        .getId())))
+                .thenReturn(List
+                        .of(deckProjection));
         when(this.folderMapper
-                .toFolderResponse(folderOne, 3))
+                .toFolderResponse(folderOne, 3, 4))
                 .thenReturn(responseOne);
         when(this.folderMapper
-                .toFolderResponse(folderTwo, 0))
+                .toFolderResponse(folderTwo, 0, 0))
                 .thenReturn(responseTwo);
 
         final var result = this.folderService
@@ -313,6 +322,8 @@ class FolderServiceImplTest {
                 .of(), result);
         verify(this.folderRepository, never())
                 .findChildCountByParentIds(any());
+        verify(this.deckRepository, never())
+                .findDeckCountByFolderIds(any());
     }
 
     private Folder folder(Long id, Folder parent, Integer depth, String name, String description) {
@@ -327,23 +338,22 @@ class FolderServiceImplTest {
                 .setName(name);
         folder
                 .setDescription(description);
-        folder
-                .setColorHex(FolderConstants.DEFAULT_COLOR_HEX);
 
         return folder;
     }
 
-    private FolderResponse folderResponse(Long id, Long parentId, Integer depth, Integer childFolderCount) {
+    private FolderResponse folderResponse(Long id, Long parentId, Integer depth, Integer childFolderCount,
+            Integer deckCount) {
 
         return com.lumos.testkit.FolderTestFixtures
                 .folderResponse(
                         id,
                         "Folder A",
                         "Description",
-                        FolderConstants.DEFAULT_COLOR_HEX,
                         parentId,
                         depth,
-                        childFolderCount);
+                        childFolderCount,
+                        deckCount);
     }
 
     private FolderChildCountProjection projection(Long parentId, Long childCount) {
@@ -359,6 +369,23 @@ class FolderServiceImplTest {
             public Long getChildFolderCount() {
 
                 return childCount;
+            }
+        };
+    }
+
+    private DeckFolderCountProjection deckProjection(Long folderId, Long deckCount) {
+
+        return new DeckFolderCountProjection() {
+            @Override
+            public Long getFolderId() {
+
+                return folderId;
+            }
+
+            @Override
+            public Long getDeckCount() {
+
+                return deckCount;
             }
         };
     }

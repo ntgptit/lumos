@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.lumos.common.dto.request.SearchRequest;
 import com.lumos.deck.repository.DeckRepository;
+import com.lumos.deck.repository.projection.DeckFolderCountProjection;
 import com.lumos.folder.constant.FolderConstants;
 import com.lumos.folder.dto.request.CreateFolderRequest;
 import com.lumos.folder.dto.request.RenameFolderRequest;
@@ -57,7 +58,6 @@ public class FolderServiceImpl implements FolderService {
         final var folder = this.folderMapper.toFolderEntity(
                 normalizedName,
                 normalizedDescription,
-                FolderConstants.DEFAULT_COLOR_HEX,
                 parent,
                 depth);
         final var savedFolder = this.folderRepository.save(folder);
@@ -135,6 +135,7 @@ public class FolderServiceImpl implements FolderService {
                 searchRequest.sortType());
         final var folders = this.folderRepository.findAll(specification, sortedPageable).getContent();
         final var childCountByParentId = this.resolveChildCountByParentId(folders);
+        final var deckCountByFolderId = this.resolveDeckCountByFolderId(folders);
         // Return the page slice enriched with child counts so the tree view can render folder badges.
         return folders.stream()
                 // Map each folder row with its precomputed child count so the list API stays O(1) per row.
@@ -142,8 +143,11 @@ public class FolderServiceImpl implements FolderService {
                     final var childFolderCount = childCountByParentId.getOrDefault(
                             folder.getId(),
                             FolderConstants.DEFAULT_CHILD_FOLDER_COUNT);
+                    final var deckCount = deckCountByFolderId.getOrDefault(
+                            folder.getId(),
+                            FolderConstants.DEFAULT_DECK_COUNT);
                     // Return the folder row enriched with its child count for tree-navigation rendering.
-                    return this.folderMapper.toFolderResponse(folder, childFolderCount);
+                    return this.folderMapper.toFolderResponse(folder, childFolderCount, deckCount);
                 })
                 .toList();
     }
@@ -230,5 +234,19 @@ public class FolderServiceImpl implements FolderService {
                 .collect(Collectors.toMap(
                         FolderChildCountProjection::getParentId,
                         row -> row.getChildFolderCount().intValue()));
+    }
+
+    private Map<Long, Integer> resolveDeckCountByFolderId(List<Folder> folders) {
+        final var folderIds = folders.stream()
+                .map(Folder::getId)
+                .toList();
+        if (folderIds.isEmpty()) {
+            
+            return Map.of();
+        }
+        return this.deckRepository.findDeckCountByFolderIds(folderIds).stream()
+                .collect(Collectors.toMap(
+                        DeckFolderCountProjection::getFolderId,
+                        row -> row.getDeckCount().intValue()));
     }
 }

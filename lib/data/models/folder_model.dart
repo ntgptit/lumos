@@ -8,9 +8,9 @@ part 'folder_model.g.dart';
 const int folderDataDefaultId = 0;
 const String folderDataDefaultName = '';
 const String folderDataDefaultDescription = '';
-const String folderDataDefaultColorHex = FolderDomainConst.defaultColorHex;
 const int folderDataDefaultDepth = 0;
 const int folderDataDefaultChildFolderCount = 0;
+const int folderDataDefaultDeckCount = 0;
 
 @freezed
 abstract class FolderModel with _$FolderModel {
@@ -18,10 +18,10 @@ abstract class FolderModel with _$FolderModel {
     @Default(folderDataDefaultId) int id,
     @Default(folderDataDefaultName) String name,
     @Default(folderDataDefaultDescription) String description,
-    @Default(folderDataDefaultColorHex) String colorHex,
     int? parentId,
     @Default(folderDataDefaultDepth) int depth,
     @Default(folderDataDefaultChildFolderCount) int childFolderCount,
+    @Default(folderDataDefaultDeckCount) int deckCount,
   }) = _FolderModel;
 
   factory FolderModel.fromJson(Map<String, dynamic> json) =>
@@ -34,10 +34,10 @@ extension FolderModelMapper on FolderModel {
       id: id,
       name: name,
       description: description,
-      colorHex: colorHex,
       parentId: parentId,
       depth: depth,
       childFolderCount: childFolderCount,
+      deckCount: deckCount,
     );
   }
 }

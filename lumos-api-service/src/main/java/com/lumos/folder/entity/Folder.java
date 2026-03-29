@@ -31,9 +31,6 @@ public class Folder extends AuditEntity {
     @Column(name = "description", nullable = false, length = FolderConstants.DESCRIPTION_MAX_LENGTH)
     private String description;
 
-    @Column(name = "color_hex", nullable = false, length = FolderConstants.COLOR_HEX_MAX_LENGTH)
-    private String colorHex;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private Folder parent;

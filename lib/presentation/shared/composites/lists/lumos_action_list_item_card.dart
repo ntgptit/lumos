@@ -28,7 +28,8 @@ class LumosActionListItemCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final contentInset = context.component.cardPadding;
     final titleGap = context.spacing.xxs;
-    double minHeight = context.component.buttonHeight + (context.spacing.sm * 2);
+    double minHeight =
+        context.component.buttonHeight + (context.spacing.sm * 2);
     final double leadingMinHeight =
         context.component.listItemLeadingSize + (contentInset * 2);
     if (leadingMinHeight > minHeight) {
@@ -77,26 +78,14 @@ class LumosActionListItemCard extends StatelessWidget {
                 itemBuilder: (context) {
                   return actions
                       .map((action) {
-                        final color =
-                            action.tone == LumosActionListItemTone.critical
-                            ? context.colorScheme.error
-                            : null;
-                        return PopupMenuItem<String>(
+                        return LumosPopupMenuActionItem<String>(
                           value: action.key,
-                          child: Row(
-                            children: [
-                              Icon(action.icon, color: color),
-                              SizedBox(width: context.spacing.sm),
-                              Expanded(
-                                child: Text(
-                                  action.label,
-                                  style: color == null
-                                      ? null
-                                      : TextStyle(color: color),
-                                ),
-                              ),
-                            ],
-                          ),
+                          label: action.label,
+                          icon: action.icon,
+                          supportingText: action.supportingText,
+                          tone: action.tone == LumosActionListItemTone.critical
+                              ? LumosPopupMenuItemTone.critical
+                              : LumosPopupMenuItemTone.standard,
                         );
                       })
                       .toList(growable: false);

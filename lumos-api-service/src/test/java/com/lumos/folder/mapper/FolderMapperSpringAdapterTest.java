@@ -23,7 +23,6 @@ class FolderMapperSpringAdapterTest {
         folder.setId(10L);
         folder.setName("Folder A");
         folder.setDescription("Description");
-        folder.setColorHex("#112233");
         folder.setDepth(2);
         folder.setParent(parent);
         folder.setCreatedAt(Instant.parse("2026-01-01T00:00:00Z"));
@@ -34,10 +33,10 @@ class FolderMapperSpringAdapterTest {
         assertEquals(10L, response.id());
         assertEquals("Folder A", response.name());
         assertEquals("Description", response.description());
-        assertEquals("#112233", response.colorHex());
         assertEquals(3L, response.parentId());
         assertEquals(2, response.depth());
         assertEquals(FolderConstants.DEFAULT_CHILD_FOLDER_COUNT, response.childFolderCount());
+        assertEquals(FolderConstants.DEFAULT_DECK_COUNT, response.deckCount());
         assertNotNull(response.audit());
         assertEquals(folder.getCreatedAt(), response.audit().createdAt());
         assertEquals(folder.getUpdatedAt(), response.audit().updatedAt());
@@ -49,7 +48,6 @@ class FolderMapperSpringAdapterTest {
         folder.setId(12L);
         folder.setName("Folder B");
         folder.setDescription("Description");
-        folder.setColorHex("#112233");
         folder.setDepth(1);
 
         final var response = this.mapper.toFolderResponse(folder);
@@ -62,11 +60,10 @@ class FolderMapperSpringAdapterTest {
         final var parent = new Folder();
         parent.setId(5L);
 
-        final var folder = this.mapper.toFolderEntity("Folder Name", "Folder Description", "#445566", parent, 3);
+        final var folder = this.mapper.toFolderEntity("Folder Name", "Folder Description", parent, 3);
 
         assertEquals("Folder Name", folder.getName());
         assertEquals("Folder Description", folder.getDescription());
-        assertEquals("#445566", folder.getColorHex());
         assertEquals(parent, folder.getParent());
         assertEquals(3, folder.getDepth());
     }

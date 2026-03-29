@@ -69,6 +69,11 @@ abstract final class AppTheme {
         dimensions,
         textTheme,
       ),
+      popupMenuTheme: LumosPopupMenuTheme.build(
+        colorScheme,
+        dimensions,
+        textTheme,
+      ),
       cardTheme: LumosCardTheme.build(colorScheme, dimensions),
       dialogTheme: LumosDialogTheme.build(colorScheme, dimensions),
       chipTheme: LumosChipTheme.build(colorScheme, dimensions),

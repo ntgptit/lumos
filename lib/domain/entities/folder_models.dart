@@ -5,18 +5,6 @@ abstract final class FolderDomainConst {
   static const int nameMinLength = 1;
   static const int nameMaxLength = 120;
   static const int descriptionMaxLength = 400;
-  static const String defaultColorHex = '#4F46E5';
-  static const List<String> colorPresets = <String>[
-    '#4F46E5',
-    '#0EA5E9',
-    '#10B981',
-    '#F59E0B',
-    '#EF4444',
-    '#8B5CF6',
-  ];
-  static final RegExp colorHexPattern = RegExp(
-    r'^#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})$',
-  );
 }
 
 @immutable
@@ -25,19 +13,19 @@ class FolderNode {
     required this.id,
     required this.name,
     required this.description,
-    required this.colorHex,
     required this.parentId,
     required this.depth,
     required this.childFolderCount,
+    required this.deckCount,
   });
 
   final int id;
   final String name;
   final String description;
-  final String colorHex;
   final int? parentId;
   final int depth;
   final int childFolderCount;
+  final int deckCount;
 }
 
 @immutable

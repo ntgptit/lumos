@@ -239,12 +239,6 @@ abstract class AppLocalizations {
   /// **'Enter folder description'**
   String get folderDescriptionHint;
 
-  /// No description provided for @folderColorLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Color'**
-  String get folderColorLabel;
-
   /// No description provided for @folderManagerTitle.
   ///
   /// In en, this message translates to:
@@ -401,12 +395,6 @@ abstract class AppLocalizations {
   /// **'Description must be at most {max} character(s).'**
   String folderDescriptionMaxLengthValidation(int max);
 
-  /// No description provided for @folderColorInvalidValidation.
-  ///
-  /// In en, this message translates to:
-  /// **'Folder color is invalid.'**
-  String get folderColorInvalidValidation;
-
   /// No description provided for @folderDeleteConfirm.
   ///
   /// In en, this message translates to:
@@ -424,6 +412,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =0 {0 subfolders} =1 {1 subfolder} other {{count} subfolders}}'**
   String folderSubfolderCount(int count);
+
+  /// No description provided for @folderDeckCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0 {0 decks} =1 {1 deck} other {{count} decks}}'**
+  String folderDeckCount(int count);
 
   /// No description provided for @deckNewDeck.
   ///
@@ -628,6 +622,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Toggle flashcard search'**
   String get flashcardToggleSearchTooltip;
+
+  /// No description provided for @flashcardHeroSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Study, review, and manage cards in this deck.'**
+  String get flashcardHeroSubtitle;
 
   /// No description provided for @flashcardSortButtonTooltip.
   ///
@@ -838,6 +838,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Blast'**
   String get flashcardBlastActionLabel;
+
+  /// No description provided for @flashcardStudyModesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Study modes'**
+  String get flashcardStudyModesTitle;
 
   /// No description provided for @flashcardProgressTitle.
   ///

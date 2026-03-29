@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:lumos/core/enums/dialog_type.dart';
 import 'package:lumos/core/theme/extensions/theme_context_ext.dart';
+import 'package:lumos/core/theme/tokens/tokens.dart';
 import 'package:lumos/presentation/shared/primitives/text/lumos_text.dart';
 
 class LumosAlertDialog extends StatelessWidget {
@@ -32,7 +33,7 @@ class LumosAlertDialog extends StatelessWidget {
       insetPadding: _resolveInsetPadding(context),
       backgroundColor: _resolveBackgroundColor(context),
       surfaceTintColor: Colors.transparent,
-      elevation: 0,
+      elevation: AppElevationTokens.level0,
       shape: RoundedRectangleBorder(
         borderRadius: context.shapes.dialog,
         side: BorderSide(color: context.colorScheme.outlineVariant),

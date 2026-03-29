@@ -81,9 +81,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get folderDescriptionHint => 'Enter folder description';
 
   @override
-  String get folderColorLabel => 'Color';
-
-  @override
   String get folderManagerTitle => 'Folder Manager';
 
   @override
@@ -170,9 +167,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get folderColorInvalidValidation => 'Folder color is invalid.';
-
-  @override
   String folderDeleteConfirm(Object name) {
     return 'Delete \"$name\" and all subfolders?';
   }
@@ -190,6 +184,18 @@ class AppLocalizationsEn extends AppLocalizations {
       other: '$count subfolders',
       one: '1 subfolder',
       zero: '0 subfolders',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String folderDeckCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count decks',
+      one: '1 deck',
+      zero: '0 decks',
     );
     return '$_temp0';
   }
@@ -311,6 +317,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get flashcardToggleSearchTooltip => 'Toggle flashcard search';
 
   @override
+  String get flashcardHeroSubtitle => 'Study, review, and manage cards in this deck.';
+
+  @override
   String get flashcardSortButtonTooltip => 'Sort flashcards';
 
   @override
@@ -420,6 +429,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get flashcardBlastActionLabel => 'Blast';
+
+  @override
+  String get flashcardStudyModesTitle => 'Study modes';
 
   @override
   String get flashcardProgressTitle => 'Your progress';

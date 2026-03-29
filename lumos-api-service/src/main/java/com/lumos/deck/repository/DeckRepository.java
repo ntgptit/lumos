@@ -11,12 +11,22 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.lumos.deck.entity.Deck;
+import com.lumos.deck.repository.projection.DeckFolderCountProjection;
 
 public interface DeckRepository extends JpaRepository<Deck, Long>, JpaSpecificationExecutor<Deck> {
 
     Optional<Deck> findByIdAndDeletedAtIsNull(Long id);
 
     boolean existsByFolderIdAndDeletedAtIsNull(Long folderId);
+
+    @Query(nativeQuery = true, value = """
+            SELECT d.folder_id AS folderId, COUNT(d.id) AS deckCount
+            FROM decks d
+            WHERE d.deleted_at IS NULL
+              AND d.folder_id IN (:folderIds)
+            GROUP BY d.folder_id
+            """)
+    java.util.List<DeckFolderCountProjection> findDeckCountByFolderIds(@Param("folderIds") Collection<Long> folderIds);
 
     @Query(value = """
             SELECT d.*

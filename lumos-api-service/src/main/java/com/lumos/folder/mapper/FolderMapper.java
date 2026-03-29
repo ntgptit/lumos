@@ -14,6 +14,7 @@ public interface FolderMapper {
 
     @Mapping(target = "parentId", source = "parent.id")
     @Mapping(target = "childFolderCount", expression = "java(defaultChildFolderCount())")
+    @Mapping(target = "deckCount", expression = "java(defaultDeckCount())")
     @Mapping(target = "audit", expression = "java(toAuditMetadata(folder))")
     FolderResponse toFolderResponse(Folder folder);
 
@@ -21,22 +22,21 @@ public interface FolderMapper {
     @Mapping(target = "version", ignore = true)
     @Mapping(target = "name", source = "name")
     @Mapping(target = "description", source = "description")
-    @Mapping(target = "colorHex", source = "colorHex")
     @Mapping(target = "parent", source = "parent")
     @Mapping(target = "depth", source = "depth")
-    Folder toFolderEntity(String name, String description, String colorHex, Folder parent, Integer depth);
+    Folder toFolderEntity(String name, String description, Folder parent, Integer depth);
 
-    default FolderResponse toFolderResponse(Folder folder, Integer childFolderCount) {
+    default FolderResponse toFolderResponse(Folder folder, Integer childFolderCount, Integer deckCount) {
         final var response = toFolderResponse(folder);
         
         return new FolderResponse(
                 response.id(),
                 response.name(),
                 response.description(),
-                response.colorHex(),
                 response.parentId(),
                 response.depth(),
                 childFolderCount,
+                deckCount,
                 response.audit()
         );
     }
@@ -49,5 +49,10 @@ public interface FolderMapper {
     default Integer defaultChildFolderCount() {
         
         return FolderConstants.DEFAULT_CHILD_FOLDER_COUNT;
+    }
+
+    default Integer defaultDeckCount() {
+        
+        return FolderConstants.DEFAULT_DECK_COUNT;
     }
 }

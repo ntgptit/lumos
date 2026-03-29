@@ -30,7 +30,6 @@
   "folderNameLabel": "Folder name",
   "folderDescriptionLabel": "Description",
   "folderDescriptionHint": "Enter folder description",
-  "folderColorLabel": "Color",
   "folderManagerTitle": "Folder Manager",
   "folderManagerSubtitle": "Browse tree, create, rename, and soft-delete folders.",
   "deckManagerTitle": "Deck Manager",
@@ -83,7 +82,6 @@
       }
     }
   },
-  "folderColorInvalidValidation": "Folder color is invalid.",
   "folderDeleteConfirm": "Delete \"{name}\" and all subfolders?",
   "@folderDeleteConfirm": {
     "placeholders": {
@@ -100,6 +98,14 @@
   },
   "folderSubfolderCount": "{count, plural, =0 {0 subfolders} =1 {1 subfolder} other {{count} subfolders}}",
   "@folderSubfolderCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "folderDeckCount": "{count, plural, =0 {0 decks} =1 {1 deck} other {{count} decks}}",
+  "@folderDeckCount": {
     "placeholders": {
       "count": {
         "type": "int"
@@ -185,6 +191,7 @@
   "flashcardSearchHint": "Search flashcards",
   "flashcardSearchClearTooltip": "Clear flashcard search",
   "flashcardToggleSearchTooltip": "Toggle flashcard search",
+  "flashcardHeroSubtitle": "Study, review, and manage cards in this deck.",
   "flashcardSortButtonTooltip": "Sort flashcards",
   "flashcardSortSheetTitle": "Sort flashcards",
   "flashcardSortByCreatedAt": "Created time",
@@ -241,6 +248,7 @@
   "flashcardQuizActionLabel": "Quiz",
   "flashcardMatchActionLabel": "Match",
   "flashcardBlastActionLabel": "Blast",
+  "flashcardStudyModesTitle": "Study modes",
   "flashcardProgressTitle": "Your progress",
   "flashcardProgressDescription": "Your progress is based on your last two study attempts across every mode, excluding games.",
   "flashcardProgressNotStartedLabel": "Not started",

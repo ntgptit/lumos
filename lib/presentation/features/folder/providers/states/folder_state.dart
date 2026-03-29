@@ -18,7 +18,6 @@ abstract final class FolderStateConst {
   static const int folderNameMaxLength = FolderDomainConst.nameMaxLength;
   static const int folderDescriptionMaxLength =
       FolderDomainConst.descriptionMaxLength;
-  static const String folderDefaultColorHex = FolderDomainConst.defaultColorHex;
   static const Duration searchDebounceDuration = Duration(milliseconds: 250);
 }
 

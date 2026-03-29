@@ -32,19 +32,19 @@ public final class FolderTestFixtures {
             Long id,
             String name,
             String description,
-            String colorHex,
             Long parentId,
             Integer depth,
-            Integer childFolderCount) {
+            Integer childFolderCount,
+            Integer deckCount) {
         
         return new FolderResponse(
                 id,
                 name,
                 description,
-                colorHex,
                 parentId,
                 depth,
                 childFolderCount,
+                deckCount,
                 new AuditMetadataResponse(
                         Instant.parse("2026-01-01T00:00:00Z"),
                         Instant.parse("2026-01-02T00:00:00Z")));

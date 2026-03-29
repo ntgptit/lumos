@@ -81,9 +81,6 @@ class AppLocalizationsVi extends AppLocalizations {
   String get folderDescriptionHint => 'Nhập mô tả thư mục';
 
   @override
-  String get folderColorLabel => 'Màu sắc';
-
-  @override
   String get folderManagerTitle => 'Quản lý thư mục';
 
   @override
@@ -170,9 +167,6 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
-  String get folderColorInvalidValidation => 'Màu thư mục không hợp lệ.';
-
-  @override
   String folderDeleteConfirm(Object name) {
     return 'Xóa \"$name\" và toàn bộ thư mục con?';
   }
@@ -190,6 +184,18 @@ class AppLocalizationsVi extends AppLocalizations {
       other: '$count thư mục con',
       one: '1 thư mục con',
       zero: '0 thư mục con',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String folderDeckCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count bộ thẻ',
+      one: '1 bộ thẻ',
+      zero: '0 bộ thẻ',
     );
     return '$_temp0';
   }
@@ -311,6 +317,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get flashcardToggleSearchTooltip => 'Bật/tắt tìm kiếm flashcard';
 
   @override
+  String get flashcardHeroSubtitle => 'Học, ôn tập và quản lý các thẻ trong bộ này.';
+
+  @override
   String get flashcardSortButtonTooltip => 'Sắp xếp flashcard';
 
   @override
@@ -420,6 +429,9 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get flashcardBlastActionLabel => 'Blast';
+
+  @override
+  String get flashcardStudyModesTitle => 'Chế độ học';
 
   @override
   String get flashcardProgressTitle => 'Tiến độ của bạn';

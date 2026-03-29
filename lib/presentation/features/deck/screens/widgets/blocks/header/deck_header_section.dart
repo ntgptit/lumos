@@ -61,14 +61,10 @@ class DeckHeaderSection extends StatelessWidget {
           SizedBox(height: sectionGap),
           Align(
             alignment: Alignment.centerLeft,
-            child: LumosButton.outline(
-              text: _buildSortLabel(l10n: l10n),
-              size: LumosButtonSize.medium,
+            child: LumosUtilityChipButton(
+              label: _buildSortLabel(l10n: l10n),
               onPressed: onToggleSort,
-              leading: LumosIcon(
-                Icons.sort_rounded,
-                size: IconSizes.iconSmall,
-              ),
+              leading: LumosIcon(Icons.sort_rounded, size: IconSizes.iconSmall),
               trailing: LumosIcon(
                 Icons.keyboard_arrow_down_rounded,
                 size: IconSizes.iconSmall,

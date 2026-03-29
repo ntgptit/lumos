@@ -94,7 +94,8 @@ class _FolderHeaderNavigationSectionState
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     final String currentSortLabel = _buildCurrentSortLabel();
-    final bool showNavigation = widget.currentDepth != FolderStateConst.rootDepth;
+    final bool showNavigation =
+        widget.currentDepth != FolderStateConst.rootDepth;
     final List<Widget> utilityActions = <Widget>[
       if (showNavigation)
         IntrinsicWidth(
@@ -133,14 +134,10 @@ class _FolderHeaderNavigationSectionState
             onSelectionChanged: _onNavigationGroupChanged,
           ),
         ),
-      LumosButton.outline(
-        text: currentSortLabel,
-        size: LumosButtonSize.medium,
+      LumosUtilityChipButton(
+        label: currentSortLabel,
         onPressed: () => _onSortPressed(context),
-        leading: const LumosIcon(
-          Icons.sort_rounded,
-          size: IconSizes.iconSmall,
-        ),
+        leading: const LumosIcon(Icons.sort_rounded, size: IconSizes.iconSmall),
         trailing: const LumosIcon(
           Icons.keyboard_arrow_down_rounded,
           size: IconSizes.iconSmall,
@@ -158,11 +155,7 @@ class _FolderHeaderNavigationSectionState
           clearTooltip: _buildSearchClearTooltip(),
         ),
         SizedBox(height: rowGap),
-        Wrap(
-          spacing: rowGap,
-          runSpacing: compactGap,
-          children: utilityActions,
-        ),
+        Wrap(spacing: rowGap, runSpacing: compactGap, children: utilityActions),
       ],
     );
   }

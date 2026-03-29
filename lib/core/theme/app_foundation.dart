@@ -35,6 +35,7 @@ export 'package:lumos/presentation/shared/primitives/buttons/lumos_outline_butto
 export 'package:lumos/presentation/shared/primitives/buttons/lumos_primary_button.dart';
 export 'package:lumos/presentation/shared/primitives/buttons/lumos_secondary_button.dart';
 export 'package:lumos/presentation/shared/primitives/buttons/lumos_popup_menu_button.dart';
+export 'package:lumos/presentation/shared/primitives/buttons/lumos_utility_chip_button.dart';
 export 'package:lumos/presentation/shared/primitives/displays/lumos_card.dart';
 export 'package:lumos/presentation/shared/primitives/displays/lumos_decorative_background.dart';
 export 'package:lumos/presentation/shared/primitives/displays/lumos_icon.dart';

@@ -97,9 +97,9 @@ class FolderControllerTest {
                 FOLDER_ID,
                 "Folder A",
                 "Description",
-                "#112233",
                 null,
                 1,
+                0,
                 0);
     }
 }

@@ -76,7 +76,7 @@ class FolderBrowserContent extends StatelessWidget {
       SliverToBoxAdapter(
         child: FolderHeader(
           currentDepth: state.currentDepth,
-          isDeckManager: hasDecks,
+          isDeckManager: canManageDecks,
           deckCount: deckCount,
           isNavigatingParent: state.isNavigatingParent,
           isNavigatingRoot: state.isNavigatingRoot,

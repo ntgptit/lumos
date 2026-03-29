@@ -31,12 +31,10 @@ class StudySessionScreenMenuActionButton extends StatelessWidget {
     if (session.activeMode == StudySessionSubModeConst.reviewMode &&
         session.currentItem.speech.available) {
       items.add(
-        PopupMenuItem<String>(
+        LumosPopupMenuActionItem<String>(
           value: reviewMenuReplayAudio,
-          child: LumosText(
-            l10n.studySpeechReplayAction,
-            style: LumosTextStyle.bodyMedium,
-          ),
+          label: l10n.studySpeechReplayAction,
+          icon: Icons.replay_rounded,
         ),
       );
     }
@@ -45,12 +43,10 @@ class StudySessionScreenMenuActionButton extends StatelessWidget {
         items.add(const PopupMenuDivider());
       }
       items.add(
-        PopupMenuItem<String>(
+        LumosPopupMenuActionItem<String>(
           value: resetCurrentModeActionId,
-          child: LumosText(
-            l10n.studyResetCurrentModeAction,
-            style: LumosTextStyle.bodyMedium,
-          ),
+          label: l10n.studyResetCurrentModeAction,
+          icon: Icons.restart_alt_rounded,
         ),
       );
     }

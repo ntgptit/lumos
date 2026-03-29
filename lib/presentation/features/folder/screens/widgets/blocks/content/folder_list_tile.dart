@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 
 import 'package:lumos/core/theme/app_foundation.dart';
-import '../../../../../../../core/utils/string_utils.dart';
 import '../../../../../../../domain/entities/folder_models.dart';
 import '../../../../../../../l10n/app_localizations.dart';
 
 abstract final class FolderListTileConst {
   FolderListTileConst._();
 
-  static const int rootDepth = 0;
   static const double leadingBorderWidth = WidgetSizes.borderWidthRegular;
 }
 
@@ -37,20 +35,7 @@ class FolderListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
     final String subtitle = _buildSubtitle(l10n: l10n);
-    final bool isRoot = item.depth == FolderListTileConst.rootDepth;
-    final String normalizedHex = StringUtils.normalizeUpper(item.colorHex);
     final ColorScheme colorScheme = context.colorScheme;
-    final Color foregroundColor =
-        FolderDomainConst.colorHexPattern.hasMatch(normalizedHex)
-        ? Color(
-            int.parse(
-              normalizedHex.replaceFirst('#', '').length == 6
-                  ? 'FF${normalizedHex.replaceFirst('#', '')}'
-                  : normalizedHex.replaceFirst('#', ''),
-              radix: 16,
-            ),
-          )
-        : colorScheme.primary;
     final double leadingSize = context.component.listItemLeadingSize;
     return LumosActionListItemCard(
       title: item.name,
@@ -61,9 +46,7 @@ class FolderListTile extends StatelessWidget {
         height: leadingSize,
         child: DecoratedBox(
           decoration: BoxDecoration(
-            color: isRoot
-                ? colorScheme.secondaryContainer
-                : colorScheme.primaryContainer,
+            color: colorScheme.secondaryContainer,
             borderRadius: context.shapes.control,
             border: Border.all(
               color: colorScheme.outlineVariant,
@@ -72,7 +55,7 @@ class FolderListTile extends StatelessWidget {
           ),
           child: Center(
             child: IconTheme(
-              data: IconThemeData(color: foregroundColor),
+              data: IconThemeData(color: colorScheme.onSecondaryContainer),
               child: LumosIcon(
                 Icons.folder_open_rounded,
                 size: context.iconSize.md,
@@ -107,13 +90,11 @@ class FolderListTile extends StatelessWidget {
   }
 
   String _buildSubtitle({required AppLocalizations l10n}) {
-    final String depthLabel = item.depth == FolderListTileConst.rootDepth
-        ? l10n.folderRoot
-        : l10n.folderDepth(item.depth);
     final String childCountLabel = l10n.folderSubfolderCount(
       item.childFolderCount,
     );
-    return '$depthLabel, $childCountLabel';
+    final String deckCountLabel = l10n.folderDeckCount(item.deckCount);
+    return '$childCountLabel • $deckCountLabel';
   }
 
   void _handleAction({required String actionKey}) {

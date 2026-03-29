@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lumos/core/enums/dialog_type.dart';
+import 'package:lumos/core/theme/tokens/tokens.dart';
 import 'package:lumos/presentation/shared/composites/dialogs/lumos_alert_dialog.dart';
 import 'package:lumos/presentation/shared/primitives/buttons/lumos_danger_button.dart';
 import 'package:lumos/presentation/shared/primitives/buttons/lumos_outline_button.dart';
@@ -55,7 +56,7 @@ class LumosDialog extends StatelessWidget {
       style: LumosTextStyle.bodyMedium,
       tone: LumosTextTone.secondary,
       align: TextAlign.center,
-      height: 1.45,
+      height: AppTypographyTokens.bodyHeight,
     );
   }
 

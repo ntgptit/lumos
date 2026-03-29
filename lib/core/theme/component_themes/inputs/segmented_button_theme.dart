@@ -25,7 +25,7 @@ abstract final class LumosSegmentedButtonTheme {
           if (states.contains(WidgetState.selected)) {
             return colorScheme.secondaryContainer;
           }
-          return Colors.transparent;
+          return colorScheme.surfaceContainerHigh;
         }),
         foregroundColor: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {

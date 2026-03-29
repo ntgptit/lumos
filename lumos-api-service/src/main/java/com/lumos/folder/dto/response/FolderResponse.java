@@ -4,10 +4,10 @@ public record FolderResponse(
         Long id,
         String name,
         String description,
-        String colorHex,
         Long parentId,
         Integer depth,
         Integer childFolderCount,
+        Integer deckCount,
         AuditMetadataResponse audit
 ) {
 }
