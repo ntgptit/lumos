@@ -293,6 +293,12 @@ abstract class AppLocalizations {
   /// **'Clear deck search'**
   String get deckSearchClearTooltip;
 
+  /// No description provided for @deckSearchResultsFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Search results for: {query}'**
+  String deckSearchResultsFor(Object query);
+
   /// No description provided for @folderOpenParentTooltip.
   ///
   /// In en, this message translates to:
@@ -412,6 +418,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Depth {depth}'**
   String folderDepth(int depth);
+
+  /// No description provided for @folderSubfolderCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0 {0 subfolders} =1 {1 subfolder} other {{count} subfolders}}'**
+  String folderSubfolderCount(int count);
 
   /// No description provided for @deckNewDeck.
   ///

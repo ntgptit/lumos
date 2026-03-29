@@ -205,8 +205,8 @@ class _FolderHeaderNavigationSectionState
               Expanded(
                 child: LumosSearchBar(
                   controller: _searchController,
-                  hint: _buildSearchHint(),
-                  onSearch: widget.onSearchChanged,
+                  hintText: _buildSearchHint(),
+                  onChanged: widget.onSearchChanged,
                   onClear: widget.searchQuery.isNotEmpty ? _clearSearch : null,
                   clearTooltip: _buildSearchClearTooltip(),
                 ),

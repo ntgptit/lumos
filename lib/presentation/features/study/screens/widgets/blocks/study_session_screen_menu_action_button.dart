@@ -57,11 +57,10 @@ class StudySessionScreenMenuActionButton extends StatelessWidget {
     if (items.isEmpty) {
       return const SizedBox.shrink();
     }
-    return PopupMenuButton<String>(
+    return LumosPopupMenuButton<String>(
       icon: LumosIcon(Icons.more_vert_rounded, size: iconSize),
       onSelected: onSelected,
       itemBuilder: (BuildContext context) => items,
     );
   }
 }
-

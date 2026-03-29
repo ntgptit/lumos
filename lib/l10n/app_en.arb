@@ -39,6 +39,12 @@
   "folderSearchClearTooltip": "Clear search",
   "deckSearchHint": "Search decks",
   "deckSearchClearTooltip": "Clear deck search",
+  "deckSearchResultsFor": "Search results for: {query}",
+  "@deckSearchResultsFor": {
+    "placeholders": {
+      "query": {}
+    }
+  },
   "folderOpenParentTooltip": "Open parent folder",
   "folderSortTitle": "Sort folders",
   "folderSortByName": "Name",
@@ -88,6 +94,14 @@
   "@folderDepth": {
     "placeholders": {
       "depth": {
+        "type": "int"
+      }
+    }
+  },
+  "folderSubfolderCount": "{count, plural, =0 {0 subfolders} =1 {1 subfolder} other {{count} subfolders}}",
+  "@folderSubfolderCount": {
+    "placeholders": {
+      "count": {
         "type": "int"
       }
     }

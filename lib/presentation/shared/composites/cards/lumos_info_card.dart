@@ -31,50 +31,42 @@ class LumosInfoCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return LumosCard(
       margin: margin,
+      onTap: onTap,
       padding: padding,
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          child: Column(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (leading != null) ...[
-                    leading!,
-                    SizedBox(width: context.spacing.sm),
+              if (leading != null) ...[
+                leading!,
+                SizedBox(width: context.spacing.sm),
+              ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    LumosTitleText(text: title),
+                    if (subtitle != null) ...[
+                      SizedBox(height: context.spacing.xxs),
+                      LumosBodyText(text: subtitle!),
+                    ],
                   ],
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        LumosTitleText(text: title),
-                        if (subtitle != null) ...[
-                          SizedBox(height: context.spacing.xxs),
-                          LumosBodyText(text: subtitle!),
-                        ],
-                      ],
-                    ),
-                  ),
-                  if (trailing != null) ...[
-                    SizedBox(width: context.spacing.sm),
-                    trailing!,
-                  ] else if (onTap != null) ...[
-                    const LumosIcon(Icons.chevron_right_rounded),
-                  ],
-                ],
+                ),
               ),
-              if (child != null) ...[
-                SizedBox(height: context.spacing.md),
-                child!,
+              if (trailing != null) ...[
+                SizedBox(width: context.spacing.sm),
+                trailing!,
+              ] else if (onTap != null) ...[
+                const LumosIcon(Icons.chevron_right_rounded),
               ],
             ],
           ),
-        ),
+          if (child != null) ...[SizedBox(height: context.spacing.md), child!],
+        ],
       ),
     );
   }

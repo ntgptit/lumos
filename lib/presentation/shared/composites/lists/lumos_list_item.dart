@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lumos/core/theme/extensions/theme_context_ext.dart';
+import 'package:lumos/core/theme/foundation/app_cursor.dart';
 import 'package:lumos/core/theme/tokens/tokens.dart';
 import 'package:lumos/presentation/shared/primitives/displays/lumos_surface.dart';
 
@@ -58,6 +59,9 @@ class LumosListItem extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         onLongPress: onLongPress,
+        mouseCursor: AppMouseCursors.resolve(
+          isInteractive: onTap != null || onLongPress != null,
+        ),
         child: Padding(
           padding: itemPadding,
           child: Row(

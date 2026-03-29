@@ -197,6 +197,9 @@ class _FolderContentState extends ConsumerState<FolderContent> {
                     ),
                   );
                 },
+                onCreateFolder: () {
+                  _showCreateFolderDialog(context);
+                },
                 onOpenDeck: (DeckNode item) {
                   if (currentFolderId == null) {
                     return;
@@ -300,19 +303,7 @@ class _FolderContentState extends ConsumerState<FolderContent> {
         FolderContentSupportCreateAction(
           icon: Icons.create_new_folder_outlined,
           label: l10n.folderNewFolder,
-          onPressed: () {
-            showFolderEditorDialog(
-              context: context,
-              titleBuilder: (AppLocalizations l10n) => l10n.folderCreateTitle,
-              actionLabelBuilder: (AppLocalizations l10n) => l10n.commonCreate,
-              initialFolder: null,
-              onSubmitted: (FolderUpsertInput input) {
-                return ref
-                    .read(folderAsyncControllerProvider.notifier)
-                    .createFolder(input);
-              },
-            );
-          },
+          onPressed: () => _showCreateFolderDialog(context),
         ),
       );
     }
@@ -344,6 +335,22 @@ class _FolderContentState extends ConsumerState<FolderContent> {
       );
     }
     return actions;
+  }
+
+  void _showCreateFolderDialog(BuildContext context) {
+    unawaited(
+      showFolderEditorDialog(
+        context: context,
+        titleBuilder: (AppLocalizations l10n) => l10n.folderCreateTitle,
+        actionLabelBuilder: (AppLocalizations l10n) => l10n.commonCreate,
+        initialFolder: null,
+        onSubmitted: (FolderUpsertInput input) {
+          return ref
+              .read(folderAsyncControllerProvider.notifier)
+              .createFolder(input);
+        },
+      ),
+    );
   }
 
   void _openCreateActionSheet({
@@ -603,5 +610,3 @@ class _FolderContentState extends ConsumerState<FolderContent> {
     return true;
   }
 }
-
-

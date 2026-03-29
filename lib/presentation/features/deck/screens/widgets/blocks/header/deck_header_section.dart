@@ -125,7 +125,7 @@ class DeckHeaderSection extends StatelessWidget {
           if (searchQuery.isNotEmpty) ...<Widget>[
             SizedBox(height: sectionGap),
             LumosText(
-              searchQuery,
+              l10n.deckSearchResultsFor(searchQuery),
               style: LumosTextStyle.bodyMedium,
               tone: LumosTextTone.secondary,
               maxLines: 1,

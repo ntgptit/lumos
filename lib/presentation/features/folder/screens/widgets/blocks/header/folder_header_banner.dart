@@ -73,10 +73,6 @@ class FolderHeaderBanner extends StatelessWidget {
     final Color leadingIconColor = _buildLeadingIconColor(colorScheme);
     final IconData secondaryPillIcon = _buildSecondaryPillIcon();
     final String secondaryPillLabel = _buildSecondaryPillLabel();
-    final Color secondaryPillBackgroundColor =
-        _buildSecondaryPillBackgroundColor(colorScheme: colorScheme);
-    final Color secondaryPillForegroundColor =
-        _buildSecondaryPillForegroundColor(colorScheme: colorScheme);
     final Widget leadingIconWidget = Container(
       width: leadingBoxSize,
       height: leadingBoxSize,
@@ -162,8 +158,8 @@ class FolderHeaderBanner extends StatelessWidget {
                           FolderHeaderMetaPill(
                             icon: secondaryPillIcon,
                             label: secondaryPillLabel,
-                            backgroundColor: secondaryPillBackgroundColor,
-                            foregroundColor: secondaryPillForegroundColor,
+                            backgroundColor: colorScheme.tertiaryContainer,
+                            foregroundColor: colorScheme.onTertiaryContainer,
                           ),
                         ],
                       ),
@@ -218,19 +214,5 @@ class FolderHeaderBanner extends StatelessWidget {
       return l10n.deckCount(deckCount);
     }
     return l10n.folderDepth(currentDepth);
-  }
-
-  Color _buildSecondaryPillBackgroundColor({required ColorScheme colorScheme}) {
-    if (isDeckManager) {
-      return colorScheme.tertiaryContainer;
-    }
-    return colorScheme.tertiaryContainer;
-  }
-
-  Color _buildSecondaryPillForegroundColor({required ColorScheme colorScheme}) {
-    if (isDeckManager) {
-      return colorScheme.onTertiaryContainer;
-    }
-    return colorScheme.onTertiaryContainer;
   }
 }

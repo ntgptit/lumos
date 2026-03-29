@@ -7,6 +7,7 @@ import '../../../../../../../domain/entities/deck_models.dart';
 import '../../../../../../../l10n/app_localizations.dart';
 import '../../../../providers/deck_provider.dart';
 import '../../dialogs/deck_dialogs.dart';
+import '../../../../../../../presentation/shared/composites/lists/lumos_animated_list_item.dart';
 import 'deck_list_tile.dart';
 
 class DeckListContent extends ConsumerWidget {
@@ -45,58 +46,61 @@ class DeckListContent extends ConsumerWidget {
         final DeckNode item = visibleDecks[index];
         return Padding(
           padding: EdgeInsets.only(bottom: rowSpacing),
-          child: DeckListTile(
-            item: item,
-            onOpen: () {
-              DeckDetailRouteData(
-                folderId: providerArgs.folderId,
-                deckId: item.id,
-                deckName: item.name,
-              ).push(context);
-            },
-            onRename: () => showDeckEditorDialog(
-              context: context,
-              titleBuilder: (AppLocalizations l10n) {
-                return l10n.deckRenameTitle;
+          child: LumosAnimatedListItem(
+            index: index,
+            child: DeckListTile(
+              item: item,
+              onOpen: () {
+                DeckDetailRouteData(
+                  folderId: providerArgs.folderId,
+                  deckId: item.id,
+                  deckName: item.name,
+                ).push(context);
               },
-              actionLabelBuilder: (AppLocalizations l10n) {
-                return l10n.commonSave;
-              },
-              initialDeck: item,
-              onSubmitted: (DeckUpsertInput input) {
-                return ref
-                    .read(
-                      deckAsyncControllerProvider(
-                        providerArgs.folderId,
-                        providerArgs.searchQuery,
-                        providerArgs.sortType,
-                      ).notifier,
-                    )
-                    .updateDeck(deckId: item.id, input: input);
-              },
-            ),
-            onDelete: () => showDeckConfirmDialog(
-              context: context,
-              titleBuilder: (AppLocalizations l10n) {
-                return l10n.deckDeleteTitle;
-              },
-              messageBuilder: (AppLocalizations l10n) {
-                return l10n.deckDeleteConfirm(item.name);
-              },
-              confirmLabelBuilder: (AppLocalizations l10n) {
-                return l10n.commonDelete;
-              },
-              onConfirmed: () async {
-                await ref
-                    .read(
-                      deckAsyncControllerProvider(
-                        providerArgs.folderId,
-                        providerArgs.searchQuery,
-                        providerArgs.sortType,
-                      ).notifier,
-                    )
-                    .deleteDeck(item.id);
-              },
+              onRename: () => showDeckEditorDialog(
+                context: context,
+                titleBuilder: (AppLocalizations l10n) {
+                  return l10n.deckRenameTitle;
+                },
+                actionLabelBuilder: (AppLocalizations l10n) {
+                  return l10n.commonSave;
+                },
+                initialDeck: item,
+                onSubmitted: (DeckUpsertInput input) {
+                  return ref
+                      .read(
+                        deckAsyncControllerProvider(
+                          providerArgs.folderId,
+                          providerArgs.searchQuery,
+                          providerArgs.sortType,
+                        ).notifier,
+                      )
+                      .updateDeck(deckId: item.id, input: input);
+                },
+              ),
+              onDelete: () => showDeckConfirmDialog(
+                context: context,
+                titleBuilder: (AppLocalizations l10n) {
+                  return l10n.deckDeleteTitle;
+                },
+                messageBuilder: (AppLocalizations l10n) {
+                  return l10n.deckDeleteConfirm(item.name);
+                },
+                confirmLabelBuilder: (AppLocalizations l10n) {
+                  return l10n.commonDelete;
+                },
+                onConfirmed: () async {
+                  await ref
+                      .read(
+                        deckAsyncControllerProvider(
+                          providerArgs.folderId,
+                          providerArgs.searchQuery,
+                          providerArgs.sortType,
+                        ).notifier,
+                      )
+                      .deleteDeck(item.id);
+                },
+              ),
             ),
           ),
         );

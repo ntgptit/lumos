@@ -59,6 +59,7 @@ class FlashcardListHeader extends StatelessWidget {
     );
     final Widget sortAction = InkWell(
       onTap: onSortPressed,
+      mouseCursor: AppMouseCursors.clickable,
       borderRadius: context.shapes.card,
       child: Padding(
         padding: sortPadding,

@@ -2,6 +2,7 @@ export 'package:lumos/core/extensions/build_context_ext.dart';
 export 'package:lumos/core/theme/extensions/theme_context_ext.dart';
 export 'package:lumos/core/theme/foundation/app_motion.dart';
 export 'package:lumos/core/theme/foundation/app_typography_const.dart';
+export 'package:lumos/core/theme/foundation/app_cursor.dart';
 export 'package:lumos/core/theme/foundation/border_radii.dart';
 export 'package:lumos/core/theme/foundation/breakpoints.dart';
 export 'package:lumos/core/theme/foundation/device_type.dart';

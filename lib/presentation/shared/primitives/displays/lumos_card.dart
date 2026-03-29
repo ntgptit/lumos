@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lumos/core/theme/foundation/app_cursor.dart';
 import 'package:lumos/core/theme/extensions/theme_context_ext.dart';
 import 'package:lumos/core/theme/foundation/app_motion.dart';
 
@@ -59,6 +60,7 @@ class _LumosCardState extends State<LumosCard> {
         ? childWidget
         : InkWell(
             onTap: widget.onTap,
+            mouseCursor: AppMouseCursors.clickable,
             onHighlightChanged: (bool highlighted) {
               setState(() => _pressed = highlighted);
             },

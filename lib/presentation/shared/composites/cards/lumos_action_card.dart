@@ -97,11 +97,9 @@ class LumosActionCard extends StatelessWidget {
 
     return LumosCard(
       margin: margin,
+      onTap: onTap,
       padding: EdgeInsets.zero,
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(onTap: onTap, child: content),
-      ),
+      child: content,
     );
   }
 }

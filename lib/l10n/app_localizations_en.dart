@@ -108,6 +108,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deckSearchClearTooltip => 'Clear deck search';
 
   @override
+  String deckSearchResultsFor(Object query) {
+    return 'Search results for: $query';
+  }
+
+  @override
   String get folderOpenParentTooltip => 'Open parent folder';
 
   @override
@@ -175,6 +180,18 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String folderDepth(int depth) {
     return 'Depth $depth';
+  }
+
+  @override
+  String folderSubfolderCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count subfolders',
+      one: '1 subfolder',
+      zero: '0 subfolders',
+    );
+    return '$_temp0';
   }
 
   @override

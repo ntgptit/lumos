@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:lumos/core/theme/app_foundation.dart';
+import 'package:lumos/presentation/shared/composites/lists/lumos_animated_list_item.dart';
 import '../../../../../../../domain/entities/folder_models.dart';
 import '../../../folder_content_support.dart';
 import '../../states/folder_empty_view.dart';
@@ -17,6 +18,8 @@ class FolderListContent extends StatelessWidget {
     required this.onOpenFolder,
     required this.onRenameFolder,
     required this.onDeleteFolder,
+    this.emptyActionLabel,
+    this.onEmptyActionPressed,
     super.key,
   });
 
@@ -28,6 +31,8 @@ class FolderListContent extends StatelessWidget {
   final ValueChanged<FolderNode> onOpenFolder;
   final void Function(BuildContext context, FolderNode item) onRenameFolder;
   final void Function(BuildContext context, FolderNode item) onDeleteFolder;
+  final String? emptyActionLabel;
+  final VoidCallback? onEmptyActionPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -73,16 +78,22 @@ class FolderListContent extends StatelessWidget {
         final FolderNode item = visibleFolders[index];
         return Padding(
           padding: EdgeInsets.only(bottom: rowSpacing),
-          child: FolderListTile(
-            item: item,
-            onOpen: () => onOpenFolder(item),
-            onRename: () => onRenameFolder(context, item),
-            onDelete: () => onDeleteFolder(context, item),
+          child: LumosAnimatedListItem(
+            index: index,
+            child: FolderListTile(
+              item: item,
+              onOpen: () => onOpenFolder(item),
+              onRename: () => onRenameFolder(context, item),
+              onDelete: () => onDeleteFolder(context, item),
+            ),
           ),
         );
       },
-      emptySliver: FolderEmptyView(isSearchResult: searchQuery.isNotEmpty),
+      emptySliver: FolderEmptyView(
+        isSearchResult: searchQuery.isNotEmpty,
+        buttonLabel: searchQuery.isNotEmpty ? null : emptyActionLabel,
+        onButtonPressed: searchQuery.isNotEmpty ? null : onEmptyActionPressed,
+      ),
     );
   }
 }
-

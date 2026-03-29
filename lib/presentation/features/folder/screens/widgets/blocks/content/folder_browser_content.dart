@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lumos/core/theme/app_foundation.dart';
 import '../../../../../../../domain/entities/deck_models.dart';
 import '../../../../../../../domain/entities/folder_models.dart';
+import '../../../../../../../l10n/app_localizations.dart';
 import '../../../../providers/states/folder_state.dart';
 import '../../states/folder_error_banner.dart';
 import 'folder_deck_list_content.dart';
@@ -27,6 +28,7 @@ class FolderBrowserContent extends StatelessWidget {
     required this.onOpenFolder,
     required this.onRenameFolder,
     required this.onDeleteFolder,
+    required this.onCreateFolder,
     required this.onOpenDeck,
     required this.onRenameDeck,
     required this.onDeleteDeck,
@@ -51,6 +53,7 @@ class FolderBrowserContent extends StatelessWidget {
   final ValueChanged<FolderNode> onOpenFolder;
   final void Function(BuildContext context, FolderNode item) onRenameFolder;
   final void Function(BuildContext context, FolderNode item) onDeleteFolder;
+  final VoidCallback onCreateFolder;
   final ValueChanged<DeckNode> onOpenDeck;
   final void Function(BuildContext context, DeckNode item) onRenameDeck;
   final void Function(BuildContext context, DeckNode item) onDeleteDeck;
@@ -58,6 +61,7 @@ class FolderBrowserContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     final double sectionGap = ResponsiveDimensions.compactValue(
       context: context,
       baseValue: LumosSpacing.lg,
@@ -91,9 +95,7 @@ class FolderBrowserContent extends StatelessWidget {
       leadingSlivers.add(
         SliverToBoxAdapter(child: FolderErrorBanner(message: message)),
       );
-      leadingSlivers.add(
-        SliverToBoxAdapter(child: SizedBox(height: errorGap)),
-      );
+      leadingSlivers.add(SliverToBoxAdapter(child: SizedBox(height: errorGap)));
     }
     if (canManageDecks) {
       return FolderDeckListContent(
@@ -117,7 +119,8 @@ class FolderBrowserContent extends StatelessWidget {
       onOpenFolder: onOpenFolder,
       onRenameFolder: onRenameFolder,
       onDeleteFolder: onDeleteFolder,
+      emptyActionLabel: searchQuery.isNotEmpty ? null : l10n.folderNewFolder,
+      onEmptyActionPressed: searchQuery.isNotEmpty ? null : onCreateFolder,
     );
   }
 }
-

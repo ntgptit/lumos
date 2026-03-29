@@ -9,13 +9,7 @@ abstract final class FolderListTileConst {
   FolderListTileConst._();
 
   static const int rootDepth = 0;
-
-  static const double leadingSize = WidgetSizes.avatarLarge;
-  static const double leadingIconSize = IconSizes.iconMedium;
   static const double leadingBorderWidth = WidgetSizes.borderWidthRegular;
-  static const double badgeMinSize = LumosSpacing.xl;
-  static const double badgeHorizontalPadding = LumosSpacing.xs;
-  static const double badgeFontSize = FontSizes.fontSizeSmall;
 }
 
 abstract final class FolderListTileActionKey {
@@ -42,12 +36,10 @@ class FolderListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
-    final String subtitle = item.depth == FolderListTileConst.rootDepth
-        ? l10n.folderRoot
-        : l10n.folderDepth(item.depth);
+    final String subtitle = _buildSubtitle(l10n: l10n);
     final bool isRoot = item.depth == FolderListTileConst.rootDepth;
     final String normalizedHex = StringUtils.normalizeUpper(item.colorHex);
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final ColorScheme colorScheme = context.colorScheme;
     final Color foregroundColor =
         FolderDomainConst.colorHexPattern.hasMatch(normalizedHex)
         ? Color(
@@ -59,26 +51,7 @@ class FolderListTile extends StatelessWidget {
             ),
           )
         : colorScheme.primary;
-    final double leadingSize = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: FolderListTileConst.leadingSize,
-      minScale: ResponsiveDimensions.compactLargeInsetScale,
-    );
-    final double leadingIconSize = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: FolderListTileConst.leadingIconSize,
-      minScale: ResponsiveDimensions.compactInsetScale,
-    );
-    final double badgeMinSize = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: FolderListTileConst.badgeMinSize,
-      minScale: ResponsiveDimensions.compactInsetScale,
-    );
-    final double badgeHorizontalPadding = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: FolderListTileConst.badgeHorizontalPadding,
-      minScale: ResponsiveDimensions.compactInsetScale,
-    );
+    final double leadingSize = context.component.listItemLeadingSize;
     return LumosActionListItemCard(
       title: item.name,
       subtitle: subtitle,
@@ -86,61 +59,26 @@ class FolderListTile extends StatelessWidget {
       leading: SizedBox(
         width: leadingSize,
         height: leadingSize,
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: <Widget>[
-            DecoratedBox(
-              decoration: BoxDecoration(
-                color: isRoot
-                    ? colorScheme.secondaryContainer
-                    : colorScheme.primaryContainer,
-                borderRadius: context.shapes.card,
-                border: Border.all(
-                  color: colorScheme.outlineVariant,
-                  width: FolderListTileConst.leadingBorderWidth,
-                ),
-              ),
-              child: Center(
-                child: IconTheme(
-                  data: IconThemeData(color: foregroundColor),
-                  child: LumosIcon(
-                    Icons.folder_open_rounded,
-                    size: leadingIconSize,
-                  ),
-                ),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: isRoot
+                ? colorScheme.secondaryContainer
+                : colorScheme.primaryContainer,
+            borderRadius: context.shapes.control,
+            border: Border.all(
+              color: colorScheme.outlineVariant,
+              width: FolderListTileConst.leadingBorderWidth,
+            ),
+          ),
+          child: Center(
+            child: IconTheme(
+              data: IconThemeData(color: foregroundColor),
+              child: LumosIcon(
+                Icons.folder_open_rounded,
+                size: context.iconSize.lg,
               ),
             ),
-            Positioned(
-              right: LumosSpacing.none,
-              bottom: LumosSpacing.none,
-              child: Container(
-                constraints: BoxConstraints(
-                  minWidth: badgeMinSize,
-                  minHeight: badgeMinSize,
-                ),
-                padding: EdgeInsets.symmetric(
-                  horizontal: badgeHorizontalPadding,
-                ),
-                decoration: BoxDecoration(
-                  color: isRoot ? colorScheme.secondary : colorScheme.primary,
-                  borderRadius: context.shapes.pill,
-                ),
-                child: Center(
-                  child: LumosInlineText(
-                    '${item.childFolderCount}',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: isRoot
-                          ? colorScheme.onSecondary
-                          : colorScheme.onPrimary,
-                      fontSize: FolderListTileConst.badgeFontSize,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
       actions: _buildActions(l10n: l10n),
@@ -166,6 +104,16 @@ class FolderListTile extends StatelessWidget {
         tone: LumosActionListItemTone.critical,
       ),
     ];
+  }
+
+  String _buildSubtitle({required AppLocalizations l10n}) {
+    final String depthLabel = item.depth == FolderListTileConst.rootDepth
+        ? l10n.folderRoot
+        : l10n.folderDepth(item.depth);
+    final String childCountLabel = l10n.folderSubfolderCount(
+      item.childFolderCount,
+    );
+    return '$depthLabel, $childCountLabel';
   }
 
   void _handleAction({required String actionKey}) {

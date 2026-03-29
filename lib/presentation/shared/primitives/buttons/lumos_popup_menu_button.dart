@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lumos/core/theme/foundation/app_cursor.dart';
 
 class LumosPopupMenuButton<T> extends StatelessWidget {
   const LumosPopupMenuButton({
@@ -16,11 +17,14 @@ class LumosPopupMenuButton<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PopupMenuButton<T>(
-      itemBuilder: itemBuilder,
-      onSelected: onSelected,
-      tooltip: tooltip,
-      icon: icon,
+    return MouseRegion(
+      cursor: AppMouseCursors.clickable,
+      child: PopupMenuButton<T>(
+        itemBuilder: itemBuilder,
+        onSelected: onSelected,
+        tooltip: tooltip,
+        icon: icon,
+      ),
     );
   }
 }

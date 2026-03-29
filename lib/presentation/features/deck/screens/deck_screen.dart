@@ -13,6 +13,7 @@ import '../providers/states/deck_state.dart';
 import 'deck_content.dart';
 import 'widgets/blocks/header/deck_header_section.dart';
 import 'widgets/states/deck_loading_view.dart';
+import 'widgets/states/deck_status_scroll_view.dart';
 
 abstract final class DeckScreenConst {
   DeckScreenConst._();
@@ -118,20 +119,11 @@ class _DeckScreenState extends ConsumerState<DeckScreen> {
         ];
         return deckAsync.when(
           loading: () {
-            return RefreshIndicator(
+            return DeckStatusScrollView(
+              scrollController: _scrollController,
+              leadingSlivers: leadingSlivers,
               onRefresh: _refreshDecks,
-              child: LumosScreenFrame(
-                child: LumosPagedSliverList(
-                  controller: _scrollController,
-                  leadingSlivers: leadingSlivers,
-                  trailingSlivers: const <Widget>[],
-                  itemCount: 0,
-                  itemBuilder: (BuildContext context, int index) {
-                    return const SizedBox.shrink();
-                  },
-                  emptySliver: const DeckLoadingView(),
-                ),
-              ),
+              child: const DeckLoadingView(),
             );
           },
           error: (Object error, StackTrace stackTrace) {
@@ -139,23 +131,14 @@ class _DeckScreenState extends ConsumerState<DeckScreen> {
                 ? error.message
                 : error.toString();
             final AppLocalizations l10n = AppLocalizations.of(context)!;
-            return RefreshIndicator(
+            return DeckStatusScrollView(
+              scrollController: _scrollController,
+              leadingSlivers: leadingSlivers,
               onRefresh: _refreshDecks,
-              child: LumosScreenFrame(
-                child: LumosPagedSliverList(
-                  controller: _scrollController,
-                  leadingSlivers: leadingSlivers,
-                  trailingSlivers: const <Widget>[],
-                  itemCount: 0,
-                  itemBuilder: (BuildContext context, int index) {
-                    return const SizedBox.shrink();
-                  },
-                  emptySliver: LumosErrorState(
-                    errorMessage: errorMessage,
-                    retryLabel: l10n.commonRetry,
-                    onRetry: _refreshDecks,
-                  ),
-                ),
+              child: LumosErrorState(
+                errorMessage: errorMessage,
+                retryLabel: l10n.commonRetry,
+                onRetry: _refreshDecks,
               ),
             );
           },

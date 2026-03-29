@@ -88,6 +88,7 @@ class FlashcardStudyProgressSection extends StatelessWidget {
         Expanded(
           child: InkWell(
             onTap: item.onPressed,
+            mouseCursor: AppMouseCursors.clickable,
             borderRadius: context.shapes.card,
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: ringLabelSpacing),

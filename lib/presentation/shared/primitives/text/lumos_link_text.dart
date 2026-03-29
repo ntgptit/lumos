@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lumos/core/theme/foundation/app_cursor.dart';
 import 'package:lumos/core/theme/extensions/theme_context_ext.dart';
 import 'package:lumos/presentation/shared/primitives/text/lumos_text.dart';
 
@@ -43,7 +44,7 @@ class LumosLinkText extends StatelessWidget {
     );
 
     return MouseRegion(
-      cursor: onTap == null ? MouseCursor.defer : SystemMouseCursors.click,
+      cursor: AppMouseCursors.resolve(isInteractive: onTap != null),
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: onTap,

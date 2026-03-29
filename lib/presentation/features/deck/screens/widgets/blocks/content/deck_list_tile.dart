@@ -7,9 +7,7 @@ import '../../../../../../../l10n/app_localizations.dart';
 abstract final class DeckListTileConst {
   DeckListTileConst._();
 
-  static const double leadingSize = WidgetSizes.avatarLarge;
   static const double leadingBorderWidth = WidgetSizes.borderWidthRegular;
-  static const double leadingIconSize = IconSizes.iconMedium;
 }
 
 abstract final class DeckListTileActionKey {
@@ -35,37 +33,31 @@ class DeckListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double leadingSize = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: DeckListTileConst.leadingSize,
-      minScale: ResponsiveDimensions.compactLargeInsetScale,
-    );
-    final double leadingIconSize = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: DeckListTileConst.leadingIconSize,
-      minScale: ResponsiveDimensions.compactInsetScale,
-    );
+    final double leadingSize = context.component.listItemLeadingSize;
     final AppLocalizations l10n = AppLocalizations.of(context)!;
+    final ColorScheme colorScheme = context.colorScheme;
     return LumosActionListItemCard(
       title: item.name,
       subtitle: _buildSubtitle(l10n),
       onTap: onOpen,
-      leading: Container(
+      leading: SizedBox(
         width: leadingSize,
         height: leadingSize,
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.tertiaryContainer,
-          borderRadius: context.shapes.card,
-          border: Border.all(
-            color: Theme.of(context).colorScheme.outlineVariant,
-            width: DeckListTileConst.leadingBorderWidth,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: colorScheme.tertiaryContainer,
+            borderRadius: context.shapes.control,
+            border: Border.all(
+              color: colorScheme.outlineVariant,
+              width: DeckListTileConst.leadingBorderWidth,
+            ),
           ),
-        ),
-        child: IconTheme(
-          data: IconThemeData(
-            color: Theme.of(context).colorScheme.onTertiaryContainer,
+          child: Center(
+            child: IconTheme(
+              data: IconThemeData(color: colorScheme.onTertiaryContainer),
+              child: LumosIcon(Icons.style_rounded, size: context.iconSize.lg),
+            ),
           ),
-          child: LumosIcon(Icons.style_rounded, size: leadingIconSize),
         ),
       ),
       actions: _buildActions(l10n: l10n),

@@ -108,6 +108,11 @@ class AppLocalizationsVi extends AppLocalizations {
   String get deckSearchClearTooltip => 'Xóa tìm kiếm deck';
 
   @override
+  String deckSearchResultsFor(Object query) {
+    return 'Kết quả tìm kiếm cho: $query';
+  }
+
+  @override
   String get folderOpenParentTooltip => 'Mở thư mục cha';
 
   @override
@@ -175,6 +180,18 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String folderDepth(int depth) {
     return 'Độ sâu $depth';
+  }
+
+  @override
+  String folderSubfolderCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count thư mục con',
+      one: '1 thư mục con',
+      zero: '0 thư mục con',
+    );
+    return '$_temp0';
   }
 
   @override

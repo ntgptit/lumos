@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:lumos/core/theme/app_foundation.dart';
+import 'package:lumos/presentation/shared/composites/feedback/lumos_skeleton_list_item.dart';
 
 class FolderSkeletonView extends StatelessWidget {
   const FolderSkeletonView({super.key});
@@ -35,7 +36,7 @@ class FolderSkeletonView extends StatelessWidget {
                 6,
                 (int index) => Padding(
                   padding: EdgeInsets.only(bottom: itemGap),
-                  child: LumosSkeletonBox(height: heroHeight),
+                  child: const LumosSkeletonListItem(showTrailing: true),
                 ),
               ),
             ],
@@ -45,4 +46,3 @@ class FolderSkeletonView extends StatelessWidget {
     );
   }
 }
-

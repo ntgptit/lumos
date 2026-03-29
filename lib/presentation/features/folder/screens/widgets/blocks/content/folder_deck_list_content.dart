@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:lumos/core/theme/app_foundation.dart';
 import '../../../../../../../domain/entities/deck_models.dart';
+import '../../../../../../../presentation/shared/composites/lists/lumos_animated_list_item.dart';
 import '../../../../../deck/providers/states/deck_state.dart';
 import '../../../../../deck/screens/widgets/blocks/content/deck_list_tile.dart';
 import '../../../../../deck/screens/widgets/states/deck_empty_view.dart';
@@ -121,11 +122,14 @@ class FolderDeckListContent extends StatelessWidget {
             final DeckNode item = deckState.decks[index];
             return Padding(
               padding: EdgeInsets.only(bottom: rowSpacing),
-              child: DeckListTile(
-                item: item,
-                onOpen: () => onOpenDeck(item),
-                onRename: () => onRenameDeck(context, item),
-                onDelete: () => onDeleteDeck(context, item),
+              child: LumosAnimatedListItem(
+                index: index,
+                child: DeckListTile(
+                  item: item,
+                  onOpen: () => onOpenDeck(item),
+                  onRename: () => onRenameDeck(context, item),
+                  onDelete: () => onDeleteDeck(context, item),
+                ),
               ),
             );
           },
@@ -135,4 +139,3 @@ class FolderDeckListContent extends StatelessWidget {
     );
   }
 }
-

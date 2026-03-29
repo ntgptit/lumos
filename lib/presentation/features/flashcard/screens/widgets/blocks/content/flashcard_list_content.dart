@@ -100,7 +100,9 @@ class FlashcardListContent extends StatelessWidget {
       leadingSlivers.add(
         SliverToBoxAdapter(child: FlashcardErrorBanner(message: message)),
       );
-      leadingSlivers.add(SliverToBoxAdapter(child: SizedBox(height: mediumGap)));
+      leadingSlivers.add(
+        SliverToBoxAdapter(child: SizedBox(height: mediumGap)),
+      );
     }
     if (state.hasItems) {
       leadingSlivers.add(
@@ -133,10 +135,10 @@ class FlashcardListContent extends StatelessWidget {
             padding: EdgeInsets.only(top: sectionSpacing),
             child: LumosSearchBar(
               controller: searchController,
-              autoFocus: true,
-              hint: l10n.flashcardSearchHint,
+              autofocus: true,
+              hintText: l10n.flashcardSearchHint,
               clearTooltip: l10n.flashcardSearchClearTooltip,
-              onSearch: onSearchChanged,
+              onChanged: onSearchChanged,
               onClear: onSearchCleared,
             ),
           ),
@@ -187,7 +189,9 @@ class FlashcardListContent extends StatelessWidget {
           ),
         ),
       );
-      leadingSlivers.add(SliverToBoxAdapter(child: SizedBox(height: mediumGap)));
+      leadingSlivers.add(
+        SliverToBoxAdapter(child: SizedBox(height: mediumGap)),
+      );
     }
 
     final List<Widget> trailingSlivers = <Widget>[];
@@ -195,10 +199,7 @@ class FlashcardListContent extends StatelessWidget {
       trailingSlivers.add(
         SliverToBoxAdapter(
           child: Padding(
-            padding: EdgeInsets.only(
-              top: mediumGap,
-              bottom: loadingBottomGap,
-            ),
+            padding: EdgeInsets.only(top: mediumGap, bottom: loadingBottomGap),
             child: const Center(child: LumosLoadingIndicator()),
           ),
         ),
@@ -237,4 +238,3 @@ class FlashcardListContent extends StatelessWidget {
     );
   }
 }
-

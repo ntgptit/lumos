@@ -32,40 +32,35 @@ class LumosStatCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return LumosCard(
       margin: margin,
+      onTap: onTap,
       padding: padding,
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          child: Column(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (leading != null) ...[
-                    leading!,
-                    SizedBox(width: context.spacing.sm),
-                  ],
-                  Expanded(child: LumosLabel(text: label)),
-                  if (trailing != null) ...[
-                    SizedBox(width: context.spacing.sm),
-                    trailing!,
-                  ] else if (onTap != null) ...[
-                    const LumosIcon(Icons.chevron_right_rounded),
-                  ],
-                ],
-              ),
-              SizedBox(height: context.spacing.sm),
-              LumosValueText(text: value),
-              if (subtitle != null) ...[
-                SizedBox(height: context.spacing.xxs),
-                LumosBodyText(text: subtitle!),
+              if (leading != null) ...[
+                leading!,
+                SizedBox(width: context.spacing.sm),
+              ],
+              Expanded(child: LumosLabel(text: label)),
+              if (trailing != null) ...[
+                SizedBox(width: context.spacing.sm),
+                trailing!,
+              ] else if (onTap != null) ...[
+                const LumosIcon(Icons.chevron_right_rounded),
               ],
             ],
           ),
-        ),
+          SizedBox(height: context.spacing.sm),
+          LumosValueText(text: value),
+          if (subtitle != null) ...[
+            SizedBox(height: context.spacing.xxs),
+            LumosBodyText(text: subtitle!),
+          ],
+        ],
       ),
     );
   }

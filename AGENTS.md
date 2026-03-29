@@ -39,11 +39,11 @@ Load these in order:
    - `C:\Users\ntgpt\.codex\skills\flutter-full-app\SKILL.md`
    - `C:\Users\ntgpt\.codex\skills\flutter-frontend-client\SKILL.md`
 4. `C:\Users\ntgpt\.codex\flutter_architecture_checklist.md`
-5. `D:\workspace\lumos\00_docs\architecture\flutter\lumos_flutter_architecture_contract.md`
+5. `D:\workspace\lumos\00_docs\architecture\flutter\memora_flutter_architecture_contract.md`
 
 Repo-specific rules for Flutter:
 
-- `D:\workspace\lumos\00_docs\architecture\flutter\lumos_flutter_architecture_contract.md` is the authoritative repo-local contract for Flutter folder placement, shared UI boundaries, feature sequencing, and study-mode structure.
+- `D:\workspace\lumos\00_docs\architecture\flutter\memora_flutter_architecture_contract.md` is the authoritative repo-local contract for Flutter folder placement, shared UI boundaries, feature sequencing, and study-mode structure.
 - `Riverpod Annotation + DI` is required.
 - `go_router` is required.
 - `retrofit + dio` is required for remote HTTP integration.
@@ -76,12 +76,64 @@ Repo-specific rules for Flutter:
 - Use Material 3 theme, density, and component behavior.
 - Use centralized theme tokens under `lib/core/theme/**`.
 
-Flutter verification after code changes:
+Flutter verification strategy:
+
+- Do not run the full Flutter suite by default.
+- Choose the smallest verification level that matches the affected files.
+- Escalate one level when a selected check fails unexpectedly or when the change radius is unclear.
+- Always report which verification level was used.
+
+Verification triggers:
+
+- Run `flutter pub get` only when `pubspec.yaml`, `pubspec.lock`, dependency declarations, or Flutter tooling setup change.
+- Run `flutter gen-l10n` only when files under `lib/l10n/*.arb` change.
+- Run `flutter pub run build_runner build --delete-conflicting-outputs` only when touching generated-code inputs:
+  - files using `@riverpod`
+  - files using `@freezed`
+  - files using `@JsonSerializable`
+  - files using `@RestApi`
+  - files declaring `part '*.g.dart'` or `part '*.freezed.dart'`
+
+Verification level 1: Fast path
+
+- Use for leaf UI or copy changes limited to feature files under `lib/presentation/features/**`
+- Do not use when touching `lib/presentation/shared/**`, `lib/core/**`, `lib/app/**`, `lib/l10n/**`, or `tool/**`
+- Do not use when touching providers, routing, DI, generated-code inputs, or shared design system primitives
+
+Run:
 
 ```bash
-flutter pub get
-flutter gen-l10n
-flutter pub run build_runner build --delete-conflicting-outputs
+flutter analyze <changed_files_or_changed_feature_dirs>
+flutter test <affected_test_files_or_feature_test_dirs_if_they_exist>
+```
+
+Verification level 2: Standard feature path
+
+- Use for feature-level state, repository, navigation, DTO, or multi-file feature changes
+- Use when the change is bigger than a leaf widget patch but still not app-wide
+- Prefer targeted `flutter analyze` and targeted `flutter test` after the guard pass
+
+Run regeneration commands only if their trigger applies, then run:
+
+```bash
+dart run tool/verify_frontend_checklists.dart
+flutter analyze <changed_files_or_changed_feature_dirs>
+flutter test <affected_test_files_or_feature_test_dirs_if_they_exist>
+```
+
+Verification level 3: Full gate
+
+- Use for changes in `lib/presentation/shared/**`
+- Use for changes in `lib/core/**`
+- Use for changes in `lib/app/**`
+- Use for changes in `lib/l10n/**`
+- Use for changes in `tool/**`
+- Use for theme, auth, network, routing, DI, generated-code architecture, and cross-feature refactors
+- Use before commit or push unless the user explicitly asks for a narrower local verification only
+
+Run regeneration commands only if their trigger applies, then run:
+
+```bash
 dart run tool/verify_frontend_checklists.dart
 dart run custom_lint
 flutter analyze
@@ -90,8 +142,10 @@ flutter test
 
 Default Flutter rule:
 
-- run the consolidated verifier `dart run tool/verify_frontend_checklists.dart`
-- do not run individual guard scripts unless debugging a specific failure
+- For inner-loop implementation, prefer verification level 1 or level 2.
+- Use the consolidated verifier `dart run tool/verify_frontend_checklists.dart` for level 2 and level 3, not for every leaf widget edit.
+- Do not run `flutter pub get`, `flutter gen-l10n`, `build_runner`, or `custom_lint` unless their trigger or verification level requires them.
+- Do not run individual guard scripts unless debugging a specific failure.
 
 ### Spring Boot API
 
