@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:lumos/core/enums/sort_direction.dart';
 import 'package:lumos/core/theme/app_foundation.dart';
 import 'package:lumos/l10n/app_localizations.dart';
-import 'package:lumos/presentation/shared/primitives/displays/lumos_pill.dart';
+
+import 'deck_hero_banner.dart';
 
 abstract final class DeckHeaderSectionConst {
   DeckHeaderSectionConst._();
 
-  static const double headerGap = LumosSpacing.md;
+  static const double sectionGap = LumosSpacing.sm;
 }
 
 class DeckHeaderSection extends StatelessWidget {
@@ -38,80 +39,16 @@ class DeckHeaderSection extends StatelessWidget {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
     final double sectionGap = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: DeckHeaderSectionConst.headerGap,
+      baseValue: DeckHeaderSectionConst.sectionGap,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final String sortLabel = sortDirection == SortDirection.asc
-        ? l10n.deckSortNameAscending
-        : l10n.deckSortNameDescending;
-    final Widget titleSection = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        LumosText(
-          l10n.deckManagerTitle,
-          style: LumosTextStyle.headlineSmall,
-          fontWeight: FontWeight.w700,
-        ),
-        SizedBox(height: context.spacing.xs),
-        LumosText(
-          l10n.deckManagerSubtitle,
-          style: LumosTextStyle.bodyMedium,
-          tone: LumosTextTone.secondary,
-        ),
-      ],
-    );
-    final Widget badgeSection = Wrap(
-      spacing: context.spacing.sm,
-      runSpacing: context.spacing.sm,
-      alignment: WrapAlignment.end,
-      children: <Widget>[
-        if (deckCount == null)
-          LumosSkeletonBox(
-            width: context.spacing.xxxl * 2,
-            height: context.spacing.xl,
-            borderRadius: context.shapes.pill,
-          ),
-        if (deckCount != null)
-          LumosPill(
-            child: LumosText(
-              l10n.deckCount(deckCount!),
-              style: LumosTextStyle.labelLarge,
-            ),
-          ),
-        LumosPill(
-          child: LumosText(sortLabel, style: LumosTextStyle.labelLarge),
-        ),
-      ],
-    );
+
     return LumosSectionCard(
       variant: LumosCardVariant.filled,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          LayoutBuilder(
-            builder: (BuildContext context, BoxConstraints constraints) {
-              final bool useRowLayout =
-                  constraints.isTablet || constraints.isDesktop;
-              if (!useRowLayout) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    titleSection,
-                    SizedBox(height: sectionGap),
-                    badgeSection,
-                  ],
-                );
-              }
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Expanded(child: titleSection),
-                  SizedBox(width: sectionGap),
-                  Flexible(child: badgeSection),
-                ],
-              );
-            },
-          ),
+          DeckHeroBanner(l10n: l10n, deckCount: deckCount),
           SizedBox(height: sectionGap),
           LumosSearchBar(
             controller: searchController,
@@ -120,20 +57,33 @@ class DeckHeaderSection extends StatelessWidget {
             onChanged: onSearchChanged,
             onSubmitted: onSearchSubmitted,
             onClear: onClearSearch,
-            onSortPressed: onToggleSort,
           ),
-          if (searchQuery.isNotEmpty) ...<Widget>[
-            SizedBox(height: sectionGap),
-            LumosText(
-              l10n.deckSearchResultsFor(searchQuery),
-              style: LumosTextStyle.bodyMedium,
-              tone: LumosTextTone.secondary,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+          SizedBox(height: sectionGap),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: LumosButton.outline(
+              text: _buildSortLabel(l10n: l10n),
+              size: LumosButtonSize.medium,
+              onPressed: onToggleSort,
+              leading: LumosIcon(
+                Icons.sort_rounded,
+                size: IconSizes.iconSmall,
+              ),
+              trailing: LumosIcon(
+                Icons.keyboard_arrow_down_rounded,
+                size: IconSizes.iconSmall,
+              ),
             ),
-          ],
+          ),
         ],
       ),
     );
+  }
+
+  String _buildSortLabel({required AppLocalizations l10n}) {
+    if (sortDirection == SortDirection.asc) {
+      return l10n.deckSortNameAscending;
+    }
+    return l10n.deckSortNameDescending;
   }
 }

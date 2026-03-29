@@ -1,23 +1,18 @@
 import 'package:flutter/material.dart';
 
 import 'package:lumos/core/theme/app_foundation.dart';
-import '../../../../../../../l10n/app_localizations.dart';
+import 'package:lumos/l10n/app_localizations.dart';
+import 'package:lumos/presentation/shared/primitives/displays/lumos_pill.dart';
 
-import 'folder_header_meta_pill.dart';
-
-class FolderHeaderBanner extends StatelessWidget {
-  const FolderHeaderBanner({
+class DeckHeroBanner extends StatelessWidget {
+  const DeckHeroBanner({
     required this.l10n,
-    required this.currentDepth,
-    required this.isDeckManager,
     required this.deckCount,
     super.key,
   });
 
   final AppLocalizations l10n;
-  final int currentDepth;
-  final bool isDeckManager;
-  final int deckCount;
+  final int? deckCount;
 
   @override
   Widget build(BuildContext context) {
@@ -53,28 +48,7 @@ class FolderHeaderBanner extends StatelessWidget {
       minScale: ResponsiveDimensions.compactLargeInsetScale,
     );
     final ColorScheme colorScheme = context.colorScheme;
-    final String managerTitle = _buildManagerTitle();
-    final String managerSubtitle = _buildManagerSubtitle();
-    final IconData leadingIcon = _buildLeadingIcon();
-    final Color leadingIconColor = _buildLeadingIconColor(colorScheme);
-    final IconData contextPillIcon = _buildContextPillIcon();
-    final String contextPillLabel = _buildContextPillLabel();
-    final Widget leadingIconWidget = Container(
-      width: leadingBoxSize,
-      height: leadingBoxSize,
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerHigh,
-        borderRadius: context.shapes.control,
-        border: Border.all(
-          color: colorScheme.outlineVariant,
-          width: WidgetSizes.borderWidthRegular,
-        ),
-      ),
-      child: IconTheme(
-        data: IconThemeData(color: leadingIconColor),
-        child: LumosIcon(leadingIcon, size: context.iconSize.lg),
-      ),
-    );
+
     return ClipRRect(
       borderRadius: context.shapes.hero,
       child: Stack(
@@ -110,7 +84,22 @@ class FolderHeaderBanner extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                leadingIconWidget,
+                Container(
+                  width: leadingBoxSize,
+                  height: leadingBoxSize,
+                  decoration: BoxDecoration(
+                    color: colorScheme.surfaceContainerHigh,
+                    borderRadius: context.shapes.control,
+                    border: Border.all(
+                      color: colorScheme.outlineVariant,
+                      width: WidgetSizes.borderWidthRegular,
+                    ),
+                  ),
+                  child: IconTheme(
+                    data: IconThemeData(color: colorScheme.onSurface),
+                    child: LumosIcon(Icons.style_rounded, size: context.iconSize.lg),
+                  ),
+                ),
                 SizedBox(width: rowGap),
                 Expanded(
                   child: Column(
@@ -122,22 +111,30 @@ class FolderHeaderBanner extends StatelessWidget {
                         children: <Widget>[
                           Expanded(
                             child: LumosText(
-                              managerTitle,
+                              l10n.deckManagerTitle,
                               style: LumosTextStyle.titleLarge,
                             ),
                           ),
                           SizedBox(width: titleRowGap),
-                          FolderHeaderMetaPill(
-                            icon: contextPillIcon,
-                            label: contextPillLabel,
-                            backgroundColor: colorScheme.surfaceContainerHigh,
-                            foregroundColor: colorScheme.onSurface,
-                          ),
+                          if (deckCount == null)
+                            LumosSkeletonBox(
+                              width: context.spacing.xxxl * 2,
+                              height: context.spacing.xl,
+                              borderRadius: context.shapes.pill,
+                            ),
+                          if (deckCount != null)
+                            LumosPill(
+                              backgroundColor: colorScheme.surfaceContainerHigh,
+                              child: LumosText(
+                                l10n.deckCount(deckCount!),
+                                style: LumosTextStyle.labelLarge,
+                              ),
+                            ),
                         ],
                       ),
                       SizedBox(height: titleGap),
                       LumosText(
-                        managerSubtitle,
+                        l10n.deckManagerSubtitle,
                         style: LumosTextStyle.bodySmall,
                       ),
                     ],
@@ -149,50 +146,5 @@ class FolderHeaderBanner extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  String _buildManagerTitle() {
-    if (isDeckManager) {
-      return l10n.deckManagerTitle;
-    }
-    return l10n.folderManagerTitle;
-  }
-
-  String _buildManagerSubtitle() {
-    if (isDeckManager) {
-      return l10n.deckManagerSubtitle;
-    }
-    return l10n.folderManagerSubtitle;
-  }
-
-  IconData _buildLeadingIcon() {
-    if (isDeckManager) {
-      return Icons.style_rounded;
-    }
-    return Icons.folder_copy_rounded;
-  }
-
-  Color _buildLeadingIconColor(ColorScheme colorScheme) {
-    return colorScheme.onSurface;
-  }
-
-  IconData _buildContextPillIcon() {
-    if (isDeckManager) {
-      return Icons.style_outlined;
-    }
-    if (currentDepth == 0) {
-      return Icons.home_rounded;
-    }
-    return Icons.account_tree_rounded;
-  }
-
-  String _buildContextPillLabel() {
-    if (isDeckManager) {
-      return l10n.deckCount(deckCount);
-    }
-    if (currentDepth == 0) {
-      return l10n.folderRoot;
-    }
-    return l10n.folderDepth(currentDepth);
   }
 }

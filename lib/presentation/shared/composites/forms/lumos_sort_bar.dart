@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lumos/core/theme/extensions/theme_context_ext.dart';
+import 'package:go_router/go_router.dart';
+import 'package:lumos/core/theme/app_foundation.dart';
 import 'package:lumos/presentation/shared/primitives/displays/lumos_surface.dart';
 
 class LumosSortBar extends StatelessWidget {
@@ -86,89 +87,81 @@ Future<void> showLumosSortBottomSheet<T>({
   int selectedDirection = initialDirectionIndex;
   await showModalBottomSheet<void>(
     context: context,
-    showDragHandle: true,
+    showDragHandle: false,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
     builder: (sheetContext) {
       return StatefulBuilder(
         builder: (context, setState) {
-          return SafeArea(
-            child: Padding(
-              padding: EdgeInsets.all(sheetContext.spacing.md),
+          return LumosBottomSheet(
+            title: title,
+            subtitle: subtitle,
+            maxHeightFactor: 0.82,
+            child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(title, style: sheetContext.textTheme.titleLarge),
-                  if (subtitle != null) ...[
-                    SizedBox(height: sheetContext.spacing.xs),
-                    Text(subtitle, style: sheetContext.textTheme.bodyMedium),
-                  ],
-                  SizedBox(height: sheetContext.spacing.md),
-                  Text(
-                    optionSectionTitle,
-                    style: sheetContext.textTheme.titleMedium,
+                children: <Widget>[
+                  _buildSortSectionHeader(
+                    context: sheetContext,
+                    title: optionSectionTitle,
                   ),
-                  RadioGroup<T>(
-                    groupValue: selectedValue,
-                    onChanged: (value) {
-                      if (value == null) {
-                        return;
-                      }
-                      setState(() {
-                        selectedValue = value;
-                      });
-                    },
-                    child: Column(
-                      children: options
-                          .map((option) {
-                            return RadioListTile<T>(
-                              value: option.value,
-                              title: Text(option.label),
-                              secondary: option.icon == null
-                                  ? null
-                                  : Icon(option.icon),
-                            );
-                          })
-                          .toList(growable: false),
-                    ),
-                  ),
+                  SizedBox(height: sheetContext.spacing.xs),
+                  ...options.map((option) {
+                    return Padding(
+                      padding: EdgeInsets.only(bottom: sheetContext.spacing.xs),
+                      child: _buildSortOptionTile(
+                        context: sheetContext,
+                        title: option.label,
+                        icon: option.icon,
+                        isSelected: option.value == selectedValue,
+                        onTap: () {
+                          setState(() {
+                            selectedValue = option.value;
+                          });
+                        },
+                      ),
+                    );
+                  }),
                   SizedBox(height: sheetContext.spacing.sm),
-                  Text(
-                    directionSectionTitle,
-                    style: sheetContext.textTheme.titleMedium,
+                  _buildSortSectionHeader(
+                    context: sheetContext,
+                    title: directionSectionTitle,
                   ),
-                  RadioGroup<int>(
-                    groupValue: selectedDirection,
-                    onChanged: (value) {
-                      if (value == null) {
-                        return;
-                      }
-                      setState(() {
-                        selectedDirection = value;
-                      });
-                    },
-                    child: Column(
-                      children: [
-                        RadioListTile<int>(
-                          value: 0,
-                          title: Text(directionLabelBuilder(selectedValue, 0)),
-                        ),
-                        RadioListTile<int>(
-                          value: 1,
-                          title: Text(directionLabelBuilder(selectedValue, 1)),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: sheetContext.spacing.md),
-                  SizedBox(
-                    width: double.infinity,
-                    child: FilledButton(
-                      onPressed: () {
-                        Navigator.of(sheetContext).pop();
-                        onApply(selectedValue, selectedDirection);
+                  SizedBox(height: sheetContext.spacing.xs),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: sheetContext.spacing.xs),
+                    child: _buildSortOptionTile(
+                      context: sheetContext,
+                      title: directionLabelBuilder(selectedValue, 0),
+                      isSelected: selectedDirection == 0,
+                      onTap: () {
+                        setState(() {
+                          selectedDirection = 0;
+                        });
                       },
-                      child: Text(applyLabel),
                     ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: sheetContext.spacing.md),
+                    child: _buildSortOptionTile(
+                      context: sheetContext,
+                      title: directionLabelBuilder(selectedValue, 1),
+                      isSelected: selectedDirection == 1,
+                      onTap: () {
+                        setState(() {
+                          selectedDirection = 1;
+                        });
+                      },
+                    ),
+                  ),
+                  LumosButton.primary(
+                    text: applyLabel,
+                    expand: true,
+                    onPressed: () {
+                      sheetContext.pop();
+                      onApply(selectedValue, selectedDirection);
+                    },
                   ),
                 ],
               ),
@@ -177,5 +170,90 @@ Future<void> showLumosSortBottomSheet<T>({
         },
       );
     },
+  );
+}
+
+Widget _buildSortSectionHeader({
+  required BuildContext context,
+  required String title,
+}) {
+  return LumosText(
+    title,
+    style: LumosTextStyle.labelLarge,
+    tone: LumosTextTone.secondary,
+    fontWeight: FontWeight.w700,
+  );
+}
+
+Widget _buildSortOptionTile({
+  required BuildContext context,
+  required String title,
+  required bool isSelected,
+  required VoidCallback onTap,
+  IconData? icon,
+}) {
+  final ColorScheme colorScheme = context.colorScheme;
+  final Color backgroundColor = isSelected
+      ? colorScheme.secondaryContainer
+      : colorScheme.surfaceContainerHighest;
+  final Color foregroundColor = isSelected
+      ? colorScheme.onSecondaryContainer
+      : colorScheme.onSurface;
+  final Color borderColor = isSelected
+      ? colorScheme.secondary
+      : colorScheme.outlineVariant;
+
+  return LumosSurface(
+    color: backgroundColor,
+    shape: RoundedRectangleBorder(
+      borderRadius: context.shapes.card,
+      side: BorderSide(color: borderColor),
+    ),
+    clipBehavior: Clip.antiAlias,
+    child: Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: context.shapes.card,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: context.component.buttonHeight),
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: context.spacing.md,
+              vertical: context.spacing.sm,
+            ),
+            child: Row(
+              children: <Widget>[
+                IconTheme(
+                  data: IconThemeData(color: foregroundColor),
+                  child: LumosIcon(
+                    isSelected
+                        ? Icons.radio_button_checked_rounded
+                        : Icons.radio_button_unchecked_rounded,
+                    size: context.iconSize.md,
+                  ),
+                ),
+                SizedBox(width: context.spacing.sm),
+                Expanded(
+                  child: LumosText(
+                    title,
+                    style: LumosTextStyle.bodyMedium,
+                    color: foregroundColor,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                if (icon != null) ...<Widget>[
+                  SizedBox(width: context.spacing.sm),
+                  IconTheme(
+                    data: IconThemeData(color: foregroundColor),
+                    child: LumosIcon(icon, size: context.iconSize.md),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ),
+      ),
+    ),
   );
 }

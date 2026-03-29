@@ -75,7 +75,7 @@ class FolderListTile extends StatelessWidget {
               data: IconThemeData(color: foregroundColor),
               child: LumosIcon(
                 Icons.folder_open_rounded,
-                size: context.iconSize.lg,
+                size: context.iconSize.md,
               ),
             ),
           ),

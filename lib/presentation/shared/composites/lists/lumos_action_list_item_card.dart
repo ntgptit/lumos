@@ -26,26 +26,27 @@ class LumosActionListItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final horizontalPadding = context.component.cardPadding;
-    final verticalPadding = context.spacing.sm;
-    final minHeight =
-        context.component.listItemLeadingSize + (verticalPadding * 2);
+    final contentInset = context.component.cardPadding;
+    final titleGap = context.spacing.xxs;
+    double minHeight = context.component.buttonHeight + (context.spacing.sm * 2);
+    final double leadingMinHeight =
+        context.component.listItemLeadingSize + (contentInset * 2);
+    if (leadingMinHeight > minHeight) {
+      minHeight = leadingMinHeight;
+    }
 
     return LumosCard(
       minHeight: minHeight,
       onTap: onTap,
       padding: EdgeInsets.zero,
       child: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: horizontalPadding,
-          vertical: verticalPadding,
-        ),
+        padding: EdgeInsets.all(contentInset),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             if (leading != null) ...<Widget>[
               leading!,
-              SizedBox(width: context.spacing.md),
+              SizedBox(width: context.spacing.sm),
             ],
             Expanded(
               child: Column(
@@ -59,7 +60,7 @@ class LumosActionListItemCard extends StatelessWidget {
                     style: context.textTheme.titleSmall,
                   ),
                   if (subtitle != null) ...<Widget>[
-                    SizedBox(height: context.spacing.xs),
+                    SizedBox(height: titleGap),
                     LumosCaptionText(
                       text: subtitle!,
                       maxLines: 1,
@@ -70,7 +71,7 @@ class LumosActionListItemCard extends StatelessWidget {
               ),
             ),
             if (actions.isNotEmpty) ...<Widget>[
-              SizedBox(width: context.spacing.sm),
+              SizedBox(width: context.spacing.xs),
               LumosPopupMenuButton<String>(
                 onSelected: onActionSelected,
                 itemBuilder: (context) {

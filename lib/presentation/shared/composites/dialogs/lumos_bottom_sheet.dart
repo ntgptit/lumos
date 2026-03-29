@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lumos/core/theme/extensions/theme_context_ext.dart';
+import 'package:lumos/core/theme/app_foundation.dart';
 
 class LumosBottomSheet extends StatelessWidget {
   const LumosBottomSheet({
@@ -23,14 +23,14 @@ class LumosBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final sheetPadding =
-        padding ??
-        EdgeInsets.fromLTRB(
-          context.spacing.md,
-          context.spacing.sm,
-          context.spacing.md,
-          context.spacing.md,
-        );
+    final sheetPadding = padding ?? EdgeInsets.all(context.spacing.md);
+    final ShapeBorder sheetShape = RoundedRectangleBorder(
+      borderRadius: BorderRadius.only(
+        topLeft: context.shapes.sheet.topLeft,
+        topRight: context.shapes.sheet.topRight,
+      ),
+      side: BorderSide(color: context.colorScheme.outlineVariant),
+    );
 
     return SafeArea(
       top: false,
@@ -39,12 +39,9 @@ class LumosBottomSheet extends StatelessWidget {
           maxHeight: MediaQuery.sizeOf(context).height * maxHeightFactor,
         ),
         child: Material(
-          color: context.colorScheme.surface,
+          color: context.colorScheme.surfaceContainerHigh,
           surfaceTintColor: Colors.transparent,
-          borderRadius: BorderRadius.only(
-            topLeft: context.shapes.sheet.topLeft,
-            topRight: context.shapes.sheet.topRight,
-          ),
+          shape: sheetShape,
           clipBehavior: Clip.antiAlias,
           child: Padding(
             padding: sheetPadding,
@@ -66,20 +63,18 @@ class LumosBottomSheet extends StatelessWidget {
                   SizedBox(height: context.spacing.md),
                 ],
                 if (title != null) ...[
-                  Text(
+                  LumosText(
                     title!,
-                    style: context.textTheme.titleLarge?.copyWith(
-                      color: context.colorScheme.onSurface,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: LumosTextStyle.titleLarge,
+                    tone: LumosTextTone.primary,
+                    fontWeight: FontWeight.w700,
                   ),
                   if (subtitle != null) ...[
                     SizedBox(height: context.spacing.xxs),
-                    Text(
+                    LumosText(
                       subtitle!,
-                      style: context.textTheme.bodyMedium?.copyWith(
-                        color: context.colorScheme.onSurfaceVariant,
-                      ),
+                      style: LumosTextStyle.bodySmall,
+                      tone: LumosTextTone.secondary,
                     ),
                   ],
                   SizedBox(height: context.spacing.md),

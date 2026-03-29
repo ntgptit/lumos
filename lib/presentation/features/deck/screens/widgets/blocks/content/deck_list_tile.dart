@@ -55,7 +55,7 @@ class DeckListTile extends StatelessWidget {
           child: Center(
             child: IconTheme(
               data: IconThemeData(color: colorScheme.onTertiaryContainer),
-              child: LumosIcon(Icons.style_rounded, size: context.iconSize.lg),
+              child: LumosIcon(Icons.style_rounded, size: context.iconSize.md),
             ),
           ),
         ),

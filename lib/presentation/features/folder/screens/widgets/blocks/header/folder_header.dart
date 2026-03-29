@@ -44,7 +44,7 @@ class FolderHeader extends StatelessWidget {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
     final double sectionGap = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: LumosSpacing.md,
+      baseValue: LumosSpacing.sm,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     return LumosCard(

@@ -36,6 +36,8 @@ class UiDesignGuardConst {
   static const String featurePrefix = 'lib/presentation/features/';
   static const String featureScreensMarker = '/screens/';
   static const String featureWidgetsMarker = '/widgets/';
+  static const String sharedBalancedListItemCardPath =
+      'lib/presentation/shared/composites/lists/lumos_action_list_item_card.dart';
 
   /// Mobile breakpoint policy (dp).
   static const double mobileBreakpointMax = 600;
@@ -174,6 +176,7 @@ Future<void> main() async {
     const _MobileBreakpointRule(),
     const _SpacingGridRule(),
     const _HorizontalPaddingRule(),
+    const _BalancedListItemCardPaddingRule(),
     const _ButtonHeightRule(),
     const _IconSizeRule(),
     const _AppBarHeightRule(),
@@ -261,6 +264,9 @@ String _normalizePath(String path) => path.replaceAll('\\', '/');
 /// - lib/presentation/features/*/screens/*
 /// - lib/presentation/features/*/widgets/*
 bool _isUiLayerFile(String path) {
+  if (path == UiDesignGuardConst.sharedBalancedListItemCardPath) {
+    return true;
+  }
   if (path.startsWith(UiDesignGuardConst.coreWidgetsPrefix)) {
     return true;
   }
@@ -757,6 +763,47 @@ class _HorizontalPaddingRule implements UiGuardRule {
         ),
       );
     }
+  }
+}
+
+/// Rule: shared list item cards must keep balanced content insets on all sides.
+class _BalancedListItemCardPaddingRule implements UiGuardRule {
+  const _BalancedListItemCardPaddingRule();
+
+  @override
+  String get name => 'balanced_list_item_card_padding';
+
+  @override
+  void checkLine({
+    required List<UiDesignViolation> violations,
+    required String filePath,
+    required int lineNumber,
+    required String rawLine,
+    required String sourceLine,
+    required List<String> allLines,
+    required int index,
+  }) {
+    if (filePath != UiDesignGuardConst.sharedBalancedListItemCardPath) {
+      return;
+    }
+    if (!sourceLine.contains('padding: EdgeInsets')) {
+      return;
+    }
+    if (sourceLine.contains('padding: EdgeInsets.zero')) {
+      return;
+    }
+    if (sourceLine.contains('padding: EdgeInsets.all(')) {
+      return;
+    }
+    violations.add(
+      UiDesignViolation(
+        filePath: filePath,
+        lineNumber: lineNumber,
+        reason:
+            'Shared list item cards must use balanced all-side content inset. Use `EdgeInsets.all(...)` instead of directional card padding.',
+        lineContent: rawLine.trim(),
+      ),
+    );
   }
 }
 

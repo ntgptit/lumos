@@ -5,16 +5,7 @@ import 'package:lumos/core/theme/app_foundation.dart';
 import '../../../../../../../l10n/app_localizations.dart';
 import '../../../../providers/states/folder_state.dart';
 
-import 'folder_header_meta_pill.dart';
-
 enum _FolderNavigationAction { root, parent }
-
-abstract final class FolderHeaderNavigationSectionLayout {
-  FolderHeaderNavigationSectionLayout._();
-
-  static const double contextMetaPillWidth =
-      LumosSpacing.canvas + LumosSpacing.canvas + LumosSpacing.lg;
-}
 
 class FolderHeaderNavigationSection extends StatefulWidget {
   const FolderHeaderNavigationSection({
@@ -92,11 +83,6 @@ class _FolderHeaderNavigationSectionState
 
   @override
   Widget build(BuildContext context) {
-    final double containerPadding = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.sm,
-      minScale: ResponsiveDimensions.compactInsetScale,
-    );
     final double rowGap = ResponsiveDimensions.compactValue(
       context: context,
       baseValue: LumosSpacing.sm,
@@ -107,121 +93,77 @@ class _FolderHeaderNavigationSectionState
       baseValue: LumosSpacing.xs,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double metaPillWidth = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: FolderHeaderNavigationSectionLayout.contextMetaPillWidth,
-      minScale: ResponsiveDimensions.compactLargeInsetScale,
-    );
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final String currentSortLabel = _buildCurrentSortLabel();
-    final IconData contextMetaIcon = widget.searchQuery.isNotEmpty
-        ? Icons.search_rounded
-        : widget.isDeckManager
-        ? Icons.sort_by_alpha_rounded
-        : widget.sortBy == FolderSortBy.createdAt
-        ? Icons.schedule_rounded
-        : Icons.sort_by_alpha_rounded;
-    final String contextMetaLabel = widget.searchQuery.isNotEmpty
-        ? _buildSearchHint()
-        : currentSortLabel;
-    return Container(
-      padding: EdgeInsets.all(containerPadding),
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerHigh,
-        borderRadius: context.shapes.card,
-        border: Border.all(
-          color: colorScheme.outlineVariant,
-          width: WidgetSizes.borderWidthRegular,
+    final bool showNavigation = widget.currentDepth != FolderStateConst.rootDepth;
+    final List<Widget> utilityActions = <Widget>[
+      if (showNavigation)
+        IntrinsicWidth(
+          child: LumosSegmentedControl<_FolderNavigationAction>(
+            showSelectedIcon: false,
+            selected: const <_FolderNavigationAction>{},
+            emptySelectionAllowed: true,
+            segments: <ButtonSegment<_FolderNavigationAction>>[
+              ButtonSegment<_FolderNavigationAction>(
+                value: _FolderNavigationAction.root,
+                enabled: !_isNavigating,
+                label: Tooltip(
+                  message: widget.l10n.folderRoot,
+                  child: widget.isNavigatingRoot
+                      ? const LumosLoadingIndicator(size: IconSizes.iconSmall)
+                      : const LumosIcon(
+                          Icons.home_rounded,
+                          size: IconSizes.iconSmall,
+                        ),
+                ),
+              ),
+              ButtonSegment<_FolderNavigationAction>(
+                value: _FolderNavigationAction.parent,
+                enabled: !_isNavigating,
+                label: Tooltip(
+                  message: widget.l10n.folderOpenParentTooltip,
+                  child: widget.isNavigatingParent
+                      ? const LumosLoadingIndicator(size: IconSizes.iconSmall)
+                      : const LumosIcon(
+                          Icons.keyboard_arrow_up_rounded,
+                          size: IconSizes.iconSmall,
+                        ),
+                ),
+              ),
+            ],
+            onSelectionChanged: _onNavigationGroupChanged,
+          ),
+        ),
+      LumosButton.outline(
+        text: currentSortLabel,
+        size: LumosButtonSize.medium,
+        onPressed: () => _onSortPressed(context),
+        leading: const LumosIcon(
+          Icons.sort_rounded,
+          size: IconSizes.iconSmall,
+        ),
+        trailing: const LumosIcon(
+          Icons.keyboard_arrow_down_rounded,
+          size: IconSizes.iconSmall,
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              LumosSegmentedControl<_FolderNavigationAction>(
-                showSelectedIcon: false,
-                selected: const <_FolderNavigationAction>{},
-                emptySelectionAllowed: true,
-                style: const ButtonStyle(
-                  visualDensity: VisualDensity.compact,
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                ),
-                segments: <ButtonSegment<_FolderNavigationAction>>[
-                  ButtonSegment<_FolderNavigationAction>(
-                    value: _FolderNavigationAction.root,
-                    enabled:
-                        widget.currentDepth != FolderStateConst.rootDepth &&
-                        !_isNavigating,
-                    label: Tooltip(
-                      message: widget.l10n.folderRoot,
-                      child: widget.isNavigatingRoot
-                          ? const LumosLoadingIndicator(
-                              size: IconSizes.iconSmall,
-                            )
-                          : const LumosIcon(
-                              Icons.home_rounded,
-                              size: IconSizes.iconSmall,
-                            ),
-                    ),
-                  ),
-                  ButtonSegment<_FolderNavigationAction>(
-                    value: _FolderNavigationAction.parent,
-                    enabled:
-                        widget.currentDepth != FolderStateConst.rootDepth &&
-                        !_isNavigating,
-                    label: Tooltip(
-                      message: widget.l10n.folderOpenParentTooltip,
-                      child: widget.isNavigatingParent
-                          ? const LumosLoadingIndicator(
-                              size: IconSizes.iconSmall,
-                            )
-                          : const LumosIcon(
-                              Icons.keyboard_arrow_up_rounded,
-                              size: IconSizes.iconSmall,
-                            ),
-                    ),
-                  ),
-                ],
-                onSelectionChanged: _onNavigationGroupChanged,
-              ),
-              const Spacer(),
-              SizedBox(width: rowGap),
-              SizedBox(
-                width: metaPillWidth,
-                child: FolderHeaderMetaPill(
-                  icon: contextMetaIcon,
-                  label: contextMetaLabel,
-                  backgroundColor: colorScheme.secondaryContainer,
-                  foregroundColor: colorScheme.onSecondaryContainer,
-                  expandLabel: true,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: rowGap),
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: LumosSearchBar(
-                  controller: _searchController,
-                  hintText: _buildSearchHint(),
-                  onChanged: widget.onSearchChanged,
-                  onClear: widget.searchQuery.isNotEmpty ? _clearSearch : null,
-                  clearTooltip: _buildSearchClearTooltip(),
-                ),
-              ),
-              SizedBox(width: compactGap),
-              LumosIconButton(
-                icon: Icons.sort_rounded,
-                tooltip: currentSortLabel,
-                variant: AppIconButtonVariant.outline,
-                onPressed: () => _onSortPressed(context),
-              ),
-            ],
-          ),
-        ],
-      ),
+    ];
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        LumosSearchBar(
+          controller: _searchController,
+          hintText: _buildSearchHint(),
+          onChanged: widget.onSearchChanged,
+          onClear: widget.searchQuery.isNotEmpty ? _clearSearch : null,
+          clearTooltip: _buildSearchClearTooltip(),
+        ),
+        SizedBox(height: rowGap),
+        Wrap(
+          spacing: rowGap,
+          runSpacing: compactGap,
+          children: utilityActions,
+        ),
+      ],
     );
   }
 
