@@ -4,6 +4,7 @@ import 'package:lumos/presentation/shared/composites/dialogs/lumos_alert_dialog.
 import 'package:lumos/presentation/shared/primitives/buttons/lumos_danger_button.dart';
 import 'package:lumos/presentation/shared/primitives/buttons/lumos_outline_button.dart';
 import 'package:lumos/presentation/shared/primitives/buttons/lumos_primary_button.dart';
+import 'package:lumos/presentation/shared/primitives/text/lumos_text.dart';
 
 class LumosDialog extends StatelessWidget {
   const LumosDialog({
@@ -49,7 +50,13 @@ class LumosDialog extends StatelessWidget {
     if (content is Widget) {
       return content! as Widget;
     }
-    return Text(content as String);
+    return LumosText(
+      content as String,
+      style: LumosTextStyle.bodyMedium,
+      tone: LumosTextTone.secondary,
+      align: TextAlign.center,
+      height: 1.45,
+    );
   }
 
   List<Widget>? _resolveActions() {

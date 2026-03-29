@@ -54,17 +54,12 @@ void main() {
       await tester.tap(find.text('Open dialog'));
       await tester.pumpAndSettle();
 
-      final AlertDialog dialog = tester.widget(find.byType(AlertDialog));
-      final BoxConstraints? constraints = dialog.constraints;
-      expect(
-        constraints?.minWidth,
-        closeTo(
-          AdaptiveLayout.fromScreen(ScreenClass.medium).dialogMaxWidth,
-          0.01,
-        ),
+      final Finder surfaceFinder = find.byKey(
+        const ValueKey<String>(LumosAlertDialog.surfaceKey),
       );
+      final Size surfaceSize = tester.getSize(surfaceFinder);
       expect(
-        constraints?.maxWidth,
+        surfaceSize.width,
         closeTo(
           AdaptiveLayout.fromScreen(ScreenClass.medium).dialogMaxWidth,
           0.01,
