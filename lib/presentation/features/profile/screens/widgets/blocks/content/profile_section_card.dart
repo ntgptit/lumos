@@ -1,0 +1,53 @@
+import 'package:flutter/material.dart';
+
+import 'package:lumos/core/theme/app_foundation.dart';
+
+class ProfileSectionCard extends StatelessWidget {
+  const ProfileSectionCard({
+    required this.title,
+    required this.subtitle,
+    required this.child,
+    super.key,
+  });
+
+  final String title;
+  final String subtitle;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final double cardPadding = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: LumosSpacing.lg,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double headerGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: LumosSpacing.sm,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double sectionGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: LumosSpacing.md,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+
+    return LumosCard(
+      margin: EdgeInsets.zero,
+      variant: LumosCardVariant.filled,
+      child: Padding(
+        padding: EdgeInsets.all(cardPadding),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            LumosText(title, style: LumosTextStyle.titleMedium),
+            SizedBox(height: headerGap),
+            LumosText(subtitle, style: LumosTextStyle.bodySmall),
+            SizedBox(height: sectionGap),
+            child,
+          ],
+        ),
+      ),
+    );
+  }
+}

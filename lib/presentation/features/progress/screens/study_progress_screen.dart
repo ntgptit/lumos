@@ -54,7 +54,10 @@ class StudyProgressScreen extends ConsumerWidget {
                 recommendation: recommendation,
                 l10n: l10n,
                 onStartReview: () {
-                  const StudySessionRouteData().push(context);
+                  StudySessionRouteData(
+                    deckId: recommendation.deckId,
+                    deckName: recommendation.deckName,
+                  ).push(context);
                 },
               ),
             SizedBox(height: sectionGap),
@@ -68,4 +71,3 @@ class StudyProgressScreen extends ConsumerWidget {
     );
   }
 }
-

@@ -124,6 +124,15 @@
   "deckLibraryEntryTitle": "Deck nằm trong thư mục.",
   "deckLibraryEntryMessage": "Hãy mở thư mục để tạo, tìm kiếm và quản lý deck theo đúng ngữ cảnh.",
   "deckLibraryEntryAction": "Mở thư mục",
+  "libraryRootFolderCount": "{count, plural, =0 {Chưa có thư mục gốc} =1 {# thư mục gốc} other {# thư mục gốc}}",
+  "@libraryRootFolderCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "librarySearchEmptyMessage": "Hãy thử từ khóa khác hoặc mở tab Thư mục để duyệt toàn bộ cây thư mục.",
   "deckNameRequiredValidation": "Tên deck là bắt buộc.",
   "deckNameMinLengthValidation": "Tên deck phải có ít nhất {min} ký tự.",
   "@deckNameMinLengthValidation": {
@@ -401,6 +410,7 @@
   "profileSpeechPreviewStopLabel": "Dừng",
   "profileSpeechPreviewDefaultText": "안녕하세요. 이 문장은 현재 음성과 속도, 음높이를 테스트하기 위한 예시입니다.",
   "profileSpeechPreviewPlaybackError": "Thiết bị không thể phát đoạn nghe thử.",
+  "profileLogoutSectionSubtitle": "Đăng xuất trên thiết bị này mà không làm mất dữ liệu học tập đã lưu.",
   "profileStudySectionTitle": "Tùy chọn phiên học",
   "profileStudySectionSubtitle": "Thiết lập số thẻ mới mà backend được phép nạp cho mỗi phiên FIRST_LEARNING.",
   "profileStudyFirstLearningLimitLabel": "Số thẻ mới mỗi phiên FIRST_LEARNING",

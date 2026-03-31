@@ -5,6 +5,8 @@ import '../../../../../../../domain/entities/study/study_models.dart';
 import '../../../../../../../domain/entities/study/study_speech_contract.dart';
 import '../../../../../../../l10n/app_localizations.dart';
 import 'profile_speech_preview_panel.dart';
+import 'profile_section_card.dart';
+import 'profile_speech_toggle_tile.dart';
 
 class ProfileSpeechSection extends StatelessWidget {
   const ProfileSpeechSection({
@@ -36,11 +38,6 @@ class ProfileSpeechSection extends StatelessWidget {
     final String resolvedAdapter = normalizeTtsAdapter(preference.adapter);
     final double resolvedSpeed = normalizeTtsSpeed(preference.speed);
     final double resolvedPitch = normalizeTtsPitch(preference.pitch);
-    final double cardPadding = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.lg,
-      minScale: ResponsiveDimensions.compactInsetScale,
-    );
     final double sectionGap = ResponsiveDimensions.compactValue(
       context: context,
       baseValue: LumosSpacing.md,
@@ -51,146 +48,126 @@ class ProfileSpeechSection extends StatelessWidget {
       baseValue: LumosSpacing.lg,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    return LumosCard(
-      margin: EdgeInsets.zero,
-      child: Padding(
-        padding: EdgeInsets.all(cardPadding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            LumosText(
-              l10n.profileSpeechSectionTitle,
-              style: LumosTextStyle.titleLarge,
-            ),
-            const SizedBox(height: LumosSpacing.sm),
-            LumosText(
-              l10n.profileSpeechSectionSubtitle,
-              style: LumosTextStyle.bodyMedium,
-            ),
-            const SizedBox(height: LumosSpacing.md),
-            SwitchListTile.adaptive(
-              contentPadding: EdgeInsets.zero,
-              title: LumosText(
-                l10n.profileSpeechEnabledLabel,
-                style: LumosTextStyle.bodyMedium,
+    return ProfileSectionCard(
+      title: l10n.profileSpeechSectionTitle,
+      subtitle: l10n.profileSpeechSectionSubtitle,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          ProfileSpeechToggleTile(
+            label: l10n.profileSpeechEnabledLabel,
+            value: preference.enabled,
+            onChanged: onEnabledChanged,
+          ),
+          SizedBox(height: sectionGap),
+          ProfileSpeechToggleTile(
+            label: l10n.profileSpeechAutoPlayLabel,
+            value: preference.autoPlay,
+            onChanged: onAutoPlayChanged,
+          ),
+          SizedBox(height: footerGap),
+          LumosDropdown<String>(
+            value: resolvedAdapter,
+            label: l10n.profileSpeechAdapterLabel,
+            items: supportedTtsAdapters
+                .map((String adapter) {
+                  final String adapterLabel =
+                      adapter == studySpeechAdapterFlutterTts
+                      ? l10n.profileSpeechAdapterFlutterTtsLabel
+                      : adapter;
+                  return DropdownMenuItem<String>(
+                    value: adapter,
+                    child: LumosText(
+                      adapterLabel,
+                      style: LumosTextStyle.bodyMedium,
+                    ),
+                  );
+                })
+                .toList(growable: false),
+            onChanged: (String? adapter) {
+              if (adapter == null) {
+                return;
+              }
+              onAdapterChanged(adapter);
+            },
+          ),
+          SizedBox(height: sectionGap),
+          LumosDropdown<String>(
+            value: selectedVoiceId,
+            label: l10n.profileSpeechVoiceLabel,
+            items: <DropdownMenuItem<String>>[
+              DropdownMenuItem<String>(
+                value: studySpeechVoiceUnspecified,
+                child: LumosText(
+                  l10n.profileSpeechVoiceDefaultLabel,
+                  style: LumosTextStyle.bodyMedium,
+                ),
               ),
-              value: preference.enabled,
-              onChanged: onEnabledChanged,
-            ),
-            SwitchListTile.adaptive(
-              contentPadding: EdgeInsets.zero,
-              title: LumosText(
-                l10n.profileSpeechAutoPlayLabel,
-                style: LumosTextStyle.bodyMedium,
-              ),
-              value: preference.autoPlay,
-              onChanged: onAutoPlayChanged,
-            ),
-            SizedBox(height: sectionGap),
-            LumosDropdown<String>(
-              value: resolvedAdapter,
-              label: l10n.profileSpeechAdapterLabel,
-              items: supportedTtsAdapters
-                  .map((String adapter) {
-                    final String adapterLabel =
-                        adapter == studySpeechAdapterFlutterTts
-                        ? l10n.profileSpeechAdapterFlutterTtsLabel
-                        : adapter;
-                    return DropdownMenuItem<String>(
-                      value: adapter,
-                      child: LumosText(
-                        adapterLabel,
-                        style: LumosTextStyle.bodyMedium,
-                      ),
-                    );
-                  })
-                  .toList(growable: false),
-              onChanged: (String? adapter) {
-                if (adapter == null) {
-                  return;
-                }
-                onAdapterChanged(adapter);
-              },
-            ),
-            SizedBox(height: sectionGap),
-            LumosDropdown<String>(
-              value: selectedVoiceId,
-              label: l10n.profileSpeechVoiceLabel,
-              items: <DropdownMenuItem<String>>[
-                DropdownMenuItem<String>(
-                  value: studySpeechVoiceUnspecified,
+              ...voiceOptions.map(
+                (TtsVoiceOption voice) => DropdownMenuItem<String>(
+                  value: voice.id,
                   child: LumosText(
-                    l10n.profileSpeechVoiceDefaultLabel,
+                    voice.label,
                     style: LumosTextStyle.bodyMedium,
                   ),
                 ),
-                ...voiceOptions.map(
-                  (TtsVoiceOption voice) => DropdownMenuItem<String>(
-                    value: voice.id,
+              ),
+            ],
+            onChanged: (String? voice) {
+              if (voice == null) {
+                return;
+              }
+              onVoiceChanged(voice);
+            },
+          ),
+          SizedBox(height: sectionGap),
+          LumosDropdown<double>(
+            value: resolvedSpeed,
+            label: l10n.profileSpeechSpeedLabel,
+            items: supportedTtsSpeeds
+                .map(
+                  (double speed) => DropdownMenuItem<double>(
+                    value: speed,
                     child: LumosText(
-                      voice.label,
+                      '${speed.toStringAsFixed(1)}x',
                       style: LumosTextStyle.bodyMedium,
                     ),
                   ),
-                ),
-              ],
-              onChanged: (String? voice) {
-                if (voice == null) {
-                  return;
-                }
-                onVoiceChanged(voice);
-              },
-            ),
-            SizedBox(height: sectionGap),
-            LumosDropdown<double>(
-              value: resolvedSpeed,
-              label: l10n.profileSpeechSpeedLabel,
-              items: supportedTtsSpeeds
-                  .map(
-                    (double speed) => DropdownMenuItem<double>(
-                      value: speed,
-                      child: LumosText(
-                        '${speed.toStringAsFixed(1)}x',
-                        style: LumosTextStyle.bodyMedium,
-                      ),
+                )
+                .toList(growable: false),
+            onChanged: (double? speed) {
+              if (speed == null) {
+                return;
+              }
+              onSpeedChanged(speed);
+            },
+          ),
+          SizedBox(height: sectionGap),
+          LumosDropdown<double>(
+            value: resolvedPitch,
+            label: l10n.profileSpeechPitchLabel,
+            items: supportedTtsPitches
+                .map(
+                  (double pitch) => DropdownMenuItem<double>(
+                    value: pitch,
+                    child: LumosText(
+                      '${pitch.toStringAsFixed(1)}x',
+                      style: LumosTextStyle.bodyMedium,
                     ),
-                  )
-                  .toList(growable: false),
-              onChanged: (double? speed) {
-                if (speed == null) {
-                  return;
-                }
-                onSpeedChanged(speed);
-              },
-            ),
-            SizedBox(height: sectionGap),
-            LumosDropdown<double>(
-              value: resolvedPitch,
-              label: l10n.profileSpeechPitchLabel,
-              items: supportedTtsPitches
-                  .map(
-                    (double pitch) => DropdownMenuItem<double>(
-                      value: pitch,
-                      child: LumosText(
-                        '${pitch.toStringAsFixed(1)}x',
-                        style: LumosTextStyle.bodyMedium,
-                      ),
-                    ),
-                  )
-                  .toList(growable: false),
-              onChanged: (double? pitch) {
-                if (pitch == null) {
-                  return;
-                }
-                onPitchChanged(pitch);
-              },
-            ),
-            SizedBox(height: footerGap),
-            ProfileSpeechPreviewPanel(preference: preference),
-          ],
-        ),
+                  ),
+                )
+                .toList(growable: false),
+            onChanged: (double? pitch) {
+              if (pitch == null) {
+                return;
+              }
+              onPitchChanged(pitch);
+            },
+          ),
+          SizedBox(height: footerGap),
+          ProfileSpeechPreviewPanel(preference: preference),
+        ],
       ),
     );
   }
 }
-

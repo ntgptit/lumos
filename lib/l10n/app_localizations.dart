@@ -527,6 +527,18 @@ abstract class AppLocalizations {
   /// **'Open folders'**
   String get deckLibraryEntryAction;
 
+  /// No description provided for @libraryRootFolderCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0 {No root folders} =1 {# root folder} other {# root folders}}'**
+  String libraryRootFolderCount(int count);
+
+  /// No description provided for @librarySearchEmptyMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Try another keyword or open Folders to browse the full tree.'**
+  String get librarySearchEmptyMessage;
+
   /// No description provided for @deckNameRequiredValidation.
   ///
   /// In en, this message translates to:
@@ -1720,6 +1732,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The device could not play the preview audio.'**
   String get profileSpeechPreviewPlaybackError;
+
+  /// No description provided for @profileLogoutSectionSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out on this device without affecting your saved learning data.'**
+  String get profileLogoutSectionSubtitle;
 
   /// No description provided for @profileStudySectionTitle.
   ///

@@ -37,6 +37,20 @@ extension FolderAsyncControllerNavigationX on FolderAsyncController {
     );
   }
 
+  Future<void> openFolderFromLibrary({required FolderNode folder}) async {
+    final List<int> nextOpenedFolderPath = _resolveNextOpenedPath(
+      currentPath: const <int>[],
+      folderId: folder.id,
+    );
+    await _replaceState(
+      parentId: folder.id,
+      currentDepth: nextOpenedFolderPath.length,
+      openedFolderPath: nextOpenedFolderPath,
+      page: FolderStateConst.firstPage,
+      view: FolderViewState.initial(),
+    );
+  }
+
   Future<void> _openRootFolder() async {
     final FolderState? currentState = state.asData?.value;
     if (currentState == null) {

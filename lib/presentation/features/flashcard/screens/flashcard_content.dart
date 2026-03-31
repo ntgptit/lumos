@@ -152,11 +152,7 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
                   },
                   onSetPreviewIndex: _controller.setPreviewIndex,
                   onOpenStudyFromPreview: _openStudyScreenFromPreview,
-                  onOpenStudyAtPreview: () {
-                    _openStudyScreen(
-                      initialIndex: widget.state.safePreviewIndex,
-                    );
-                  },
+                  onOpenStudyAtPreview: _openStudyScreen,
                   isStarredResolver: (FlashcardNode item) {
                     return _starredStateForItem(item: item, state: state);
                   },
@@ -221,8 +217,7 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
       FlashcardStudyActionSectionItem(
         label: l10n.flashcardReviewActionLabel,
         icon: Icons.layers_rounded,
-        onPressed: () =>
-            _openStudyScreen(initialIndex: widget.state.safePreviewIndex),
+        onPressed: _openStudyScreen,
         tone: FlashcardStudyActionSectionTone.primary,
       ),
       FlashcardStudyActionSectionItem(
@@ -236,22 +231,19 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
       FlashcardStudyActionSectionItem(
         label: l10n.flashcardQuizActionLabel,
         icon: Icons.description_outlined,
-        onPressed: () =>
-            _openStudyScreen(initialIndex: widget.state.safePreviewIndex),
+        onPressed: _openStudyScreen,
         tone: FlashcardStudyActionSectionTone.warning,
       ),
       FlashcardStudyActionSectionItem(
         label: l10n.flashcardMatchActionLabel,
         icon: Icons.compare_arrows_rounded,
-        onPressed: () =>
-            _openStudyScreen(initialIndex: widget.state.safePreviewIndex),
+        onPressed: _openStudyScreen,
         tone: FlashcardStudyActionSectionTone.success,
       ),
       FlashcardStudyActionSectionItem(
         label: l10n.flashcardBlastActionLabel,
         icon: Icons.rocket_launch_rounded,
-        onPressed: () =>
-            _openStudyScreen(initialIndex: widget.state.safePreviewIndex),
+        onPressed: _openStudyScreen,
         tone: FlashcardStudyActionSectionTone.primary,
       ),
     ];
@@ -522,10 +514,10 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
   }
 
   void _openStudyScreenFromPreview(int previewIndex) {
-    _openStudyScreen(initialIndex: previewIndex);
+    _openStudyScreen();
   }
 
-  void _openStudyScreen({required int initialIndex}) {
+  void _openStudyScreen() {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
     final FlashcardState state = widget.state;
     if (state.items.isEmpty) {
@@ -535,7 +527,10 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
       );
       return;
     }
-    const StudySessionRouteData().push(context);
+    StudySessionRouteData(
+      deckId: state.deckId,
+      deckName: state.deckName,
+    ).push(context);
   }
 
   Future<void> _showLearnOptionsSheet() async {
@@ -576,14 +571,20 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
   }) async {
     final FlashcardState state = widget.state;
     try {
-      await ref.read(studySessionLauncherProvider.notifier).startSession(
-        deckId: state.deckId,
-        preferredSessionType: preferredSessionType,
-      );
+      final StudySessionData launchedSession = await ref
+          .read(studySessionLauncherProvider.notifier)
+          .startSession(
+            deckId: state.deckId,
+            preferredSessionType: preferredSessionType,
+          );
       if (!mounted) {
         return;
       }
-      const StudySessionRouteData().push(context);
+      StudySessionRouteData(
+        deckId: launchedSession.deckId,
+        deckName: launchedSession.deckName,
+        sessionId: launchedSession.sessionId,
+      ).push(context);
     } catch (_) {
       if (!mounted) {
         return;
@@ -659,10 +660,7 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
   }) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: LumosSnackbar(
-          message: message,
-          type: LumosSnackbarType.info,
-        ),
+        content: LumosSnackbar(message: message, type: LumosSnackbarType.info),
       ),
     );
   }
@@ -673,12 +671,8 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
   }) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: LumosSnackbar(
-          message: message,
-          type: LumosSnackbarType.error,
-        ),
+        content: LumosSnackbar(message: message, type: LumosSnackbarType.error),
       ),
     );
   }
 }
-

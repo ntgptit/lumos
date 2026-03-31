@@ -255,6 +255,21 @@ class AppLocalizationsVi extends AppLocalizations {
   String get deckLibraryEntryAction => 'Mở thư mục';
 
   @override
+  String libraryRootFolderCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '# thư mục gốc',
+      one: '# thư mục gốc',
+      zero: 'Chưa có thư mục gốc',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get librarySearchEmptyMessage => 'Hãy thử từ khóa khác hoặc mở tab Thư mục để duyệt toàn bộ cây thư mục.';
+
+  @override
   String get deckNameRequiredValidation => 'Tên deck là bắt buộc.';
 
   @override
@@ -874,6 +889,9 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get profileSpeechPreviewPlaybackError => 'Thiết bị không thể phát đoạn nghe thử.';
+
+  @override
+  String get profileLogoutSectionSubtitle => 'Đăng xuất trên thiết bị này mà không làm mất dữ liệu học tập đã lưu.';
 
   @override
   String get profileStudySectionTitle => 'Tùy chọn phiên học';

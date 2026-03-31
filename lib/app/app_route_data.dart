@@ -28,10 +28,9 @@ import 'package:lumos/presentation/features/settings/screens/backup_restore_scre
 import 'package:lumos/presentation/features/settings/screens/language_settings_screen.dart';
 import 'package:lumos/presentation/features/settings/screens/theme_settings_screen.dart';
 import 'package:lumos/presentation/features/study/screens/study_history_screen.dart';
-import 'package:lumos/presentation/features/study/screens/study_session_route_screen.dart';
 import 'package:lumos/presentation/features/study/screens/study_mode_picker_screen.dart';
 import 'package:lumos/presentation/features/study/screens/study_result_screen.dart';
-import 'package:lumos/presentation/features/study/screens/study_setup_screen.dart';
+import 'package:lumos/presentation/features/study/screens/study_session_screen.dart';
 import 'package:lumos/presentation/shared/screens/lumos_maintenance_screen.dart';
 import 'package:lumos/presentation/shared/screens/lumos_not_found_screen.dart';
 import 'package:lumos/presentation/shared/screens/lumos_offline_screen.dart';
@@ -137,7 +136,6 @@ class OnboardingStudyGoalRouteData extends GoRouteData
 @TypedGoRoute<StudyRouteData>(
   path: '/study',
   routes: <TypedRoute<RouteData>>[
-    TypedGoRoute<StudySetupRouteData>(path: 'setup'),
     TypedGoRoute<StudySessionRouteData>(path: 'session'),
     TypedGoRoute<StudyResultRouteData>(path: 'result'),
     TypedGoRoute<StudyHistoryRouteData>(path: 'history'),
@@ -149,56 +147,57 @@ class StudyRouteData extends GoRouteData with $StudyRouteData {
 
   @override
   String? redirect(BuildContext context, GoRouterState state) {
-    return const StudySetupRouteData().location;
+    return const DecksRouteData().location;
   }
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return StudySetupScreen(
-      onStartSession: () => const StudySessionRouteData().push(context),
-      onOpenModePicker: () => const StudyModePickerRouteData().push(context),
-      onOpenHistory: () => const StudyHistoryRouteData().push(context),
-    );
-  }
-}
-
-class StudySetupRouteData extends GoRouteData with $StudySetupRouteData {
-  const StudySetupRouteData();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return StudySetupScreen(
-      onStartSession: () => const StudySessionRouteData().push(context),
-      onOpenModePicker: () => const StudyModePickerRouteData().push(context),
-      onOpenHistory: () => const StudyHistoryRouteData().push(context),
-    );
+    return const SizedBox.shrink();
   }
 }
 
 class StudySessionRouteData extends GoRouteData with $StudySessionRouteData {
-  const StudySessionRouteData();
+  const StudySessionRouteData({
+    required this.deckId,
+    required this.deckName,
+    this.sessionId,
+  });
+
+  final int deckId;
+  final String deckName;
+  final int? sessionId;
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return StudySessionScreen(
-      onOpenModePicker: () => const StudyModePickerRouteData().push(context),
-      onOpenResult: () => const StudyResultRouteData().go(context),
-      onExit: () {
-        if (!RouteUtils.popIfPossible(context)) {
-          const DecksRouteData().go(context);
-        }
-      },
+      deckId: deckId,
+      deckName: deckName,
+      sessionId: sessionId,
     );
   }
 }
 
 class StudyResultRouteData extends GoRouteData with $StudyResultRouteData {
-  const StudyResultRouteData();
+  const StudyResultRouteData({this.deckId, this.deckName});
+
+  final int? deckId;
+  final String? deckName;
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return StudyResultScreen(
-      onRestartSession: () => const StudySessionRouteData().go(context),
+      onRestartSession: () {
+        final int? resolvedDeckId = deckId;
+        final String? resolvedDeckName = deckName;
+        if (resolvedDeckId == null || resolvedDeckName == null) {
+          const DecksRouteData().go(context);
+          return;
+        }
+        StudySessionRouteData(
+          deckId: resolvedDeckId,
+          deckName: resolvedDeckName,
+        ).go(context);
+      },
       onOpenHistory: () => const StudyHistoryRouteData().push(context),
       onReturnToDeck: () {
         if (!RouteUtils.popIfPossible(context)) {

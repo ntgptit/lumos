@@ -130,6 +130,15 @@
   "deckLibraryEntryTitle": "Decks live inside folders.",
   "deckLibraryEntryMessage": "Open your folders to create, search, and manage decks in context.",
   "deckLibraryEntryAction": "Open folders",
+  "libraryRootFolderCount": "{count, plural, =0 {No root folders} =1 {# root folder} other {# root folders}}",
+  "@libraryRootFolderCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "librarySearchEmptyMessage": "Try another keyword or open Folders to browse the full tree.",
   "deckNameRequiredValidation": "Deck name is required.",
   "deckNameMinLengthValidation": "Deck name must be at least {min} character(s).",
   "@deckNameMinLengthValidation": {
@@ -407,6 +416,7 @@
   "profileSpeechPreviewStopLabel": "Stop",
   "profileSpeechPreviewDefaultText": "안녕하세요. 이 문장은 현재 음성과 속도, 음높이를 테스트하기 위한 예시입니다.",
   "profileSpeechPreviewPlaybackError": "The device could not play the preview audio.",
+  "profileLogoutSectionSubtitle": "Sign out on this device without affecting your saved learning data.",
   "profileStudySectionTitle": "Study preference",
   "profileStudySectionSubtitle": "Set how many new cards a FIRST_LEARNING session can load from the backend.",
   "profileStudyFirstLearningLimitLabel": "New cards per FIRST_LEARNING session",

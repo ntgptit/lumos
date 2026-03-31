@@ -3,6 +3,8 @@ import 'package:lumos/core/enums/app_theme_type.dart';
 
 import 'package:lumos/core/theme/app_foundation.dart';
 import '../../../../../../../l10n/app_localizations.dart';
+import 'profile_section_card.dart';
+import 'profile_theme_option_card.dart';
 
 class ProfileThemeSection extends StatelessWidget {
   const ProfileThemeSection({
@@ -21,14 +23,9 @@ class ProfileThemeSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
-    final double cardPadding = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.lg,
-      minScale: ResponsiveDimensions.compactInsetScale,
-    );
     final double sectionGap = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: LumosSpacing.lg,
+      baseValue: LumosSpacing.sm,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     final double actionGap = ResponsiveDimensions.compactValue(
@@ -36,45 +33,31 @@ class ProfileThemeSection extends StatelessWidget {
       baseValue: LumosSpacing.sm,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    return LumosCard(
-      margin: EdgeInsets.zero,
-      child: Padding(
-        padding: EdgeInsets.all(cardPadding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            LumosText(
-              l10n.profileThemeSectionTitle,
-              style: LumosTextStyle.titleLarge,
+    return ProfileSectionCard(
+      title: l10n.profileThemeSectionTitle,
+      subtitle: l10n.profileThemeSectionSubtitle,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          for (final AppThemeType preference
+              in AppThemeType.values) ...<Widget>[
+            ProfileThemeOptionCard(
+              label: _themeLabel(l10n: l10n, preference: preference),
+              selected: themeType == preference,
+              onPressed: () => onPreferenceChanged(preference),
             ),
-            const SizedBox(height: LumosSpacing.sm),
-            LumosText(
-              l10n.profileThemeSectionSubtitle,
-              style: LumosTextStyle.bodyMedium,
-            ),
-            SizedBox(height: sectionGap),
-            LumosRadioGroup<AppThemeType>(
-              options: AppThemeType.values,
-              value: themeType,
-              onChanged: (AppThemeType? value) {
-                if (value == null) {
-                  return;
-                }
-                onPreferenceChanged(value);
-              },
-              labelBuilder: (AppThemeType preference) {
-                return _themeLabel(l10n: l10n, preference: preference);
-              },
-            ),
-            SizedBox(height: actionGap),
-            LumosOutlineButton(
-              text: _quickToggleLabel(l10n: l10n, mode: themeMode),
-              icon: Icons.brightness_6_outlined,
-              expand: true,
-              onPressed: onQuickTogglePressed,
-            ),
+            if (preference != AppThemeType.values.last)
+              SizedBox(height: sectionGap),
           ],
-        ),
+          SizedBox(height: actionGap),
+          LumosButton.secondary(
+            text: _quickToggleLabel(l10n: l10n, mode: themeMode),
+            leading: const LumosIcon(Icons.brightness_6_outlined),
+            expand: true,
+            size: LumosButtonSize.medium,
+            onPressed: onQuickTogglePressed,
+          ),
+        ],
       ),
     );
   }
@@ -100,4 +83,3 @@ String _quickToggleLabel({
     _ => l10n.profileThemeToggleToDark,
   };
 }
-

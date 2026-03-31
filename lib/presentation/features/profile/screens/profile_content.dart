@@ -12,6 +12,7 @@ import '../../../../l10n/app_localizations.dart';
 import '../../auth/providers/auth_session_provider.dart';
 import '../providers/profile_provider.dart';
 import 'widgets/blocks/content/profile_account_card.dart';
+import 'widgets/blocks/content/profile_section_card.dart';
 import 'widgets/blocks/content/profile_speech_section.dart';
 import 'widgets/blocks/content/profile_study_section.dart';
 import 'widgets/blocks/content/profile_theme_section.dart';
@@ -30,15 +31,10 @@ class ProfileContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
-    final double screenPadding = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.lg,
-      minScale: ResponsiveDimensions.compactOuterInsetScale,
-    );
     final double sectionGap = ResponsiveDimensions.compactValue(
       context: context,
       baseValue: LumosSpacing.lg,
-      minScale: ResponsiveDimensions.compactInsetScale,
+      minScale: ResponsiveDimensions.compactOuterInsetScale,
     );
     final AsyncValue<ProfileData> profileAsync = ref.watch(
       profileControllerProvider,
@@ -46,14 +42,17 @@ class ProfileContent extends ConsumerWidget {
     final AppThemeType themeType = ref.watch(themeTypeControllerProvider);
     final ThemeMode themeMode = themeType.appThemeMode.materialThemeMode;
     return ColoredBox(
-      color: Theme.of(context).colorScheme.surface,
+      color: context.colorScheme.surface,
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(
             maxWidth: ProfileContentConst.maxWidth,
           ),
           child: SingleChildScrollView(
-            padding: EdgeInsets.all(screenPadding),
+            padding: EdgeInsets.symmetric(
+              horizontal: LumosScreenFrame.resolveHorizontalInset(context),
+              vertical: context.layout.pageVerticalPadding,
+            ),
             child: profileAsync.when(
               loading: () => const Center(child: LumosLoadingIndicator()),
               error: (Object error, StackTrace stackTrace) {
@@ -93,7 +92,9 @@ class ProfileContent extends ConsumerWidget {
                       },
                       onQuickTogglePressed: () {
                         unawaited(
-                          ref.read(themeTypeControllerProvider.notifier).toggle(),
+                          ref
+                              .read(themeTypeControllerProvider.notifier)
+                              .toggle(),
                         );
                       },
                     ),
@@ -180,15 +181,19 @@ class ProfileContent extends ConsumerWidget {
                       },
                     ),
                     SizedBox(height: sectionGap),
-                    ProfileLogoutButton(
-                      label: l10n.commonLogout,
-                      onPressed: () {
-                        unawaited(
-                          ref
-                              .read(authSessionControllerProvider.notifier)
-                              .logout(),
-                        );
-                      },
+                    ProfileSectionCard(
+                      title: l10n.commonLogout,
+                      subtitle: l10n.profileLogoutSectionSubtitle,
+                      child: ProfileLogoutButton(
+                        label: l10n.commonLogout,
+                        onPressed: () {
+                          unawaited(
+                            ref
+                                .read(authSessionControllerProvider.notifier)
+                                .logout(),
+                          );
+                        },
+                      ),
                     ),
                   ],
                 );
@@ -200,4 +205,3 @@ class ProfileContent extends ConsumerWidget {
     );
   }
 }
-

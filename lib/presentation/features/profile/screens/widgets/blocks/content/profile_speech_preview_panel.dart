@@ -86,6 +86,11 @@ class _ProfileSpeechPreviewPanelState
       baseValue: LumosSpacing.md,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
+    final double actionGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: LumosSpacing.sm,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         final bool stackButtons = constraints.maxWidth < 380;
@@ -94,12 +99,13 @@ class _ProfileSpeechPreviewPanelState
           children: <Widget>[
             LumosText(
               l10n.profileSpeechPreviewTitle,
-              style: LumosTextStyle.titleMedium,
+              style: LumosTextStyle.labelLarge,
+              fontWeight: FontWeight.w600,
             ),
             SizedBox(height: titleGap),
             LumosText(
               l10n.profileSpeechPreviewSubtitle,
-              style: LumosTextStyle.bodyMedium,
+              style: LumosTextStyle.bodySmall,
             ),
             SizedBox(height: sectionGap),
             ValueListenableBuilder<TextEditingValue>(
@@ -114,10 +120,11 @@ class _ProfileSpeechPreviewPanelState
                         StringUtils.normalizeText(value.text).isNotEmpty &&
                         !previewState.isBusy &&
                         !previewState.isPlaying;
-                    final Widget playButton = LumosPrimaryButton(
+                    final Widget playButton = LumosButton.primary(
                       text: l10n.profileSpeechPreviewPlayLabel,
-                      icon: Icons.play_arrow_rounded,
+                      leading: const LumosIcon(Icons.play_arrow_rounded),
                       isLoading: previewState.isBusy,
+                      size: LumosButtonSize.medium,
                       onPressed: canPlayPreview
                           ? () {
                               unawaited(
@@ -134,9 +141,10 @@ class _ProfileSpeechPreviewPanelState
                             }
                           : null,
                     );
-                    final Widget stopButton = LumosOutlineButton(
+                    final Widget stopButton = LumosButton.outline(
                       text: l10n.profileSpeechPreviewStopLabel,
-                      icon: Icons.stop_rounded,
+                      leading: const LumosIcon(Icons.stop_rounded),
+                      size: LumosButtonSize.medium,
                       onPressed: previewState.isBusy || previewState.isPlaying
                           ? () {
                               unawaited(
@@ -161,14 +169,14 @@ class _ProfileSpeechPreviewPanelState
                         SizedBox(height: sectionGap),
                         if (stackButtons) ...<Widget>[
                           playButton,
-                          SizedBox(height: sectionGap),
+                          SizedBox(height: actionGap),
                           stopButton,
                         ],
                         if (!stackButtons)
                           Row(
                             children: <Widget>[
                               Expanded(child: playButton),
-                              SizedBox(width: sectionGap),
+                              SizedBox(width: actionGap),
                               Expanded(child: stopButton),
                             ],
                           ),
@@ -182,4 +190,3 @@ class _ProfileSpeechPreviewPanelState
     );
   }
 }
-

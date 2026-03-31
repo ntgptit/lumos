@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:lumos/core/theme/app_foundation.dart';
+import 'package:lumos/core/utils/string_utils.dart';
 import '../../../../../../../domain/entities/auth/auth_models.dart';
 import '../../../../../../../l10n/app_localizations.dart';
+import '../../../../../../shared/composites/cards/lumos_hero_banner.dart';
+import '../../../../../../shared/primitives/displays/lumos_pill.dart';
 
 class ProfileAccountCard extends StatelessWidget {
   const ProfileAccountCard({required this.user, super.key});
@@ -12,68 +15,97 @@ class ProfileAccountCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
-    final ThemeData theme = Theme.of(context);
-    final double cardPadding = ResponsiveDimensions.compactValue(
+    final double bannerGap = ResponsiveDimensions.compactValue(
       context: context,
       baseValue: LumosSpacing.lg,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double sectionGap = ResponsiveDimensions.compactValue(
+    final double titleGap = ResponsiveDimensions.compactValue(
       context: context,
-      baseValue: LumosSpacing.lg,
+      baseValue: LumosSpacing.sm,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    return LumosCard(
-      margin: EdgeInsets.zero,
-      child: Padding(
-        padding: EdgeInsets.all(cardPadding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            LumosText(
-              l10n.profileAccountSectionTitle,
-              style: LumosTextStyle.titleLarge,
-            ),
-            const SizedBox(height: LumosSpacing.sm),
-            LumosText(
-              l10n.profileAccountSectionSubtitle,
-              style: LumosTextStyle.bodyMedium,
-            ),
-            SizedBox(height: sectionGap),
-            LumosInlineText(
-              user.username,
-              style: theme.textTheme.headlineSmall,
-            ),
-            const SizedBox(height: LumosSpacing.xs),
-            LumosInlineText(
-              user.email,
-              style: theme.textTheme.bodyLarge?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
+    final double rowGap = ResponsiveDimensions.compactValue(
+      context: context,
+      baseValue: LumosSpacing.md,
+      minScale: ResponsiveDimensions.compactInsetScale,
+    );
+    final double iconBoxSize = context.component.listItemLeadingSize;
+
+    return LumosHeroBanner(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            width: iconBoxSize,
+            height: iconBoxSize,
+            decoration: BoxDecoration(
+              color: context.colorScheme.surfaceContainerHigh,
+              borderRadius: context.shapes.control,
+              border: Border.all(
+                color: context.colorScheme.outlineVariant,
+                width: WidgetSizes.borderWidthRegular,
               ),
             ),
-            const SizedBox(height: LumosSpacing.md),
-            DecoratedBox(
-              decoration: BoxDecoration(
-                color: theme.colorScheme.secondaryContainer,
-                borderRadius: context.shapes.pill,
+            child: Center(
+              child: LumosText(
+                _initials(),
+                style: LumosTextStyle.labelLarge,
+                fontWeight: FontWeight.w700,
               ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: LumosSpacing.md,
-                  vertical: LumosSpacing.xs,
+            ),
+          ),
+          SizedBox(width: rowGap),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Expanded(
+                      child: LumosText(
+                        l10n.profileAccountSectionTitle,
+                        style: LumosTextStyle.titleLarge,
+                      ),
+                    ),
+                    SizedBox(width: titleGap),
+                    LumosPill(
+                      backgroundColor: context.colorScheme.surfaceContainerHigh,
+                      child: LumosText(
+                        user.accountStatus,
+                        style: LumosTextStyle.labelLarge,
+                      ),
+                    ),
+                  ],
                 ),
-                child: LumosInlineText(
-                  user.accountStatus,
-                  style: theme.textTheme.labelMedium?.copyWith(
-                    color: theme.colorScheme.onSecondaryContainer,
-                    fontWeight: FontWeight.w700,
-                  ),
+                SizedBox(height: titleGap),
+                LumosText(
+                  l10n.profileAccountSectionSubtitle,
+                  style: LumosTextStyle.bodySmall,
+                  tone: LumosTextTone.secondary,
                 ),
-              ),
+                SizedBox(height: bannerGap),
+                LumosText(
+                  user.username,
+                  style: LumosTextStyle.titleMedium,
+                  fontWeight: FontWeight.w600,
+                ),
+                SizedBox(height: context.spacing.xxs),
+                LumosText(
+                  user.email,
+                  style: LumosTextStyle.bodySmall,
+                  tone: LumosTextTone.secondary,
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
+  }
+
+  String _initials() {
+    return StringUtils.initials(user.username);
   }
 }

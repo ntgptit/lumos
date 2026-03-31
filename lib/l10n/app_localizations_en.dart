@@ -255,6 +255,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deckLibraryEntryAction => 'Open folders';
 
   @override
+  String libraryRootFolderCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '# root folders',
+      one: '# root folder',
+      zero: 'No root folders',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get librarySearchEmptyMessage => 'Try another keyword or open Folders to browse the full tree.';
+
+  @override
   String get deckNameRequiredValidation => 'Deck name is required.';
 
   @override
@@ -874,6 +889,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profileSpeechPreviewPlaybackError => 'The device could not play the preview audio.';
+
+  @override
+  String get profileLogoutSectionSubtitle => 'Sign out on this device without affecting your saved learning data.';
 
   @override
   String get profileStudySectionTitle => 'Study preference';

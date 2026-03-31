@@ -17,12 +17,12 @@ class ProfileLogoutButton extends StatelessWidget {
     final LumosButtonSize buttonSize = context.deviceType == DeviceType.mobile
         ? LumosButtonSize.medium
         : LumosButtonSize.large;
-    return LumosDangerButton(
+    return LumosButton.outline(
       onPressed: onPressed,
       text: label,
-      icon: Icons.logout_rounded,
+      leading: const LumosIcon(Icons.logout_rounded),
+      expand: true,
       size: buttonSize,
     );
   }
 }
-

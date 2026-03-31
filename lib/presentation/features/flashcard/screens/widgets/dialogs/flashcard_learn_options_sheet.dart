@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:lumos/core/theme/app_foundation.dart';
 import '../../../../../../l10n/app_localizations.dart';
+import 'flashcard_learn_option_card.dart';
 
 enum FlashcardLearnOptionsSheetAction { firstLearning, review, resetProgress }
 
@@ -13,6 +14,24 @@ abstract final class FlashcardLearnOptionsSheetConst {
   static const double optionSpacing = LumosSpacing.md;
   static const double iconContainerSize = WidgetSizes.avatarMedium;
   static const double iconSize = IconSizes.iconSmall;
+}
+
+class _LearnOptionItem {
+  const _LearnOptionItem({
+    required this.action,
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+    required this.backgroundColor,
+    required this.foregroundColor,
+  });
+
+  final FlashcardLearnOptionsSheetAction action;
+  final String title;
+  final String subtitle;
+  final IconData icon;
+  final Color backgroundColor;
+  final Color foregroundColor;
 }
 
 Future<FlashcardLearnOptionsSheetAction?> showFlashcardLearnOptionsSheet({
@@ -50,12 +69,44 @@ Future<FlashcardLearnOptionsSheetAction?> showFlashcardLearnOptionsSheet({
         baseValue: LumosSpacing.md,
         minScale: ResponsiveDimensions.compactInsetScale,
       );
+      final double cardPadding = ResponsiveDimensions.compactValue(
+        context: sheetContext,
+        baseValue: LumosSpacing.md,
+        minScale: ResponsiveDimensions.compactInsetScale,
+      );
       final double subtitleGap = ResponsiveDimensions.compactValue(
         context: sheetContext,
         baseValue: LumosSpacing.xs,
         minScale: ResponsiveDimensions.compactInsetScale,
       );
       final AppLocalizations l10n = AppLocalizations.of(sheetContext)!;
+      final ColorScheme colorScheme = sheetContext.colorScheme;
+      final List<_LearnOptionItem> options = <_LearnOptionItem>[
+        _LearnOptionItem(
+          action: FlashcardLearnOptionsSheetAction.firstLearning,
+          title: l10n.flashcardLearnContinueOptionTitle,
+          subtitle: l10n.flashcardLearnContinueOptionSubtitle,
+          icon: Icons.school_rounded,
+          backgroundColor: colorScheme.secondaryContainer,
+          foregroundColor: colorScheme.onSecondaryContainer,
+        ),
+        _LearnOptionItem(
+          action: FlashcardLearnOptionsSheetAction.review,
+          title: l10n.flashcardLearnReviewOptionTitle,
+          subtitle: l10n.flashcardLearnReviewOptionSubtitle,
+          icon: Icons.schedule_rounded,
+          backgroundColor: colorScheme.secondaryContainer,
+          foregroundColor: colorScheme.onSecondaryContainer,
+        ),
+        _LearnOptionItem(
+          action: FlashcardLearnOptionsSheetAction.resetProgress,
+          title: l10n.flashcardLearnResetOptionTitle,
+          subtitle: l10n.flashcardLearnResetOptionSubtitle,
+          icon: Icons.restart_alt_rounded,
+          backgroundColor: colorScheme.errorContainer,
+          foregroundColor: colorScheme.onErrorContainer,
+        ),
+      ];
       return LumosBottomSheet(
         child: SingleChildScrollView(
           child: Column(
@@ -67,158 +118,27 @@ Future<FlashcardLearnOptionsSheetAction?> showFlashcardLearnOptionsSheet({
                 style: LumosTextStyle.titleLarge,
               ),
               SizedBox(height: optionSpacing),
-              LumosInlineText(
+              LumosText(
                 l10n.flashcardLearnSheetSubtitle,
-                style: Theme.of(sheetContext).textTheme.bodyMedium,
+                style: LumosTextStyle.bodySmall,
               ),
               SizedBox(height: sectionSpacing),
-              LumosCard(
-                variant: LumosCardVariant.elevated,
-                onTap: () {
-                  sheetContext.pop(
-                    FlashcardLearnOptionsSheetAction.firstLearning,
-                  );
-                },
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-                      width: iconContainerSize,
-                      height: iconContainerSize,
-                      decoration: BoxDecoration(
-                        color: Theme.of(
-                          sheetContext,
-                        ).colorScheme.secondaryContainer,
-                        borderRadius: sheetContext.shapes.card,
-                      ),
-                      child: IconTheme(
-                        data: IconThemeData(
-                          color: Theme.of(
-                            sheetContext,
-                          ).colorScheme.onSecondaryContainer,
-                          size: iconSize,
-                        ),
-                        child: const LumosIcon(Icons.school_rounded),
-                      ),
-                    ),
-                    SizedBox(width: rowGap),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          LumosInlineText(
-                            l10n.flashcardLearnContinueOptionTitle,
-                            style: Theme.of(sheetContext).textTheme.titleMedium,
-                          ),
-                          SizedBox(height: subtitleGap),
-                          LumosInlineText(
-                            l10n.flashcardLearnContinueOptionSubtitle,
-                            style: Theme.of(sheetContext).textTheme.bodyMedium,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+              for (final _LearnOptionItem option in options) ...<Widget>[
+                FlashcardLearnOptionCard(
+                  title: option.title,
+                  subtitle: option.subtitle,
+                  icon: option.icon,
+                  iconContainerSize: iconContainerSize,
+                  iconSize: iconSize,
+                  rowGap: rowGap,
+                  cardPadding: cardPadding,
+                  subtitleGap: subtitleGap,
+                  backgroundColor: option.backgroundColor,
+                  foregroundColor: option.foregroundColor,
+                  onTap: () => sheetContext.pop(option.action),
                 ),
-              ),
-              SizedBox(height: optionSpacing),
-              LumosCard(
-                variant: LumosCardVariant.elevated,
-                onTap: () {
-                  sheetContext.pop(FlashcardLearnOptionsSheetAction.review);
-                },
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-                      width: iconContainerSize,
-                      height: iconContainerSize,
-                      decoration: BoxDecoration(
-                        color: Theme.of(
-                          sheetContext,
-                        ).colorScheme.secondaryContainer,
-                        borderRadius: sheetContext.shapes.card,
-                      ),
-                      child: IconTheme(
-                        data: IconThemeData(
-                          color: Theme.of(
-                            sheetContext,
-                          ).colorScheme.onSecondaryContainer,
-                          size: iconSize,
-                        ),
-                        child: const LumosIcon(Icons.schedule_rounded),
-                      ),
-                    ),
-                    SizedBox(width: rowGap),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          LumosInlineText(
-                            l10n.flashcardLearnReviewOptionTitle,
-                            style: Theme.of(sheetContext).textTheme.titleMedium,
-                          ),
-                          SizedBox(height: subtitleGap),
-                          LumosInlineText(
-                            l10n.flashcardLearnReviewOptionSubtitle,
-                            style: Theme.of(sheetContext).textTheme.bodyMedium,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: optionSpacing),
-              LumosCard(
-                variant: LumosCardVariant.elevated,
-                onTap: () {
-                  sheetContext.pop(
-                    FlashcardLearnOptionsSheetAction.resetProgress,
-                  );
-                },
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-                      width: iconContainerSize,
-                      height: iconContainerSize,
-                      decoration: BoxDecoration(
-                        color: Theme.of(
-                          sheetContext,
-                        ).colorScheme.errorContainer,
-                        borderRadius: sheetContext.shapes.card,
-                      ),
-                      child: IconTheme(
-                        data: IconThemeData(
-                          color: Theme.of(
-                            sheetContext,
-                          ).colorScheme.onErrorContainer,
-                          size: iconSize,
-                        ),
-                        child: const LumosIcon(Icons.restart_alt_rounded),
-                      ),
-                    ),
-                    SizedBox(width: rowGap),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          LumosInlineText(
-                            l10n.flashcardLearnResetOptionTitle,
-                            style: Theme.of(sheetContext).textTheme.titleMedium,
-                          ),
-                          SizedBox(height: subtitleGap),
-                          LumosInlineText(
-                            l10n.flashcardLearnResetOptionSubtitle,
-                            style: Theme.of(sheetContext).textTheme.bodyMedium,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+                if (option != options.last) SizedBox(height: optionSpacing),
+              ],
             ],
           ),
         ),
