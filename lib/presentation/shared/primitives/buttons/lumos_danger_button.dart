@@ -10,13 +10,9 @@ class LumosDangerButton extends LumosButton {
     super.isLoading,
     Widget? leading,
     super.trailing,
-    super.style,
     IconData? icon,
     super.size,
-  }) : super(
-         leading: leading ?? _icon(icon),
-         variant: AppButtonVariant.danger,
-       );
+  }) : super(leading: leading ?? _icon(icon), variant: AppButtonVariant.danger);
 
   static Widget? _icon(IconData? icon) {
     if (icon == null) {

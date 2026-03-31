@@ -5,13 +5,20 @@ import 'package:lumos/core/theme/app_foundation.dart';
 abstract final class FlashcardStudyActionSectionConst {
   FlashcardStudyActionSectionConst._();
 
-  static const double gridSpacing = LumosSpacing.sm;
+  static const double gridSpacing =
+      12;
+  static const double compactWidthBreakpoint = 380;
   static const double cardMinHeight = 72;
-  static const double iconContainerSize = LumosSpacing.xl;
-  static const double iconSize = IconSizes.iconSmall;
-  static const double labelLeftSpacing = LumosSpacing.xs;
-  static const double cardVerticalPadding = LumosSpacing.sm;
-  static const double cardHorizontalPadding = LumosSpacing.md;
+  static const double iconContainerSize =
+      32;
+  static const double iconSize =
+      18;
+  static const double labelLeftSpacing =
+      8;
+  static const double cardVerticalPadding =
+      12;
+  static const double cardHorizontalPadding =
+      16;
   static const int gridCrossAxisCount = 2;
 }
 
@@ -45,46 +52,40 @@ class FlashcardStudyActionSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (actions.isEmpty) {
-      return const SizedBox.shrink();
+      return SizedBox.shrink();
     }
-    final double gridSpacing = ResponsiveDimensions.compactValue(
-      context: context,
+    final double gridSpacing = context.compactValue(
       baseValue: FlashcardStudyActionSectionConst.gridSpacing,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double cardMinHeight = ResponsiveDimensions.compactValue(
-      context: context,
+    final double cardMinHeight = context.compactValue(
       baseValue: FlashcardStudyActionSectionConst.cardMinHeight,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double iconContainerSize = ResponsiveDimensions.compactValue(
-      context: context,
+    final double iconContainerSize = context.compactValue(
       baseValue: FlashcardStudyActionSectionConst.iconContainerSize,
       minScale: ResponsiveDimensions.compactLargeInsetScale,
     );
-    final double iconSize = ResponsiveDimensions.compactValue(
-      context: context,
+    final double iconSize = context.compactValue(
       baseValue: FlashcardStudyActionSectionConst.iconSize,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double labelLeftSpacing = ResponsiveDimensions.compactValue(
-      context: context,
+    final double labelLeftSpacing = context.compactValue(
       baseValue: FlashcardStudyActionSectionConst.labelLeftSpacing,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double cardVerticalPadding = ResponsiveDimensions.compactValue(
-      context: context,
+    final double cardVerticalPadding = context.compactValue(
       baseValue: FlashcardStudyActionSectionConst.cardVerticalPadding,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double cardHorizontalPadding = ResponsiveDimensions.compactValue(
-      context: context,
+    final double cardHorizontalPadding = context.compactValue(
       baseValue: FlashcardStudyActionSectionConst.cardHorizontalPadding,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        final bool compactWidth = constraints.maxWidth < 380;
+        final bool compactWidth = constraints.maxWidth <
+            FlashcardStudyActionSectionConst.compactWidthBreakpoint;
         final double availableWidth = constraints.maxWidth;
         final int crossAxisCount =
             FlashcardStudyActionSectionConst.gridCrossAxisCount;
@@ -139,8 +140,12 @@ class FlashcardStudyActionSection extends StatelessWidget {
                         maxLines: compactWidth ? 2 : 1,
                         overflow: TextOverflow.ellipsis,
                         style: compactWidth
-                            ? Theme.of(context).textTheme.titleSmall
-                            : Theme.of(context).textTheme.titleMedium,
+                            ? context.theme
+                                  .textTheme
+                                  .titleSmall
+                            : context.theme
+                                  .textTheme
+                                  .titleMedium,
                       ),
                     ),
                   ],
@@ -158,7 +163,7 @@ Color _resolveFlashcardActionContainerColor({
   required BuildContext context,
   required FlashcardStudyActionSectionTone tone,
 }) {
-  final ColorScheme colorScheme = Theme.of(context).colorScheme;
+  final ColorScheme colorScheme = context.theme.colorScheme;
   if (tone == FlashcardStudyActionSectionTone.primary) {
     return colorScheme.primaryContainer;
   }
@@ -178,7 +183,7 @@ Color _resolveFlashcardActionIconColor({
   required BuildContext context,
   required FlashcardStudyActionSectionTone tone,
 }) {
-  final ColorScheme colorScheme = Theme.of(context).colorScheme;
+  final ColorScheme colorScheme = context.theme.colorScheme;
   if (tone == FlashcardStudyActionSectionTone.primary) {
     return colorScheme.onPrimaryContainer;
   }

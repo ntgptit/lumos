@@ -18,8 +18,10 @@ import 'widgets/states/deck_status_scroll_view.dart';
 abstract final class DeckScreenConst {
   DeckScreenConst._();
 
-  static const Duration searchDebounce = AppDurations.medium;
-  static const double sectionSpacing = LumosSpacing.lg;
+  static const Duration searchDebounce =
+      AppMotion.medium;
+  static const double sectionSpacing =
+      24;
 }
 
 class DeckScreen extends ConsumerStatefulWidget {
@@ -94,8 +96,7 @@ class _DeckScreenState extends ConsumerState<DeckScreen> {
         final String searchQuery = _searchQueryNotifier.value;
         final SortDirection sortDirection = _sortDirectionNotifier.value;
         final String sortType = sortDirection.apiValue;
-        final double sectionSpacing = ResponsiveDimensions.compactValue(
-          context: context,
+        final double sectionSpacing = context.compactValue(
           baseValue: DeckScreenConst.sectionSpacing,
           minScale: ResponsiveDimensions.compactInsetScale,
         );

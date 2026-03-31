@@ -74,7 +74,7 @@ class _AppSnackbarListenerState extends State<LumosSnackbarListener> {
           content: LumosSnackbar(
             message: message,
             title: widget.title,
-            type: widget.type,
+            type: _mapSnackbarType(widget.type),
             actionLabel: widget.actionLabel,
             onActionPressed: widget.onActionPressed,
           ),
@@ -86,5 +86,14 @@ class _AppSnackbarListenerState extends State<LumosSnackbarListener> {
   @override
   Widget build(BuildContext context) {
     return widget.child;
+  }
+
+  LumosSnackbarType _mapSnackbarType(SnackbarType type) {
+    return switch (type) {
+      SnackbarType.success => LumosSnackbarType.success,
+      SnackbarType.error => LumosSnackbarType.error,
+      SnackbarType.warning => LumosSnackbarType.warning,
+      SnackbarType.info => LumosSnackbarType.info,
+    };
   }
 }

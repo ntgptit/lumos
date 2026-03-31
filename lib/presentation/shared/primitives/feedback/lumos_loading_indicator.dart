@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 
 class LumosLoadingIndicator extends StatelessWidget {
-  const LumosLoadingIndicator({
-    super.key,
-    this.size,
-    this.isLinear = false,
-  });
+  const LumosLoadingIndicator({super.key, this.size, this.isLinear = false});
 
   final double? size;
   final bool isLinear;

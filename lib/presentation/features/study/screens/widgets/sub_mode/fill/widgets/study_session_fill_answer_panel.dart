@@ -6,7 +6,8 @@ import '../../widgets/study_session_content_card.dart';
 import '../../widgets/study_session_layout_metrics.dart';
 import 'study_session_fill_panel_style.dart';
 
-const double _fillComparisonSpacing = LumosSpacing.canvas;
+const double _fillComparisonSpacing =
+    96;
 
 class StudySessionFillAnswerPanel extends StatelessWidget {
   const StudySessionFillAnswerPanel({
@@ -22,7 +23,7 @@ class StudySessionFillAnswerPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final ThemeData theme = context.theme;
     final ColorScheme colorScheme = theme.colorScheme;
     final TextStyle resolvedBaseStyle =
         StudySessionFillPanelStyle.termTextStyle(
@@ -60,17 +61,19 @@ class StudySessionFillAnswerPanel extends StatelessWidget {
           );
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        final bool compactHeight = constraints.maxHeight < 260;
+        final bool compactHeight =
+            constraints.maxHeight < StudySessionLayoutMetrics.compactPanelHeightBreakpoint;
         final double comparisonSpacing =
             StudySessionLayoutMetrics.actionSpacing(
               context,
               baseValue: compactHeight
-                  ? LumosSpacing.xxxl
+                  ? context.spacing.xxxl
                   : _fillComparisonSpacing,
             );
-        final double horizontalInset = ResponsiveDimensions.compactValue(
-          context: context,
-          baseValue: compactHeight ? LumosSpacing.md : LumosSpacing.lg,
+        final double horizontalInset = context.compactValue(
+          baseValue: compactHeight
+              ? context.spacing.md
+              : context.spacing.lg,
           minScale: ResponsiveDimensions.compactInsetScale,
         );
         final Widget resolvedContent = comparison == null
@@ -112,4 +115,3 @@ class StudySessionFillAnswerPanel extends StatelessWidget {
     );
   }
 }
-

@@ -122,7 +122,7 @@ Future<void> showFlashcardConfirmDialog({
       return LumosDialog(
         title: titleBuilder(l10n),
         icon: const LumosDialogIcon.destructive(Icons.delete_outline_rounded),
-        content: messageBuilder(l10n),
+        message: messageBuilder(l10n),
         cancelText: l10n.commonCancel,
         confirmText: confirmLabelBuilder(l10n),
         onCancel: () => dialogContext.pop(),

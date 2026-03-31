@@ -30,9 +30,8 @@ class DeckListContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final double rowSpacing = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.sm,
+    final double rowSpacing = context.compactValue(
+      baseValue: context.spacing.sm,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     return LumosPagedSliverList(

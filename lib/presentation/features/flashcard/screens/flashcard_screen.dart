@@ -13,12 +13,12 @@ abstract final class FlashcardScreenConst {
   FlashcardScreenConst._();
 
   static const EdgeInsets loadingMaskPadding = EdgeInsets.fromLTRB(
-    LumosSpacing.lg,
-    LumosSpacing.sm,
-    LumosSpacing.lg,
-    LumosSpacing.none,
+    24,
+    12,
+    24,
+    0,
   );
-  static const double loadingMaskHeight = WidgetSizes.progressTrackHeight;
+  static const double loadingMaskHeight = 6;
 }
 
 class FlashcardScreen extends ConsumerWidget {
@@ -64,5 +64,3 @@ class FlashcardScreen extends ConsumerWidget {
     );
   }
 }
-
-

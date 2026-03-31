@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lumos/core/enums/dialog_type.dart';
 import 'package:lumos/core/theme/extensions/theme_context_ext.dart';
+import 'package:lumos/l10n/l10n.dart';
 import 'package:lumos/presentation/shared/composites/dialogs/lumos_alert_dialog.dart';
 import 'package:lumos/presentation/shared/primitives/buttons/lumos_outline_button.dart';
 import 'package:lumos/presentation/shared/primitives/buttons/lumos_primary_button.dart';
@@ -18,8 +19,8 @@ class LumosPromptDialog extends StatefulWidget {
     this.hintText,
     this.label,
     this.additionalContent,
-    this.confirmText = 'Save',
-    this.cancelText = 'Cancel',
+    this.confirmText,
+    this.cancelText,
     this.isCancelEnabled = true,
     this.isConfirmEnabled = true,
     this.type = DialogType.info,
@@ -35,8 +36,8 @@ class LumosPromptDialog extends StatefulWidget {
   final String? hintText;
   final String? label;
   final Widget? additionalContent;
-  final String confirmText;
-  final String cancelText;
+  final String? confirmText;
+  final String? cancelText;
   final bool isCancelEnabled;
   final bool isConfirmEnabled;
   final DialogType type;
@@ -69,6 +70,10 @@ class _LumosPromptDialogState extends State<LumosPromptDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final String resolvedConfirmText =
+        widget.confirmText ?? context.l10n.commonSave;
+    final String resolvedCancelText =
+        widget.cancelText ?? context.l10n.commonCancel;
     return LumosAlertDialog(
       title: widget.title,
       type: widget.type,
@@ -91,11 +96,11 @@ class _LumosPromptDialogState extends State<LumosPromptDialog> {
       ),
       actions: [
         LumosOutlineButton(
-          text: widget.cancelText,
+          text: resolvedCancelText,
           onPressed: widget.isCancelEnabled ? widget.onCancel : null,
         ),
         LumosPrimaryButton(
-          text: widget.confirmText,
+          text: resolvedConfirmText,
           onPressed: widget.isConfirmEnabled ? _submit : null,
         ),
       ],

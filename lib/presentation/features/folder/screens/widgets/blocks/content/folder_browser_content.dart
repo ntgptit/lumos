@@ -62,14 +62,12 @@ class FolderBrowserContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
-    final double sectionGap = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.lg,
+    final double sectionGap = context.compactValue(
+      baseValue: context.spacing.lg,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double errorGap = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.md,
+    final double errorGap = context.compactValue(
+      baseValue: context.spacing.md,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     final List<Widget> leadingSlivers = <Widget>[

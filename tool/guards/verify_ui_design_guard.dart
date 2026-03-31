@@ -36,8 +36,11 @@ class UiDesignGuardConst {
   static const String featurePrefix = 'lib/presentation/features/';
   static const String featureScreensMarker = '/screens/';
   static const String featureWidgetsMarker = '/widgets/';
+  static const String screenSuffix = '_screen.dart';
   static const String sharedBalancedListItemCardPath =
       'lib/presentation/shared/composites/lists/lumos_action_list_item_card.dart';
+  static const String allowRawScaffoldMarker =
+      'ui-design-guard: allow-raw-scaffold';
 
   /// Mobile breakpoint policy (dp).
   static const double mobileBreakpointMax = 600;
@@ -173,6 +176,7 @@ Future<void> main() async {
 
   final List<UiGuardRule> rules = <UiGuardRule>[
     const _LegacyComponentRule(),
+    const _RawScaffoldRule(),
     const _MobileBreakpointRule(),
     const _SpacingGridRule(),
     const _HorizontalPaddingRule(),
@@ -280,6 +284,26 @@ bool _isUiLayerFile(String path) {
     return true;
   }
   if (path.contains(UiDesignGuardConst.featureWidgetsMarker)) {
+    return true;
+  }
+  return false;
+}
+
+bool _isFeatureScreenFile(String path) {
+  if (!path.startsWith(UiDesignGuardConst.featurePrefix)) {
+    return false;
+  }
+  if (!path.contains(UiDesignGuardConst.featureScreensMarker)) {
+    return false;
+  }
+  return path.endsWith(UiDesignGuardConst.screenSuffix);
+}
+
+bool _fileHasRawScaffoldOptOut(List<String> lines) {
+  for (final String line in lines) {
+    if (!line.contains(UiDesignGuardConst.allowRawScaffoldMarker)) {
+      continue;
+    }
     return true;
   }
   return false;
@@ -801,6 +825,53 @@ class _BalancedListItemCardPaddingRule implements UiGuardRule {
         lineNumber: lineNumber,
         reason:
             'Shared list item cards must use balanced all-side content inset. Use `EdgeInsets.all(...)` instead of directional card padding.',
+        lineContent: rawLine.trim(),
+      ),
+    );
+  }
+}
+
+class _RawScaffoldRule implements UiGuardRule {
+  const _RawScaffoldRule();
+
+  static final RegExp _rawScaffoldPattern = RegExp(
+    r'(?<![A-Za-z0-9_])Scaffold\s*\(',
+  );
+
+  @override
+  String get name => 'raw_scaffold';
+
+  @override
+  void checkLine({
+    required List<UiDesignViolation> violations,
+    required String filePath,
+    required int lineNumber,
+    required String rawLine,
+    required String sourceLine,
+    required List<String> allLines,
+    required int index,
+  }) {
+    if (!_isFeatureScreenFile(filePath)) {
+      return;
+    }
+    if (_fileHasRawScaffoldOptOut(allLines)) {
+      return;
+    }
+    if (!sourceLine.contains('Scaffold')) {
+      return;
+    }
+    if (sourceLine.contains('LumosScaffold(')) {
+      return;
+    }
+    if (!_rawScaffoldPattern.hasMatch(sourceLine)) {
+      return;
+    }
+    violations.add(
+      UiDesignViolation(
+        filePath: filePath,
+        lineNumber: lineNumber,
+        reason:
+            'Screen nên dùng LumosScaffold để đảm bảo responsive padding, SafeArea, và AppBar nhất quán.',
         lineContent: rawLine.trim(),
       ),
     );

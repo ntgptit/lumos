@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:lumos/core/theme/app_foundation.dart';
 import '../../../../../../../domain/entities/study/study_models.dart';
+import 'study_session_layout_metrics.dart';
 
 class StudySessionChoiceList extends StatelessWidget {
   const StudySessionChoiceList({
@@ -17,15 +18,15 @@ class StudySessionChoiceList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double itemSpacing = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.sm,
+    final double itemSpacing = context.compactValue(
+      baseValue: context.spacing.sm,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     if (useGrid) {
       return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-          final bool singleColumn = constraints.maxWidth < 360;
+          final bool singleColumn = constraints.maxWidth <
+              StudySessionLayoutMetrics.narrowContentWidthBreakpoint;
           return GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -62,4 +63,3 @@ class StudySessionChoiceList extends StatelessWidget {
     );
   }
 }
-

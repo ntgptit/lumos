@@ -67,7 +67,7 @@ class LumosErrorState extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                icon ?? const LumosIcon(Icons.error_outline_rounded),
+                icon ?? LumosIcon(Icons.error_outline_rounded),
                 SizedBox(height: context.spacing.md),
                 LumosTitleText(
                   text: title ?? context.l10n.commonSomethingWentWrong,

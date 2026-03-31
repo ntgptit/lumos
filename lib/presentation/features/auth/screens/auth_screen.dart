@@ -6,14 +6,12 @@ import 'package:lumos/core/theme/extensions/theme_context_ext.dart';
 import 'package:lumos/l10n/l10n.dart';
 import 'package:lumos/presentation/shared/composites/states/lumos_error_state.dart';
 import 'package:lumos/presentation/shared/primitives/feedback/lumos_circular_loader.dart';
+import 'package:lumos/presentation/shared/layouts/lumos_scaffold.dart';
 import '../providers/auth_session_provider.dart';
 import 'widgets/blocks/content/auth_form_card.dart';
 
 class AuthScreen extends ConsumerStatefulWidget {
-  const AuthScreen({
-    super.key,
-    this.initialMode = AuthScreenModeState.login,
-  });
+  const AuthScreen({super.key, this.initialMode = AuthScreenModeState.login});
 
   final AuthScreenModeState initialMode;
 
@@ -53,9 +51,13 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     }
 
     return authAsync.when(
-      loading: () => const Scaffold(body: Center(child: LumosCircularLoader())),
+      loading: () => const LumosScaffold(
+        body: Center(child: LumosCircularLoader()),
+        bodyPadding: EdgeInsets.zero,
+      ),
       error: (Object error, StackTrace stackTrace) {
-        return Scaffold(
+        return LumosScaffold(
+          bodyPadding: EdgeInsets.zero,
           body: LumosErrorState(
             message: error.toString(),
             primaryActionLabel: context.l10n.commonRetry,
@@ -72,7 +74,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             const DashboardRouteData().go(context);
           });
         }
-        return Scaffold(
+        return LumosScaffold(
+          bodyPadding: EdgeInsets.zero,
           body: SafeArea(
             child: Center(
               child: ConstrainedBox(

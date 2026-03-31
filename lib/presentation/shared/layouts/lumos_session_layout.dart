@@ -5,18 +5,18 @@ import 'package:lumos/presentation/shared/layouts/lumos_split_view_layout.dart';
 import 'package:lumos/presentation/shared/primitives/layout/lumos_responsive_container.dart';
 import 'package:lumos/presentation/shared/primitives/layout/lumos_spacing.dart';
 
-class LumosStudyLayout extends StatelessWidget {
-  const LumosStudyLayout({
+class LumosSessionLayout extends StatelessWidget {
+  const LumosSessionLayout({
     super.key,
     this.header,
-    required this.flashcard,
+    required this.primaryContent,
     this.controls,
     this.sidePanel,
     this.footer,
   });
 
   final Widget? header;
-  final Widget flashcard;
+  final Widget primaryContent;
   final Widget? controls;
   final Widget? sidePanel;
   final Widget? footer;
@@ -31,7 +31,7 @@ class LumosStudyLayout extends StatelessWidget {
         if (resolvedHeader != null) const LumosSpacing(size: AppSpacingSize.lg),
         LumosResponsiveContainer(
           maxWidth: context.layout.flashcardMaxWidth,
-          child: flashcard,
+          child: primaryContent,
         ),
         if (controls != null) ...[
           const LumosSpacing(size: AppSpacingSize.lg),

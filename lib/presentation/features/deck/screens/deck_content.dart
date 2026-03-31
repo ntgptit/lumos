@@ -15,7 +15,8 @@ import 'widgets/states/deck_error_banner.dart';
 abstract final class DeckContentConst {
   DeckContentConst._();
 
-  static const double listBottomSpacing = LumosSpacing.canvas;
+  static const double listBottomSpacing =
+      96;
 }
 
 class DeckContent extends ConsumerWidget {
@@ -34,8 +35,7 @@ class DeckContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final double listBottomSpacing = ResponsiveDimensions.compactValue(
-      context: context,
+    final double listBottomSpacing = context.compactValue(
       baseValue: DeckContentConst.listBottomSpacing,
       minScale: ResponsiveDimensions.compactVerticalInsetScale,
     );
@@ -54,7 +54,9 @@ class DeckContent extends ConsumerWidget {
         SliverToBoxAdapter(child: DeckErrorBanner(message: message)),
       );
       contentLeadingSlivers.add(
-        SliverToBoxAdapter(child: SizedBox(height: LumosSpacing.md)),
+        SliverToBoxAdapter(
+          child: SizedBox(height: context.spacing.md),
+        ),
       );
     }
     return Stack(

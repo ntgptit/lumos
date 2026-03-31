@@ -6,7 +6,8 @@ import '../../../../../providers/study_guess_selection_provider.dart';
 import '../../widgets/study_session_layout_metrics.dart';
 import 'study_session_guess_choice_card.dart';
 
-const double studySessionGuessChoiceGap = LumosSpacing.sm;
+const double studySessionGuessChoiceGap =
+    12;
 
 class StudySessionGuessChoiceList extends StatelessWidget {
   const StudySessionGuessChoiceList({
@@ -31,8 +32,10 @@ class StudySessionGuessChoiceList extends StatelessWidget {
       builder: (BuildContext context, BoxConstraints constraints) {
         final double choiceGap = StudySessionLayoutMetrics.sectionSpacing(
           context,
-          baseValue: constraints.maxWidth < 380
-              ? LumosSpacing.xs
+          baseValue:
+              constraints.maxWidth <
+                  StudySessionLayoutMetrics.compactActionWidthBreakpoint
+              ? context.spacing.xs
               : studySessionGuessChoiceGap,
         );
         return Column(
@@ -42,7 +45,9 @@ class StudySessionGuessChoiceList extends StatelessWidget {
             final bool isLastChoice = index == choiceCount - 1;
             return Padding(
               padding: EdgeInsets.only(
-                bottom: isLastChoice ? LumosSpacing.none : choiceGap,
+                bottom: isLastChoice
+                    ? 0
+                    : choiceGap,
               ),
               child: StudySessionGuessChoiceCard(
                 label: choice.label,
@@ -64,4 +69,3 @@ class StudySessionGuessChoiceList extends StatelessWidget {
     );
   }
 }
-

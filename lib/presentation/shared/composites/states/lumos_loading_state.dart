@@ -48,7 +48,10 @@ class LumosLoadingState extends StatelessWidget {
                     ),
                     if (subtitle != null) ...[
                       SizedBox(height: context.spacing.xxs),
-                      LumosBodyText(text: subtitle!, textAlign: TextAlign.center),
+                      LumosBodyText(
+                        text: subtitle!,
+                        textAlign: TextAlign.center,
+                      ),
                     ],
                   ],
                 ),

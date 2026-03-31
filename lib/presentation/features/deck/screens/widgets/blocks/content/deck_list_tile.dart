@@ -7,7 +7,7 @@ import '../../../../../../../l10n/app_localizations.dart';
 abstract final class DeckListTileConst {
   DeckListTileConst._();
 
-  static const double leadingBorderWidth = WidgetSizes.borderWidthRegular;
+  static const double leadingBorderWidth = AppStroke.regular;
 }
 
 abstract final class DeckListTileActionKey {

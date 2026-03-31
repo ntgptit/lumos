@@ -19,12 +19,16 @@ class ProfileErrorView extends StatelessWidget {
     return LumosCard(
       margin: EdgeInsets.zero,
       child: Padding(
-        padding: const EdgeInsets.all(LumosSpacing.lg),
+        padding: EdgeInsets.all(
+          context.spacing.lg,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             LumosText(message, style: LumosTextStyle.bodyMedium),
-            const SizedBox(height: LumosSpacing.md),
+            SizedBox(
+              height: context.spacing.md,
+            ),
             LumosPrimaryButton(onPressed: onRetry, text: l10n.commonRetry),
           ],
         ),
@@ -32,4 +36,3 @@ class ProfileErrorView extends StatelessWidget {
     );
   }
 }
-

@@ -2233,9 +2233,9 @@
 - L9: `LumosInfoCard.LumosInfoCard()` (constructor)
 - L30: `LumosInfoCard.build` (method)
 
-### `lib/presentation/shared/composites/cards/lumos_progress_card.dart`
-- L10: `LumosProgressCard.LumosProgressCard()` (constructor)
-- L33: `LumosProgressCard.build` (method)
+### `lib/presentation/shared/composites/cards/lumos_metric_card.dart`
+- L10: `LumosMetricCard.LumosMetricCard()` (constructor)
+- L33: `LumosMetricCard.build` (method)
 
 ### `lib/presentation/shared/composites/cards/lumos_stat_card.dart`
 - L10: `LumosStatCard.LumosStatCard()` (constructor)
@@ -2433,27 +2433,27 @@
 - L6: `LumosOfflineState.LumosOfflineState()` (constructor)
 - L19: `LumosOfflineState.build` (method)
 
-### `lib/presentation/shared/composites/states/lumos_unauthorized_state.dart`
-- L6: `LumosUnauthorizedState.LumosUnauthorizedState()` (constructor)
-- L19: `LumosUnauthorizedState.build` (method)
+### `lib/presentation/shared/composites/states/lumos_access_required_state.dart`
+- L6: `LumosAccessRequiredState.LumosAccessRequiredState()` (constructor)
+- L19: `LumosAccessRequiredState.build` (method)
 
-### `lib/presentation/shared/composites/study/lumos_answer_result_banner.dart`
-- L9: `LumosAnswerResultBanner.LumosAnswerResultBanner()` (constructor)
-- L26: `LumosAnswerResultBanner.build` (method)
+### `lib/presentation/shared/composites/session/lumos_result_banner.dart`
+- L9: `LumosResultBanner.LumosResultBanner()` (constructor)
+- L26: `LumosResultBanner.build` (method)
 
-### `lib/presentation/shared/composites/study/lumos_flashcard_face.dart`
-- L8: `LumosFlashcardFace.LumosFlashcardFace()` (constructor)
-- L33: `LumosFlashcardFace.build` (method)
+### `lib/presentation/shared/composites/session/lumos_flip_card_face.dart`
+- L8: `LumosFlipCardFace.LumosFlipCardFace()` (constructor)
+- L33: `LumosFlipCardFace.build` (method)
 
-### `lib/presentation/shared/composites/study/lumos_score_input_dialog.dart`
-- L10: `LumosScoreInputDialog.LumosScoreInputDialog()` (constructor)
-- L37: `LumosScoreInputDialog.createState` (method)
+### `lib/presentation/shared/composites/session/lumos_rating_input_dialog.dart`
+- L10: `LumosRatingInputDialog.LumosRatingInputDialog()` (constructor)
+- L37: `LumosRatingInputDialog.createState` (method)
 - L44: `_AppScoreInputDialogState.didUpdateWidget` (method)
 - L52: `_AppScoreInputDialogState.build` (method)
 
-### `lib/presentation/shared/composites/study/lumos_study_progress_header.dart`
-- L9: `LumosStudyProgressHeader.LumosStudyProgressHeader()` (constructor)
-- L28: `LumosStudyProgressHeader.build` (method)
+### `lib/presentation/shared/composites/session/lumos_completion_header.dart`
+- L9: `LumosCompletionHeader.LumosCompletionHeader()` (constructor)
+- L28: `LumosCompletionHeader.build` (method)
 
 ### `lib/presentation/shared/composites/text/lumos_inline_text.dart`
 - L5: `LumosInlineText.LumosInlineText()` (constructor)
@@ -2553,9 +2553,9 @@
 - L6: `LumosSplitViewLayout.LumosSplitViewLayout()` (constructor)
 - L25: `LumosSplitViewLayout.build` (method)
 
-### `lib/presentation/shared/layouts/lumos_study_layout.dart`
-- L9: `LumosStudyLayout.LumosStudyLayout()` (constructor)
-- L24: `LumosStudyLayout.build` (method)
+### `lib/presentation/shared/layouts/lumos_session_layout.dart`
+- L9: `LumosSessionLayout.LumosSessionLayout()` (constructor)
+- L24: `LumosSessionLayout.build` (method)
 
 ### `lib/presentation/shared/mixins/dialog_mixin.dart`
 - L8: `DialogMixin.showAppDialog` (method)
@@ -2710,13 +2710,13 @@
 - L5: `LumosPill.LumosPill()` (constructor)
 - L20: `LumosPill.build` (method)
 
-### `lib/presentation/shared/primitives/displays/lumos_progress_bar.dart`
-- L5: `LumosProgressBar.LumosProgressBar()` (constructor)
-- L20: `LumosProgressBar.build` (method)
+### `lib/presentation/shared/primitives/displays/lumos_value_bar.dart`
+- L5: `LumosValueBar.LumosValueBar()` (constructor)
+- L20: `LumosValueBar.build` (method)
 
-### `lib/presentation/shared/primitives/displays/lumos_progress_ring.dart`
-- L6: `LumosProgressRing.LumosProgressRing()` (constructor)
-- L21: `LumosProgressRing.build` (method)
+### `lib/presentation/shared/primitives/displays/lumos_value_ring.dart`
+- L6: `LumosValueRing.LumosValueRing()` (constructor)
+- L21: `LumosValueRing.build` (method)
 
 ### `lib/presentation/shared/primitives/displays/lumos_surface.dart`
 - L5: `LumosSurface.LumosSurface()` (constructor)

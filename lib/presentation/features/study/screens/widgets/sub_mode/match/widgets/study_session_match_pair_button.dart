@@ -33,7 +33,7 @@ class StudySessionMatchPairButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final ThemeData theme = context.theme;
     final ColorScheme colorScheme = theme.colorScheme;
     final Color backgroundColor = isSuccessFeedback
         ? context.appColors.successContainer
@@ -51,11 +51,16 @@ class StudySessionMatchPairButton extends StatelessWidget {
         : colorScheme.onSurface;
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        final bool compactWidth = constraints.maxWidth < 180;
+        final bool compactWidth = constraints.maxWidth <
+            StudySessionLayoutMetrics.compactActionButtonWidthBreakpoint;
         final EdgeInsets contentPadding = StudySessionLayoutMetrics.cardPadding(
           context,
-          horizontal: compactWidth ? LumosSpacing.lg : LumosSpacing.xl,
-          vertical: compactWidth ? LumosSpacing.lg : LumosSpacing.xl,
+          horizontal: compactWidth
+              ? context.spacing.lg
+              : context.spacing.xl,
+          vertical: compactWidth
+              ? context.spacing.lg
+              : context.spacing.xl,
         );
         final TextStyle? textStyle =
             (isMeaningCard
@@ -91,7 +96,7 @@ class StudySessionMatchPairButton extends StatelessWidget {
                 borderRadius: context.shapes.hero,
                 padding: EdgeInsets.zero,
                 child: AnimatedContainer(
-                  duration: AppDurations.medium,
+                  duration: AppMotion.medium,
                   curve: Curves.easeInOutCubic,
                   decoration: BoxDecoration(
                     color: isSuccessFeedback || isErrorFeedback

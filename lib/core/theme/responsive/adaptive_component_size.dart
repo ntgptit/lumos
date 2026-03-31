@@ -5,6 +5,7 @@ import 'package:lumos/core/theme/tokens/tokens.dart';
 @immutable
 class AdaptiveComponentSize {
   const AdaptiveComponentSize({
+    required this.avatarLarge,
     required this.buttonHeight,
     required this.bottomBarHeight,
     required this.bottomSheetHandleHeight,
@@ -16,6 +17,7 @@ class AdaptiveComponentSize {
     required this.dialogPadding,
     required this.listItemLeadingSize,
     required this.loadingStateMaxWidth,
+    required this.progressTrackHeight,
     required this.toolbarHeight,
     required this.fabSize,
     required this.navigationRailWidth,
@@ -25,6 +27,7 @@ class AdaptiveComponentSize {
   factory AdaptiveComponentSize.fromScreen(ScreenClass screenClass) {
     return switch (screenClass) {
       ScreenClass.compact => const AdaptiveComponentSize(
+        avatarLarge: AppSizeTokens.regularListItemLeadingSize,
         buttonHeight: AppSizeTokens.compactButtonHeight,
         bottomBarHeight: AppSizeTokens.compactBottomBarHeight,
         bottomSheetHandleHeight: AppSizeTokens.bottomSheetHandleHeight,
@@ -36,12 +39,14 @@ class AdaptiveComponentSize {
         dialogPadding: AppSizeTokens.dialogPadding,
         listItemLeadingSize: AppSizeTokens.compactListItemLeadingSize,
         loadingStateMaxWidth: AppSizeTokens.loadingStateMaxWidth,
+        progressTrackHeight: 6,
         toolbarHeight: AppSizeTokens.compactToolbarHeight,
         fabSize: AppSizeTokens.fabSize,
         navigationRailWidth: 72,
         cardMinHeight: AppSizeTokens.cardMinHeight,
       ),
       ScreenClass.medium => const AdaptiveComponentSize(
+        avatarLarge: AppSizeTokens.comfortableListItemLeadingSize,
         buttonHeight: AppSizeTokens.regularButtonHeight,
         bottomBarHeight: AppSizeTokens.regularBottomBarHeight,
         bottomSheetHandleHeight: AppSizeTokens.bottomSheetHandleHeight,
@@ -53,12 +58,14 @@ class AdaptiveComponentSize {
         dialogPadding: AppSizeTokens.dialogPadding,
         listItemLeadingSize: AppSizeTokens.regularListItemLeadingSize,
         loadingStateMaxWidth: AppSizeTokens.loadingStateMaxWidth,
+        progressTrackHeight: 6,
         toolbarHeight: AppSizeTokens.compactToolbarHeight,
         fabSize: AppSizeTokens.fabSize,
         navigationRailWidth: AppSizeTokens.navigationRailWidth,
         cardMinHeight: AppSizeTokens.cardMinHeight,
       ),
       ScreenClass.expanded => const AdaptiveComponentSize(
+        avatarLarge: AppSizeTokens.comfortableListItemLeadingSize,
         buttonHeight: AppSizeTokens.comfortableButtonHeight,
         bottomBarHeight: AppSizeTokens.comfortableBottomBarHeight,
         bottomSheetHandleHeight: AppSizeTokens.bottomSheetHandleHeight,
@@ -70,12 +77,14 @@ class AdaptiveComponentSize {
         dialogPadding: 32,
         listItemLeadingSize: AppSizeTokens.regularListItemLeadingSize,
         loadingStateMaxWidth: AppSizeTokens.loadingStateMaxWidth,
+        progressTrackHeight: 6,
         toolbarHeight: AppSizeTokens.regularToolbarHeight,
         fabSize: 60,
         navigationRailWidth: 88,
         cardMinHeight: 136,
       ),
       ScreenClass.large => const AdaptiveComponentSize(
+        avatarLarge: AppSizeTokens.comfortableListItemLeadingSize,
         buttonHeight: AppSizeTokens.comfortableButtonHeight,
         bottomBarHeight: AppSizeTokens.comfortableBottomBarHeight,
         bottomSheetHandleHeight: AppSizeTokens.bottomSheetHandleHeight,
@@ -87,6 +96,7 @@ class AdaptiveComponentSize {
         dialogPadding: 40,
         listItemLeadingSize: AppSizeTokens.comfortableListItemLeadingSize,
         loadingStateMaxWidth: AppSizeTokens.loadingStateMaxWidth,
+        progressTrackHeight: 6,
         toolbarHeight: AppSizeTokens.regularToolbarHeight,
         fabSize: 64,
         navigationRailWidth: 96,
@@ -95,6 +105,7 @@ class AdaptiveComponentSize {
     };
   }
 
+  final double avatarLarge;
   final double buttonHeight;
   final double bottomBarHeight;
   final double bottomSheetHandleHeight;
@@ -106,6 +117,7 @@ class AdaptiveComponentSize {
   final double dialogPadding;
   final double listItemLeadingSize;
   final double loadingStateMaxWidth;
+  final double progressTrackHeight;
   final double toolbarHeight;
   final double fabSize;
   final double navigationRailWidth;

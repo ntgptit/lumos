@@ -17,7 +17,7 @@ enum LumosTextTone { primary, secondary }
 
 enum LumosTextContainerRole { primaryContainer, errorContainer }
 
-class LumosText extends StatelessWidget {
+class LumosText<TStyle extends Object?> extends StatelessWidget {
   const LumosText(
     this.text, {
     super.key,
@@ -36,24 +36,13 @@ class LumosText extends StatelessWidget {
     this.textHeightBehavior,
     this.selectionColor,
     this.color,
-    this.fontSize,
     this.fontWeight,
-    this.fontStyle,
-    this.letterSpacing,
     this.height,
-    this.decoration,
-    this.decorationColor,
-    this.decorationStyle,
-    this.decorationThickness,
-    this.shadows,
-    this.fontFamily,
-    this.fontFamilyFallback,
-    this.textBaseline,
     this.inherit = true,
   });
 
   final String text;
-  final Object? style;
+  final TStyle? style;
   final LumosTextTone? tone;
   final LumosTextContainerRole? containerRole;
   final TextAlign? textAlign;
@@ -68,19 +57,8 @@ class LumosText extends StatelessWidget {
   final TextHeightBehavior? textHeightBehavior;
   final Color? selectionColor;
   final Color? color;
-  final double? fontSize;
   final FontWeight? fontWeight;
-  final FontStyle? fontStyle;
-  final double? letterSpacing;
   final double? height;
-  final TextDecoration? decoration;
-  final Color? decorationColor;
-  final TextDecorationStyle? decorationStyle;
-  final double? decorationThickness;
-  final List<Shadow>? shadows;
-  final String? fontFamily;
-  final List<String>? fontFamilyFallback;
-  final TextBaseline? textBaseline;
   final bool inherit;
 
   @override
@@ -90,19 +68,8 @@ class LumosText extends StatelessWidget {
     final resolvedStyle = baseStyle
         .copyWith(
           color: resolvedColor,
-          fontSize: fontSize,
           fontWeight: fontWeight,
-          fontStyle: fontStyle,
-          letterSpacing: letterSpacing,
           height: height,
-          decoration: decoration,
-          decorationColor: decorationColor,
-          decorationStyle: decorationStyle,
-          decorationThickness: decorationThickness,
-          shadows: shadows,
-          fontFamily: fontFamily,
-          fontFamilyFallback: fontFamilyFallback,
-          textBaseline: textBaseline,
           inherit: inherit,
         )
         .merge(_resolveMergedStyle());

@@ -4,10 +4,12 @@ import 'package:lumos/core/theme/app_foundation.dart';
 import '../../../../../../../../domain/entities/study/study_models.dart';
 import '../../../../../../../../l10n/app_localizations.dart';
 import '../../../../../providers/study_speech_playback_provider.dart';
+import '../../widgets/study_session_layout_metrics.dart';
 import 'study_session_review_answer_card.dart';
 import 'study_session_review_prompt_card.dart';
 
-const double _reviewCardSpacing = LumosSpacing.lg;
+const double _reviewCardSpacing =
+    24;
 
 class StudySessionReviewCardDeck extends StatelessWidget {
   const StudySessionReviewCardDeck({
@@ -28,10 +30,11 @@ class StudySessionReviewCardDeck extends StatelessWidget {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        final double cardSpacing = ResponsiveDimensions.compactValue(
-          context: context,
-          baseValue: constraints.maxHeight < 520
-              ? LumosSpacing.md
+        final double cardSpacing = context.compactValue(
+          baseValue:
+              constraints.maxHeight <
+                  StudySessionLayoutMetrics.reviewDeckWidthBreakpoint
+              ? context.spacing.md
               : _reviewCardSpacing,
           minScale: ResponsiveDimensions.compactInsetScale,
         );
@@ -86,4 +89,3 @@ class StudySessionReviewCardDeck extends StatelessWidget {
     return currentItem.prompt;
   }
 }
-

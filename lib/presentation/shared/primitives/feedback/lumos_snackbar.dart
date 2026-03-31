@@ -10,7 +10,7 @@ class LumosSnackbar extends StatelessWidget {
     super.key,
     required this.message,
     this.title,
-    this.type = SnackbarType.info,
+    this.type = LumosSnackbarType.info,
     this.actionLabel,
     this.onActionPressed,
     this.leading,
@@ -18,7 +18,7 @@ class LumosSnackbar extends StatelessWidget {
 
   final String message;
   final String? title;
-  final Object type;
+  final LumosSnackbarType type;
   final String? actionLabel;
   final VoidCallback? onActionPressed;
   final Widget? leading;
@@ -117,8 +117,7 @@ class LumosSnackbar extends StatelessWidget {
   }
 
   IconData _iconFor(Object type) {
-    final resolvedType = _resolveType();
-    return switch (resolvedType) {
+    return switch (_resolveType()) {
       SnackbarType.success => Icons.check_circle_rounded,
       SnackbarType.error => Icons.error_rounded,
       SnackbarType.info => Icons.info_rounded,
@@ -127,9 +126,6 @@ class LumosSnackbar extends StatelessWidget {
   }
 
   SnackbarType _resolveType() {
-    if (type is SnackbarType) {
-      return type as SnackbarType;
-    }
     return switch (type) {
       LumosSnackbarType.success => SnackbarType.success,
       LumosSnackbarType.error => SnackbarType.error,

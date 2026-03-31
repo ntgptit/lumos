@@ -19,9 +19,14 @@ class HomeAnimatedReveal extends StatelessWidget {
       duration: Duration(milliseconds: durationMs),
       tween: Tween<double>(begin: 0, end: 1),
       builder: (BuildContext context, double value, Widget? animatedChild) {
-        final double dy = LumosSpacing.lg * (1 - value);
+        final double dy =
+            context.spacing.lg *
+            (1 - value);
         return Transform.translate(
-          offset: Offset(LumosSpacing.none, dy),
+          offset: Offset(
+            0,
+            dy,
+          ),
           child: animatedChild,
         );
       },
@@ -29,4 +34,3 @@ class HomeAnimatedReveal extends StatelessWidget {
     );
   }
 }
-

@@ -19,7 +19,8 @@ import 'widgets/states/library_loading_view.dart';
 abstract final class DeckListScreenConst {
   DeckListScreenConst._();
 
-  static const double listGap = LumosSpacing.sm;
+  static const double listGap =
+      12;
   static const double loadMoreThreshold = 240;
 }
 

@@ -14,9 +14,8 @@ class HomeBottomNav extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
-    final double navigationBarHeight = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: WidgetSizes.navigationBarHeight,
+    final double navigationBarHeight = context.compactValue(
+      baseValue: context.component.bottomBarHeight,
       minScale: ResponsiveDimensions.compactLargeInsetScale,
     );
     final int selectedIndex = ref.watch(homeSelectedIndexProvider);
@@ -64,4 +63,3 @@ class HomeBottomNav extends ConsumerWidget {
     }
   }
 }
-

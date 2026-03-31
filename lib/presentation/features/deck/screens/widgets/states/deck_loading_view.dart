@@ -14,9 +14,8 @@ class DeckLoadingView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double itemSpacing = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.sm,
+    final double itemSpacing = context.compactValue(
+      baseValue: context.spacing.sm,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     return Column(
@@ -26,7 +25,7 @@ class DeckLoadingView extends StatelessWidget {
       ) {
         final double bottomSpacing =
             index == DeckLoadingViewConst.skeletonCount - 1
-            ? LumosSpacing.none
+            ? 0
             : itemSpacing;
         return Padding(
           padding: EdgeInsets.only(bottom: bottomSpacing),

@@ -5,8 +5,8 @@ import 'package:lumos/presentation/shared/primitives/feedback/lumos_banner.dart'
 
 enum AppAnswerResultKind { correct, incorrect, neutral }
 
-class LumosAnswerResultBanner extends StatelessWidget {
-  const LumosAnswerResultBanner({
+class LumosResultBanner extends StatelessWidget {
+  const LumosResultBanner({
     super.key,
     required this.message,
     this.title,

@@ -68,7 +68,7 @@ class LumosActionCard extends StatelessWidget {
                 trailing!,
               ] else if (onTap != null) ...[
                 SizedBox(width: context.spacing.xxs),
-                const LumosIcon(Icons.chevron_right_rounded),
+                LumosIcon(Icons.chevron_right_rounded),
               ],
             ],
           ),

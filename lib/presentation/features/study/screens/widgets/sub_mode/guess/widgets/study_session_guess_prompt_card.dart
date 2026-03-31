@@ -11,7 +11,8 @@ import '../../widgets/study_session_layout_metrics.dart';
 const double _guessHeroCardMinHeight = 184;
 const double _guessHeroCardMaxHeight = 240;
 const double _guessHeroCardHeightFactor = 0.58;
-const double _guessHeroIconSize = IconSizes.iconMedium;
+const double _guessHeroIconSize =
+    24;
 const int _guessHeroPromptMaxLines = 2;
 
 class StudySessionGuessPromptCard extends StatelessWidget {
@@ -32,7 +33,7 @@ class StudySessionGuessPromptCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final ThemeData theme = context.theme;
     final ColorScheme colorScheme = theme.colorScheme;
     final bool isSpeechEnabled = speech.available && !playbackState.isBusy;
     final double resolvedIconSize = StudySessionLayoutMetrics.compactIcon(
@@ -41,8 +42,9 @@ class StudySessionGuessPromptCard extends StatelessWidget {
     );
     final EdgeInsets cardPadding = StudySessionLayoutMetrics.cardPadding(
       context,
-      horizontal: LumosSpacing.xl,
-      vertical: LumosSpacing.xl,
+      horizontal:
+          context.spacing.xl,
+      vertical: context.spacing.xl,
     );
     final EdgeInsets topTrailingPadding =
         StudySessionLayoutMetrics.topTrailingPadding(context);

@@ -50,7 +50,7 @@ class LumosStatCard extends StatelessWidget {
                 SizedBox(width: context.spacing.sm),
                 trailing!,
               ] else if (onTap != null) ...[
-                const LumosIcon(Icons.chevron_right_rounded),
+                LumosIcon(Icons.chevron_right_rounded),
               ],
             ],
           ),

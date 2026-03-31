@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:lumos/core/theme/app_foundation.dart';
+import 'study_session_layout_metrics.dart';
 
 class StudySessionContentCard extends StatelessWidget {
   const StudySessionContentCard({
@@ -28,7 +29,8 @@ class StudySessionContentCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        final BorderRadius borderRadius = constraints.maxWidth < 390
+        final BorderRadius borderRadius = constraints.maxWidth <
+                StudySessionLayoutMetrics.compactContentWidthBreakpoint
             ? context.shapes.card
             : context.shapes.hero;
         final Widget stackedChild = Stack(

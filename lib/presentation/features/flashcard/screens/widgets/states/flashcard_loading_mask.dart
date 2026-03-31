@@ -11,15 +11,13 @@ class FlashcardLoadingMask extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (!isVisible) {
-      return const SizedBox.shrink();
+      return SizedBox.shrink();
     }
-    final double topInset = ResponsiveDimensions.compactValue(
-      context: context,
+    final double topInset = context.compactValue(
       baseValue: FlashcardContentSupportConst.progressMaskTopInset,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double progressHeight = ResponsiveDimensions.compactValue(
-      context: context,
+    final double progressHeight = context.compactValue(
       baseValue: FlashcardContentSupportConst.progressMaskHeight,
       minScale: ResponsiveDimensions.compactInsetScale,
     );

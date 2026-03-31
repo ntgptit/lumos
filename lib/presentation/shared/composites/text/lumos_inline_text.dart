@@ -13,7 +13,7 @@ class LumosInlineText extends StatelessWidget {
   });
 
   final String text;
-  final Object? style;
+  final TextStyle? style;
   final TextAlign? textAlign;
   final TextAlign? align;
   final int? maxLines;

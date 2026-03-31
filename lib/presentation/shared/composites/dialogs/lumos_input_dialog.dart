@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:lumos/core/enums/dialog_type.dart';
 import 'package:lumos/core/theme/extensions/theme_context_ext.dart';
+import 'package:lumos/l10n/l10n.dart';
 import 'package:lumos/presentation/shared/composites/dialogs/lumos_alert_dialog.dart';
 import 'package:lumos/presentation/shared/primitives/buttons/lumos_outline_button.dart';
 import 'package:lumos/presentation/shared/primitives/buttons/lumos_primary_button.dart';
@@ -16,8 +16,9 @@ class LumosInputDialog extends StatefulWidget {
     this.icon,
     this.initialValue,
     this.hintText,
-    this.confirmLabel = 'Save',
-    this.cancelLabel = 'Cancel',
+    this.confirmLabel,
+    this.cancelLabel,
+    this.onCancel,
     this.type = DialogType.info,
     this.keyboardType,
     this.maxLines = 1,
@@ -28,8 +29,9 @@ class LumosInputDialog extends StatefulWidget {
   final Widget? icon;
   final String? initialValue;
   final String? hintText;
-  final String confirmLabel;
-  final String cancelLabel;
+  final String? confirmLabel;
+  final String? cancelLabel;
+  final VoidCallback? onCancel;
   final DialogType type;
   final TextInputType? keyboardType;
   final int? maxLines;
@@ -56,6 +58,10 @@ class _AppInputDialogState extends State<LumosInputDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final String resolvedConfirmLabel =
+        widget.confirmLabel ?? context.l10n.commonSave;
+    final String resolvedCancelLabel =
+        widget.cancelLabel ?? context.l10n.commonCancel;
     return LumosAlertDialog(
       title: widget.title,
       type: widget.type,
@@ -80,16 +86,15 @@ class _AppInputDialogState extends State<LumosInputDialog> {
       ),
       actions: [
         LumosOutlineButton(
-          text: widget.cancelLabel,
-          onPressed: () => context.pop(),
+          text: resolvedCancelLabel,
+          onPressed: widget.onCancel,
         ),
-        LumosPrimaryButton(text: widget.confirmLabel, onPressed: _submit),
+        LumosPrimaryButton(text: resolvedConfirmLabel, onPressed: _submit),
       ],
     );
   }
 
   void _submit() {
-    context.pop();
     widget.onSubmitted(_controller.text);
   }
 }

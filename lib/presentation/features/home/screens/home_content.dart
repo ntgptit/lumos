@@ -14,10 +14,10 @@ class HomeContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final DeviceType deviceType = context.deviceType;
     final AppLocalizations l10n = AppLocalizations.of(context)!;
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
-    final double sectionGap = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.xxl,
+    final ColorScheme colorScheme = context.theme.colorScheme;
+    final double sectionGap = context.compactValue(
+      baseValue:
+          context.spacing.xxl,
       minScale: ResponsiveDimensions.compactLargeInsetScale,
     );
     return ColoredBox(
@@ -45,4 +45,3 @@ class HomeContent extends StatelessWidget {
     );
   }
 }
-

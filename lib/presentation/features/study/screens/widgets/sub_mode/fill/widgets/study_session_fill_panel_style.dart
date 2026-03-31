@@ -15,6 +15,19 @@ abstract final class StudySessionFillPanelStyle {
     filled: false,
   );
 
+  static const InputDecorationTheme termInputDecorationTheme =
+      InputDecorationTheme(
+        border: InputBorder.none,
+        enabledBorder: InputBorder.none,
+        focusedBorder: InputBorder.none,
+        errorBorder: InputBorder.none,
+        focusedErrorBorder: InputBorder.none,
+        disabledBorder: InputBorder.none,
+        contentPadding: EdgeInsets.zero,
+        isCollapsed: true,
+        filled: false,
+      );
+
   static TextStyle? termTextStyle({
     required ThemeData theme,
     required ColorScheme colorScheme,

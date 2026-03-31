@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:lumos/core/theme/extensions/theme_context_ext.dart';
 import 'package:lumos/presentation/shared/primitives/displays/lumos_card.dart';
-import 'package:lumos/presentation/shared/primitives/displays/lumos_progress_bar.dart';
+import 'package:lumos/presentation/shared/primitives/displays/lumos_value_bar.dart';
 import 'package:lumos/presentation/shared/primitives/displays/lumos_label.dart';
 import 'package:lumos/presentation/shared/primitives/text/lumos_body_text.dart';
 import 'package:lumos/presentation/shared/primitives/text/lumos_title_text.dart';
 
-class LumosProgressCard extends StatelessWidget {
-  const LumosProgressCard({
+class LumosMetricCard extends StatelessWidget {
+  const LumosMetricCard({
     super.key,
     required this.title,
     required this.value,
@@ -74,7 +74,7 @@ class LumosProgressCard extends StatelessWidget {
             ],
           ),
           SizedBox(height: context.spacing.md),
-          LumosProgressBar(value: value),
+          LumosValueBar(value: value),
         ],
       ),
     );

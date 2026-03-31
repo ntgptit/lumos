@@ -15,7 +15,7 @@ class LumosFloatingActionButton extends StatelessWidget {
   final IconData? icon;
   final String? label;
   final String? tooltip;
-  final Object? heroTag;
+  final String? heroTag;
 
   @override
   Widget build(BuildContext context) {

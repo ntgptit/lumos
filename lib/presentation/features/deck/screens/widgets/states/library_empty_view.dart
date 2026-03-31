@@ -18,13 +18,13 @@ class LibraryEmptyView extends StatelessWidget {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
     if (searchQuery.isNotEmpty) {
       return LumosEmptyState(
-        icon: Icons.search_off_rounded,
+        icon: const LumosIcon(Icons.search_off_rounded),
         title: l10n.noResultsTitle,
         message: l10n.librarySearchEmptyMessage,
       );
     }
     return LumosEmptyState(
-      icon: Icons.folder_copy_outlined,
+      icon: const LumosIcon(Icons.folder_copy_outlined),
       title: l10n.folderEmptyTitle,
       message: l10n.deckLibraryEntryMessage,
       buttonLabel: l10n.deckLibraryEntryAction,

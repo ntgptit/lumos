@@ -27,7 +27,10 @@ class HomeSplitFocusItem extends StatelessWidget {
       children: <Widget>[
         IconTheme(
           data: IconThemeData(color: iconColor),
-          child: LumosIcon(icon, size: IconSizes.iconSmall),
+          child: LumosIcon(
+            icon,
+            size: context.iconSize.sm,
+          ),
         ),
         SizedBox(width: inlineGap),
         Expanded(
@@ -36,7 +39,7 @@ class HomeSplitFocusItem extends StatelessWidget {
             children: <Widget>[
               LumosText(label, style: LumosTextStyle.bodySmall),
               SizedBox(height: itemSpacing * 0.5),
-              LumosProgressBar(value: progressValue),
+              LumosValueBar(value: progressValue),
             ],
           ),
         ),
@@ -44,4 +47,3 @@ class HomeSplitFocusItem extends StatelessWidget {
     );
   }
 }
-

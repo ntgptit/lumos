@@ -16,19 +16,16 @@ class ProfileSectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double cardPadding = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.lg,
+    final double cardPadding = context.compactValue(
+      baseValue: context.spacing.lg,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double headerGap = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.sm,
+    final double headerGap = context.compactValue(
+      baseValue: context.spacing.sm,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double sectionGap = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.md,
+    final double sectionGap = context.compactValue(
+      baseValue: context.spacing.md,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
 

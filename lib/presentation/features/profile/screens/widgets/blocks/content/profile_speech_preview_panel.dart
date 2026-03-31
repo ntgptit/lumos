@@ -10,6 +10,12 @@ import '../../../../../../../l10n/app_localizations.dart';
 import '../../../../providers/profile_speech_preview_provider.dart';
 import '../../../../providers/profile_speech_preview_state.dart';
 
+abstract final class ProfileSpeechPreviewPanelConst {
+  ProfileSpeechPreviewPanelConst._();
+
+  static const double stackedActionWidthBreakpoint = 380;
+}
+
 class ProfileSpeechPreviewPanel extends ConsumerStatefulWidget {
   const ProfileSpeechPreviewPanel({required this.preference, super.key});
 
@@ -76,24 +82,22 @@ class _ProfileSpeechPreviewPanelState
         ref.read(profileSpeechPreviewControllerProvider.notifier).clearError();
       },
     );
-    final double titleGap = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.xs,
+    final double titleGap = context.compactValue(
+      baseValue: context.spacing.xs,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double sectionGap = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.md,
+    final double sectionGap = context.compactValue(
+      baseValue: context.spacing.md,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double actionGap = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.sm,
+    final double actionGap = context.compactValue(
+      baseValue: context.spacing.sm,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        final bool stackButtons = constraints.maxWidth < 380;
+        final bool stackButtons = constraints.maxWidth <
+            ProfileSpeechPreviewPanelConst.stackedActionWidthBreakpoint;
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[

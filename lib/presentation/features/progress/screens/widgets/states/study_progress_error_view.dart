@@ -19,4 +19,3 @@ class StudyProgressErrorView extends StatelessWidget {
     );
   }
 }
-

@@ -12,6 +12,7 @@ class L10nUsageGuardConst {
     'lib/presentation',
     'lib/main.dart',
   };
+  static const String sharedRoot = 'lib/presentation/shared/';
   static const String allowLiteralMarker = 'l10n-guard: allow-literal';
 
   static const Set<String> trackedTextWidgets = <String>{
@@ -35,8 +36,27 @@ class L10nUsageGuardConst {
     'message',
   };
 
-  static const String l10nFacadePath = 'lib/l10n/l10n.dart';
+  static const Set<String> trackedSharedDefaultLabelParameters = <String>{
+    'confirmLabel',
+    'cancelLabel',
+    'confirmText',
+    'cancelText',
+    'buttonLabel',
+  };
 
+  static const Set<String> forbiddenSharedDefaultLabels = <String>{
+    'save',
+    'cancel',
+    'confirm',
+    'ok',
+    'yes',
+    'no',
+    'close',
+    'delete',
+    'submit',
+  };
+
+  static const String l10nFacadePath = 'lib/l10n/l10n.dart';
 }
 
 class L10nUsageViolation {
@@ -159,7 +179,9 @@ Future<List<L10nUsageViolation>> _collectFacadeViolations() async {
     lineInfo: parsed.lineInfo,
   );
   parsed.unit.accept(visitor);
-  return visitor.violations.map((_FacadeViolation item) => item.toViolation()).toList();
+  return visitor.violations
+      .map((_FacadeViolation item) => item.toViolation())
+      .toList();
 }
 
 List<File> _collectScanFiles() {
@@ -254,6 +276,70 @@ class _L10nUsageVisitor extends RecursiveAstVisitor<void> {
     super.visitNamedExpression(node);
   }
 
+  @override
+  void visitConstructorDeclaration(ConstructorDeclaration node) {
+    if (!_fileContext.path.startsWith(L10nUsageGuardConst.sharedRoot)) {
+      super.visitConstructorDeclaration(node);
+      return;
+    }
+
+    for (final FormalParameter parameter in node.parameters.parameters) {
+      if (parameter is! DefaultFormalParameter) {
+        continue;
+      }
+
+      final FormalParameter innerParameter = parameter.parameter;
+      final String parameterName = _resolveParameterName(innerParameter);
+      if (!L10nUsageGuardConst.trackedSharedDefaultLabelParameters.contains(
+        parameterName,
+      )) {
+        continue;
+      }
+
+      final Expression? defaultValue = parameter.defaultValue;
+      if (defaultValue == null) {
+        continue;
+      }
+      final String? literalValue = _resolveTrackedLiteral(defaultValue);
+      if (literalValue == null) {
+        continue;
+      }
+
+      final String normalizedValue = literalValue.trim().toLowerCase();
+      if (!L10nUsageGuardConst.forbiddenSharedDefaultLabels.contains(
+        normalizedValue,
+      )) {
+        continue;
+      }
+
+      final int lineNumber = _fileContext.lineInfo
+          .getLocation(parameter.offset)
+          .lineNumber;
+      final String lineContent = _lineContentAt(_fileContext.lines, lineNumber);
+      if (lineContent.contains(L10nUsageGuardConst.allowLiteralMarker)) {
+        continue;
+      }
+
+      final String dedupeKey =
+          '${_fileContext.path}:$lineNumber:default-label:$parameterName';
+      if (_dedupeKeys.contains(dedupeKey)) {
+        continue;
+      }
+      _dedupeKeys.add(dedupeKey);
+      violations.add(
+        L10nUsageViolation(
+          filePath: _fileContext.path,
+          lineNumber: lineNumber,
+          reason:
+              'Shared widget default label nên dùng l10n hoặc bắt buộc caller pass, không hardcode tiếng Anh.',
+          lineContent: lineContent,
+        ),
+      );
+    }
+
+    super.visitConstructorDeclaration(node);
+  }
+
   void _checkLiteralExpression({
     required Expression? expression,
     required String reason,
@@ -269,7 +355,9 @@ class _L10nUsageVisitor extends RecursiveAstVisitor<void> {
       return;
     }
 
-    final int lineNumber = _fileContext.lineInfo.getLocation(expression.offset).lineNumber;
+    final int lineNumber = _fileContext.lineInfo
+        .getLocation(expression.offset)
+        .lineNumber;
     final String lineContent = _lineContentAt(_fileContext.lines, lineNumber);
     if (lineContent.contains(L10nUsageGuardConst.allowLiteralMarker)) {
       return;
@@ -321,6 +409,22 @@ class _L10nUsageVisitor extends RecursiveAstVisitor<void> {
       return invocation.methodName.name;
     }
     return 'unknown owner';
+  }
+
+  String _resolveParameterName(FormalParameter parameter) {
+    if (parameter is SimpleFormalParameter) {
+      return parameter.name?.lexeme ?? '';
+    }
+    if (parameter is FieldFormalParameter) {
+      return parameter.name.lexeme;
+    }
+    if (parameter is SuperFormalParameter) {
+      return parameter.name.lexeme;
+    }
+    if (parameter is FunctionTypedFormalParameter) {
+      return parameter.name.lexeme;
+    }
+    return '';
   }
 }
 

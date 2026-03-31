@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lumos/core/theme/extensions/app_theme_palette.dart';
 import 'package:lumos/core/theme/extensions/dimension_theme_ext.dart';
 
 abstract final class LumosSegmentedButtonTheme {
@@ -8,8 +7,6 @@ abstract final class LumosSegmentedButtonTheme {
     DimensionThemeExt dims,
     TextTheme textTheme,
   ) {
-    final palette = AppThemePalette.fromBrightness(colorScheme.brightness);
-
     return SegmentedButtonThemeData(
       style: ButtonStyle(
         textStyle: WidgetStatePropertyAll(textTheme.labelLarge),
@@ -20,7 +17,7 @@ abstract final class LumosSegmentedButtonTheme {
         shape: WidgetStatePropertyAll(
           RoundedRectangleBorder(borderRadius: dims.shapes.control),
         ),
-        side: WidgetStatePropertyAll(BorderSide(color: palette.outline)),
+        side: WidgetStatePropertyAll(BorderSide(color: colorScheme.outline)),
         backgroundColor: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
             return colorScheme.secondaryContainer;

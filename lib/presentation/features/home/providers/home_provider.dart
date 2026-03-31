@@ -19,7 +19,8 @@ part 'home_provider.g.dart';
 abstract final class HomeProviderConst {
   HomeProviderConst._();
 
-  static const Duration tabSwitchLoadingDuration = AppDurations.medium;
+  static const Duration tabSwitchLoadingDuration =
+      AppMotion.medium;
 }
 
 @Riverpod(keepAlive: true)
@@ -185,4 +186,3 @@ HomePageBuilder homeTabPage(Ref ref, HomeTabId selectedTab) {
     HomeTabId.profile => (BuildContext context) => const ProfileContent(),
   };
 }
-

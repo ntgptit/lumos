@@ -7,24 +7,23 @@ class FolderMutatingOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double overlayWidth = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.canvas * 2,
+    final double overlayWidth = context.compactValue(
+      baseValue:
+          96 *
+          2,
       minScale: ResponsiveDimensions.compactLargeInsetScale,
     );
-    final double overlayPadding = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.lg,
+    final double overlayPadding = context.compactValue(
+      baseValue: context.spacing.lg,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double skeletonSize = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.page,
+    final double skeletonSize = context.compactValue(
+      baseValue:
+          20,
       minScale: ResponsiveDimensions.compactLargeInsetScale,
     );
-    final double labelGap = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.md,
+    final double labelGap = context.compactValue(
+      baseValue: context.spacing.md,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     return Center(
@@ -33,7 +32,7 @@ class FolderMutatingOverlay extends StatelessWidget {
         padding: EdgeInsets.all(overlayPadding),
         decoration: BoxDecoration(
           borderRadius: context.shapes.card,
-          color: Theme.of(context).colorScheme.surface,
+          color: context.theme.colorScheme.surface,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,

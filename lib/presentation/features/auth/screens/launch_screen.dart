@@ -5,6 +5,7 @@ import 'package:lumos/app/app_route_data.dart';
 import 'package:lumos/core/theme/app_foundation.dart';
 import 'package:lumos/l10n/l10n.dart';
 import 'package:lumos/presentation/shared/composites/states/lumos_error_state.dart';
+import 'package:lumos/presentation/shared/layouts/lumos_scaffold.dart';
 import 'package:lumos/presentation/shared/screens/lumos_splash_screen.dart';
 import '../providers/auth_session_provider.dart';
 
@@ -18,7 +19,8 @@ class LaunchScreen extends ConsumerWidget {
     return authAsync.when(
       loading: () => const LumosSplashScreen(),
       error: (Object error, StackTrace stackTrace) {
-        return Scaffold(
+        return LumosScaffold(
+          bodyPadding: EdgeInsets.zero,
           body: LumosErrorState(
             message: error.toString(),
             primaryActionLabel: context.l10n.commonRetry,

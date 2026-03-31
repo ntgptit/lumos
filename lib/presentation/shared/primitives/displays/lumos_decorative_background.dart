@@ -31,9 +31,7 @@ class LumosDecorativeBackground extends StatelessWidget {
       children: [
         Positioned.fill(child: background),
         Positioned.fill(
-          child: IgnorePointer(
-            child: Stack(children: blobs),
-          ),
+          child: IgnorePointer(child: Stack(children: blobs)),
         ),
         if (child != null) child!,
       ],
@@ -68,10 +66,7 @@ class LumosDecorativeBlob extends StatelessWidget {
     final blob = Container(
       width: size,
       height: size,
-      decoration: BoxDecoration(
-        color: fill ?? color,
-        shape: BoxShape.circle,
-      ),
+      decoration: BoxDecoration(color: fill ?? color, shape: BoxShape.circle),
     );
 
     final hasPosition =
@@ -86,9 +81,6 @@ class LumosDecorativeBlob extends StatelessWidget {
       );
     }
 
-    return Align(
-      alignment: alignment ?? Alignment.center,
-      child: blob,
-    );
+    return Align(alignment: alignment ?? Alignment.center, child: blob);
   }
 }

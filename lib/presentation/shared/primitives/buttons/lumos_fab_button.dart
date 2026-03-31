@@ -15,7 +15,7 @@ class LumosFabButton extends StatelessWidget {
   final Widget? icon;
   final String? label;
   final String? tooltip;
-  final Object? heroTag;
+  final String? heroTag;
 
   @override
   Widget build(BuildContext context) {

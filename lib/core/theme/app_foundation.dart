@@ -39,8 +39,8 @@ export 'package:lumos/presentation/shared/primitives/buttons/lumos_utility_chip_
 export 'package:lumos/presentation/shared/primitives/displays/lumos_card.dart';
 export 'package:lumos/presentation/shared/primitives/displays/lumos_decorative_background.dart';
 export 'package:lumos/presentation/shared/primitives/displays/lumos_icon.dart';
-export 'package:lumos/presentation/shared/primitives/displays/lumos_progress_bar.dart';
-export 'package:lumos/presentation/shared/primitives/displays/lumos_progress_ring.dart';
+export 'package:lumos/presentation/shared/primitives/displays/lumos_value_bar.dart';
+export 'package:lumos/presentation/shared/primitives/displays/lumos_value_ring.dart';
 export 'package:lumos/presentation/shared/primitives/feedback/lumos_loading_indicator.dart';
 export 'package:lumos/presentation/shared/primitives/feedback/lumos_skeleton_box.dart';
 export 'package:lumos/presentation/shared/primitives/feedback/lumos_snackbar.dart';

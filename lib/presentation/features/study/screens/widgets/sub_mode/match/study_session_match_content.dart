@@ -8,8 +8,10 @@ import '../widgets/study_session_layout_metrics.dart';
 import '../widgets/study_session_progress_row.dart';
 import 'widgets/study_session_match_pairs.dart';
 
-const double _matchSectionSpacing = LumosSpacing.lg;
-const double _matchBottomSpacing = LumosSpacing.xxl;
+const double _matchSectionSpacing =
+    24;
+const double _matchBottomSpacing =
+    48;
 
 class StudySessionMatchContent extends StatelessWidget {
   const StudySessionMatchContent({
@@ -34,25 +36,36 @@ class StudySessionMatchContent extends StatelessWidget {
     ).copyWith(scrollbars: false);
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        final bool compactHeight = constraints.maxHeight < 760;
-        final EdgeInsets contentPadding =
-            StudySessionLayoutMetrics.contentPadding(
-              context,
-              top: compactHeight ? LumosSpacing.sm : LumosSpacing.md,
-              bottom: compactHeight ? LumosSpacing.lg : LumosSpacing.xl,
-            );
-        final EdgeInsets progressPadding =
-            StudySessionLayoutMetrics.progressPadding(
-              context,
-              horizontal: compactHeight ? LumosSpacing.sm : LumosSpacing.md,
-            );
+        final bool compactHeight =
+            constraints.maxHeight < StudySessionLayoutMetrics.compactBodyHeightBreakpoint;
+        final EdgeInsets
+        contentPadding = StudySessionLayoutMetrics.contentPadding(
+          context,
+          top: compactHeight
+              ? context.spacing.sm
+              : context.spacing.md,
+          bottom: compactHeight
+              ? context.spacing.lg
+              : context.spacing.xl,
+        );
+        final EdgeInsets
+        progressPadding = StudySessionLayoutMetrics.progressPadding(
+          context,
+          horizontal: compactHeight
+              ? context.spacing.sm
+              : context.spacing.md,
+        );
         final double sectionSpacing = StudySessionLayoutMetrics.sectionSpacing(
           context,
-          baseValue: compactHeight ? LumosSpacing.md : _matchSectionSpacing,
+          baseValue: compactHeight
+              ? context.spacing.md
+              : _matchSectionSpacing,
         );
         final double bottomSpacing = StudySessionLayoutMetrics.actionSpacing(
           context,
-          baseValue: compactHeight ? LumosSpacing.lg : _matchBottomSpacing,
+          baseValue: compactHeight
+              ? context.spacing.lg
+              : _matchBottomSpacing,
         );
         return Padding(
           padding: contentPadding,
@@ -91,4 +104,3 @@ class StudySessionMatchContent extends StatelessWidget {
     );
   }
 }
-

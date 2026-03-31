@@ -18,9 +18,8 @@ class StudyProgressRecommendationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double cardPadding = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.lg,
+    final double cardPadding = context.compactValue(
+      baseValue: context.spacing.lg,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     return LumosCard(
@@ -33,7 +32,9 @@ class StudyProgressRecommendationCard extends StatelessWidget {
               l10n.studyProgressRecommendedReviewTitle,
               style: LumosTextStyle.titleLarge,
             ),
-            const SizedBox(height: LumosSpacing.sm),
+            SizedBox(
+              height: context.spacing.sm,
+            ),
             LumosText(
               l10n.studyProgressRecommendedReviewSummary(
                 recommendation.deckName,
@@ -41,7 +42,9 @@ class StudyProgressRecommendationCard extends StatelessWidget {
               ),
               style: LumosTextStyle.bodyMedium,
             ),
-            const SizedBox(height: LumosSpacing.md),
+            SizedBox(
+              height: context.spacing.md,
+            ),
             LumosPrimaryButton(
               onPressed: onStartReview,
               text: l10n.studyProgressStartReviewAction,
@@ -53,4 +56,3 @@ class StudyProgressRecommendationCard extends StatelessWidget {
     );
   }
 }
-

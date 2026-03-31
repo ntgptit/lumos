@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lumos/core/theme/extensions/theme_context_ext.dart';
 
-class LumosProgressBar extends StatelessWidget {
-  const LumosProgressBar({
+class LumosValueBar extends StatelessWidget {
+  const LumosValueBar({
     super.key,
     this.value,
     this.minHeight,

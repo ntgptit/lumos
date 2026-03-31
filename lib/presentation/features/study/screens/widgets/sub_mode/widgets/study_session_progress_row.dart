@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:lumos/core/theme/app_foundation.dart';
 import 'study_session_layout_metrics.dart';
 
-const double _studySessionProgressBarHeight = LumosSpacing.md;
+const double _studySessionProgressBarHeight =
+    16;
 
 class StudySessionProgressRow extends StatelessWidget {
   const StudySessionProgressRow({required this.progressValue, super.key});
@@ -19,15 +20,15 @@ class StudySessionProgressRow extends StatelessWidget {
     );
     final double valueGap = StudySessionLayoutMetrics.sectionSpacing(
       context,
-      baseValue: LumosSpacing.md,
+      baseValue: context.spacing.md,
     );
-    final ThemeData theme = Theme.of(context);
+    final ThemeData theme = context.theme;
     final ColorScheme colorScheme = theme.colorScheme;
     final int progressPercentage = (progressValue * 100).round();
     return Row(
       children: <Widget>[
         Expanded(
-          child: LumosProgressBar(value: progressValue, height: barHeight),
+          child: LumosValueBar(value: progressValue, height: barHeight),
         ),
         SizedBox(width: valueGap),
         LumosInlineText(
@@ -42,4 +43,3 @@ class StudySessionProgressRow extends StatelessWidget {
     );
   }
 }
-

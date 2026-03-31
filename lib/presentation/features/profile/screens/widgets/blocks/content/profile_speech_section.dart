@@ -38,14 +38,12 @@ class ProfileSpeechSection extends StatelessWidget {
     final String resolvedAdapter = normalizeTtsAdapter(preference.adapter);
     final double resolvedSpeed = normalizeTtsSpeed(preference.speed);
     final double resolvedPitch = normalizeTtsPitch(preference.pitch);
-    final double sectionGap = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.md,
+    final double sectionGap = context.compactValue(
+      baseValue: context.spacing.md,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double footerGap = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.lg,
+    final double footerGap = context.compactValue(
+      baseValue: context.spacing.lg,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     return ProfileSectionCard(

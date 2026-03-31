@@ -6,7 +6,7 @@ import 'package:lumos/domain/entities/study/study_models.dart';
 import 'package:lumos/l10n/app_localizations.dart';
 import 'package:lumos/presentation/features/study/providers/study_speech_playback_provider.dart';
 import 'package:lumos/presentation/features/study/screens/widgets/sub_mode/review/study_session_review_content.dart';
-import 'package:lumos/presentation/shared/primitives/displays/lumos_progress_bar.dart';
+import 'package:lumos/presentation/shared/primitives/displays/lumos_value_bar.dart';
 
 import '../../../../testkit/feature_fixtures.dart';
 
@@ -24,7 +24,7 @@ void main() {
       },
     );
 
-    await tester.drag(find.byType(LumosProgressBar), const Offset(-600, 0));
+    await tester.drag(find.byType(LumosValueBar), const Offset(-600, 0));
     await tester.pumpAndSettle();
 
     expect(actions, isEmpty);

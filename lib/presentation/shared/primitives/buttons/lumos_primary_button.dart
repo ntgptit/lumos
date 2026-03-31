@@ -10,12 +10,9 @@ class LumosPrimaryButton extends LumosButton {
     super.isLoading,
     Widget? leading,
     super.trailing,
-    super.style,
     IconData? icon,
     super.size,
-  }) : super(
-         leading: leading ?? _icon(icon),
-       );
+  }) : super(leading: leading ?? _icon(icon));
 
   static Widget? _icon(IconData? icon) {
     if (icon == null) {

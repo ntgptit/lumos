@@ -21,12 +21,13 @@ class StudySessionRecallAnswerPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final ThemeData theme = context.theme;
     final ColorScheme colorScheme = theme.colorScheme;
     final EdgeInsets cardPadding = StudySessionLayoutMetrics.cardPadding(
       context,
-      horizontal: LumosSpacing.xl,
-      vertical: LumosSpacing.xl,
+      horizontal:
+          context.spacing.xl,
+      vertical: context.spacing.xl,
     );
     final double hiddenAnswerWidth = StudySessionLayoutMetrics.compactHeight(
       context,
@@ -94,7 +95,8 @@ class StudySessionRecallAnswerPanel extends StatelessWidget {
     return StudySessionContentCard(
       variant: LumosCardVariant.filled,
       child: AnimatedSwitcher(
-        duration: AppDurations.medium,
+        duration:
+            AppMotion.medium,
         switchInCurve: Curves.easeOutCubic,
         switchOutCurve: Curves.easeInCubic,
         child: panelContent,

@@ -26,7 +26,7 @@ class LumosNavigationRail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (destinations.isEmpty) {
-      return const SizedBox.shrink();
+      return SizedBox.shrink();
     }
 
     final railWidth = context.component.navigationRailWidth;

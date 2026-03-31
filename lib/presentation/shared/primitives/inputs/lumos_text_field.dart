@@ -30,7 +30,6 @@ class LumosTextField extends StatelessWidget {
     this.textAlign = TextAlign.start,
     this.textAlignVertical,
     this.textStyle,
-    this.decoration,
     this.autofillHints,
     this.validator,
     this.autovalidateMode,
@@ -67,7 +66,6 @@ class LumosTextField extends StatelessWidget {
   final TextAlign textAlign;
   final TextAlignVertical? textAlignVertical;
   final TextStyle? textStyle;
-  final InputDecoration? decoration;
   final Iterable<String>? autofillHints;
   final FormFieldValidator<String>? validator;
   final AutovalidateMode? autovalidateMode;
@@ -111,16 +109,14 @@ class LumosTextField extends StatelessWidget {
       inputFormatters: inputFormatters,
       maxLength: maxLength,
       textCapitalization: textCapitalization,
-      decoration:
-          decoration ??
-          InputDecoration(
-            hintText: hintText,
-            helperText: helperText,
-            errorText: errorText,
-            prefixIcon: prefixIcon,
-            suffixIcon: suffixIcon,
-            counterText: '',
-          ),
+      decoration: InputDecoration(
+        hintText: hintText,
+        helperText: helperText,
+        errorText: errorText,
+        prefixIcon: prefixIcon,
+        suffixIcon: suffixIcon,
+        counterText: '',
+      ),
     );
     Widget resolvedField = field;
     if (isSingleLine) {

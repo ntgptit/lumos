@@ -18,14 +18,12 @@ class LibraryHeroBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double leadingBoxSize = context.component.listItemLeadingSize;
-    final double rowGap = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.lg,
+    final double rowGap = context.compactValue(
+      baseValue: context.spacing.lg,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double titleGap = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.sm,
+    final double titleGap = context.compactValue(
+      baseValue: context.spacing.sm,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     return LumosHeroBanner(
@@ -40,7 +38,7 @@ class LibraryHeroBanner extends StatelessWidget {
               borderRadius: context.shapes.control,
               border: Border.all(
                 color: context.colorScheme.outlineVariant,
-                width: WidgetSizes.borderWidthRegular,
+                width: AppStroke.regular,
               ),
             ),
             child: IconTheme(

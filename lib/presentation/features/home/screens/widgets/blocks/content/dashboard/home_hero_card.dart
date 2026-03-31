@@ -10,8 +10,10 @@ abstract final class HomeHeroCardConst {
   static const double heroMinHeightMobile = 280;
   static const double heroMinHeightLarge = 250;
   static const double emphasizedBorderWidth = AppStroke.thin;
-  static const double heroShadowBlurRadius = LumosSpacing.xxl;
-  static const double heroShadowOffsetY = LumosSpacing.sm;
+  static const double heroShadowBlurRadius =
+      48;
+  static const double heroShadowOffsetY =
+      12;
 }
 
 class HomeHeroCard extends StatelessWidget {
@@ -22,16 +24,15 @@ class HomeHeroCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final ColorScheme colorScheme = context.theme.colorScheme;
     final bool isMobile = deviceType == DeviceType.mobile;
-    final double heroPadding = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.xxl,
+    final double heroPadding = context.compactValue(
+      baseValue:
+          context.spacing.xxl,
       minScale: ResponsiveDimensions.compactLargeInsetScale,
     );
-    final double titleGap = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.lg,
+    final double titleGap = context.compactValue(
+      baseValue: context.spacing.lg,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     final Color secondaryBlend = Color.alphaBlend(
@@ -64,7 +65,7 @@ class HomeHeroCard extends StatelessWidget {
               color: colorScheme.shadow.withValues(alpha: AppOpacity.subtle),
               blurRadius: HomeHeroCardConst.heroShadowBlurRadius,
               offset: const Offset(
-                LumosSpacing.none,
+                0,
                 HomeHeroCardConst.heroShadowOffsetY,
               ),
             ),
@@ -82,16 +83,18 @@ class HomeHeroCard extends StatelessWidget {
                   children: <Widget>[
                     IconTheme(
                       data: IconThemeData(color: colorScheme.primary),
-                      child: const LumosIcon(
+                      child: LumosIcon(
                         Icons.auto_awesome_rounded,
-                        size: IconSizes.iconMedium,
+                        size: context.iconSize.lg,
                       ),
                     ),
-                    const SizedBox(width: LumosSpacing.sm),
+                    SizedBox(
+                      width: context.spacing.sm,
+                    ),
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: LumosSpacing.sm,
-                        vertical: LumosSpacing.xs,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: context.spacing.sm,
+                        vertical: context.spacing.xs,
                       ),
                       decoration: BoxDecoration(
                         color: colorScheme.surfaceContainerLowest,
@@ -115,7 +118,9 @@ class HomeHeroCard extends StatelessWidget {
                   style: LumosTextStyle.headlineMedium,
                   containerRole: LumosTextContainerRole.primaryContainer,
                 ),
-                const SizedBox(height: LumosSpacing.sm),
+                SizedBox(
+                  height: context.spacing.sm,
+                ),
                 LumosText(
                   l10n.homeHeroBody,
                   style: LumosTextStyle.bodyMedium,
@@ -125,8 +130,8 @@ class HomeHeroCard extends StatelessWidget {
                 ),
                 SizedBox(height: titleGap),
                 Wrap(
-                  spacing: LumosSpacing.sm,
-                  runSpacing: LumosSpacing.sm,
+                  spacing: context.spacing.sm,
+                  runSpacing: context.spacing.sm,
                   children: <Widget>[
                     LumosPrimaryButton(
                       text: l10n.homePrimaryAction,

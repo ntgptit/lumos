@@ -35,11 +35,10 @@ class StudySessionReviewCardViewport extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        final double horizontalInset = ResponsiveDimensions.compactValue(
-          context: context,
+        final double horizontalInset = context.compactValue(
           baseValue: constraints.maxWidth > 480
-              ? LumosSpacing.sm
-              : LumosSpacing.none,
+              ? context.spacing.sm
+              : 0,
           minScale: ResponsiveDimensions.compactInsetScale,
         );
         final Widget cards = Padding(
@@ -70,4 +69,3 @@ class StudySessionReviewCardViewport extends StatelessWidget {
     );
   }
 }
-

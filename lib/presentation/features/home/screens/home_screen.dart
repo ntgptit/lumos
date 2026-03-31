@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lumos/app/app_route_data.dart';
 import 'package:lumos/core/theme/app_foundation.dart';
+import 'package:lumos/presentation/shared/layouts/lumos_scaffold.dart';
 import '../../auth/providers/auth_session_provider.dart';
 import '../providers/home_provider.dart';
 import 'widgets/blocks/content/shell/home_navigation_scaffold.dart';
@@ -19,10 +20,15 @@ class HomeScreen extends ConsumerWidget {
       authSessionControllerProvider,
     );
     return authAsync.when(
-      loading: () =>
-          const Scaffold(body: Center(child: LumosLoadingIndicator())),
+      loading: () => const LumosScaffold(
+        body: Center(child: LumosLoadingIndicator()),
+        bodyPadding: EdgeInsets.zero,
+      ),
       error: (Object error, StackTrace stackTrace) {
-        return const Scaffold(body: Center(child: LumosLoadingIndicator()));
+        return const LumosScaffold(
+          body: Center(child: LumosLoadingIndicator()),
+          bodyPadding: EdgeInsets.zero,
+        );
       },
       data: (AuthViewState state) {
         if (!state.isAuthenticated) {
@@ -41,4 +47,3 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 }
-

@@ -23,4 +23,3 @@ class FolderFailureView extends StatelessWidget {
     );
   }
 }
-

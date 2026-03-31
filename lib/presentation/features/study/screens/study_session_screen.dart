@@ -18,6 +18,7 @@ import '../providers/study_recall_selection_provider.dart';
 import '../providers/study_speech_playback_provider.dart';
 import '../providers/study_mode_view_strategy_factory_provider.dart';
 import '../providers/study_session_provider.dart';
+import 'package:lumos/presentation/shared/layouts/lumos_scaffold.dart';
 import 'widgets/blocks/study_session_screen_app_bar.dart';
 import 'widgets/blocks/study_session_screen_body.dart';
 import 'widgets/sub_mode/study_session_sub_mode_const.dart';
@@ -84,7 +85,7 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
     _listenGuessSelectionUpdates(currentSession?.sessionId);
     _listenMatchSelectionUpdates(currentSession?.sessionId);
     _listenRecallSelectionUpdates(currentSession?.sessionId);
-    return Scaffold(
+    return LumosScaffold(
       appBar: StudySessionScreenAppBar(
         deckName: widget.deckName,
         session: currentSession,
@@ -92,6 +93,8 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
         onPlaySpeech: _playSpeech,
         onStudyMenuSelected: _handleStudyMenuSelection,
       ),
+      bodyPadding: EdgeInsets.zero,
+      useSafeArea: false,
       body: SafeArea(
         top: false,
         bottom: !compactPhone,
@@ -643,7 +646,7 @@ class _StudySessionScreenState extends ConsumerState<StudySessionScreen> {
         return LumosDialog(
           title: l10n.studyResetCurrentModeTitle,
           icon: const LumosDialogIcon(Icons.restart_alt_rounded),
-          content: l10n.studyResetCurrentModeMessage,
+          message: l10n.studyResetCurrentModeMessage,
           cancelText: l10n.commonCancel,
           confirmText: l10n.studyResetCurrentModeConfirm,
           onCancel: () {

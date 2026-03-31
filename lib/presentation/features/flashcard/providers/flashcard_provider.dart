@@ -588,4 +588,3 @@ class FlashcardAsyncController extends _$FlashcardAsyncController {
     );
   }
 }
-

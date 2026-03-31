@@ -20,12 +20,14 @@ class LumosRadioGroup<T> extends StatelessWidget {
       groupValue: value,
       onChanged: onChanged,
       child: Column(
-        children: options.map((option) {
-          return RadioListTile<T>(
-            value: option,
-            title: Text(labelBuilder(option)),
-          );
-        }).toList(growable: false),
+        children: options
+            .map((option) {
+              return RadioListTile<T>(
+                value: option,
+                title: Text(labelBuilder(option)),
+              );
+            })
+            .toList(growable: false),
       ),
     );
   }

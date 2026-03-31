@@ -22,9 +22,9 @@ class StudySessionScreenMenuActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
-    final double iconSize = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: IconSizes.iconMedium,
+    final double iconSize = context.compactValue(
+      baseValue:
+          context.iconSize.lg,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     final List<PopupMenuEntry<String>> items = <PopupMenuEntry<String>>[];

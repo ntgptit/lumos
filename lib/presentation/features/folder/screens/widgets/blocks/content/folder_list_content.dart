@@ -36,24 +36,20 @@ class FolderListContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double loadMoreTopSpacing = ResponsiveDimensions.compactValue(
-      context: context,
+    final double loadMoreTopSpacing = context.compactValue(
       baseValue: FolderContentSupportConst.loadMoreTopSpacing,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double loadMoreBottomSpacing = ResponsiveDimensions.compactValue(
-      context: context,
+    final double loadMoreBottomSpacing = context.compactValue(
       baseValue: FolderContentSupportConst.loadMoreBottomSpacing,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double listBottomSpacing = ResponsiveDimensions.compactValue(
-      context: context,
+    final double listBottomSpacing = context.compactValue(
       baseValue: FolderContentSupportConst.listBottomSpacing,
       minScale: ResponsiveDimensions.compactVerticalInsetScale,
     );
-    final double rowSpacing = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.sm,
+    final double rowSpacing = context.compactValue(
+      baseValue: context.spacing.sm,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     final List<Widget> trailingSlivers = <Widget>[

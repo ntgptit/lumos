@@ -10,4 +10,3 @@ class StudyProgressLoadingView extends StatelessWidget {
     return const Center(child: LumosLoadingIndicator());
   }
 }
-

@@ -8,6 +8,7 @@ class ComponentThemeGuardConst {
   const ComponentThemeGuardConst._();
 
   static const String presentationRoot = 'lib/presentation';
+  static const String componentThemeRoot = 'lib/core/theme/component_themes';
   static const String sharedWidgetsRoot = 'lib/presentation/shared/';
   static const String featurePrefix = 'lib/presentation/features/';
   static const String featureScreensMarker = '/screens/';
@@ -37,6 +38,20 @@ class ComponentThemeGuardConst {
       'Direct ProgressIndicator usage in feature UI should be wrapped by shared loading widgets '
       '(for example `${ComponentThemeGuardConst.loadingWidgetName}`) to keep app-wide behavior and theming consistent.';
 }
+
+const Map<String, String>
+_forbiddenPaletteAccessInComponentTheme = <String, String>{
+  'palette.primary':
+      'Component theme nên dùng colorScheme.primary cho M3 role, không dùng palette.primary trực tiếp.',
+  'palette.textPrimary':
+      'Component theme nên dùng colorScheme.onSurface cho M3 role, không dùng palette.textPrimary trực tiếp.',
+  'palette.surface':
+      'Component theme nên dùng colorScheme.surface cho M3 role, không dùng palette.surface trực tiếp.',
+  'palette.outline':
+      'Component theme nên dùng colorScheme.outline cho M3 role, không dùng palette.outline trực tiếp.',
+  'AppColorTokens.white':
+      'Dùng colorScheme.onPrimary / colorScheme.onError thay vì AppColorTokens.white trong component theme.',
+};
 
 class ComponentThemeViolation {
   const ComponentThemeViolation({
@@ -225,6 +240,24 @@ Future<void> main() async {
     _checkFile(path: path, lines: lines, violations: violations);
   }
 
+  final Directory componentThemeRoot = Directory(
+    ComponentThemeGuardConst.componentThemeRoot,
+  );
+  if (componentThemeRoot.existsSync()) {
+    final List<File> componentThemeFiles = _collectSourceFiles(
+      componentThemeRoot,
+    );
+    for (final File file in componentThemeFiles) {
+      final String path = _normalizePath(file.path);
+      final List<String> lines = await file.readAsLines();
+      _checkComponentThemeFoundationFile(
+        path: path,
+        lines: lines,
+        violations: violations,
+      );
+    }
+  }
+
   if (violations.isEmpty) {
     stdout.writeln('Component theme usage contract passed.');
     return;
@@ -237,6 +270,51 @@ Future<void> main() async {
     );
   }
   exitCode = 1;
+}
+
+void _checkComponentThemeFoundationFile({
+  required String path,
+  required List<String> lines,
+  required List<ComponentThemeViolation> violations,
+}) {
+  for (int index = 0; index < lines.length; index++) {
+    final String rawLine = lines[index];
+    if (rawLine.contains(ComponentThemeGuardConst.allowInlineOverrideMarker)) {
+      continue;
+    }
+
+    final String sourceLine = _stripLineCommentSmart(rawLine).trim();
+    if (sourceLine.isEmpty) {
+      continue;
+    }
+
+    for (final MapEntry<String, String> entry
+        in _forbiddenPaletteAccessInComponentTheme.entries) {
+      if (!_matchesExactMemberAccess(sourceLine, entry.key)) {
+        continue;
+      }
+      violations.add(
+        ComponentThemeViolation(
+          filePath: path,
+          lineNumber: index + 1,
+          reason: entry.value,
+          lineContent: rawLine.trim(),
+        ),
+      );
+    }
+  }
+}
+
+bool _matchesExactMemberAccess(String sourceLine, String accessPattern) {
+  final List<String> parts = accessPattern.split('.');
+  if (parts.length != 2) {
+    return false;
+  }
+
+  final String owner = RegExp.escape(parts.first);
+  final String member = RegExp.escape(parts.last);
+  final RegExp pattern = RegExp('\\b$owner\\s*\\.\\s*$member\\b');
+  return pattern.hasMatch(sourceLine);
 }
 
 void _checkFile({

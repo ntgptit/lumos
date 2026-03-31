@@ -16,6 +16,8 @@ abstract final class AppMotion {
   static const Duration medium = AppMotionTokens.medium;
   static const Duration slow = AppMotionTokens.slow;
   static const Duration verySlow = AppMotionTokens.emphasized;
+  static const Duration toast = Duration(seconds: 3);
+  static const Duration stagger = Duration(milliseconds: 50);
 
   static const Curve standardCurve = AppMotionTokens.standardCurve;
   static const Curve emphasizedCurve = AppMotionTokens.emphasizedCurve;
@@ -32,4 +34,5 @@ abstract final class AppOpacity {
 
 abstract final class AppStroke {
   static const double thin = AppBorderTokens.thin;
+  static const double regular = AppBorderTokens.regular;
 }

@@ -6,12 +6,21 @@ abstract final class StudySessionLayoutMetrics {
   StudySessionLayoutMetrics._();
 
   static const double denseHeightScale = 0.78;
+  static const double compactBodyHeightBreakpoint = 760;
+  static const double compactPanelHeightBreakpoint = 260;
+  static const double compactActionWidthBreakpoint = 380;
+  static const double narrowContentWidthBreakpoint = 360;
+  static const double compactActionButtonWidthBreakpoint = 180;
+  static const double compactContentWidthBreakpoint = 390;
+  static const double reviewDeckWidthBreakpoint = 520;
 
   static EdgeInsets contentPadding(
     BuildContext context, {
-    double horizontal = LumosSpacing.lg,
-    double top = LumosSpacing.md,
-    double bottom = LumosSpacing.xl,
+    double horizontal =
+        24,
+    double top = 16,
+    double bottom =
+        32,
   }) {
     return EdgeInsets.fromLTRB(
       _outerInset(context, horizontal),
@@ -23,15 +32,18 @@ abstract final class StudySessionLayoutMetrics {
 
   static EdgeInsets progressPadding(
     BuildContext context, {
-    double horizontal = LumosSpacing.md,
+    double horizontal =
+        16,
   }) {
     return EdgeInsets.symmetric(horizontal: _sectionInset(context, horizontal));
   }
 
   static EdgeInsets cardPadding(
     BuildContext context, {
-    double horizontal = LumosSpacing.xl,
-    double vertical = LumosSpacing.xl,
+    double horizontal =
+        32,
+    double vertical =
+        32,
   }) {
     return EdgeInsets.symmetric(
       horizontal: _cardInset(context, horizontal),
@@ -56,8 +68,9 @@ abstract final class StudySessionLayoutMetrics {
 
   static EdgeInsets topTrailingPadding(
     BuildContext context, {
-    double top = LumosSpacing.lg,
-    double right = LumosSpacing.lg,
+    double top = 24,
+    double right =
+        24,
   }) {
     return EdgeInsets.only(
       top: _sectionInset(context, top),
@@ -67,8 +80,10 @@ abstract final class StudySessionLayoutMetrics {
 
   static EdgeInsets bottomTrailingPadding(
     BuildContext context, {
-    double right = LumosSpacing.md,
-    double bottom = LumosSpacing.md,
+    double right =
+        16,
+    double bottom =
+        16,
   }) {
     return EdgeInsets.only(
       right: _sectionInset(context, right),
@@ -78,14 +93,16 @@ abstract final class StudySessionLayoutMetrics {
 
   static double sectionSpacing(
     BuildContext context, {
-    double baseValue = LumosSpacing.lg,
+    double baseValue =
+        24,
   }) {
     return _sectionInset(context, baseValue);
   }
 
   static double actionSpacing(
     BuildContext context, {
-    double baseValue = LumosSpacing.xl,
+    double baseValue =
+        32,
   }) {
     return _sectionInset(context, baseValue);
   }
@@ -95,8 +112,7 @@ abstract final class StudySessionLayoutMetrics {
     required double baseValue,
     double minScale = denseHeightScale,
   }) {
-    return ResponsiveDimensions.compactValue(
-      context: context,
+    return context.compactValue(
       baseValue: baseValue,
       minScale: minScale,
     );
@@ -107,35 +123,30 @@ abstract final class StudySessionLayoutMetrics {
   }
 
   static double _outerInset(BuildContext context, double baseValue) {
-    return ResponsiveDimensions.compactValue(
-      context: context,
+    return context.compactValue(
       baseValue: baseValue,
       minScale: ResponsiveDimensions.compactOuterInsetScale,
     );
   }
 
   static double _bottomInset(BuildContext context, double baseValue) {
-    return ResponsiveDimensions.compactValue(
-      context: context,
+    return context.compactValue(
       baseValue: baseValue,
       minScale: ResponsiveDimensions.compactVerticalInsetScale,
     );
   }
 
   static double _sectionInset(BuildContext context, double baseValue) {
-    return ResponsiveDimensions.compactValue(
-      context: context,
+    return context.compactValue(
       baseValue: baseValue,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
   }
 
   static double _cardInset(BuildContext context, double baseValue) {
-    return ResponsiveDimensions.compactValue(
-      context: context,
+    return context.compactValue(
       baseValue: baseValue,
       minScale: ResponsiveDimensions.compactLargeInsetScale,
     );
   }
 }
-

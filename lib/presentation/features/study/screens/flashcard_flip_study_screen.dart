@@ -8,6 +8,7 @@ import 'package:lumos/core/theme/app_foundation.dart';
 import '../../../../core/utils/string_utils.dart';
 import '../../../../domain/entities/flashcard_models.dart';
 import '../../../../l10n/app_localizations.dart';
+import 'package:lumos/presentation/shared/layouts/lumos_scaffold.dart';
 import '../../flashcard/providers/flashcard_provider.dart';
 import '../../flashcard/providers/states/flashcard_state.dart';
 import 'widgets/blocks/flashcard_study_bottom_bar.dart';
@@ -16,20 +17,34 @@ import 'widgets/blocks/flashcard_study_card.dart';
 abstract final class FlashcardFlipStudyConst {
   FlashcardFlipStudyConst._();
 
-  static const double screenHorizontalPadding = LumosSpacing.lg;
-  static const double screenVerticalPadding = LumosSpacing.md;
-  static const double progressTopGap = LumosSpacing.sm;
-  static const double progressBottomGap = LumosSpacing.lg;
-  static const double cardVerticalInset = LumosSpacing.sm;
-  static const double cardContentHorizontalPadding = LumosSpacing.lg;
-  static const double cardContentVerticalPadding = LumosSpacing.lg;
-  static const double cardActionGap = LumosSpacing.sm;
-  static const double cardTitleGap = LumosSpacing.sm;
-  static const double cardBottomGap = LumosSpacing.sm;
-  static const double bottomBarTopGap = LumosSpacing.sm;
-  static const double bottomBarBottomGap = LumosSpacing.lg;
-  static const double actionIconSize = LumosSpacing.xl;
-  static const double hintIconSize = LumosSpacing.xl;
+  static const double screenHorizontalPadding =
+      24;
+  static const double screenVerticalPadding =
+      16;
+  static const double progressTopGap =
+      12;
+  static const double progressBottomGap =
+      24;
+  static const double cardVerticalInset =
+      12;
+  static const double cardContentHorizontalPadding =
+      24;
+  static const double cardContentVerticalPadding =
+      24;
+  static const double cardActionGap =
+      12;
+  static const double cardTitleGap =
+      12;
+  static const double cardBottomGap =
+      12;
+  static const double bottomBarTopGap =
+      12;
+  static const double bottomBarBottomGap =
+      24;
+  static const double actionIconSize =
+      32;
+  static const double hintIconSize =
+      32;
   static const int backTextMaxLines = 8;
   static const int noteMaxLines = 4;
 }
@@ -111,38 +126,31 @@ class _FlashcardFlipStudyScreenState
 
   @override
   Widget build(BuildContext context) {
-    final double screenHorizontalPadding = ResponsiveDimensions.compactValue(
-      context: context,
+    final double screenHorizontalPadding = context.compactValue(
       baseValue: FlashcardFlipStudyConst.screenHorizontalPadding,
       minScale: ResponsiveDimensions.compactOuterInsetScale,
     );
-    final double screenVerticalPadding = ResponsiveDimensions.compactValue(
-      context: context,
+    final double screenVerticalPadding = context.compactValue(
       baseValue: FlashcardFlipStudyConst.screenVerticalPadding,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double progressTopGap = ResponsiveDimensions.compactValue(
-      context: context,
+    final double progressTopGap = context.compactValue(
       baseValue: FlashcardFlipStudyConst.progressTopGap,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double progressBottomGap = ResponsiveDimensions.compactValue(
-      context: context,
+    final double progressBottomGap = context.compactValue(
       baseValue: FlashcardFlipStudyConst.progressBottomGap,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double cardVerticalInset = ResponsiveDimensions.compactValue(
-      context: context,
+    final double cardVerticalInset = context.compactValue(
       baseValue: FlashcardFlipStudyConst.cardVerticalInset,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double bottomBarTopGap = ResponsiveDimensions.compactValue(
-      context: context,
+    final double bottomBarTopGap = context.compactValue(
       baseValue: FlashcardFlipStudyConst.bottomBarTopGap,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double bottomBarBottomGap = ResponsiveDimensions.compactValue(
-      context: context,
+    final double bottomBarBottomGap = context.compactValue(
       baseValue: FlashcardFlipStudyConst.bottomBarBottomGap,
       minScale: ResponsiveDimensions.compactVerticalInsetScale,
     );
@@ -155,7 +163,7 @@ class _FlashcardFlipStudyScreenState
     if (widget.items.isEmpty) {
       return Theme(
         data: screenTheme,
-        child: Scaffold(
+        child: LumosScaffold(
           appBar: LumosAppBar(
             title: title,
             leading: LumosIconButton(
@@ -164,11 +172,12 @@ class _FlashcardFlipStudyScreenState
               icon: Icons.arrow_back_rounded,
             ),
           ),
+          bodyPadding: EdgeInsets.zero,
           body: Center(
             child: LumosEmptyState(
               title: l10n.flashcardEmptyTitle,
               message: l10n.flashcardEmptySubtitle,
-              icon: Icons.style_outlined,
+              icon: const LumosIcon(Icons.style_outlined),
             ),
           ),
         ),
@@ -176,7 +185,7 @@ class _FlashcardFlipStudyScreenState
     }
     return Theme(
       data: screenTheme,
-      child: Scaffold(
+      child: LumosScaffold(
         appBar: LumosAppBar(
           title: title,
           wrapActions: false,
@@ -189,23 +198,24 @@ class _FlashcardFlipStudyScreenState
             LumosIconButton(
               onPressed: _onSharePressed,
               tooltip: l10n.flashcardShareButtonTooltip,
-              size: IconSizes.iconMedium,
+              size: context.iconSize.lg,
               icon: Icons.ios_share_rounded,
             ),
             LumosIconButton(
               onPressed: _onMorePressed,
               tooltip: l10n.flashcardMoreButtonTooltip,
-              size: IconSizes.iconMedium,
+              size: context.iconSize.lg,
               icon: Icons.more_vert_rounded,
             ),
           ],
         ),
+        bodyPadding: EdgeInsets.zero,
         body: Padding(
           padding: EdgeInsets.fromLTRB(
             screenHorizontalPadding,
             screenVerticalPadding,
             screenHorizontalPadding,
-            LumosSpacing.none,
+            0,
           ),
           child: Column(
             children: <Widget>[
@@ -214,7 +224,7 @@ class _FlashcardFlipStudyScreenState
                 valueListenable: _currentIndexNotifier,
                 builder: (BuildContext context, int value, Widget? child) {
                   final double progress = (value + 1) / widget.items.length;
-                  return LumosProgressBar(value: progress);
+                  return LumosValueBar(value: progress);
                 },
               ),
               SizedBox(height: progressBottomGap),
@@ -279,7 +289,7 @@ class _FlashcardFlipStudyScreenState
   }
 
   ThemeData _buildScreenTheme({required BuildContext context}) {
-    final ThemeData baseTheme = Theme.of(context);
+    final ThemeData baseTheme = context.theme;
     final ColorScheme colorScheme = baseTheme.colorScheme;
     return baseTheme.copyWith(
       appBarTheme: baseTheme.appBarTheme.copyWith(
@@ -349,7 +359,8 @@ class _FlashcardFlipStudyScreenState
 
   void _goPrevious() {
     _pageController.previousPage(
-      duration: AppDurations.medium,
+      duration:
+          AppMotion.medium,
       curve: Curves.easeOutCubic,
     );
   }
@@ -361,7 +372,8 @@ class _FlashcardFlipStudyScreenState
       return;
     }
     _pageController.nextPage(
-      duration: AppDurations.medium,
+      duration:
+          AppMotion.medium,
       curve: Curves.easeOutCubic,
     );
   }
@@ -420,12 +432,8 @@ class _FlashcardFlipStudyScreenState
   void _showInfoSnackBar({required String message}) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: LumosSnackbar(
-          message: message,
-          type: LumosSnackbarType.info,
-        ),
+        content: LumosSnackbar(message: message, type: LumosSnackbarType.info),
       ),
     );
   }
 }
-

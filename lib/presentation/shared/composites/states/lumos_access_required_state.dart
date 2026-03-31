@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:lumos/l10n/l10n.dart';
 import 'package:lumos/presentation/shared/composites/states/lumos_error_state.dart';
 
-class LumosUnauthorizedState extends StatelessWidget {
-  const LumosUnauthorizedState({
+class LumosAccessRequiredState extends StatelessWidget {
+  const LumosAccessRequiredState({
     super.key,
     this.onActionPressed,
     this.actionLabel,

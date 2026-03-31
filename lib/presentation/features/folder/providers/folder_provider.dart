@@ -422,4 +422,3 @@ class FolderAsyncController extends _$FolderAsyncController {
     _cacheState(nextState);
   }
 }
-

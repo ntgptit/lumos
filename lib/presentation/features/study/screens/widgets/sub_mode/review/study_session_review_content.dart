@@ -22,15 +22,16 @@ abstract final class StudySessionReviewContentConst {
   static const int currentPageIndex = 1;
   static const int nextPageIndex = 2;
   static const EdgeInsetsGeometry contentPadding = EdgeInsets.fromLTRB(
-    LumosSpacing.lg,
-    LumosSpacing.md,
-    LumosSpacing.lg,
-    LumosSpacing.xl,
+    24,
+    16,
+    24,
+    32,
   );
   static const EdgeInsetsGeometry progressPadding = EdgeInsets.symmetric(
-    horizontal: LumosSpacing.md,
+    horizontal: 16,
   );
-  static const double sectionSpacing = LumosSpacing.lg;
+  static const double sectionSpacing =
+      24;
 }
 
 class StudySessionReviewContent extends StatefulWidget {
@@ -90,22 +91,29 @@ class _StudySessionReviewContentState extends State<StudySessionReviewContent> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        final bool compactHeight = constraints.maxHeight < 760;
-        final EdgeInsets contentPadding =
-            StudySessionLayoutMetrics.contentPadding(
-              context,
-              top: compactHeight ? LumosSpacing.sm : LumosSpacing.md,
-              bottom: compactHeight ? LumosSpacing.lg : LumosSpacing.xl,
-            );
-        final EdgeInsets progressPadding =
-            StudySessionLayoutMetrics.progressPadding(
-              context,
-              horizontal: compactHeight ? LumosSpacing.sm : LumosSpacing.md,
-            );
+        final bool compactHeight =
+            constraints.maxHeight < StudySessionLayoutMetrics.compactBodyHeightBreakpoint;
+        final EdgeInsets
+        contentPadding = StudySessionLayoutMetrics.contentPadding(
+          context,
+          top: compactHeight
+              ? context.spacing.sm
+              : context.spacing.md,
+          bottom: compactHeight
+              ? context.spacing.lg
+              : context.spacing.xl,
+        );
+        final EdgeInsets
+        progressPadding = StudySessionLayoutMetrics.progressPadding(
+          context,
+          horizontal: compactHeight
+              ? context.spacing.sm
+              : context.spacing.md,
+        );
         final double sectionSpacing = StudySessionLayoutMetrics.sectionSpacing(
           context,
           baseValue: compactHeight
-              ? LumosSpacing.md
+              ? context.spacing.md
               : StudySessionReviewContentConst.sectionSpacing,
         );
         return Padding(
@@ -275,9 +283,7 @@ class _StudySessionReviewContentState extends State<StudySessionReviewContent> {
     final ScaffoldFeatureController<SnackBar, SnackBarClosedReason> controller =
         messenger.showSnackBar(
           SnackBar(
-            content: LumosSnackbar(
-              message: l10n.studyReviewFirstCardToast,
-            ),
+            content: LumosSnackbar(message: l10n.studyReviewFirstCardToast),
           ),
         );
     unawaited(
@@ -287,4 +293,3 @@ class _StudySessionReviewContentState extends State<StudySessionReviewContent> {
     );
   }
 }
-

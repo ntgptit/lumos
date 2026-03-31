@@ -10,14 +10,15 @@ import '../../../../../providers/states/home_state.dart';
 abstract final class HomeAdaptiveBodyConst {
   HomeAdaptiveBodyConst._();
 
-  static const Duration loadingMaskFadeDuration = AppDurations.fast;
+  static const Duration loadingMaskFadeDuration = AppMotion.fast;
   static const EdgeInsets tabLoadingMaskPadding = EdgeInsets.fromLTRB(
-    LumosSpacing.lg,
-    LumosSpacing.sm,
-    LumosSpacing.lg,
-    LumosSpacing.none,
+    24,
+    12,
+    24,
+    0,
   );
-  static const double tabLoadingMaskHeight = WidgetSizes.progressTrackHeight;
+  static const double tabLoadingMaskHeight = 6;
+  static const double railDividerWidth = 0;
 }
 
 class HomeAdaptiveBody extends ConsumerStatefulWidget {
@@ -43,17 +44,15 @@ class _HomeAdaptiveBodyState extends ConsumerState<HomeAdaptiveBody> {
   Widget build(BuildContext context) {
     _syncPageCacheForLocale(context);
     final AppLocalizations l10n = AppLocalizations.of(context)!;
-    final EdgeInsets loadingMaskPadding = ResponsiveDimensions.compactInsets(
-      context: context,
-      baseInsets: const EdgeInsets.fromLTRB(
-        LumosSpacing.lg,
-        LumosSpacing.sm,
-        LumosSpacing.lg,
-        LumosSpacing.none,
+    final EdgeInsets loadingMaskPadding = context.compactInsets(
+      baseInsets: EdgeInsets.fromLTRB(
+        context.spacing.lg,
+        context.spacing.sm,
+        context.spacing.lg,
+        0,
       ),
     );
-    final double loadingMaskHeight = ResponsiveDimensions.compactValue(
-      context: context,
+    final double loadingMaskHeight = context.compactValue(
       baseValue: HomeAdaptiveBodyConst.tabLoadingMaskHeight,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
@@ -130,13 +129,11 @@ class _HomeAdaptiveBodyState extends ConsumerState<HomeAdaptiveBody> {
         final bool extendedRail =
             widget._deviceType == DeviceType.desktop &&
             constraints.maxWidth >= 1180;
-        final double railMinWidth = ResponsiveDimensions.compactValue(
-          context: context,
+        final double railMinWidth = context.compactValue(
           baseValue: 72,
           minScale: ResponsiveDimensions.compactLargeInsetScale,
         );
-        final double railMinExtendedWidth = ResponsiveDimensions.compactValue(
-          context: context,
+        final double railMinExtendedWidth = context.compactValue(
           baseValue: 220,
           minScale: ResponsiveDimensions.compactLargeInsetScale,
         );
@@ -161,14 +158,12 @@ class _HomeAdaptiveBodyState extends ConsumerState<HomeAdaptiveBody> {
                     (HomeNavigationItem item) => NavigationRailDestination(
                       icon: LumosIcon(item.icon),
                       selectedIcon: LumosIcon(item.selectedIcon),
-                      label: LumosInlineText(
-                        item.tabId.toLocalizedLabel(l10n),
-                      ),
+                      label: LumosInlineText(item.tabId.toLocalizedLabel(l10n)),
                     ),
                   )
                   .toList(),
             ),
-            const VerticalDivider(width: LumosSpacing.none),
+            const VerticalDivider(width: HomeAdaptiveBodyConst.railDividerWidth),
             Expanded(child: tabbedBody),
           ],
         );

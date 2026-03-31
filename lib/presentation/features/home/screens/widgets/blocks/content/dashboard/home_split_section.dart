@@ -14,34 +14,29 @@ class HomeSplitSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
-    final double inlineGap = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.sm,
+    final ColorScheme colorScheme = context.theme.colorScheme;
+    final double inlineGap = context.compactValue(
+      baseValue: context.spacing.sm,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double itemSpacing = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.md,
+    final double itemSpacing = context.compactValue(
+      baseValue: context.spacing.md,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double activityAccentSize = ResponsiveDimensions.compactValue(
-      context: context,
+    final double activityAccentSize = context.compactValue(
       baseValue: HomeStatGridConst.activityAccentSize,
       minScale: ResponsiveDimensions.compactLargeInsetScale,
     );
-    final double activityItemPadding = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.md,
+    final double activityItemPadding = context.compactValue(
+      baseValue: context.spacing.md,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final EdgeInsets sectionHeaderPadding = ResponsiveDimensions.compactInsets(
-      context: context,
-      baseInsets: const EdgeInsets.fromLTRB(
-        LumosSpacing.lg,
-        LumosSpacing.lg,
-        LumosSpacing.lg,
-        LumosSpacing.md,
+    final EdgeInsets sectionHeaderPadding = context.compactInsets(
+      baseInsets: EdgeInsets.fromLTRB(
+        context.spacing.lg,
+        context.spacing.lg,
+        context.spacing.lg,
+        context.spacing.md,
       ),
     );
     final List<({String title, String subtitle, String trailing, Color color})>
@@ -69,10 +64,12 @@ class HomeSplitSection extends StatelessWidget {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         final bool compactDesktop =
-            deviceType == DeviceType.desktop && constraints.maxWidth < 1080;
-        final double columnGap = ResponsiveDimensions.compactValue(
-          context: context,
-          baseValue: compactDesktop ? LumosSpacing.xl : LumosSpacing.xxl,
+            deviceType == DeviceType.desktop &&
+            constraints.maxWidth < HomeLayoutBreakpoints.compactDesktopWidth;
+        final double columnGap = context.compactValue(
+          baseValue: compactDesktop
+              ? context.spacing.xl
+              : context.spacing.xxl,
           minScale: ResponsiveDimensions.compactInsetScale,
         );
         final Widget focusCard = Semantics(

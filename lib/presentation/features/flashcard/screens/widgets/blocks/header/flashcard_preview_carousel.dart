@@ -8,16 +8,25 @@ import '../../../../../../../l10n/app_localizations.dart';
 abstract final class FlashcardPreviewCarouselConst {
   FlashcardPreviewCarouselConst._();
 
-  static const double carouselHeight = LumosSpacing.section * 6;
-  static const double pageSpacing = LumosSpacing.xs;
-  static const double dotSpacing = LumosSpacing.xs;
+  static const double carouselHeight =
+      24 * 6;
+  static const double pageSpacing =
+      8;
+  static const double dotSpacing =
+      8;
   static const double activeDotScale = 1.7;
-  static const double dotSize = LumosSpacing.sm;
-  static const double titleHorizontalPadding = LumosSpacing.xl;
-  static const double titleVerticalPadding = LumosSpacing.lg;
-  static const double expandButtonInset = LumosSpacing.sm;
-  static const double expandIconSize = LumosSpacing.xl;
-  static const double horizontalScrollActivationOffset = LumosSpacing.xs;
+  static const double dotSize =
+      12;
+  static const double titleHorizontalPadding =
+      32;
+  static const double titleVerticalPadding =
+      24;
+  static const double expandButtonInset =
+      12;
+  static const double expandIconSize =
+      32;
+  static const double horizontalScrollActivationOffset =
+      8;
 }
 
 class FlashcardPreviewCarousel extends StatelessWidget {
@@ -39,43 +48,35 @@ class FlashcardPreviewCarousel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
-    final double carouselHeight = ResponsiveDimensions.compactValue(
-      context: context,
+    final double carouselHeight = context.compactValue(
       baseValue: FlashcardPreviewCarouselConst.carouselHeight,
       minScale: ResponsiveDimensions.compactLargeInsetScale,
     );
-    final double titleHorizontalPadding = ResponsiveDimensions.compactValue(
-      context: context,
+    final double titleHorizontalPadding = context.compactValue(
       baseValue: FlashcardPreviewCarouselConst.titleHorizontalPadding,
       minScale: ResponsiveDimensions.compactLargeInsetScale,
     );
-    final double titleVerticalPadding = ResponsiveDimensions.compactValue(
-      context: context,
+    final double titleVerticalPadding = context.compactValue(
       baseValue: FlashcardPreviewCarouselConst.titleVerticalPadding,
       minScale: ResponsiveDimensions.compactLargeInsetScale,
     );
-    final double expandButtonInset = ResponsiveDimensions.compactValue(
-      context: context,
+    final double expandButtonInset = context.compactValue(
       baseValue: FlashcardPreviewCarouselConst.expandButtonInset,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double expandIconSize = ResponsiveDimensions.compactValue(
-      context: context,
+    final double expandIconSize = context.compactValue(
       baseValue: FlashcardPreviewCarouselConst.expandIconSize,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double indicatorGap = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.sm,
+    final double indicatorGap = context.compactValue(
+      baseValue: context.spacing.sm,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double dotSpacing = ResponsiveDimensions.compactValue(
-      context: context,
+    final double dotSpacing = context.compactValue(
       baseValue: FlashcardPreviewCarouselConst.dotSpacing,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double dotSize = ResponsiveDimensions.compactValue(
-      context: context,
+    final double dotSize = context.compactValue(
       baseValue: FlashcardPreviewCarouselConst.dotSize,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
@@ -116,7 +117,7 @@ class FlashcardPreviewCarousel extends StatelessWidget {
                     final String title =
                         item?.frontText ?? l10n.flashcardPreviewPlaceholder;
                     return Padding(
-                      padding: const EdgeInsets.symmetric(
+                      padding: EdgeInsets.symmetric(
                         horizontal: FlashcardPreviewCarouselConst.pageSpacing,
                       ),
                       child: LumosCard(
@@ -135,7 +136,9 @@ class FlashcardPreviewCarousel extends StatelessWidget {
                                   align: TextAlign.center,
                                   maxLines: 3,
                                   overflow: TextOverflow.ellipsis,
-                                  style: Theme.of(context).textTheme.titleLarge
+                                  style: context.theme
+                                      .textTheme
+                                      .titleLarge
                                       ?.copyWith(fontWeight: FontWeight.w600),
                                 ),
                               ),
@@ -165,7 +168,7 @@ class FlashcardPreviewCarousel extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: List<Widget>.generate(dotCount, (int index) {
               final bool isActive = index == safePreviewIndex;
-              final ColorScheme colorScheme = Theme.of(context).colorScheme;
+              final ColorScheme colorScheme = context.theme.colorScheme;
               return Padding(
                 padding: EdgeInsets.symmetric(horizontal: dotSpacing),
                 child: SizedBox(
@@ -236,12 +239,14 @@ class FlashcardPreviewCarousel extends StatelessWidget {
       return;
     }
     final double horizontalDelta = event.scrollDelta.dx;
-    if (horizontalDelta == LumosSpacing.none) {
+    if (horizontalDelta == 0) {
+     
       return;
     }
 
     final int currentPage = pageController.page?.round() ?? previewIndex;
-    if (horizontalDelta > LumosSpacing.none) {
+    if (horizontalDelta > 0) {
+     
       final int nextPage = (currentPage + 1).clamp(0, dotCount - 1);
       if (nextPage == currentPage) {
         return;

@@ -64,7 +64,7 @@ class StudySessionResolvedBodyContent extends ConsumerWidget {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         final double maxWidth = constraints.isDesktop
-            ? WidgetSizes.maxContentWidth
+            ? context.component.loadingStateMaxWidth
             : constraints.maxWidth;
         return Align(
           alignment: Alignment.topCenter,
@@ -102,4 +102,3 @@ class StudySessionResolvedBodyContent extends ConsumerWidget {
     return modeStrategy.buildViewModel(session: currentSession);
   }
 }
-

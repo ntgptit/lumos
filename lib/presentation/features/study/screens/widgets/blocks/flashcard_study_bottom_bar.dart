@@ -15,9 +15,8 @@ class FlashcardStudyBottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double actionGap = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.sm,
+    final double actionGap = context.compactValue(
+      baseValue: context.spacing.sm,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     final AppLocalizations l10n = AppLocalizations.of(context)!;
@@ -42,4 +41,3 @@ class FlashcardStudyBottomBar extends StatelessWidget {
     );
   }
 }
-

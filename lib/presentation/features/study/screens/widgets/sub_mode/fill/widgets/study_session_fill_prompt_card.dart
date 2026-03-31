@@ -6,7 +6,8 @@ import '../../../../../providers/study_speech_playback_provider.dart';
 import '../../widgets/study_session_content_card.dart';
 import '../../widgets/study_session_layout_metrics.dart';
 
-const double _fillHeroIconSize = IconSizes.iconMedium;
+const double _fillHeroIconSize =
+    24;
 const int _fillHeroPromptMaxLines = 3;
 
 class StudySessionFillPromptCard extends StatelessWidget {
@@ -27,34 +28,48 @@ class StudySessionFillPromptCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final ThemeData theme = context.theme;
     final ColorScheme colorScheme = theme.colorScheme;
     final bool isSpeechEnabled = speech.available && !playbackState.isBusy;
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        final bool compactHeight = constraints.maxHeight < 260;
-        final double iconSize = ResponsiveDimensions.compactValue(
-          context: context,
-          baseValue: compactHeight ? IconSizes.iconSmall : _fillHeroIconSize,
+        final bool compactHeight =
+            constraints.maxHeight < StudySessionLayoutMetrics.compactPanelHeightBreakpoint;
+        final double iconSize = context.compactValue(
+          baseValue: compactHeight
+              ? context.iconSize.sm
+              : _fillHeroIconSize,
           minScale: ResponsiveDimensions.compactInsetScale,
         );
         final EdgeInsets cardPadding = StudySessionLayoutMetrics.cardPadding(
           context,
-          horizontal: compactHeight ? LumosSpacing.lg : LumosSpacing.xl,
-          vertical: compactHeight ? LumosSpacing.lg : LumosSpacing.xl,
+          horizontal: compactHeight
+              ? context.spacing.lg
+              : context.spacing.xl,
+          vertical: compactHeight
+              ? context.spacing.lg
+              : context.spacing.xl,
         );
-        final EdgeInsets topTrailingPadding =
-            StudySessionLayoutMetrics.topTrailingPadding(
-              context,
-              top: compactHeight ? LumosSpacing.md : LumosSpacing.lg,
-              right: compactHeight ? LumosSpacing.md : LumosSpacing.lg,
-            );
-        final EdgeInsets bottomTrailingPadding =
-            StudySessionLayoutMetrics.bottomTrailingPadding(
-              context,
-              right: compactHeight ? LumosSpacing.sm : LumosSpacing.md,
-              bottom: compactHeight ? LumosSpacing.sm : LumosSpacing.md,
-            );
+        final EdgeInsets
+        topTrailingPadding = StudySessionLayoutMetrics.topTrailingPadding(
+          context,
+          top: compactHeight
+              ? context.spacing.md
+              : context.spacing.lg,
+          right: compactHeight
+              ? context.spacing.md
+              : context.spacing.lg,
+        );
+        final EdgeInsets
+        bottomTrailingPadding = StudySessionLayoutMetrics.bottomTrailingPadding(
+          context,
+          right: compactHeight
+              ? context.spacing.sm
+              : context.spacing.md,
+          bottom: compactHeight
+              ? context.spacing.sm
+              : context.spacing.md,
+        );
         return StudySessionContentCard(
           variant: LumosCardVariant.filled,
           height: height,

@@ -19,11 +19,11 @@ class DeckCreateButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (isMutating) {
-      return const SizedBox.shrink();
+      return SizedBox.shrink();
     }
-    final double bottomInset = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.xxl,
+    final double bottomInset = context.compactValue(
+      baseValue:
+          context.spacing.xxl,
       minScale: ResponsiveDimensions.compactVerticalInsetScale,
     );
     return Positioned(
@@ -37,4 +37,3 @@ class DeckCreateButton extends StatelessWidget {
     );
   }
 }
-

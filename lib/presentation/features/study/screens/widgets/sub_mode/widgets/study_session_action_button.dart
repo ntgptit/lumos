@@ -6,6 +6,7 @@ import 'package:lumos/presentation/shared/primitives/buttons/lumos_primary_butto
 import 'package:lumos/presentation/shared/primitives/buttons/lumos_secondary_button.dart';
 import '../../../../mode/study_mode_action_button_style.dart';
 import '../../../../mode/study_mode_action_view_model.dart';
+import 'study_session_layout_metrics.dart';
 
 class StudySessionActionButton extends StatelessWidget {
   const StudySessionActionButton({
@@ -21,7 +22,8 @@ class StudySessionActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        final LumosButtonSize buttonSize = constraints.maxWidth < 180
+        final LumosButtonSize buttonSize = constraints.maxWidth <
+                StudySessionLayoutMetrics.compactActionButtonWidthBreakpoint
             ? LumosButtonSize.medium
             : LumosButtonSize.large;
         switch (action.style) {
@@ -49,4 +51,3 @@ class StudySessionActionButton extends StatelessWidget {
     );
   }
 }
-

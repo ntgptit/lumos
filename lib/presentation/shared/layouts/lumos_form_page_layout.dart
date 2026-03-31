@@ -46,7 +46,9 @@ class LumosFormPageLayout extends StatelessWidget {
               breadcrumb != null ||
               header != null)
             const LumosSpacing(size: AppSpacingSize.lg),
-          Expanded(child: LumosSectionList(sections: sections, scrollable: true)),
+          Expanded(
+            child: LumosSectionList(sections: sections, scrollable: true),
+          ),
         ],
       ),
       footer: submitBar,

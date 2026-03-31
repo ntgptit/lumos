@@ -177,4 +177,3 @@ class AuthSessionController extends _$AuthSessionController {
     };
   }
 }
-

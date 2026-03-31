@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'package:lumos/core/theme/foundation/widget_sizes.dart';
-
-class LumosProgressRing extends StatelessWidget {
-  const LumosProgressRing({
+class LumosValueRing extends StatelessWidget {
+  const LumosValueRing({
     super.key,
     this.value,
     this.progress,
-    this.size = WidgetSizes.avatarMedium,
-    this.strokeWidth = WidgetSizes.progressTrackHeight,
+    this.size = 48,
+    this.strokeWidth = 6,
     this.centerChild,
   });
 

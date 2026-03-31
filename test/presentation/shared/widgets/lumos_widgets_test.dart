@@ -6,7 +6,7 @@ import 'package:lumos/presentation/shared/composites/states/lumos_empty_state.da
 import 'package:lumos/presentation/shared/composites/states/lumos_error_state.dart';
 import 'package:lumos/presentation/shared/primitives/buttons/lumos_button.dart';
 import 'package:lumos/presentation/shared/primitives/displays/lumos_card.dart';
-import 'package:lumos/presentation/shared/primitives/displays/lumos_progress_bar.dart';
+import 'package:lumos/presentation/shared/primitives/displays/lumos_value_bar.dart';
 import 'package:lumos/presentation/shared/primitives/inputs/lumos_text_field.dart';
 import 'package:lumos/presentation/shared/primitives/text/lumos_text.dart';
 
@@ -92,12 +92,12 @@ void main() {
     expect(find.text('Retry now'), findsOneWidget);
   });
 
-  testWidgets('LumosProgressBar forwards value and height', (
+  testWidgets('LumosValueBar forwards value and height', (
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(
       const _TestApp(
-        child: LumosProgressBar(value: 0.7, height: 6),
+        child: LumosValueBar(value: 0.7, height: 6),
       ),
     );
 

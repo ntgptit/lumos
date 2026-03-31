@@ -199,4 +199,3 @@ class DeckAsyncController extends _$DeckAsyncController {
     return failure.message;
   }
 }
-

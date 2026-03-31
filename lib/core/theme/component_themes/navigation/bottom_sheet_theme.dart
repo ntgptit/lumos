@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lumos/core/theme/extensions/app_theme_palette.dart';
 import 'package:lumos/core/theme/extensions/dimension_theme_ext.dart';
 import 'package:lumos/core/theme/tokens/tokens.dart';
 
@@ -8,14 +7,12 @@ abstract final class LumosBottomSheetTheme {
     ColorScheme colorScheme,
     DimensionThemeExt dims,
   ) {
-    final palette = AppThemePalette.fromBrightness(colorScheme.brightness);
-
     return BottomSheetThemeData(
-      backgroundColor: palette.surface,
-      modalBackgroundColor: palette.surface,
+      backgroundColor: colorScheme.surface,
+      modalBackgroundColor: colorScheme.surface,
       elevation: AppElevationTokens.level2,
       modalElevation: AppElevationTokens.level3,
-      shadowColor: palette.shadow,
+      shadowColor: colorScheme.shadow,
       surfaceTintColor: Colors.transparent,
       constraints: BoxConstraints(maxWidth: dims.layout.panelMaxWidth),
       clipBehavior: Clip.antiAlias,
@@ -26,7 +23,7 @@ abstract final class LumosBottomSheetTheme {
         ),
       ),
       showDragHandle: true,
-      dragHandleColor: palette.outline,
+      dragHandleColor: colorScheme.outline,
       dragHandleSize: Size(dims.iconSize.xl, AppBorderTokens.thick),
     );
   }

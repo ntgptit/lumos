@@ -8,7 +8,8 @@ class LumosAnimatedListItem extends StatefulWidget {
     required this.index,
     required this.child,
     this.duration = AppMotion.medium,
-    this.staggerDelay = AppDurations.stagger,
+    this.staggerDelay =
+        AppMotion.stagger,
     this.slideOffset = 0.04,
   });
 

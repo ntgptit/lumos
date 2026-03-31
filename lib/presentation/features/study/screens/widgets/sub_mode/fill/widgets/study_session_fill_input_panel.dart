@@ -24,30 +24,38 @@ class StudySessionFillInputPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
-    final ThemeData theme = Theme.of(context);
+    final ThemeData theme = context.theme;
     final ColorScheme colorScheme = theme.colorScheme;
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        final bool compactHeight = constraints.maxHeight < 260;
+        final bool compactHeight =
+            constraints.maxHeight < StudySessionLayoutMetrics.compactPanelHeightBreakpoint;
         final double errorFieldPadding =
             StudySessionLayoutMetrics.actionSpacing(
               context,
-              baseValue: compactHeight ? LumosSpacing.xxl : LumosSpacing.xxxl,
+              baseValue: compactHeight
+                  ? context.spacing.xxl
+                  : context.spacing.xxxl,
             );
-        final EdgeInsets errorBannerPadding =
-            StudySessionLayoutMetrics.cardPadding(
-              context,
-              horizontal: compactHeight ? LumosSpacing.md : LumosSpacing.lg,
-              vertical: LumosSpacing.sm,
-            );
-        final double horizontalInset = ResponsiveDimensions.compactValue(
-          context: context,
-          baseValue: compactHeight ? LumosSpacing.md : LumosSpacing.lg,
+        final EdgeInsets
+        errorBannerPadding = StudySessionLayoutMetrics.cardPadding(
+          context,
+          horizontal: compactHeight
+              ? context.spacing.md
+              : context.spacing.lg,
+          vertical:
+              context.spacing.sm,
+        );
+        final double horizontalInset = context.compactValue(
+          baseValue: compactHeight
+              ? context.spacing.md
+              : context.spacing.lg,
           minScale: ResponsiveDimensions.compactInsetScale,
         );
-        final double bottomInset = ResponsiveDimensions.compactValue(
-          context: context,
-          baseValue: compactHeight ? LumosSpacing.md : LumosSpacing.lg,
+        final double bottomInset = context.compactValue(
+          baseValue: compactHeight
+              ? context.spacing.md
+              : context.spacing.lg,
           minScale: ResponsiveDimensions.compactInsetScale,
         );
         return LumosCard(
@@ -60,27 +68,31 @@ class StudySessionFillInputPanel extends StatelessWidget {
               children: <Widget>[
                 Positioned.fill(
                   child: AnimatedPadding(
-                    duration: AppDurations.fast,
+                    duration: AppMotion.fast,
                     curve: Curves.easeOut,
                     padding: showsRequiredInputError
                         ? EdgeInsets.only(bottom: errorFieldPadding)
                         : EdgeInsets.zero,
-                    child: LumosTextField(
-                      controller: controller,
-                      autofocus: true,
-                      expands: true,
-                      textAlign: TextAlign.center,
-                      textAlignVertical: TextAlignVertical.center,
-                      textStyle: StudySessionFillPanelStyle.termTextStyle(
-                        theme: theme,
-                        colorScheme: colorScheme,
+                    child: Theme(
+                      data: theme.copyWith(
+                        inputDecorationTheme:
+                            StudySessionFillPanelStyle.termInputDecorationTheme,
                       ),
-                      decoration:
-                          StudySessionFillPanelStyle.termInputDecoration,
-                      onChanged: onChanged,
-                      onSubmitted: (_) {
-                        onSubmit();
-                      },
+                      child: LumosTextField(
+                        controller: controller,
+                        autofocus: true,
+                        expands: true,
+                        textAlign: TextAlign.center,
+                        textAlignVertical: TextAlignVertical.center,
+                        textStyle: StudySessionFillPanelStyle.termTextStyle(
+                          theme: theme,
+                          colorScheme: colorScheme,
+                        ),
+                        onChanged: onChanged,
+                        onSubmitted: (_) {
+                          onSubmit();
+                        },
+                      ),
                     ),
                   ),
                 ),
@@ -90,7 +102,7 @@ class StudySessionFillInputPanel extends StatelessWidget {
                   bottom: bottomInset,
                   child: IgnorePointer(
                     child: AnimatedSwitcher(
-                      duration: AppDurations.fast,
+                      duration: AppMotion.fast,
                       switchInCurve: Curves.easeOut,
                       switchOutCurve: Curves.easeIn,
                       child: showsRequiredInputError
@@ -114,12 +126,14 @@ class StudySessionFillInputPanel extends StatelessWidget {
                                       data: IconThemeData(
                                         color: colorScheme.onErrorContainer,
                                       ),
-                                      child: const LumosIcon(
+                                      child: LumosIcon(
                                         Icons.error_outline_rounded,
-                                        size: IconSizes.iconSmall,
+                                        size: context.iconSize.sm,
                                       ),
                                     ),
-                                    const SizedBox(width: LumosSpacing.sm),
+                                    SizedBox(
+                                      width: context.spacing.sm,
+                                    ),
                                     Flexible(
                                       child: LumosText(
                                         l10n.studyFillAnswerRequiredValidation,

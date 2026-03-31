@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:lumos/core/theme/app_foundation.dart';
+import '../../widgets/study_session_layout_metrics.dart';
 
 class StudySessionReviewCard extends StatelessWidget {
   const StudySessionReviewCard({
@@ -18,18 +19,28 @@ class StudySessionReviewCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        final EdgeInsets cardPadding = ResponsiveDimensions.compactInsets(
-          context: context,
+        final EdgeInsets cardPadding = context.compactInsets(
           baseInsets: EdgeInsets.fromLTRB(
-            constraints.maxHeight < 260 ? LumosSpacing.lg : LumosSpacing.xl,
-            LumosSpacing.lg,
-            constraints.maxHeight < 260 ? LumosSpacing.lg : LumosSpacing.xl,
-            constraints.maxHeight < 260 ? LumosSpacing.lg : LumosSpacing.xl,
+            constraints.maxHeight <
+                    StudySessionLayoutMetrics.compactPanelHeightBreakpoint
+                ? context.spacing.lg
+                : context.spacing.xl,
+            context.spacing.lg,
+            constraints.maxHeight <
+                    StudySessionLayoutMetrics.compactPanelHeightBreakpoint
+                ? context.spacing.lg
+                : context.spacing.xl,
+            constraints.maxHeight <
+                    StudySessionLayoutMetrics.compactPanelHeightBreakpoint
+                ? context.spacing.lg
+                : context.spacing.xl,
           ),
         );
-        final double horizontalInset = ResponsiveDimensions.compactValue(
-          context: context,
-          baseValue: constraints.maxWidth < 360 ? LumosSpacing.sm : LumosSpacing.md,
+        final double horizontalInset = context.compactValue(
+          baseValue: constraints.maxWidth <
+                  StudySessionLayoutMetrics.narrowContentWidthBreakpoint
+              ? context.spacing.sm
+              : context.spacing.md,
           minScale: ResponsiveDimensions.compactInsetScale,
         );
         return LumosCard(
@@ -67,4 +78,3 @@ class StudySessionReviewCard extends StatelessWidget {
     );
   }
 }
-

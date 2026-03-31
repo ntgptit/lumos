@@ -22,7 +22,7 @@ class HomeNavigationScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final ColorScheme colorScheme = context.theme.colorScheme;
     final bool compactMobileScaffold =
         context.deviceType == DeviceType.mobile && !useNavigationRail;
     return Scaffold(
@@ -53,4 +53,3 @@ class HomeNavigationScaffold extends StatelessWidget {
     return HomeScreenKeys.desktopLayout;
   }
 }
-

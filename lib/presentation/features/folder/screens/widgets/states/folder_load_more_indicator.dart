@@ -10,4 +10,3 @@ class FolderLoadMoreIndicator extends StatelessWidget {
     return const Center(child: LumosLoadingIndicator());
   }
 }
-

@@ -20,7 +20,7 @@ class LumosEmptyState extends StatelessWidget {
 
   final String title;
   final String? message;
-  final Object? icon;
+  final Widget? icon;
   final Widget? child;
   final List<Widget> actions;
   final String? buttonLabel;
@@ -87,9 +87,6 @@ class LumosEmptyState extends StatelessWidget {
   }
 
   Widget _resolveIcon() {
-    if (icon is Widget) {
-      return icon! as Widget;
-    }
-    return Icon(icon as IconData);
+    return icon!;
   }
 }

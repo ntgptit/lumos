@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lumos/core/theme/extensions/color_scheme_ext.dart';
 import 'package:lumos/core/theme/extensions/dimension_theme_ext.dart';
 import 'package:lumos/core/theme/extensions/screen_context_ext.dart';
+import 'package:lumos/core/theme/foundation/responsive_dimensions.dart';
 import 'package:lumos/core/theme/responsive/adaptive_layout.dart';
 import 'package:lumos/core/theme/responsive/adaptive_component_size.dart';
 import 'package:lumos/core/theme/responsive/adaptive_icon_size.dart';
@@ -58,4 +59,26 @@ extension ThemeContextExt on BuildContext {
   AdaptiveIconSize get iconSize => dims.iconSize;
   AdaptiveComponentSize get componentSize => dims.componentSize;
   AdaptiveComponentSize get component => componentSize;
+
+  double compactValue({
+    required double baseValue,
+    required double minScale,
+  }) {
+    return ResponsiveDimensions.compactValue(
+      context: this,
+      baseValue: baseValue,
+      minScale: minScale,
+    );
+  }
+
+  EdgeInsets compactInsets({
+    required EdgeInsets baseInsets,
+    double minScale = ResponsiveDimensions.compactInsetScale,
+  }) {
+    return ResponsiveDimensions.compactInsets(
+      context: this,
+      baseInsets: baseInsets,
+      minScale: minScale,
+    );
+  }
 }

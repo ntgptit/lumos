@@ -23,9 +23,11 @@ class FlashcardProgressStatCard extends StatelessWidget {
     return LumosCard(
       minHeight: minHeight,
       variant: LumosCardVariant.outlined,
-      padding: const EdgeInsets.symmetric(
-        horizontal: LumosSpacing.sm,
-        vertical: LumosSpacing.md,
+      padding: EdgeInsets.symmetric(
+        horizontal:
+            context.spacing.sm,
+        vertical:
+            context.spacing.md,
       ),
       onTap: onPressed,
       child: Column(
@@ -34,7 +36,8 @@ class FlashcardProgressStatCard extends StatelessWidget {
           LumosInlineText(
             '$value',
             align: TextAlign.center,
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+            style: context.theme.textTheme.headlineSmall?.copyWith(
+             
               color: valueColor,
               fontWeight: FontWeight.w700,
             ),
@@ -45,8 +48,11 @@ class FlashcardProgressStatCard extends StatelessWidget {
             align: TextAlign.center,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            style: context.theme.textTheme.bodySmall?.copyWith(
+             
+              color: context.theme
+                  .colorScheme
+                  .onSurfaceVariant,
             ),
           ),
         ],

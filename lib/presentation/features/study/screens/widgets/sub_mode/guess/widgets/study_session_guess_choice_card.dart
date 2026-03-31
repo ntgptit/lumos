@@ -6,8 +6,8 @@ import '../../widgets/study_session_layout_metrics.dart';
 const double studySessionGuessChoiceCardDefaultHeight = 64;
 const int _guessChoiceMaxLines = 2;
 const EdgeInsetsGeometry _guessChoiceCardPadding = EdgeInsets.symmetric(
-  horizontal: LumosSpacing.md,
-  vertical: LumosSpacing.xs,
+  horizontal: 16,
+  vertical: 8,
 );
 
 class StudySessionGuessChoiceCard extends StatelessWidget {
@@ -32,7 +32,7 @@ class StudySessionGuessChoiceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final ThemeData theme = context.theme;
     final ColorScheme colorScheme = theme.colorScheme;
     final double resolvedHeight =
         height ??
@@ -41,8 +41,7 @@ class StudySessionGuessChoiceCard extends StatelessWidget {
           baseValue: studySessionGuessChoiceCardDefaultHeight,
           minScale: ResponsiveDimensions.compactLargeInsetScale,
         );
-    final EdgeInsets cardPadding = ResponsiveDimensions.compactInsets(
-      context: context,
+    final EdgeInsets cardPadding = context.compactInsets(
       baseInsets: _guessChoiceCardPadding as EdgeInsets,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
@@ -64,7 +63,8 @@ class StudySessionGuessChoiceCard extends StatelessWidget {
       borderRadius: context.shapes.hero,
       padding: EdgeInsets.zero,
       child: AnimatedContainer(
-        duration: AppDurations.medium,
+        duration:
+            AppMotion.medium,
         curve: Curves.easeInOutCubic,
         decoration: BoxDecoration(
           color: isSuccessFeedback || isErrorFeedback

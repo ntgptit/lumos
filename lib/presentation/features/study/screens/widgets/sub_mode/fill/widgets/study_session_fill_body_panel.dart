@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:lumos/core/theme/app_foundation.dart';
 
 import '../../../../../mode/study_mode_view_model.dart';
 import '../../../../../providers/study_fill_selection_provider.dart';
+import '../../widgets/study_session_layout_metrics.dart';
 import 'study_session_fill_answer_panel.dart';
 import 'study_session_fill_input_panel.dart';
-import 'package:lumos/core/theme/app_foundation.dart';
 
 class StudySessionFillBodyPanel extends StatelessWidget {
   const StudySessionFillBodyPanel({
@@ -30,15 +31,18 @@ class StudySessionFillBodyPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        final EdgeInsets panelInset = ResponsiveDimensions.compactInsets(
-          context: context,
+        final EdgeInsets panelInset = context.compactInsets(
           baseInsets: EdgeInsets.symmetric(
-            horizontal: constraints.maxWidth < 360
-                ? LumosSpacing.xs
-                : LumosSpacing.none,
-            vertical: constraints.maxHeight < 260
-                ? LumosSpacing.xs
-                : LumosSpacing.none,
+            horizontal:
+                constraints.maxWidth <
+                    StudySessionLayoutMetrics.narrowContentWidthBreakpoint
+                ? context.spacing.xs
+                : 0,
+            vertical:
+                constraints.maxHeight <
+                    StudySessionLayoutMetrics.compactPanelHeightBreakpoint
+                ? context.spacing.xs
+                : 0,
           ),
         );
         if (showsAnswerPanel) {
@@ -69,4 +73,3 @@ class StudySessionFillBodyPanel extends StatelessWidget {
     );
   }
 }
-

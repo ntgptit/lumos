@@ -4,8 +4,8 @@ import 'package:lumos/core/theme/foundation/app_cursor.dart';
 import 'package:lumos/core/theme/tokens/tokens.dart';
 import 'package:lumos/presentation/shared/primitives/displays/lumos_surface.dart';
 
-class LumosFlashcardFace extends StatelessWidget {
-  const LumosFlashcardFace({
+class LumosFlipCardFace extends StatelessWidget {
+  const LumosFlipCardFace({
     super.key,
     required this.front,
     required this.back,

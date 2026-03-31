@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:lumos/core/theme/extensions/theme_context_ext.dart';
+import 'package:lumos/l10n/l10n.dart';
 import 'package:lumos/presentation/shared/composites/dialogs/lumos_bottom_sheet.dart';
 import 'package:lumos/presentation/shared/primitives/buttons/lumos_danger_button.dart';
 import 'package:lumos/presentation/shared/primitives/buttons/lumos_outline_button.dart';
@@ -12,7 +12,7 @@ class LumosActionSheet extends StatelessWidget {
     this.title,
     required this.actions,
     this.subtitle,
-    this.cancelLabel = 'Cancel',
+    this.cancelLabel,
     this.cancelText,
     this.onCancel,
   });
@@ -20,20 +20,18 @@ class LumosActionSheet extends StatelessWidget {
   final String? title;
   final String? subtitle;
   final List<AppActionSheetAction> actions;
-  final String cancelLabel;
+  final String? cancelLabel;
   final String? cancelText;
   final VoidCallback? onCancel;
 
   @override
   Widget build(BuildContext context) {
+    final String resolvedCancelText =
+        cancelText ?? cancelLabel ?? context.l10n.commonCancel;
     return LumosBottomSheet(
       title: title,
       subtitle: subtitle,
-      actions: [
-        LumosTextButton(text: cancelLabel, onPressed: () => context.pop()),
-        if (cancelText != null)
-          LumosTextButton(text: cancelText!, onPressed: onCancel),
-      ],
+      actions: [LumosTextButton(text: resolvedCancelText, onPressed: onCancel)],
       child: ListView.separated(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),

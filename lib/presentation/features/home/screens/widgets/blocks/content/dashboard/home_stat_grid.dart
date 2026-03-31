@@ -8,14 +8,16 @@ abstract final class HomeStatGridConst {
   HomeStatGridConst._();
 
   static const double statIconContainerSize =
-      LumosSpacing.xxxl + LumosSpacing.sm;
-  static const double activityAccentSize = LumosSpacing.xxxl;
+      64 +
+      12;
+  static const double activityAccentSize =
+      64;
   static const double cardElevation = AppElevationTokens.level1;
   static const EdgeInsetsGeometry sectionHeaderPadding = EdgeInsets.fromLTRB(
-    LumosSpacing.lg,
-    LumosSpacing.lg,
-    LumosSpacing.lg,
-    LumosSpacing.md,
+    24,
+    24,
+    24,
+    16,
   );
 }
 
@@ -25,14 +27,12 @@ class HomeStatGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
-    final double cardPadding = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.lg,
+    final double cardPadding = context.compactValue(
+      baseValue: context.spacing.lg,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double itemGap = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.md,
+    final double itemGap = context.compactValue(
+      baseValue: context.spacing.md,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     final List<_HomeStatItem> stats = <_HomeStatItem>[
@@ -75,20 +75,18 @@ class HomeStatGrid extends StatelessWidget {
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                               borderRadius: context.shapes.card,
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.secondaryContainer,
+                              color: context.theme.colorScheme.secondaryContainer,
                             ),
                             child: IconTheme(
                               data: IconThemeData(
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.onSecondaryContainer,
+                                color: context.theme.colorScheme.onSecondaryContainer,
                               ),
                               child: LumosIcon(stat.icon),
                             ),
                           ),
-                          const SizedBox(width: LumosSpacing.md),
+                          SizedBox(
+                            width: context.spacing.md,
+                          ),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -119,8 +117,8 @@ class HomeStatGrid extends StatelessWidget {
               .map(
                 (_HomeStatItem stat) => Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: LumosSpacing.xs,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: context.spacing.xs,
                     ),
                     child: LumosSectionCard(
                       variant: LumosCardVariant.outlined,
@@ -135,20 +133,18 @@ class HomeStatGrid extends StatelessWidget {
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                               borderRadius: context.shapes.card,
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.secondaryContainer,
+                              color: context.theme.colorScheme.secondaryContainer,
                             ),
                             child: IconTheme(
                               data: IconThemeData(
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.onSecondaryContainer,
+                                color: context.theme.colorScheme.onSecondaryContainer,
                               ),
                               child: LumosIcon(stat.icon),
                             ),
                           ),
-                          const SizedBox(width: LumosSpacing.md),
+                          SizedBox(
+                            width: context.spacing.md,
+                          ),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,

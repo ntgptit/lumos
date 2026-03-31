@@ -15,19 +15,16 @@ class ProfileAccountCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
-    final double bannerGap = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.lg,
+    final double bannerGap = context.compactValue(
+      baseValue: context.spacing.lg,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double titleGap = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.sm,
+    final double titleGap = context.compactValue(
+      baseValue: context.spacing.sm,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double rowGap = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.md,
+    final double rowGap = context.compactValue(
+      baseValue: context.spacing.md,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     final double iconBoxSize = context.component.listItemLeadingSize;
@@ -44,7 +41,7 @@ class ProfileAccountCard extends StatelessWidget {
               borderRadius: context.shapes.control,
               border: Border.all(
                 color: context.colorScheme.outlineVariant,
-                width: WidgetSizes.borderWidthRegular,
+                width: AppStroke.regular,
               ),
             ),
             child: Center(

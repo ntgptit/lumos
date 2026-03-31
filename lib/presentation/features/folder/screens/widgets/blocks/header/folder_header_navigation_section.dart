@@ -83,14 +83,12 @@ class _FolderHeaderNavigationSectionState
 
   @override
   Widget build(BuildContext context) {
-    final double rowGap = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.sm,
+    final double rowGap = context.compactValue(
+      baseValue: context.spacing.sm,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double compactGap = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.xs,
+    final double compactGap = context.compactValue(
+      baseValue: context.spacing.xs,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     final String currentSortLabel = _buildCurrentSortLabel();
@@ -110,10 +108,12 @@ class _FolderHeaderNavigationSectionState
                 label: Tooltip(
                   message: widget.l10n.folderRoot,
                   child: widget.isNavigatingRoot
-                      ? const LumosLoadingIndicator(size: IconSizes.iconSmall)
-                      : const LumosIcon(
+                      ? LumosLoadingIndicator(
+                          size: context.iconSize.sm,
+                        )
+                      : LumosIcon(
                           Icons.home_rounded,
-                          size: IconSizes.iconSmall,
+                          size: context.iconSize.sm,
                         ),
                 ),
               ),
@@ -123,10 +123,12 @@ class _FolderHeaderNavigationSectionState
                 label: Tooltip(
                   message: widget.l10n.folderOpenParentTooltip,
                   child: widget.isNavigatingParent
-                      ? const LumosLoadingIndicator(size: IconSizes.iconSmall)
-                      : const LumosIcon(
+                      ? LumosLoadingIndicator(
+                          size: context.iconSize.sm,
+                        )
+                      : LumosIcon(
                           Icons.keyboard_arrow_up_rounded,
-                          size: IconSizes.iconSmall,
+                          size: context.iconSize.sm,
                         ),
                 ),
               ),
@@ -137,10 +139,13 @@ class _FolderHeaderNavigationSectionState
       LumosUtilityChipButton(
         label: currentSortLabel,
         onPressed: () => _onSortPressed(context),
-        leading: const LumosIcon(Icons.sort_rounded, size: IconSizes.iconSmall),
-        trailing: const LumosIcon(
+        leading: LumosIcon(
+          Icons.sort_rounded,
+          size: context.iconSize.sm,
+        ),
+        trailing: LumosIcon(
           Icons.keyboard_arrow_down_rounded,
-          size: IconSizes.iconSmall,
+          size: context.iconSize.sm,
         ),
       ),
     ];

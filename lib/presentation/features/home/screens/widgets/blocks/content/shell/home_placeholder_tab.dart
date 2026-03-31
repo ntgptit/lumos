@@ -19,10 +19,9 @@ class HomePlaceholderTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
-    final double screenPadding = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.lg,
+    final ColorScheme colorScheme = context.theme.colorScheme;
+    final double screenPadding = context.compactValue(
+      baseValue: context.spacing.lg,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     return Center(
@@ -37,7 +36,9 @@ class HomePlaceholderTab extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Container(
-                  padding: const EdgeInsets.all(LumosSpacing.lg),
+                  padding: EdgeInsets.all(
+                    context.spacing.lg,
+                  ),
                   decoration: BoxDecoration(
                     border: Border.all(
                       color: colorScheme.outlineVariant,
@@ -48,12 +49,19 @@ class HomePlaceholderTab extends StatelessWidget {
                   ),
                   child: IconTheme(
                     data: IconThemeData(color: colorScheme.primary),
-                    child: LumosIcon(icon, size: IconSizes.iconXLarge),
+                    child: LumosIcon(
+                      icon,
+                      size: context.iconSize.xxxl,
+                    ),
                   ),
                 ),
-                const SizedBox(height: LumosSpacing.lg),
+                SizedBox(
+                  height: context.spacing.lg,
+                ),
                 LumosText(title, style: LumosTextStyle.headlineSmall),
-                const SizedBox(height: LumosSpacing.sm),
+                SizedBox(
+                  height: context.spacing.sm,
+                ),
                 LumosText(
                   subtitle,
                   style: LumosTextStyle.bodyMedium,

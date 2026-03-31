@@ -63,12 +63,13 @@ class StudySessionScreenBody extends ConsumerWidget {
       error: (Object error, StackTrace stackTrace) {
         return LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
-            final EdgeInsets shellPadding = ResponsiveDimensions.compactInsets(
-              context: context,
-              baseInsets: const EdgeInsets.all(LumosSpacing.lg),
+            final EdgeInsets shellPadding = context.compactInsets(
+              baseInsets: EdgeInsets.all(
+                context.spacing.lg,
+              ),
             );
             final double maxWidth = constraints.isDesktop
-                ? WidgetSizes.maxContentWidth
+                ? context.component.loadingStateMaxWidth
                 : constraints.maxWidth;
             return Align(
               alignment: Alignment.topCenter,
@@ -94,9 +95,10 @@ class StudySessionScreenBody extends ConsumerWidget {
           return LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
               final EdgeInsets shellPadding =
-                  ResponsiveDimensions.compactInsets(
-                    context: context,
-                    baseInsets: const EdgeInsets.all(LumosSpacing.lg),
+                  context.compactInsets(
+                    baseInsets: EdgeInsets.all(
+                      context.spacing.lg,
+                    ),
                   );
               return Padding(
                 padding: shellPadding,
@@ -124,7 +126,7 @@ class StudySessionScreenBody extends ConsumerWidget {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         final double maxWidth = constraints.isDesktop
-            ? WidgetSizes.maxContentWidth
+            ? context.component.loadingStateMaxWidth
             : constraints.maxWidth;
         return Align(
           alignment: Alignment.topCenter,
@@ -137,4 +139,3 @@ class StudySessionScreenBody extends ConsumerWidget {
     );
   }
 }
-

@@ -5,10 +5,14 @@ import 'package:lumos/core/theme/app_foundation.dart';
 abstract final class FlashcardStudyProgressSectionConst {
   FlashcardStudyProgressSectionConst._();
 
-  static const double sectionSpacing = LumosSpacing.lg;
-  static const double columnSpacing = LumosSpacing.sm;
-  static const double ringLabelSpacing = LumosSpacing.xs;
-  static const double progressRingSize = WidgetSizes.avatarMedium;
+  static const double sectionSpacing =
+      24;
+  static const double columnSpacing =
+      12;
+  static const double ringLabelSpacing =
+      8;
+  static const double progressRingSize =
+      48;
   static const double progressTextMaxValue = 1;
 }
 
@@ -44,23 +48,19 @@ class FlashcardStudyProgressSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double sectionSpacing = ResponsiveDimensions.compactValue(
-      context: context,
+    final double sectionSpacing = context.compactValue(
       baseValue: FlashcardStudyProgressSectionConst.sectionSpacing,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double columnSpacing = ResponsiveDimensions.compactValue(
-      context: context,
+    final double columnSpacing = context.compactValue(
       baseValue: FlashcardStudyProgressSectionConst.columnSpacing,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double ringSize = ResponsiveDimensions.compactValue(
-      context: context,
+    final double ringSize = context.compactValue(
       baseValue: FlashcardStudyProgressSectionConst.progressRingSize,
       minScale: ResponsiveDimensions.compactLargeInsetScale,
     );
-    final double ringLabelSpacing = ResponsiveDimensions.compactValue(
-      context: context,
+    final double ringLabelSpacing = context.compactValue(
       baseValue: FlashcardStudyProgressSectionConst.ringLabelSpacing,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
@@ -68,7 +68,7 @@ class FlashcardStudyProgressSection extends StatelessWidget {
     final List<_FlashcardStudyProgressItem> items = _buildItems(
       safeTotalCount: safeTotalCount,
     );
-    final ThemeData theme = Theme.of(context);
+    final ThemeData theme = context.theme;
     final List<Widget> ringChildren = <Widget>[];
     for (int i = 0; i < items.length; i++) {
       if (i > 0) {
@@ -100,7 +100,7 @@ class FlashcardStudyProgressSection extends StatelessWidget {
                         color: ringColor,
                       ),
                     ),
-                    child: LumosProgressRing(
+                    child: LumosValueRing(
                       progress: item.progress,
                       size: ringSize,
                       centerChild: LumosInlineText(

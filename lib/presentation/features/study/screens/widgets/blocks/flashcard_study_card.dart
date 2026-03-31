@@ -8,12 +8,18 @@ import '../../../../../../l10n/app_localizations.dart';
 abstract final class FlashcardStudyCardConst {
   FlashcardStudyCardConst._();
 
-  static const double contentHorizontalPadding = LumosSpacing.lg;
-  static const double contentVerticalPadding = LumosSpacing.lg;
-  static const double actionIconSize = LumosSpacing.xl;
-  static const double hintIconSize = LumosSpacing.xl;
-  static const double titleGap = LumosSpacing.sm;
-  static const double bottomGap = LumosSpacing.sm;
+  static const double contentHorizontalPadding =
+      24;
+  static const double contentVerticalPadding =
+      24;
+  static const double actionIconSize =
+      32;
+  static const double hintIconSize =
+      32;
+  static const double titleGap =
+      12;
+  static const double bottomGap =
+      12;
   static const int backTextMaxLines = 8;
   static const int noteMaxLines = 4;
 }
@@ -41,36 +47,30 @@ class FlashcardStudyCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
-    final ThemeData theme = Theme.of(context);
+    final ThemeData theme = context.theme;
     final String normalizedNote = StringUtils.normalizeText(item.note);
     final bool hasNote = normalizedNote.isNotEmpty;
-    final double contentHorizontalPadding = ResponsiveDimensions.compactValue(
-      context: context,
+    final double contentHorizontalPadding = context.compactValue(
       baseValue: FlashcardStudyCardConst.contentHorizontalPadding,
       minScale: ResponsiveDimensions.compactLargeInsetScale,
     );
-    final double contentVerticalPadding = ResponsiveDimensions.compactValue(
-      context: context,
+    final double contentVerticalPadding = context.compactValue(
       baseValue: FlashcardStudyCardConst.contentVerticalPadding,
       minScale: ResponsiveDimensions.compactLargeInsetScale,
     );
-    final double actionIconSize = ResponsiveDimensions.compactValue(
-      context: context,
+    final double actionIconSize = context.compactValue(
       baseValue: FlashcardStudyCardConst.actionIconSize,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double titleGap = ResponsiveDimensions.compactValue(
-      context: context,
+    final double titleGap = context.compactValue(
       baseValue: FlashcardStudyCardConst.titleGap,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double bottomGap = ResponsiveDimensions.compactValue(
-      context: context,
+    final double bottomGap = context.compactValue(
       baseValue: FlashcardStudyCardConst.bottomGap,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double hintIconSize = ResponsiveDimensions.compactValue(
-      context: context,
+    final double hintIconSize = context.compactValue(
       baseValue: FlashcardStudyCardConst.hintIconSize,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
@@ -111,7 +111,7 @@ class FlashcardStudyCard extends StatelessWidget {
             Expanded(
               child: Center(
                 child: AnimatedSwitcher(
-                  duration: AppDurations.medium,
+                  duration: AppMotion.medium,
                   switchInCurve: Curves.easeOutCubic,
                   switchOutCurve: Curves.easeOutCubic,
                   child: isFlipped

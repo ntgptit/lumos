@@ -15,11 +15,15 @@ import 'widgets/study_session_guess_prompt_card.dart';
 
 const String _submitAnswerActionId = 'SUBMIT_ANSWER';
 const double _guessPromptHeightFactor = 0.45;
-const double _guessSectionSpacing = LumosSpacing.md;
-const double _guessBottomSpacing = LumosSpacing.none;
+const double _guessSectionSpacing =
+    16;
+const double _guessBottomSpacing =
+    0;
 const double _guessMinimumChoiceHeight = 56;
-const double _guessScrollableSectionSpacing = LumosSpacing.md;
-const double _guessScrollableBottomSpacing = LumosSpacing.none;
+const double _guessScrollableSectionSpacing =
+    16;
+const double _guessScrollableBottomSpacing =
+    0;
 
 class StudySessionGuessContent extends StatelessWidget {
   const StudySessionGuessContent({
@@ -172,4 +176,3 @@ class StudySessionGuessContent extends StatelessWidget {
     );
   }
 }
-

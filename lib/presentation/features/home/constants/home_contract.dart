@@ -20,3 +20,9 @@ abstract final class HomeScreenKeys {
     'home-layout-desktop',
   );
 }
+
+abstract final class HomeLayoutBreakpoints {
+  HomeLayoutBreakpoints._();
+
+  static const double compactDesktopWidth = 1080;
+}

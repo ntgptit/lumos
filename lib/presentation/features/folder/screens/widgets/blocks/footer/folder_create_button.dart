@@ -26,13 +26,13 @@ class FolderCreateButton extends StatelessWidget {
       return const SizedBox.shrink();
     }
     if (actions.isEmpty) {
-      return const SizedBox.shrink();
+      return SizedBox.shrink();
     }
     final bool isSingleAction = actions.length == 1;
     final FolderContentSupportCreateAction singleAction = actions.first;
-    final double bottomInset = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.xxl,
+    final double bottomInset = context.compactValue(
+      baseValue:
+          context.spacing.xxl,
       minScale: ResponsiveDimensions.compactVerticalInsetScale,
     );
     return Positioned(
@@ -54,4 +54,3 @@ class FolderCreateButton extends StatelessWidget {
     );
   }
 }
-

@@ -10,12 +10,12 @@ class LumosHeroBanner extends StatelessWidget {
     this.minHeight,
     this.gradientColors,
     this.borderRadius,
-    this.borderWidth = WidgetSizes.borderWidthRegular,
+    this.borderWidth = AppStroke.regular,
     this.showDecorativeBlob = true,
     this.decorativeBlobColor,
     this.showShadow = false,
-    this.shadowBlurRadius = LumosSpacing.xxl,
-    this.shadowOffsetY = LumosSpacing.sm,
+    this.shadowBlurRadius = 48,
+    this.shadowOffsetY = 12,
   });
 
   final Widget child;
@@ -38,14 +38,13 @@ class LumosHeroBanner extends StatelessWidget {
     final List<Color> resolvedGradientColors =
         gradientColors ??
         <Color>[colorScheme.primaryContainer, colorScheme.surfaceContainer];
-    final double blobOffset = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.xxl,
+    final double blobOffset = context.compactValue(
+      baseValue:
+          context.spacing.xxl,
       minScale: ResponsiveDimensions.compactLargeInsetScale,
     );
-    final double blobSize = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.canvas + LumosSpacing.xxxl,
+    final double blobSize = context.compactValue(
+      baseValue: 96 + context.spacing.xxxl,
       minScale: ResponsiveDimensions.compactLargeInsetScale,
     );
 
@@ -66,7 +65,7 @@ class LumosHeroBanner extends StatelessWidget {
                     alpha: AppOpacity.subtle,
                   ),
                   blurRadius: shadowBlurRadius,
-                  offset: Offset(LumosSpacing.none, shadowOffsetY),
+                  offset: Offset(0, shadowOffsetY),
                 ),
               ]
             : null,

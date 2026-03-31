@@ -21,6 +21,17 @@ class SpacingOwnershipGuardConst {
 
   static const String allowLineMarker = 'spacing-ownership-guard: allow-line';
   static const String allowFileMarker = 'spacing-ownership-guard: allow-file';
+  static const Set<String> forbiddenLumosSpacingStatics = <String>{
+    'none',
+    'md',
+    'lg',
+    'xl',
+    'xxl',
+    'xxxl',
+    'section',
+    'page',
+    'canvas',
+  };
   static const String childArgumentName = 'child';
   static const String paddingArgumentName = 'padding';
   static const String marginArgumentName = 'margin';
@@ -328,6 +339,37 @@ class _SpacingOwnershipVisitor extends RecursiveAstVisitor<void> {
       return '';
     }
     return lines[lineNumber - 1].trim();
+  }
+
+  @override
+  void visitPrefixedIdentifier(PrefixedIdentifier node) {
+    super.visitPrefixedIdentifier(node);
+
+    if (!path.startsWith(SpacingOwnershipGuardConst.featurePrefix)) {
+      return;
+    }
+    if (node.prefix.name != 'LumosSpacing') {
+      return;
+    }
+    if (!SpacingOwnershipGuardConst.forbiddenLumosSpacingStatics.contains(
+      node.identifier.name,
+    )) {
+      return;
+    }
+    if (_isIgnored(node)) {
+      return;
+    }
+
+    final int lineNumber = lineInfo.getLocation(node.offset).lineNumber;
+    violations.add(
+      SpacingOwnershipViolation(
+        filePath: path,
+        lineNumber: lineNumber,
+        reason:
+            'Dùng context.spacing.${node.identifier.name} thay vì LumosSpacing.${node.identifier.name} static const trong feature layer.',
+        lineContent: _lineAt(lineNumber),
+      ),
+    );
   }
 }
 

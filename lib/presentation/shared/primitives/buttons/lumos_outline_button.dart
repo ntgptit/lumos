@@ -10,7 +10,6 @@ class LumosOutlineButton extends LumosButton {
     super.isLoading,
     Widget? leading,
     super.trailing,
-    super.style,
     IconData? icon,
     super.size,
   }) : super(

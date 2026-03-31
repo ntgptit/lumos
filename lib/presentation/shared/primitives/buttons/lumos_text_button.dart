@@ -9,6 +9,5 @@ class LumosTextButton extends LumosButton {
     super.isLoading,
     super.leading,
     super.trailing,
-    super.style,
   }) : super(variant: AppButtonVariant.text);
 }

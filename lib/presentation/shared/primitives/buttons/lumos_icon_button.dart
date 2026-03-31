@@ -3,7 +3,10 @@ import 'package:lumos/core/theme/extensions/theme_context_ext.dart';
 
 enum AppIconButtonVariant { standard, filled, tonal, outline }
 
-class LumosIconButton extends StatelessWidget {
+class LumosIconButton<
+  TIcon extends Object,
+  TSelectedIcon extends Object
+> extends StatelessWidget {
   const LumosIconButton({
     super.key,
     required this.icon,
@@ -12,17 +15,15 @@ class LumosIconButton extends StatelessWidget {
     this.variant = AppIconButtonVariant.standard,
     this.isSelected = false,
     this.selectedIcon,
-    this.style,
     this.size,
   });
 
-  final Object icon;
+  final TIcon icon;
   final VoidCallback? onPressed;
   final String? tooltip;
   final AppIconButtonVariant variant;
   final bool isSelected;
-  final Object? selectedIcon;
-  final ButtonStyle? style;
+  final TSelectedIcon? selectedIcon;
   final double? size;
 
   @override
@@ -38,7 +39,6 @@ class LumosIconButton extends StatelessWidget {
       AppIconButtonVariant.standard => IconButton(
         onPressed: onPressed,
         tooltip: tooltip,
-        style: style,
         constraints: constraints,
         isSelected: isSelected,
         selectedIcon: resolvedSelectedIcon,
@@ -47,7 +47,6 @@ class LumosIconButton extends StatelessWidget {
       AppIconButtonVariant.filled => IconButton.filled(
         onPressed: onPressed,
         tooltip: tooltip,
-        style: style,
         constraints: constraints,
         isSelected: isSelected,
         selectedIcon: resolvedSelectedIcon,
@@ -56,7 +55,6 @@ class LumosIconButton extends StatelessWidget {
       AppIconButtonVariant.tonal => IconButton.filledTonal(
         onPressed: onPressed,
         tooltip: tooltip,
-        style: style,
         constraints: constraints,
         isSelected: isSelected,
         selectedIcon: resolvedSelectedIcon,
@@ -65,7 +63,6 @@ class LumosIconButton extends StatelessWidget {
       AppIconButtonVariant.outline => IconButton.outlined(
         onPressed: onPressed,
         tooltip: tooltip,
-        style: style,
         constraints: constraints,
         isSelected: isSelected,
         selectedIcon: resolvedSelectedIcon,

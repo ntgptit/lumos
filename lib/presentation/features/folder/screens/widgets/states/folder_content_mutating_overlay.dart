@@ -11,18 +11,15 @@ class FolderContentMutatingOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (!isMutating) {
-      return const SizedBox.shrink();
+      return SizedBox.shrink();
     }
     return Positioned.fill(
       child: IgnorePointer(
         child: ColoredBox(
-          color: Theme.of(
-            context,
-          ).colorScheme.scrim.withValues(alpha: AppOpacity.strong),
+          color: context.theme.colorScheme.scrim.withValues(alpha: AppOpacity.strong),
           child: const FolderMutatingOverlay(),
         ),
       ),
     );
   }
 }
-

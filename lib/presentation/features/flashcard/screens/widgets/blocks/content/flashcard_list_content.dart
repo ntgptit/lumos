@@ -68,30 +68,25 @@ class FlashcardListContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool compactLayout =
         MediaQuery.sizeOf(context).width < Breakpoints.kMobileMaxWidth;
-    final double sectionSpacing = ResponsiveDimensions.compactValue(
-      context: context,
+    final double sectionSpacing = context.compactValue(
       baseValue: compactLayout
-          ? LumosSpacing.md
+          ? context.spacing.md
           : FlashcardContentSupportConst.sectionSpacing,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double itemSpacing = ResponsiveDimensions.compactValue(
-      context: context,
+    final double itemSpacing = context.compactValue(
       baseValue: FlashcardContentSupportConst.listItemSpacing,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double mediumGap = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.md,
+    final double mediumGap = context.compactValue(
+      baseValue: context.spacing.md,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double loadingBottomGap = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.sm,
+    final double loadingBottomGap = context.compactValue(
+      baseValue: context.spacing.sm,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double bottomSpacing = ResponsiveDimensions.compactValue(
-      context: context,
+    final double bottomSpacing = context.compactValue(
       baseValue: FlashcardContentSupportConst.listBottomSpacing,
       minScale: ResponsiveDimensions.compactVerticalInsetScale,
     );

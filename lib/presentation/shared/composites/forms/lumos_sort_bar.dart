@@ -216,7 +216,9 @@ Widget _buildSortOptionTile({
         onTap: onTap,
         borderRadius: context.shapes.card,
         child: ConstrainedBox(
-          constraints: BoxConstraints(minHeight: context.component.buttonHeight),
+          constraints: BoxConstraints(
+            minHeight: context.component.buttonHeight,
+          ),
           child: Padding(
             padding: EdgeInsets.symmetric(
               horizontal: context.spacing.md,

@@ -8,7 +8,8 @@ import '../../../../../providers/study_match_selection_provider.dart';
 import '../../widgets/study_session_layout_metrics.dart';
 import 'study_session_match_pair_button.dart';
 
-const double _matchColumnGap = LumosSpacing.md;
+const double _matchColumnGap =
+    16;
 const double _matchCardMinHeight = 204;
 const double _matchCardMaxHeight = 276;
 const double _matchCardHeightFactor = 0.72;
@@ -32,7 +33,9 @@ class StudySessionMatchPairRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isLeftMatched = selectionState.isLeftMatched(leftPair.leftId);
-    final bool isRightMatched = selectionState.isRightMatched(rightPair.rightId);
+    final bool isRightMatched = selectionState.isRightMatched(
+      rightPair.rightId,
+    );
     final double columnGap = StudySessionLayoutMetrics.sectionSpacing(
       context,
       baseValue: _matchColumnGap,
@@ -82,7 +85,8 @@ class StudySessionMatchPairRow extends StatelessWidget {
                 child: StudySessionMatchPairButton(
                   label: rightPair.rightLabel,
                   isMatched: isRightMatched,
-                  isSelected: selectionState.selectedRightId == rightPair.rightId,
+                  isSelected:
+                      selectionState.selectedRightId == rightPair.rightId,
                   isSuccessFeedback: selectionState.isSuccessFeedbackForRight(
                     rightPair.rightId,
                   ),
@@ -104,4 +108,3 @@ class StudySessionMatchPairRow extends StatelessWidget {
     );
   }
 }
-

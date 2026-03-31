@@ -8,6 +8,8 @@ class SharedWidgetOverrideGuardConst {
   const SharedWidgetOverrideGuardConst._();
 
   static const String featuresRoot = 'lib/presentation/features';
+  static const String sharedRoot = 'lib/presentation/shared';
+  static const String sharedMixinsRoot = 'lib/presentation/shared/mixins/';
   static const String dartExtension = '.dart';
   static const String generatedExtension = '.g.dart';
   static const String freezedExtension = '.freezed.dart';
@@ -75,6 +77,10 @@ final List<_ForbiddenArgumentRule> _rules = <_ForbiddenArgumentRule>[
   ),
 ];
 
+final RegExp _sharedNavigationCouplingPattern = RegExp(
+  r'\bcontext\.(pop|push|go|replace)\s*\(',
+);
+
 Future<void> main() async {
   final Directory root = Directory(SharedWidgetOverrideGuardConst.featuresRoot);
   if (!root.existsSync()) {
@@ -94,6 +100,25 @@ Future<void> main() async {
     _checkFile(path: path, lines: lines, violations: violations);
   }
 
+  final Directory sharedRoot = Directory(
+    SharedWidgetOverrideGuardConst.sharedRoot,
+  );
+  if (sharedRoot.existsSync()) {
+    final List<File> sharedFiles = _collectDartFiles(sharedRoot);
+    for (final File file in sharedFiles) {
+      final String path = _normalizePath(file.path);
+      if (path.startsWith(SharedWidgetOverrideGuardConst.sharedMixinsRoot)) {
+        continue;
+      }
+      final List<String> lines = await file.readAsLines();
+      _checkSharedNavigationCoupling(
+        path: path,
+        lines: lines,
+        violations: violations,
+      );
+    }
+  }
+
   if (violations.isEmpty) {
     stdout.writeln('Shared widget override contract passed.');
     return;
@@ -106,6 +131,35 @@ Future<void> main() async {
     );
   }
   exitCode = 1;
+}
+
+void _checkSharedNavigationCoupling({
+  required String path,
+  required List<String> lines,
+  required List<SharedWidgetOverrideViolation> violations,
+}) {
+  for (int index = 0; index < lines.length; index++) {
+    final String rawLine = lines[index];
+    final String sourceLine = _stripLineComment(rawLine).trim();
+    if (sourceLine.isEmpty) {
+      continue;
+    }
+    if (!sourceLine.contains('context.')) {
+      continue;
+    }
+    if (!_sharedNavigationCouplingPattern.hasMatch(sourceLine)) {
+      continue;
+    }
+    violations.add(
+      SharedWidgetOverrideViolation(
+        filePath: path,
+        lineNumber: index + 1,
+        reason:
+            'Shared widget không nên gọi navigation trực tiếp. Dùng callback để caller quyết định navigation.',
+        lineContent: rawLine.trim(),
+      ),
+    );
+  }
 }
 
 void _checkFile({

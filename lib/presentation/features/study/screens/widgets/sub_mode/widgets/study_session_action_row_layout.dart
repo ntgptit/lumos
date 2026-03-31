@@ -4,7 +4,8 @@ import 'package:lumos/core/theme/app_foundation.dart';
 import 'study_session_layout_metrics.dart';
 
 const double _studySessionActionRowSingleWidthFactor = 0.42;
-const double _studySessionActionRowGap = LumosSpacing.lg;
+const double _studySessionActionRowGap =
+    24;
 const double _studySessionActionRowHeight = 64;
 
 class StudySessionActionRowLayout extends StatelessWidget {
@@ -14,7 +15,7 @@ class StudySessionActionRowLayout extends StatelessWidget {
     this.singleWidthFactor = _studySessionActionRowSingleWidthFactor,
     this.gap = _studySessionActionRowGap,
     this.rowHeight = _studySessionActionRowHeight,
-    this.verticalSpacing = LumosSpacing.sm,
+    this.verticalSpacing = 12,
   });
 
   final List<Widget> children;
@@ -71,7 +72,9 @@ class StudySessionActionRowLayout extends StatelessWidget {
         final bool isLastChild = index == children.length - 1;
         return Padding(
           padding: EdgeInsets.only(
-            bottom: isLastChild ? LumosSpacing.none : resolvedVerticalSpacing,
+            bottom: isLastChild
+                ? 0
+                : resolvedVerticalSpacing,
           ),
           child: children[index],
         );
@@ -79,4 +82,3 @@ class StudySessionActionRowLayout extends StatelessWidget {
     );
   }
 }
-

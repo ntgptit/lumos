@@ -10,7 +10,6 @@ class LumosSegmentedControl<T> extends StatelessWidget {
     this.multiSelectionEnabled = false,
     this.emptySelectionAllowed = false,
     this.showSelectedIcon = false,
-    this.style,
   });
 
   final List<ButtonSegment<T>> segments;
@@ -20,7 +19,6 @@ class LumosSegmentedControl<T> extends StatelessWidget {
   final bool multiSelectionEnabled;
   final bool emptySelectionAllowed;
   final bool showSelectedIcon;
-  final ButtonStyle? style;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +29,6 @@ class LumosSegmentedControl<T> extends StatelessWidget {
       multiSelectionEnabled: multiSelectionEnabled,
       emptySelectionAllowed: emptySelectionAllowed,
       showSelectedIcon: showSelectedIcon,
-      style: style,
     );
   }
 }

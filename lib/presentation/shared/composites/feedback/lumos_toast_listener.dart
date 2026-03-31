@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:lumos/core/enums/snackbar_type.dart';
+import 'package:lumos/core/theme/extensions/theme_context_ext.dart';
 import 'package:lumos/core/theme/foundation/app_motion.dart';
 import 'package:lumos/presentation/shared/primitives/feedback/lumos_banner.dart';
-import 'package:lumos/presentation/shared/primitives/layout/lumos_spacing.dart';
 
 enum LumosToastPosition { top, bottom }
 
@@ -15,7 +15,7 @@ class LumosToastListener extends StatefulWidget {
     required this.child,
     this.title,
     this.type = SnackbarType.info,
-    this.duration = AppDurations.toast,
+    this.duration = AppMotion.toast,
     this.position = LumosToastPosition.bottom,
   });
 
@@ -123,15 +123,15 @@ class _AppToastListenerState extends State<LumosToastListener>
         builder: (context) {
           final positioned = switch (widget.position) {
             LumosToastPosition.bottom => Positioned(
-              left: LumosSpacing.md,
-              right: LumosSpacing.md,
-              bottom: LumosSpacing.lg,
+              left: context.spacing.md,
+              right: context.spacing.md,
+              bottom: context.spacing.lg,
               child: _buildAnimatedBanner(message),
             ),
             LumosToastPosition.top => Positioned(
-              left: LumosSpacing.md,
-              right: LumosSpacing.md,
-              top: LumosSpacing.lg,
+              left: context.spacing.md,
+              right: context.spacing.md,
+              top: context.spacing.lg,
               child: _buildAnimatedBanner(message),
             ),
           };

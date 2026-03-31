@@ -92,8 +92,7 @@ class StudyRecallSelectionState {
           identical(pendingSubmittedActionId, _unsetRecallValue)
           ? this.pendingSubmittedActionId
           : pendingSubmittedActionId as String?,
-      isRememberedFeedback:
-          isRememberedFeedback ?? this.isRememberedFeedback,
+      isRememberedFeedback: isRememberedFeedback ?? this.isRememberedFeedback,
       isRetryFeedback: isRetryFeedback ?? this.isRetryFeedback,
     );
   }

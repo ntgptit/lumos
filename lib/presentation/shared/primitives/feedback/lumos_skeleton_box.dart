@@ -6,7 +6,7 @@ class LumosSkeletonBox extends StatelessWidget {
   const LumosSkeletonBox({
     super.key,
     this.width,
-    this.height = LumosSpacing.md,
+    this.height = 16,
     this.borderRadius,
   });
 

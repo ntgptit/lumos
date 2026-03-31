@@ -31,7 +31,7 @@ mixin SnackbarMixin<T extends StatefulWidget> on State<T> {
         content: LumosSnackbar(
           message: message,
           title: title,
-          type: type,
+          type: _mapSnackbarType(type),
           actionLabel: actionLabel,
           onActionPressed: onActionPressed,
         ),
@@ -41,5 +41,14 @@ mixin SnackbarMixin<T extends StatefulWidget> on State<T> {
 
   void clearAppSnackbars() {
     ScaffoldMessenger.maybeOf(context)?.clearSnackBars();
+  }
+
+  LumosSnackbarType _mapSnackbarType(SnackbarType type) {
+    return switch (type) {
+      SnackbarType.success => LumosSnackbarType.success,
+      SnackbarType.error => LumosSnackbarType.error,
+      SnackbarType.warning => LumosSnackbarType.warning,
+      SnackbarType.info => LumosSnackbarType.info,
+    };
   }
 }

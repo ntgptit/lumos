@@ -56,9 +56,8 @@ class StudySessionScreenAppBar extends StatelessWidget
       );
     }
     final bool showsLeadingModeIcon = context.screenWidth >= 390;
-    final double leadingModeInset = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.xs,
+    final double leadingModeInset = context.compactValue(
+      baseValue: context.spacing.xs,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     return LumosAppBar(
@@ -96,4 +95,3 @@ abstract final class StudySessionScreenAppBarConst {
   static const String reviewMenuReplayAudio = 'REPLAY_AUDIO';
   static const String resetCurrentModeActionId = 'RESET_CURRENT_MODE';
 }
-

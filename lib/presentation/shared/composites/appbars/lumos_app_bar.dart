@@ -74,7 +74,7 @@ class LumosAppBar extends StatelessWidget implements PreferredSizeWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               if (eyebrow != null)
-                LumosInlineText(eyebrow!, style: LumosTextStyle.labelSmall),
+                LumosInlineText(eyebrow!, style: context.textTheme.labelSmall),
               if (title != null)
                 LumosText(title!, style: LumosTextStyle.titleLarge),
             ],

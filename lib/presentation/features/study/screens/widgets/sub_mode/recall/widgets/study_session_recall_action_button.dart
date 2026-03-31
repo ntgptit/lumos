@@ -7,6 +7,7 @@ import 'package:lumos/presentation/shared/primitives/buttons/lumos_secondary_but
 import '../../../../../mode/study_mode_action_button_style.dart';
 import '../../../../../mode/study_mode_action_view_model.dart';
 import '../../../../../providers/study_recall_selection_provider.dart';
+import '../../widgets/study_session_layout_metrics.dart';
 
 class StudySessionRecallActionButton extends StatelessWidget {
   const StudySessionRecallActionButton({
@@ -37,7 +38,8 @@ class StudySessionRecallActionButton extends StatelessWidget {
         : () => onActionPressed(action.actionId);
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        final LumosButtonSize buttonSize = constraints.maxWidth < 180
+        final LumosButtonSize buttonSize = constraints.maxWidth <
+                StudySessionLayoutMetrics.compactActionButtonWidthBreakpoint
             ? LumosButtonSize.medium
             : LumosButtonSize.large;
         switch (action.style) {
@@ -73,4 +75,3 @@ class StudySessionRecallActionButton extends StatelessWidget {
     );
   }
 }
-

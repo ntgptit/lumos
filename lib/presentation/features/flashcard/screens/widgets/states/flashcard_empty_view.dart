@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../../../l10n/app_localizations.dart';
 import 'package:lumos/presentation/shared/composites/states/lumos_empty_state.dart';
+import 'package:lumos/presentation/shared/primitives/displays/lumos_icon.dart';
 
 class FlashcardEmptyView extends StatelessWidget {
   const FlashcardEmptyView({
@@ -25,10 +26,11 @@ class FlashcardEmptyView extends StatelessWidget {
     return LumosEmptyState(
       title: title,
       message: message,
-      icon: isSearchResult ? Icons.search_off_rounded : Icons.style_outlined,
+      icon: LumosIcon(
+        isSearchResult ? Icons.search_off_rounded : Icons.style_outlined,
+      ),
       buttonLabel: isSearchResult ? null : l10n.flashcardCreateButton,
       onButtonPressed: isSearchResult ? null : onCreatePressed,
     );
   }
 }
-

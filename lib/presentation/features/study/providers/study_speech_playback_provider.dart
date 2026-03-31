@@ -127,10 +127,7 @@ class StudySpeechPlaybackController extends _$StudySpeechPlaybackController {
     try {
       await textToSpeechService.stop();
       state = state.copyWith(isBusy: false, isPlaying: true);
-      await textToSpeechService.speak(
-        speech.speechText,
-        locale: speech.locale,
-      );
+      await textToSpeechService.speak(speech.speechText, locale: speech.locale);
       state = state.copyWith(
         isBusy: false,
         isPlaying: false,

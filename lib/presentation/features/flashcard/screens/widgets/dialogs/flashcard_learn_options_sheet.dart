@@ -10,10 +10,14 @@ enum FlashcardLearnOptionsSheetAction { firstLearning, review, resetProgress }
 abstract final class FlashcardLearnOptionsSheetConst {
   FlashcardLearnOptionsSheetConst._();
 
-  static const double sectionSpacing = LumosSpacing.lg;
-  static const double optionSpacing = LumosSpacing.md;
-  static const double iconContainerSize = WidgetSizes.avatarMedium;
-  static const double iconSize = IconSizes.iconSmall;
+  static const double sectionSpacing =
+      24;
+  static const double optionSpacing =
+      16;
+  static const double iconContainerSize =
+      48;
+  static const double iconSize =
+      18;
 }
 
 class _LearnOptionItem {
@@ -40,43 +44,37 @@ Future<FlashcardLearnOptionsSheetAction?> showFlashcardLearnOptionsSheet({
   return showModalBottomSheet<FlashcardLearnOptionsSheetAction>(
     context: context,
     isScrollControlled: true,
-    backgroundColor: Theme.of(
-      context,
-    ).colorScheme.surface.withValues(alpha: AppOpacity.transparent),
+    backgroundColor: context.theme.colorScheme.surface.withValues(alpha: AppOpacity.transparent),
     builder: (BuildContext sheetContext) {
-      final double sectionSpacing = ResponsiveDimensions.compactValue(
-        context: sheetContext,
+      final double sectionSpacing = sheetContext.compactValue(
         baseValue: FlashcardLearnOptionsSheetConst.sectionSpacing,
         minScale: ResponsiveDimensions.compactInsetScale,
       );
-      final double optionSpacing = ResponsiveDimensions.compactValue(
-        context: sheetContext,
+      final double optionSpacing = sheetContext.compactValue(
         baseValue: FlashcardLearnOptionsSheetConst.optionSpacing,
         minScale: ResponsiveDimensions.compactInsetScale,
       );
-      final double iconContainerSize = ResponsiveDimensions.compactValue(
-        context: sheetContext,
+      final double iconContainerSize = sheetContext.compactValue(
         baseValue: FlashcardLearnOptionsSheetConst.iconContainerSize,
         minScale: ResponsiveDimensions.compactLargeInsetScale,
       );
-      final double iconSize = ResponsiveDimensions.compactValue(
-        context: sheetContext,
+      final double iconSize = sheetContext.compactValue(
         baseValue: FlashcardLearnOptionsSheetConst.iconSize,
         minScale: ResponsiveDimensions.compactInsetScale,
       );
-      final double rowGap = ResponsiveDimensions.compactValue(
-        context: sheetContext,
-        baseValue: LumosSpacing.md,
+      final double rowGap = sheetContext.compactValue(
+        baseValue:
+            context.spacing.md,
         minScale: ResponsiveDimensions.compactInsetScale,
       );
-      final double cardPadding = ResponsiveDimensions.compactValue(
-        context: sheetContext,
-        baseValue: LumosSpacing.md,
+      final double cardPadding = sheetContext.compactValue(
+        baseValue:
+            context.spacing.md,
         minScale: ResponsiveDimensions.compactInsetScale,
       );
-      final double subtitleGap = ResponsiveDimensions.compactValue(
-        context: sheetContext,
-        baseValue: LumosSpacing.xs,
+      final double subtitleGap = sheetContext.compactValue(
+        baseValue:
+            context.spacing.xs,
         minScale: ResponsiveDimensions.compactInsetScale,
       );
       final AppLocalizations l10n = AppLocalizations.of(sheetContext)!;

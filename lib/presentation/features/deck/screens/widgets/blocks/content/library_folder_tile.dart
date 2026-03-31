@@ -32,7 +32,7 @@ class LibraryFolderTile extends StatelessWidget {
             borderRadius: context.shapes.control,
             border: Border.all(
               color: context.colorScheme.outlineVariant,
-              width: WidgetSizes.borderWidthRegular,
+              width: AppStroke.regular,
             ),
           ),
           child: Center(

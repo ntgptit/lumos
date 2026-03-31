@@ -358,8 +358,7 @@ class _FolderContentState extends ConsumerState<FolderContent> {
     required AppLocalizations l10n,
     required List<FolderContentSupportCreateAction> actions,
   }) {
-    final EdgeInsets actionSheetPadding = ResponsiveDimensions.compactInsets(
-      context: context,
+    final EdgeInsets actionSheetPadding = context.compactInsets(
       baseInsets: const EdgeInsets.fromLTRB(
         FolderContentSupportConst.createActionSheetHorizontalPadding,
         FolderContentSupportConst.createActionSheetVerticalPadding,

@@ -7,17 +7,25 @@ import 'guards/verify_common_widget_usage_contract.dart'
     as common_widget_usage_guard;
 import 'guards/verify_component_theme_usage_contract.dart'
     as component_theme_guard;
+import 'guards/verify_domain_boundary_in_shared_contract.dart'
+    as domain_boundary_in_shared_guard;
 import 'guards/verify_feature_surface_contract.dart' as feature_surface_guard;
 import 'guards/verify_feature_screen_widget_composite_boundary.dart'
     as feature_screen_widget_composite_boundary_guard;
+import 'guards/verify_foundation_single_source_contract.dart'
+    as foundation_single_source_guard;
 import 'guards/verify_l10n_usage_contract.dart' as l10n_usage_guard;
+import 'guards/verify_magic_number_contract.dart' as magic_number_guard;
 import 'guards/verify_navigation_go_router_contract.dart' as navigation_guard;
 import 'guards/verify_opacity_constants_contract.dart' as opacity_guard;
+import 'guards/verify_responsive_access_contract.dart'
+    as responsive_access_guard;
 import 'guards/verify_riverpod_annotation.dart' as riverpod_annotation_guard;
 import 'guards/verify_shared_widget_override_contract.dart'
     as shared_widget_override_guard;
-import 'guards/verify_shared_no_alias_contract.dart'
-    as shared_no_alias_guard;
+import 'guards/verify_shared_widget_bypass_contract.dart'
+    as shared_widget_bypass_guard;
+import 'guards/verify_shared_no_alias_contract.dart' as shared_no_alias_guard;
 import 'guards/verify_shared_widget_prefix_contract.dart'
     as shared_widget_prefix_guard;
 import 'guards/verify_shared_widgets_m3_coverage.dart'
@@ -28,6 +36,9 @@ import 'guards/verify_state_management_contract.dart' as state_management_guard;
 import 'guards/verify_string_utils_contract.dart' as string_utils_guard;
 import 'guards/verify_theme_architecture_contract.dart'
     as theme_architecture_guard;
+import 'guards/verify_theme_context_consistency_contract.dart'
+    as theme_context_consistency_guard;
+import 'guards/verify_type_safety_contract.dart' as type_safety_guard;
 import 'guards/verify_ui_constants_centralization.dart'
     as ui_constants_centralization_guard;
 import 'guards/verify_ui_design_guard.dart' as ui_design_guard;
@@ -215,9 +226,44 @@ List<_GuardTask> _buildDefaultTasks() {
       run: spacing_ownership_guard.main,
     ),
     _GuardTask(
+      id: 'type-safety',
+      fileName: 'guards/verify_type_safety_contract.dart',
+      run: type_safety_guard.main,
+    ),
+    _GuardTask(
+      id: 'shared-widget-bypass',
+      fileName: 'guards/verify_shared_widget_bypass_contract.dart',
+      run: shared_widget_bypass_guard.main,
+    ),
+    _GuardTask(
       id: 'theme-architecture',
       fileName: 'guards/verify_theme_architecture_contract.dart',
       run: theme_architecture_guard.main,
+    ),
+    _GuardTask(
+      id: 'foundation-single-source',
+      fileName: 'guards/verify_foundation_single_source_contract.dart',
+      run: foundation_single_source_guard.main,
+    ),
+    _GuardTask(
+      id: 'responsive-access',
+      fileName: 'guards/verify_responsive_access_contract.dart',
+      run: responsive_access_guard.main,
+    ),
+    _GuardTask(
+      id: 'theme-context-consistency',
+      fileName: 'guards/verify_theme_context_consistency_contract.dart',
+      run: theme_context_consistency_guard.main,
+    ),
+    _GuardTask(
+      id: 'domain-boundary-in-shared',
+      fileName: 'guards/verify_domain_boundary_in_shared_contract.dart',
+      run: domain_boundary_in_shared_guard.main,
+    ),
+    _GuardTask(
+      id: 'magic-number',
+      fileName: 'guards/verify_magic_number_contract.dart',
+      run: magic_number_guard.main,
     ),
     _GuardTask(
       id: 'string-utils',

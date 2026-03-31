@@ -12,6 +12,7 @@ class LumosDialog extends StatelessWidget {
     super.key,
     required this.title,
     this.content,
+    this.message,
     this.actions,
     this.icon,
     this.type = DialogType.info,
@@ -23,7 +24,8 @@ class LumosDialog extends StatelessWidget {
   });
 
   final String title;
-  final Object? content;
+  final Widget? content;
+  final String? message;
   final List<Widget>? actions;
   final Widget? icon;
   final DialogType type;
@@ -46,18 +48,18 @@ class LumosDialog extends StatelessWidget {
 
   Widget? _resolveContent() {
     if (content == null) {
-      return null;
+      if (message == null) {
+        return null;
+      }
+      return LumosText(
+        message!,
+        style: LumosTextStyle.bodyMedium,
+        tone: LumosTextTone.secondary,
+        align: TextAlign.center,
+        height: AppTypographyTokens.bodyHeight,
+      );
     }
-    if (content is Widget) {
-      return content! as Widget;
-    }
-    return LumosText(
-      content as String,
-      style: LumosTextStyle.bodyMedium,
-      tone: LumosTextTone.secondary,
-      align: TextAlign.center,
-      height: AppTypographyTokens.bodyHeight,
-    );
+    return content;
   }
 
   List<Widget>? _resolveActions() {

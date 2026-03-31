@@ -41,9 +41,8 @@ class LibraryDataView extends StatelessWidget {
       context,
     );
     final double verticalInset = context.layout.pageVerticalPadding;
-    final double listGap = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.sm,
+    final double listGap = context.compactValue(
+      baseValue: context.spacing.sm,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
     return ColoredBox(

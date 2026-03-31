@@ -22,34 +22,31 @@ class FolderHeaderBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double leadingBoxSize = context.component.listItemLeadingSize;
-    final double bannerPadding = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.md,
+    final double bannerPadding = context.compactValue(
+      baseValue: context.spacing.md,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double titleGap = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.sm,
+    final double titleGap = context.compactValue(
+      baseValue: context.spacing.sm,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double titleRowGap = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.sm,
+    final double titleRowGap = context.compactValue(
+      baseValue: context.spacing.sm,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double rowGap = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.lg,
+    final double rowGap = context.compactValue(
+      baseValue: context.spacing.lg,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double blobLargeOffset = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.xxl,
+    final double blobLargeOffset = context.compactValue(
+      baseValue:
+          context.spacing.xxl,
       minScale: ResponsiveDimensions.compactLargeInsetScale,
     );
-    final double blobLargeSize = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.canvas + LumosSpacing.xxxl,
+    final double blobLargeSize = context.compactValue(
+      baseValue:
+          96 +
+          context.spacing.xxxl,
       minScale: ResponsiveDimensions.compactLargeInsetScale,
     );
     final ColorScheme colorScheme = context.colorScheme;
@@ -67,7 +64,7 @@ class FolderHeaderBanner extends StatelessWidget {
         borderRadius: context.shapes.control,
         border: Border.all(
           color: colorScheme.outlineVariant,
-          width: WidgetSizes.borderWidthRegular,
+          width: AppStroke.regular,
         ),
       ),
       child: IconTheme(
@@ -100,7 +97,7 @@ class FolderHeaderBanner extends StatelessWidget {
               decoration: BoxDecoration(
                 border: Border.all(
                   color: colorScheme.outlineVariant,
-                  width: WidgetSizes.borderWidthRegular,
+                  width: AppStroke.regular,
                 ),
               ),
             ),

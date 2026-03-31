@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../../../l10n/app_localizations.dart';
 import 'package:lumos/presentation/shared/composites/states/lumos_empty_state.dart';
+import 'package:lumos/presentation/shared/primitives/displays/lumos_icon.dart';
 
 class FolderEmptyView extends StatelessWidget {
   const FolderEmptyView({
@@ -30,7 +31,7 @@ class FolderEmptyView extends StatelessWidget {
     return LumosEmptyState(
       title: title,
       message: message,
-      icon: icon,
+      icon: LumosIcon(icon),
       buttonLabel: buttonLabel,
       onButtonPressed: onButtonPressed,
     );

@@ -79,8 +79,7 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
   @override
   Widget build(BuildContext context) {
     _syncSearchController();
-    final double screenVerticalPadding = ResponsiveDimensions.compactValue(
-      context: context,
+    final double screenVerticalPadding = context.compactValue(
       baseValue: FlashcardContentSupportConst.screenVerticalPadding,
       minScale: ResponsiveDimensions.compactVerticalInsetScale,
     );
@@ -106,7 +105,7 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
             LumosIconButton(
               onPressed: _toggleSearchVisibility,
               tooltip: l10n.flashcardToggleSearchTooltip,
-              size: IconSizes.iconMedium,
+              size: context.iconSize.lg,
               icon: state.isSearchVisible
                   ? Icons.search_off_rounded
                   : Icons.search_rounded,
@@ -114,13 +113,13 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
             LumosIconButton(
               onPressed: () => _showSortSheet(context: context),
               tooltip: l10n.flashcardSortButtonTooltip,
-              size: IconSizes.iconMedium,
+              size: context.iconSize.lg,
               icon: Icons.tune_rounded,
             ),
             LumosIconButton(
               onPressed: () => _openCreateDialog(context: context, l10n: l10n),
               tooltip: l10n.flashcardCreateButton,
-              size: IconSizes.iconMedium,
+              size: context.iconSize.lg,
               icon: Icons.add_rounded,
             ),
           ],
@@ -200,7 +199,7 @@ class _FlashcardContentState extends ConsumerState<FlashcardContent> {
   }
 
   ThemeData _buildScreenTheme({required BuildContext context}) {
-    final ThemeData baseTheme = Theme.of(context);
+    final ThemeData baseTheme = context.theme;
     final ColorScheme colorScheme = baseTheme.colorScheme;
     return baseTheme.copyWith(
       appBarTheme: baseTheme.appBarTheme.copyWith(

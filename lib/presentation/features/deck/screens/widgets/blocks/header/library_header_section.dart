@@ -35,9 +35,8 @@ class LibraryHeaderSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double sectionGap = ResponsiveDimensions.compactValue(
-      context: context,
-      baseValue: LumosSpacing.sm,
+    final double sectionGap = context.compactValue(
+      baseValue: context.spacing.sm,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
 
@@ -62,13 +61,13 @@ class LibraryHeaderSection extends StatelessWidget {
             child: LumosUtilityChipButton(
               label: _buildSortLabel(),
               onPressed: onOpenSort,
-              leading: const LumosIcon(
+              leading: LumosIcon(
                 Icons.sort_rounded,
-                size: IconSizes.iconSmall,
+                size: context.iconSize.sm,
               ),
-              trailing: const LumosIcon(
+              trailing: LumosIcon(
                 Icons.keyboard_arrow_down_rounded,
-                size: IconSizes.iconSmall,
+                size: context.iconSize.sm,
               ),
             ),
           ),

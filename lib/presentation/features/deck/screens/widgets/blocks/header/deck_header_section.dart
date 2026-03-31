@@ -9,7 +9,8 @@ import 'deck_hero_banner.dart';
 abstract final class DeckHeaderSectionConst {
   DeckHeaderSectionConst._();
 
-  static const double sectionGap = LumosSpacing.sm;
+  static const double sectionGap =
+      12;
 }
 
 class DeckHeaderSection extends StatelessWidget {
@@ -37,8 +38,7 @@ class DeckHeaderSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
-    final double sectionGap = ResponsiveDimensions.compactValue(
-      context: context,
+    final double sectionGap = context.compactValue(
       baseValue: DeckHeaderSectionConst.sectionGap,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
@@ -64,10 +64,13 @@ class DeckHeaderSection extends StatelessWidget {
             child: LumosUtilityChipButton(
               label: _buildSortLabel(l10n: l10n),
               onPressed: onToggleSort,
-              leading: LumosIcon(Icons.sort_rounded, size: IconSizes.iconSmall),
+              leading: LumosIcon(
+                Icons.sort_rounded,
+                size: context.iconSize.sm,
+              ),
               trailing: LumosIcon(
                 Icons.keyboard_arrow_down_rounded,
-                size: IconSizes.iconSmall,
+                size: context.iconSize.sm,
               ),
             ),
           ),

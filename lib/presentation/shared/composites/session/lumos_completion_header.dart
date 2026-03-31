@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:lumos/core/theme/extensions/theme_context_ext.dart';
-import 'package:lumos/presentation/shared/primitives/displays/lumos_progress_bar.dart';
+import 'package:lumos/presentation/shared/primitives/displays/lumos_value_bar.dart';
 import 'package:lumos/presentation/shared/primitives/layout/lumos_spacing.dart';
 import 'package:lumos/presentation/shared/primitives/text/lumos_body_text.dart';
 import 'package:lumos/presentation/shared/primitives/text/lumos_title_text.dart';
 
-class LumosStudyProgressHeader extends StatelessWidget {
-  const LumosStudyProgressHeader({
+class LumosCompletionHeader extends StatelessWidget {
+  const LumosCompletionHeader({
     super.key,
     required this.title,
     required this.progress,
@@ -39,7 +39,10 @@ class LumosStudyProgressHeader extends StatelessWidget {
           children: [
             if (leading != null) ...[
               leading!,
-              const LumosSpacing(size: AppSpacingSize.sm, axis: Axis.horizontal),
+              const LumosSpacing(
+                size: AppSpacingSize.sm,
+                axis: Axis.horizontal,
+              ),
             ],
             Expanded(
               child: Column(
@@ -57,7 +60,10 @@ class LumosStudyProgressHeader extends StatelessWidget {
               ),
             ),
             if (trailing != null) ...[
-              const LumosSpacing(size: AppSpacingSize.sm, axis: Axis.horizontal),
+              const LumosSpacing(
+                size: AppSpacingSize.sm,
+                axis: Axis.horizontal,
+              ),
               trailing!,
             ],
           ],
@@ -66,8 +72,11 @@ class LumosStudyProgressHeader extends StatelessWidget {
           const LumosSpacing(size: AppSpacingSize.sm),
           Row(
             children: [
-              Expanded(child: LumosProgressBar(value: resolvedProgress)),
-              const LumosSpacing(size: AppSpacingSize.sm, axis: Axis.horizontal),
+              Expanded(child: LumosValueBar(value: resolvedProgress)),
+              const LumosSpacing(
+                size: AppSpacingSize.sm,
+                axis: Axis.horizontal,
+              ),
               LumosBodyText(
                 text: resolvedProgressLabel,
                 color: context.colorScheme.onSurfaceVariant,

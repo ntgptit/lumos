@@ -45,17 +45,17 @@ class FlashcardStudyActionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextStyle? titleStyle = isFullWidth
-        ? Theme.of(context).textTheme.titleLarge?.copyWith(
+        ? context.theme.textTheme.titleLarge?.copyWith(
+           
             color: titleColor,
             fontWeight: FontWeight.w700,
           )
-        : Theme.of(context).textTheme.titleMedium?.copyWith(
+        : context.theme.textTheme.titleMedium?.copyWith(
+           
             color: titleColor,
             fontWeight: FontWeight.w700,
           );
-    final TextStyle? subtitleStyle = Theme.of(
-      context,
-    ).textTheme.bodySmall?.copyWith(color: subtitleColor);
+    final TextStyle? subtitleStyle = context.theme.textTheme.bodySmall?.copyWith(color: subtitleColor);
     final Widget iconBadge = Container(
       width: iconContainerSize,
       height: iconContainerSize,
@@ -97,7 +97,7 @@ class FlashcardStudyActionCard extends StatelessWidget {
               IconTheme(
                 data: IconThemeData(
                   color: subtitleColor,
-                  size: IconSizes.iconMedium,
+                  size: context.iconSize.lg,
                 ),
                 child: const LumosIcon(Icons.chevron_right_rounded),
               ),
@@ -137,8 +137,11 @@ class FlashcardStudyActionCard extends StatelessWidget {
             ],
           );
     return Theme(
-      data: Theme.of(context).copyWith(
-        cardTheme: Theme.of(context).cardTheme.copyWith(color: backgroundColor),
+      data: context.theme.copyWith(
+       
+        cardTheme: context.theme.cardTheme.copyWith(
+          color: backgroundColor,
+        ),
       ),
       child: LumosCard(
         minHeight: minHeight,
@@ -147,7 +150,8 @@ class FlashcardStudyActionCard extends StatelessWidget {
           vertical: cardVerticalPadding,
         ),
         borderRadius: context.shapes.card,
-        elevation: LumosSpacing.none,
+        elevation:
+            0,
         onTap: onPressed,
         child: content,
       ),
@@ -156,8 +160,9 @@ class FlashcardStudyActionCard extends StatelessWidget {
 
   double _contentMinHeight() {
     final double resolvedHeight = minHeight - (cardVerticalPadding * 2);
-    if (resolvedHeight < LumosSpacing.none) {
-      return LumosSpacing.none;
+    if (resolvedHeight < 0) {
+     
+      return 0;
     }
     return resolvedHeight;
   }

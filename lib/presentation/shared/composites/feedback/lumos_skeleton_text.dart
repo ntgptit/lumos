@@ -3,14 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:lumos/core/theme/extensions/theme_context_ext.dart';
 import 'package:lumos/presentation/shared/primitives/feedback/lumos_shimmer.dart';
 import 'package:lumos/presentation/shared/primitives/feedback/lumos_skeleton_box.dart';
-import 'package:lumos/presentation/shared/primitives/layout/lumos_spacing.dart';
 
 class LumosSkeletonText extends StatelessWidget {
   const LumosSkeletonText({
     super.key,
     this.lines = 3,
-    this.lineHeight = LumosSpacing.sm,
-    this.lineSpacing = LumosSpacing.xs,
+    this.lineHeight = 12,
+    this.lineSpacing = 8,
     this.lastLineWidthFraction = 0.6,
     this.enabled = true,
   });

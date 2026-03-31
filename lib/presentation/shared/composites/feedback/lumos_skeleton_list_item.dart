@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:lumos/core/theme/extensions/theme_context_ext.dart';
-import 'package:lumos/core/theme/foundation/widget_sizes.dart';
 import 'package:lumos/presentation/shared/primitives/feedback/lumos_shimmer.dart';
 import 'package:lumos/presentation/shared/primitives/feedback/lumos_skeleton_box.dart';
 
@@ -14,7 +13,7 @@ class LumosSkeletonListItem extends StatelessWidget {
     this.showLeading = true,
     this.showSubtitle = true,
     this.showTrailing = false,
-    this.leadingSize = WidgetSizes.avatarMedium,
+    this.leadingSize = 48,
     this.enabled = true,
   });
 

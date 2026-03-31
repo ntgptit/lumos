@@ -10,18 +10,15 @@ class FlashcardMutatingOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (!isVisible) {
-      return const SizedBox.shrink();
+      return SizedBox.shrink();
     }
     return Positioned.fill(
       child: IgnorePointer(
         child: ColoredBox(
-          color: Theme.of(
-            context,
-          ).colorScheme.scrim.withValues(alpha: AppOpacity.strong),
+          color: context.theme.colorScheme.scrim.withValues(alpha: AppOpacity.strong),
           child: const Center(child: LumosLoadingIndicator()),
         ),
       ),
     );
   }
 }
-

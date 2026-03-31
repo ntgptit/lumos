@@ -3,6 +3,7 @@ import 'package:lumos/core/theme/extensions/theme_context_ext.dart';
 import 'package:lumos/core/theme/tokens/tokens.dart';
 
 enum AppButtonVariant { primary, secondary, outline, text, danger }
+
 enum LumosButtonSize { medium, large }
 
 class LumosButton extends StatelessWidget {
@@ -13,7 +14,6 @@ class LumosButton extends StatelessWidget {
     this.isLoading = false,
     this.leading,
     this.trailing,
-    this.style,
     this.size = LumosButtonSize.large,
     super.key,
   }) : variant = AppButtonVariant.primary;
@@ -25,7 +25,6 @@ class LumosButton extends StatelessWidget {
     this.isLoading = false,
     this.leading,
     this.trailing,
-    this.style,
     this.size = LumosButtonSize.large,
     super.key,
   }) : variant = AppButtonVariant.secondary;
@@ -37,7 +36,6 @@ class LumosButton extends StatelessWidget {
     this.isLoading = false,
     this.leading,
     this.trailing,
-    this.style,
     this.size = LumosButtonSize.large,
     super.key,
   }) : variant = AppButtonVariant.outline;
@@ -49,7 +47,6 @@ class LumosButton extends StatelessWidget {
     this.isLoading = false,
     this.leading,
     this.trailing,
-    this.style,
     this.size = LumosButtonSize.large,
     super.key,
   }) : variant = AppButtonVariant.text;
@@ -61,7 +58,6 @@ class LumosButton extends StatelessWidget {
     this.isLoading = false,
     this.leading,
     this.trailing,
-    this.style,
     this.size = LumosButtonSize.large,
     super.key,
   }) : variant = AppButtonVariant.danger;
@@ -75,7 +71,6 @@ class LumosButton extends StatelessWidget {
     this.isLoading = false,
     this.leading,
     this.trailing,
-    this.style,
     this.size = LumosButtonSize.large,
   });
 
@@ -86,7 +81,6 @@ class LumosButton extends StatelessWidget {
   final bool isLoading;
   final Widget? leading;
   final Widget? trailing;
-  final ButtonStyle? style;
   final LumosButtonSize size;
 
   @override
@@ -108,27 +102,23 @@ class LumosButton extends StatelessWidget {
     final button = switch (variant) {
       AppButtonVariant.primary => FilledButton(
         onPressed: isLoading ? null : onPressed,
-        style: style,
         child: child,
       ),
       AppButtonVariant.secondary => FilledButton.tonal(
         onPressed: isLoading ? null : onPressed,
-        style: style,
         child: child,
       ),
       AppButtonVariant.outline => OutlinedButton(
         onPressed: isLoading ? null : onPressed,
-        style: style,
         child: child,
       ),
       AppButtonVariant.text => TextButton(
         onPressed: isLoading ? null : onPressed,
-        style: style,
         child: child,
       ),
       AppButtonVariant.danger => FilledButton(
         onPressed: isLoading ? null : onPressed,
-        style: _dangerStyle(context).merge(style),
+        style: _dangerStyle(context),
         child: child,
       ),
     };

@@ -22,24 +22,35 @@ class StudySessionReviewAnswerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final ThemeData theme = context.theme;
     final ColorScheme colorScheme = theme.colorScheme;
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        final bool compactHeight = constraints.maxHeight < 260;
+        final bool compactHeight =
+            constraints.maxHeight < StudySessionLayoutMetrics.compactPanelHeightBreakpoint;
         final EdgeInsets cardPadding = StudySessionLayoutMetrics.cardInsets(
           context,
-          left: compactHeight ? LumosSpacing.lg : LumosSpacing.xl,
-          top: LumosSpacing.lg,
-          right: compactHeight ? LumosSpacing.lg : LumosSpacing.xl,
-          bottom: compactHeight ? LumosSpacing.lg : LumosSpacing.xl,
+          left: compactHeight
+              ? context.spacing.lg
+              : context.spacing.xl,
+          top: context.spacing.lg,
+          right: compactHeight
+              ? context.spacing.lg
+              : context.spacing.xl,
+          bottom: compactHeight
+              ? context.spacing.lg
+              : context.spacing.xl,
         );
-        final EdgeInsets topTrailingPadding =
-            StudySessionLayoutMetrics.topTrailingPadding(
-              context,
-              top: compactHeight ? LumosSpacing.md : LumosSpacing.lg,
-              right: compactHeight ? LumosSpacing.md : LumosSpacing.lg,
-            );
+        final EdgeInsets
+        topTrailingPadding = StudySessionLayoutMetrics.topTrailingPadding(
+          context,
+          top: compactHeight
+              ? context.spacing.md
+              : context.spacing.lg,
+          right: compactHeight
+              ? context.spacing.md
+              : context.spacing.lg,
+        );
         return StudySessionContentCard(
           variant: LumosCardVariant.filled,
           topTrailing: LumosIconButton(

@@ -9,14 +9,18 @@ abstract final class FlashcardListCardConst {
   FlashcardListCardConst._();
 
   static const EdgeInsets cardPadding = EdgeInsets.fromLTRB(
-    LumosSpacing.lg,
-    LumosSpacing.md,
-    LumosSpacing.md,
-    LumosSpacing.md,
+    24,
+    16,
+    16,
+    16,
   );
-  static const double textGap = LumosSpacing.xs;
-  static const double iconSpacing = LumosSpacing.xs;
-  static const double actionIconSize = IconSizes.iconMedium - LumosSpacing.xs;
+  static const double textGap =
+      8;
+  static const double iconSpacing =
+      8;
+  static const double actionIconSize =
+      24 -
+      8;
   static const VisualDensity actionVisualDensity = VisualDensity.compact;
   static const int backTextMaxLines = 4;
   static const int noteMaxLines = 3;
@@ -47,28 +51,24 @@ class FlashcardListCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context)!;
-    final ThemeData theme = Theme.of(context);
+    final ThemeData theme = context.theme;
     final TextStyle frontTextStyle =
         theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600) ??
         const TextStyle(fontWeight: FontWeight.w600);
     final String normalizedNote = StringUtils.normalizeText(item.note);
-    final EdgeInsets cardPadding = ResponsiveDimensions.compactInsets(
-      context: context,
+    final EdgeInsets cardPadding = context.compactInsets(
       baseInsets: FlashcardListCardConst.cardPadding,
       minScale: ResponsiveDimensions.compactLargeInsetScale,
     );
-    final double textGap = ResponsiveDimensions.compactValue(
-      context: context,
+    final double textGap = context.compactValue(
       baseValue: FlashcardListCardConst.textGap,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double iconSpacing = ResponsiveDimensions.compactValue(
-      context: context,
+    final double iconSpacing = context.compactValue(
       baseValue: FlashcardListCardConst.iconSpacing,
       minScale: ResponsiveDimensions.compactInsetScale,
     );
-    final double actionIconSize = ResponsiveDimensions.compactValue(
-      context: context,
+    final double actionIconSize = context.compactValue(
       baseValue: FlashcardListCardConst.actionIconSize,
       minScale: ResponsiveDimensions.compactInsetScale,
     );

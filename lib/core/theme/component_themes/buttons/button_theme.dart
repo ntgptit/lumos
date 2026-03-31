@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lumos/core/theme/extensions/app_theme_palette.dart';
 import 'package:lumos/core/theme/extensions/dimension_theme_ext.dart';
 import 'package:lumos/core/theme/tokens/tokens.dart';
 
@@ -8,14 +7,15 @@ abstract final class LumosButtonThemes {
     ColorScheme colorScheme,
     DimensionThemeExt dims,
   ) {
-    final palette = AppThemePalette.fromBrightness(colorScheme.brightness);
     final shape = RoundedRectangleBorder(borderRadius: dims.shapes.control);
 
     return FilledButtonThemeData(
       style: ButtonStyle(
-        backgroundColor: WidgetStatePropertyAll(palette.primary),
-        foregroundColor: const WidgetStatePropertyAll(AppColorTokens.white),
-        shadowColor: WidgetStatePropertyAll(palette.primaryAccentShadow),
+        backgroundColor: WidgetStatePropertyAll(colorScheme.primary),
+        foregroundColor: WidgetStatePropertyAll(colorScheme.onPrimary),
+        shadowColor: WidgetStatePropertyAll(
+          colorScheme.shadow.withValues(alpha: AppOpacityTokens.strong),
+        ),
         minimumSize: WidgetStatePropertyAll(
           Size(0, dims.componentSize.buttonHeight),
         ),
@@ -37,19 +37,17 @@ abstract final class LumosButtonThemes {
     ColorScheme colorScheme,
     DimensionThemeExt dims,
   ) {
-    final palette = AppThemePalette.fromBrightness(colorScheme.brightness);
-
     return OutlinedButtonThemeData(
       style: ButtonStyle(
-        backgroundColor: WidgetStatePropertyAll(palette.surface),
-        foregroundColor: WidgetStatePropertyAll(palette.textPrimary),
+        backgroundColor: WidgetStatePropertyAll(colorScheme.surface),
+        foregroundColor: WidgetStatePropertyAll(colorScheme.onSurface),
         minimumSize: WidgetStatePropertyAll(
           Size(0, dims.componentSize.buttonHeight),
         ),
         padding: WidgetStatePropertyAll(
           EdgeInsets.symmetric(horizontal: dims.spacing.lg),
         ),
-        side: WidgetStatePropertyAll(BorderSide(color: palette.outline)),
+        side: WidgetStatePropertyAll(BorderSide(color: colorScheme.outline)),
         shape: WidgetStatePropertyAll(
           RoundedRectangleBorder(borderRadius: dims.shapes.control),
         ),
@@ -67,11 +65,9 @@ abstract final class LumosButtonThemes {
     ColorScheme colorScheme,
     DimensionThemeExt dims,
   ) {
-    final palette = AppThemePalette.fromBrightness(colorScheme.brightness);
-
     return TextButtonThemeData(
       style: ButtonStyle(
-        foregroundColor: WidgetStatePropertyAll(palette.primary),
+        foregroundColor: WidgetStatePropertyAll(colorScheme.primary),
         padding: WidgetStatePropertyAll(
           EdgeInsets.symmetric(horizontal: dims.spacing.md),
         ),

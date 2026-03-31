@@ -5,12 +5,12 @@ import '../../../../../../core/utils/string_utils.dart';
 import '../../../../../../l10n/app_localizations.dart';
 
 const EdgeInsetsGeometry _flashcardLoadingMaskPadding = EdgeInsets.fromLTRB(
-  LumosSpacing.lg,
-  LumosSpacing.sm,
-  LumosSpacing.lg,
-  LumosSpacing.none,
+  24,
+  12,
+  24,
+  0,
 );
-const double _flashcardLoadingMaskHeight = WidgetSizes.progressTrackHeight;
+const double _flashcardLoadingMaskHeight = 6;
 
 class FlashcardLoadingShell extends StatelessWidget {
   const FlashcardLoadingShell({required this.deckName, super.key});

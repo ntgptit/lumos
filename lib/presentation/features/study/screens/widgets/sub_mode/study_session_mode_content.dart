@@ -104,15 +104,15 @@ class StudySessionModeContent extends StatelessWidget {
         onPlaySpeech: onPlaySpeech,
         onReplaySpeech: onReplaySpeech,
       ),
-      _ => const SizedBox.shrink(),
+      _ => SizedBox.shrink(),
     };
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         final double horizontalInset = constraints.isDesktop
-            ? LumosSpacing.sm
+            ? context.spacing.sm
             : constraints.isTablet
-            ? LumosSpacing.xs
-            : LumosSpacing.none;
+            ? context.spacing.xs
+            : 0;
         return Padding(
           padding: EdgeInsets.symmetric(horizontal: horizontalInset),
           child: content,
@@ -121,4 +121,3 @@ class StudySessionModeContent extends StatelessWidget {
     );
   }
 }
-
